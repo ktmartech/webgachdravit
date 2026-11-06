@@ -1084,9 +1084,11 @@
   function initInstantSearch() {
     const searchWrappers = document.querySelectorAll('.drv-search');
     searchWrappers.forEach((wrapper) => {
+      if (wrapper._drvSearchBound) return;
       const input = wrapper.querySelector('.drv-search__input');
       const drop = wrapper.querySelector('.drv-search-drop');
       if (!input || !drop) return;
+      wrapper._drvSearchBound = true;
 
       let backdrop = wrapper.querySelector('[data-drv-search-backdrop]');
       if (!backdrop) {
@@ -1279,6 +1281,7 @@
     DRV_MOCK_SILOS,
     DRV_MOCK_PRODUCTS,
     renderProductCardHtml,
+    initInstantSearch,
   };
 })();
 

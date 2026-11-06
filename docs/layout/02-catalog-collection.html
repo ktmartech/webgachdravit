@@ -12,8 +12,8 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/bold/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/style.css">
-  <link rel="stylesheet" href="assets/css/main.css?v=20261106e">
-  <link rel="stylesheet" href="assets/css/pages.css?v=20261106e">
+  <link rel="stylesheet" href="assets/css/main.css?v=20261106s">
+  <link rel="stylesheet" href="assets/css/pages.css?v=20261106s">
 
   <!-- JSON-LD Structured Data: BreadcrumbList + CollectionPage + ItemList + FAQPage -->
   <script type="application/ld+json">
@@ -130,743 +130,58 @@
   </script>
 </head>
 <body>
-  <a href="#main-content" class="u-sr-only">Chuyển đến danh sách sản phẩm</a>
+  <a href="#main-content" class="drv-skip-link">Chuyển đến danh sách sản phẩm</a>
 
-  <!-- 1. PROTOTYPE NAVIGATOR BAR (11 PAGES) -->
-  <nav class="drv-proto-bar" aria-label="Điều hướng bộ mẫu giao diện HTML">
-    <div class="l-container drv-proto-bar__inner">
-      <span class="drv-proto-bar__label">DRAVIT UI Prototype</span>
-      <a href="00-ui-kit.html" class="drv-proto-bar__link">00. UI Kit</a>
-      <a href="01-home.html" class="drv-proto-bar__link">01. Trang chủ</a>
-      <a href="02-catalog-collection.html" class="drv-proto-bar__link" aria-current="page">02. Danh mục Silo</a>
-      <a href="03-product-single.html" class="drv-proto-bar__link">03. Chi tiết SP</a>
-      <a href="04-cart.html" class="drv-proto-bar__link">04. Giỏ hàng</a>
-      <a href="05-checkout.html" class="drv-proto-bar__link">05. Thanh toán</a>
-      <a href="06-order-received-vietqr.html" class="drv-proto-bar__link">06. Hoàn tất đơn</a>
-      <a href="07-blog-hub.html" class="drv-proto-bar__link">07. Cẩm nang</a>
-      <a href="08-blog-single.html" class="drv-proto-bar__link">08. Bài viết GEO</a>
-      <a href="09-about-showroom-contact-b2b.html" class="drv-proto-bar__link">09. Showroom &amp; Báo giá</a>
-      <a href="10-policies-search-404.html" class="drv-proto-bar__link">10. Chính sách &amp; 404</a>
-    </div>
-  </nav>
-
-  <!-- 2. GLOBAL HEADER 2-TIER + MEGA MENU "SILO MATRIX 4+1" + INSTANT SEARCH -->
-  <header class="drv-header">
-    <!-- Tier 1: Brand, Instant Search, Showroom & Cart -->
-    <div class="l-container drv-header__top">
-      <button type="button" class="drv-btn drv-btn--outline drv-btn--sm drv-btn--icon u-only-mobile" data-drv-action="dialog-open" data-drv-target="#drv-mobile-menu-drawer" aria-label="Mở danh mục điều hướng">
-        <i class="ph ph-list drv-icon" aria-hidden="true"></i>
-      </button>
-
-      <a href="01-home.html" class="drv-logo" aria-label="DRAVIT - Trang chủ">
-        <img src="assets/img/logo-navy.png" width="150" height="44" alt="DRAVIT" fetchpriority="high" decoding="async">
-      </a>
-
-      <!-- Instant Search Box (Gõ thử: 80x80, marble, terrazzo, DRV...) -->
-      <div class="drv-search" data-drv-search>
-        <div class="drv-search-backdrop" data-drv-search-backdrop hidden></div>
-        <form class="drv-search__form" action="10-policies-search-404.html" method="get" role="search">
-          <i class="ph ph-magnifying-glass drv-search__icon" aria-hidden="true"></i>
-          <label for="global-search-input" class="u-sr-only">Tìm mẫu gạch, mã SKU hoặc kích thước</label>
-          <input id="global-search-input" name="s" type="search" class="drv-search__input" placeholder="Tìm mẫu gạch, mã SKU (DRV-8801), kích thước 80x80..." autocomplete="off">
-          <button type="submit" class="drv-search__submit" aria-label="Tìm kiếm">
-            <span>Tìm</span>
-          </button>
-        </form>
-
-        <!-- Instant Search 2-Col Dropdown -->
-        <div class="drv-search-drop" hidden aria-label="Gợi ý tìm kiếm tức thì">
-          <div class="drv-search-drop__quick" data-search-quick>
-            <span class="drv-search-drop__quick-label"><i class="ph ph-sparkle" aria-hidden="true"></i> Từ khóa phổ biến:</span>
-            <button type="button" class="drv-search-tag" data-search-keyword="80x80">80x80</button>
-            <button type="button" class="drv-search-tag" data-search-keyword="Marble">Vân đá Marble</button>
-            <button type="button" class="drv-search-tag" data-search-keyword="Terrazzo">Terrazzo</button>
-            <button type="button" class="drv-search-tag" data-search-keyword="60x120">Khổ lớn 60x120</button>
-            <button type="button" class="drv-search-tag" data-search-keyword="R10">Chống trượt R10</button>
-          </div>
-          <div class="drv-search-drop__grid">
-            <div class="drv-search-drop__col drv-search-drop__col--silo">
-              <div class="drv-search-drop__col-head">
-                <span class="drv-mega__heading" data-search-silo-heading>Danh mục &amp; Kích thước</span>
-              </div>
-              <ul class="drv-search-silo-list" data-search-silos></ul>
-            </div>
-            <div class="drv-search-drop__col">
-              <div class="drv-search-drop__col-head">
-                <span class="drv-mega__heading" data-search-prod-heading>Sản phẩm khớp mã SKU / tên</span>
-                <a href="10-policies-search-404.html" class="drv-link u-text-xs" data-search-view-all>Xem tất cả kết quả</a>
-              </div>
-              <ul class="drv-search-prod-list" data-search-products></ul>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Right Actions -->
-      <div class="drv-header__actions">
-        <a href="09-about-showroom-contact-b2b.html#showroom" class="drv-header__info-item">
-          <i class="ph ph-map-pin drv-icon u-text-moss" aria-hidden="true"></i>
-          <span>Showroom (8:00 - 21:00)</span>
-        </a>
-        <a href="tel:0901234567" class="drv-header__info-item u-tabular">
-          <i class="ph ph-phone-call drv-icon u-text-moss" aria-hidden="true"></i>
-          <span>0901.234.567</span>
-        </a>
-        <button type="button" class="drv-btn drv-btn--moss drv-btn--sm u-hide-mobile" data-drv-action="dialog-open" data-drv-target="#drv-quote-modal">
-          <i class="ph ph-file-text drv-icon drv-icon--sm" aria-hidden="true"></i>
-          <span>Báo giá công trình</span>
-        </button>
-        <button type="button" class="drv-btn drv-btn--outline drv-btn--sm" data-drv-action="dialog-open" data-drv-target="#drv-minicart-drawer" aria-label="Mở giỏ hàng">
-          <i class="ph ph-shopping-bag drv-icon drv-icon--sm" aria-hidden="true"></i>
-          <span>Giỏ (<span data-drv-cart-count class="u-tabular">2</span>)</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- Tier 2: Silo Navigation & Mega Menu Trigger -->
-    <div class="drv-header__nav-bar">
-      <div class="l-container drv-nav">
-        <ul class="drv-nav__list">
-          <li class="drv-nav__item">
-            <button type="button" class="drv-nav__link" data-drv-action="mega-toggle" aria-expanded="false" aria-controls="drv-mega-menu">
-              <i class="ph ph-squares-four drv-icon drv-icon--sm" aria-hidden="true"></i>
-              <span>Hệ thống 28 Danh mục Gạch</span>
-              <i class="ph ph-caret-down drv-icon drv-icon--xs" aria-hidden="true"></i>
-            </button>
-          </li>
-
-          <!-- Nav Item Cấp 1 có Dropdown Cấp 2 và Flyout Cấp 3: Theo công năng -->
-          <li class="drv-nav__item">
-            <a href="02-catalog-collection.html" class="drv-nav__link">
-              <span>Theo công năng</span>
-              <i class="ph ph-caret-down drv-icon drv-icon--xs" aria-hidden="true"></i>
-            </a>
-
-            <!-- Dropdown Cấp 2 -->
-            <ul class="drv-dropdown" aria-label="Menu cấp 2 - Theo công năng">
-              <li class="drv-dropdown__item">
-                <a href="02-catalog-collection.html?cong-nang=lat-nen" class="drv-dropdown__link">
-                  <span class="l-cluster l-cluster--sm"><i class="ph ph-grid-four drv-icon" aria-hidden="true"></i><span>Gạch lát nền</span></span>
-                  <i class="ph ph-caret-right drv-dropdown__arrow" aria-hidden="true"></i>
-                </a>
-                <!-- Flyout Cấp 3 -->
-                <ul class="drv-dropdown__flyout" aria-label="Menu cấp 3 - Gạch lát nền">
-                  <li class="drv-dropdown__heading">Phân loại Gạch lát nền</li>
-                  <li><a href="02-catalog-collection.html?kich-thuoc=80x80" class="drv-dropdown__sublink"><span>Lát nền phòng khách 80x80</span><span class="u-text-xs u-text-muted u-tabular">180</span></a></li>
-                  <li><a href="02-catalog-collection.html?kich-thuoc=60x120" class="drv-dropdown__sublink"><span>Khổ lớn Big Slab 60x120</span><span class="u-text-xs u-text-muted u-tabular">78</span></a></li>
-                  <li><a href="02-catalog-collection.html?be-mat=chong-tron" class="drv-dropdown__sublink"><span>Men Matt chống trơn R10-R11</span><span class="u-text-xs u-text-muted u-tabular">65</span></a></li>
-                  <li><a href="02-catalog-collection.html?van-gach=gia-go" class="drv-dropdown__sublink"><span>Thanh gỗ Porcelain 15x90</span><span class="u-text-xs u-text-muted u-tabular">38</span></a></li>
-                </ul>
-              </li>
-
-              <li class="drv-dropdown__item">
-                <a href="02-catalog-collection.html?cong-nang=op-tuong" class="drv-dropdown__link">
-                  <span class="l-cluster l-cluster--sm"><i class="ph ph-wall drv-icon" aria-hidden="true"></i><span>Gạch ốp tường</span></span>
-                  <i class="ph ph-caret-right drv-dropdown__arrow" aria-hidden="true"></i>
-                </a>
-                <!-- Flyout Cấp 3 -->
-                <ul class="drv-dropdown__flyout" aria-label="Menu cấp 3 - Gạch ốp tường">
-                  <li class="drv-dropdown__heading">Phân loại Gạch ốp tường</li>
-                  <li><a href="02-catalog-collection.html?kich-thuoc=30x60" class="drv-dropdown__sublink"><span>Gạch ốp 30x60 mờ &amp; bóng</span><span class="u-text-xs u-text-muted u-tabular">95</span></a></li>
-                  <li><a href="02-catalog-collection.html?loai=subway" class="drv-dropdown__sublink"><span>Gạch thẻ kiến trúc Subway</span><span class="u-text-xs u-text-muted u-tabular">45</span></a></li>
-                  <li><a href="02-catalog-collection.html?loai=bong-gio" class="drv-dropdown__sublink"><span>Gạch bông gió mỹ thuật</span><span class="u-text-xs u-text-muted u-tabular">22</span></a></li>
-                  <li><a href="02-catalog-collection.html?loai=vien-diem" class="drv-dropdown__sublink"><span>Gạch viền điểm &amp; bo góc</span><span class="u-text-xs u-text-muted u-tabular">16</span></a></li>
-                </ul>
-              </li>
-
-              <li class="drv-dropdown__item">
-                <a href="02-catalog-collection.html?van-gach=da-nung-ket" class="drv-dropdown__link">
-                  <span class="l-cluster l-cluster--sm"><i class="ph ph-sparkle drv-icon" aria-hidden="true"></i><span>Đá nung kết Big Slab</span></span>
-                  <i class="ph ph-caret-right drv-dropdown__arrow" aria-hidden="true"></i>
-                </a>
-                <!-- Flyout Cấp 3 -->
-                <ul class="drv-dropdown__flyout" aria-label="Menu cấp 3 - Đá nung kết">
-                  <li class="drv-dropdown__heading">Ứng dụng Đá nung kết</li>
-                  <li><a href="02-catalog-collection.html?kich-thuoc=120x240" class="drv-dropdown__sublink"><span>Đá tấm lớn 120x240 cm</span><span class="u-text-xs u-text-muted u-tabular">15</span></a></li>
-                  <li><a href="02-catalog-collection.html?loai=mat-bep" class="drv-dropdown__sublink"><span>Mặt bàn bếp chịu nhiệt 1200°C</span><span class="u-text-xs u-text-muted u-tabular">24</span></a></li>
-                  <li><a href="02-catalog-collection.html?loai=vach-tivi" class="drv-dropdown__sublink"><span>Đá ốp vách TV Bookmatch</span><span class="u-text-xs u-text-muted u-tabular">18</span></a></li>
-                </ul>
-              </li>
-
-              <li class="drv-dropdown__item">
-                <a href="02-catalog-collection.html?khong-gian=san-vuon" class="drv-dropdown__link">
-                  <span class="l-cluster l-cluster--sm"><i class="ph ph-tree drv-icon" aria-hidden="true"></i><span>Sân vườn &amp; Ngoại thất</span></span>
-                  <i class="ph ph-caret-right drv-dropdown__arrow" aria-hidden="true"></i>
-                </a>
-                <!-- Flyout Cấp 3 -->
-                <ul class="drv-dropdown__flyout" aria-label="Menu cấp 3 - Sân vườn">
-                  <li class="drv-dropdown__heading">Gạch ngoại thất chịu lực</li>
-                  <li><a href="02-catalog-collection.html?do-day=20mm" class="drv-dropdown__sublink"><span>Gạch dày 20mm chịu lực gara</span><span class="u-text-xs u-text-muted u-tabular">28</span></a></li>
-                  <li><a href="02-catalog-collection.html?be-mat=san-vuon" class="drv-dropdown__sublink"><span>Gạch chống trơn sân vườn R11</span><span class="u-text-xs u-text-muted u-tabular">52</span></a></li>
-                  <li><a href="02-catalog-collection.html?loai=ho-boi" class="drv-dropdown__sublink"><span>Gạch mosaic hồ bơi</span><span class="u-text-xs u-text-muted u-tabular">34</span></a></li>
-                </ul>
-              </li>
-            </ul>
-          </li>
-
-          <!-- Nav Item Cấp 1 có Dropdown Cấp 2 và Flyout Cấp 3: Theo không gian -->
-          <li class="drv-nav__item">
-            <a href="02-catalog-collection.html" class="drv-nav__link">
-              <span>Theo không gian</span>
-              <i class="ph ph-caret-down drv-icon drv-icon--xs" aria-hidden="true"></i>
-            </a>
-
-            <!-- Dropdown Cấp 2 -->
-            <ul class="drv-dropdown" aria-label="Menu cấp 2 - Theo không gian">
-              <li class="drv-dropdown__item">
-                <a href="02-catalog-collection.html?khong-gian=phong-khach" class="drv-dropdown__link">
-                  <span class="l-cluster l-cluster--sm"><i class="ph ph-armchair drv-icon" aria-hidden="true"></i><span>Phòng khách sang trọng</span></span>
-                  <i class="ph ph-caret-right drv-dropdown__arrow" aria-hidden="true"></i>
-                </a>
-                <!-- Flyout Cấp 3 -->
-                <ul class="drv-dropdown__flyout">
-                  <li class="drv-dropdown__heading">Gạch phòng khách</li>
-                  <li><a href="02-catalog-collection.html?kich-thuoc=80x80" class="drv-dropdown__sublink"><span>Lát nền 80x80 bóng kiếng Ý</span><span class="u-text-xs u-text-muted u-tabular">72</span></a></li>
-                  <li><a href="02-catalog-collection.html?loai=vach-tivi" class="drv-dropdown__sublink"><span>Đá nung kết ốp vách TV</span><span class="u-text-xs u-text-muted u-tabular">24</span></a></li>
-                  <li><a href="02-catalog-collection.html?loai=tham-cnc" class="drv-dropdown__sublink"><span>Gạch thảm CNC tiền sảnh</span><span class="u-text-xs u-text-muted u-tabular">16</span></a></li>
-                </ul>
-              </li>
-
-              <li class="drv-dropdown__item">
-                <a href="02-catalog-collection.html?khong-gian=nha-tam" class="drv-dropdown__link">
-                  <span class="l-cluster l-cluster--sm"><i class="ph ph-drop drv-icon" aria-hidden="true"></i><span>Nhà tắm / Toilet WC</span></span>
-                  <i class="ph ph-caret-right drv-dropdown__arrow" aria-hidden="true"></i>
-                </a>
-                <!-- Flyout Cấp 3 -->
-                <ul class="drv-dropdown__flyout">
-                  <li class="drv-dropdown__heading">Gạch phòng tắm chống trơn</li>
-                  <li><a href="02-catalog-collection.html?be-mat=chong-tron" class="drv-dropdown__sublink"><span>Nền chống trượt Matt R10</span><span class="u-text-xs u-text-muted u-tabular">86</span></a></li>
-                  <li><a href="02-catalog-collection.html?kich-thuoc=30x60" class="drv-dropdown__sublink"><span>Ốp tường 30x60 chống ố</span><span class="u-text-xs u-text-muted u-tabular">54</span></a></li>
-                  <li><a href="02-catalog-collection.html?loai=mosaic" class="drv-dropdown__sublink"><span>Mosaic tắm đứng điểm nhấn</span><span class="u-text-xs u-text-muted u-tabular">30</span></a></li>
-                </ul>
-              </li>
-
-              <li class="drv-dropdown__item">
-                <a href="02-catalog-collection.html?khong-gian=bep" class="drv-dropdown__link">
-                  <span class="l-cluster l-cluster--sm"><i class="ph ph-cooking-pot drv-icon" aria-hidden="true"></i><span>Bếp &amp; Phòng ăn</span></span>
-                  <i class="ph ph-caret-right drv-dropdown__arrow" aria-hidden="true"></i>
-                </a>
-                <!-- Flyout Cấp 3 -->
-                <ul class="drv-dropdown__flyout">
-                  <li class="drv-dropdown__heading">Gạch phòng bếp sạch dầu</li>
-                  <li><a href="02-catalog-collection.html?loai=mat-bep" class="drv-dropdown__sublink"><span>Đá nung kết mặt bàn bếp</span><span class="u-text-xs u-text-muted u-tabular">24</span></a></li>
-                  <li><a href="02-catalog-collection.html?loai=subway" class="drv-dropdown__sublink"><span>Gạch thẻ backsplash tường bếp</span><span class="u-text-xs u-text-muted u-tabular">42</span></a></li>
-                  <li><a href="02-catalog-collection.html?be-mat=lau-chui" class="drv-dropdown__sublink"><span>Gạch nền men khô dễ lau chùi</span><span class="u-text-xs u-text-muted u-tabular">64</span></a></li>
-                </ul>
-              </li>
-
-              <li class="drv-dropdown__item">
-                <a href="02-catalog-collection.html?khong-gian=san-vuon" class="drv-dropdown__link">
-                  <span class="l-cluster l-cluster--sm"><i class="ph ph-sun drv-icon" aria-hidden="true"></i><span>Sân vườn &amp; Ban công</span></span>
-                  <i class="ph ph-caret-right drv-dropdown__arrow" aria-hidden="true"></i>
-                </a>
-                <!-- Flyout Cấp 3 -->
-                <ul class="drv-dropdown__flyout">
-                  <li class="drv-dropdown__heading">Khu vực ngoài trời</li>
-                  <li><a href="02-catalog-collection.html?do-day=20mm" class="drv-dropdown__sublink"><span>Đá 20mm lát sân vườn / cỏ</span><span class="u-text-xs u-text-muted u-tabular">28</span></a></li>
-                  <li><a href="02-catalog-collection.html?be-mat=san-vuon" class="drv-dropdown__sublink"><span>Gạch chống trơn sân thượng R11</span><span class="u-text-xs u-text-muted u-tabular">52</span></a></li>
-                </ul>
-              </li>
-            </ul>
-          </li>
-
-          <li class="drv-nav__item"><a href="02-catalog-collection.html?van-gach=van-da-marble" class="drv-nav__link">Vân &amp; Chất liệu</a></li>
-          <li class="drv-nav__item"><a href="02-catalog-collection.html?kich-thuoc=80x80" class="drv-nav__link">Theo kích thước</a></li>
-          <li class="drv-nav__item"><a href="02-catalog-collection.html?van-gach=da-nung-ket" class="drv-nav__link">Đá nung kết</a></li>
-          <li class="drv-nav__item"><a href="02-catalog-collection.html" class="drv-nav__link drv-nav__link--sale">Gạch ưu đãi</a></li>
-        </ul>
-
-        <ul class="drv-nav__list">
-          <li class="drv-nav__item"><a href="07-blog-hub.html" class="drv-nav__link">Cẩm nang kỹ thuật</a></li>
-          <li class="drv-nav__item"><a href="09-about-showroom-contact-b2b.html" class="drv-nav__link">Về Dravit &amp; Showroom</a></li>
-        </ul>
-      </div>
-
-      <!-- Mega Menu "Silo Matrix 4+1" - Cấu trúc phân cấp Cấp 1 -> Cấp 2 -> Cấp 3 (Option 2: Live Dynamic Preview) -->
-      <div id="drv-mega-menu" class="drv-mega" hidden aria-label="Ma trận 28 danh mục gạch ốp lát">
-        <div class="l-container">
-          <div class="drv-mega__matrix">
-            <!-- Col 1: Cấp 1 - Theo công năng -->
-            <div class="drv-mega__col">
-              <span class="drv-mega__heading">01. Theo công năng (7)</span>
-              
-              <!-- Nhóm Lát nền -->
-              <div class="drv-mega__subgroup">
-                <span class="drv-mega__subheading">
-                  <i class="ph ph-grid-four drv-icon--xs u-text-teal" aria-hidden="true"></i>
-                  <span>Gạch Lát Nền</span>
-                </span>
-                <ul class="drv-mega__links">
-                  <li>
-                    <a href="02-catalog-collection.html?kich-thuoc=80x80" class="drv-mega__link is-active"
-                       data-drv-preview-img="assets/img/room-living-calacatta.svg"
-                       data-drv-preview-badge="Bán chạy phòng khách"
-                       data-drv-preview-title="Gạch Lát Phòng Khách 80x80 Calacatta"
-                       data-drv-preview-desc="Vân mây trắng Ý sang trọng, mặt bóng kiếng chống bám bẩn, tạo hiệu ứng mở rộng không gian đại sảnh."
-                       data-drv-preview-price="Từ 385.000đ/m²">
-                      <span class="drv-mega__label">Lát phòng khách 80x80</span>
-                      <span class="drv-mega__count">180</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="02-catalog-collection.html?be-mat=chong-tron" class="drv-mega__link"
-                       data-drv-preview-img="assets/img/room-bathroom-terrazzo.svg"
-                       data-drv-preview-badge="Chống trượt R10-R11"
-                       data-drv-preview-title="Gạch Men Matt Chống Trơn Ướt"
-                       data-drv-preview-desc="Bề mặt nhám mờ vi tinh thể an toàn tuyệt đối cho người già &amp; trẻ nhỏ, chống trơn trượt phòng tắm."
-                       data-drv-preview-price="Từ 320.000đ/m²">
-                      <span class="drv-mega__label">Nền chống trơn Matt R10</span>
-                      <span class="drv-mega__count">65</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="02-catalog-collection.html?van-gach=gia-go" class="drv-mega__link"
-                       data-drv-preview-img="assets/img/tile-wood-oak.svg"
-                       data-drv-preview-badge="Xương đá Porcelain"
-                       data-drv-preview-title="Gạch Vân Gỗ Tự Nhiên 15x90"
-                       data-drv-preview-desc="Vân sồi Bắc Âu chân thực từng thớ gỗ, không cong vênh, chống mối mọt và chịu nước 100%."
-                       data-drv-preview-price="Từ 295.000đ/m²">
-                      <span class="drv-mega__label">Thanh gỗ Porcelain 15x90</span>
-                      <span class="drv-mega__count">38</span>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-
-              <!-- Nhóm Ốp tường & Trang trí -->
-              <div class="drv-mega__subgroup">
-                <span class="drv-mega__subheading">
-                  <i class="ph ph-wall drv-icon--xs u-text-teal" aria-hidden="true"></i>
-                  <span>Gạch Ốp &amp; Trang Trí</span>
-                </span>
-                <ul class="drv-mega__links">
-                  <li>
-                    <a href="02-catalog-collection.html?kich-thuoc=30x60" class="drv-mega__link"
-                       data-drv-preview-img="assets/img/tile-decor-fluted.svg"
-                       data-drv-preview-badge="Khổ chuẩn thông dụng"
-                       data-drv-preview-title="Gạch Ốp Tường 30x60 Men Vi Tinh"
-                       data-drv-preview-desc="Dễ thi công gióng mạch thẳng hàng, men vi tinh kháng khuẩn lau chùi dầu mỡ dễ dàng."
-                       data-drv-preview-price="Từ 210.000đ/m²">
-                      <span class="drv-mega__label">Gạch ốp tường 30x60</span>
-                      <span class="drv-mega__count">142</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="02-catalog-collection.html?loai=subway" class="drv-mega__link"
-                       data-drv-preview-img="assets/img/room-kitchen-cement.svg"
-                       data-drv-preview-badge="Điểm nhấn decor"
-                       data-drv-preview-title="Gạch Thẻ Subway Mosaic Điểm Nhấn"
-                       data-drv-preview-desc="Kích thước thanh thoát tạo nhịp điệu ấn tượng cho backsplash bếp, quầy bar và nhà tắm."
-                       data-drv-preview-price="Từ 185.000đ/m²">
-                      <span class="drv-mega__label">Gạch thẻ Subway Mosaic</span>
-                      <span class="drv-mega__count">45</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="02-catalog-collection.html?loai=bong-gio" class="drv-mega__link"
-                       data-drv-preview-img="assets/img/room-outdoor-patio.svg"
-                       data-drv-preview-badge="Kiến trúc thông gió"
-                       data-drv-preview-title="Gạch Bông Gió Mỹ Thuật Sinh Thái"
-                       data-drv-preview-desc="Lấy sáng tự nhiên, đón gió đối lưu cho mặt tiền và vách ngăn không gian mở."
-                       data-drv-preview-price="Từ 28.000đ/viên">
-                      <span class="drv-mega__label">Gạch bông gió mỹ thuật</span>
-                      <span class="drv-mega__count">22</span>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            <!-- Col 2: Cấp 1 - Theo không gian -->
-            <div class="drv-mega__col">
-              <span class="drv-mega__heading">02. Theo không gian (8)</span>
-              
-              <!-- Nội thất sống -->
-              <div class="drv-mega__subgroup">
-                <span class="drv-mega__subheading">
-                  <i class="ph ph-armchair drv-icon--xs u-text-teal" aria-hidden="true"></i>
-                  <span>Không Gian Nội Thất</span>
-                </span>
-                <ul class="drv-mega__links">
-                  <li>
-                    <a href="02-catalog-collection.html?khong-gian=phong-khach" class="drv-mega__link"
-                       data-drv-preview-img="assets/img/room-living-calacatta.svg"
-                       data-drv-preview-badge="Phòng khách cao cấp"
-                       data-drv-preview-title="Bộ Sưu Tập Gạch Phòng Khách &amp; Đại Sảnh"
-                       data-drv-preview-desc="Các mẫu khổ 80x80 và 60x120 sang trọng, phản chiếu ánh sáng tự nhiên tuyệt đẹp."
-                       data-drv-preview-price="Từ 385.000đ/m²">
-                      <span class="drv-mega__label">Phòng khách &amp; Đại sảnh</span>
-                      <span class="drv-mega__count">124</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="02-catalog-collection.html?khong-gian=bep" class="drv-mega__link"
-                       data-drv-preview-img="assets/img/room-kitchen-cement.svg"
-                       data-drv-preview-badge="Chịu nhiệt 1200°C"
-                       data-drv-preview-title="Gạch Bếp &amp; Bàn Đảo Sạch Dầu"
-                       data-drv-preview-desc="Đá nung kết mặt bàn bếp chịu nhiệt trực tiếp, kết hợp nền chống bám dầu lau sạch tức thì."
-                       data-drv-preview-price="Từ 350.000đ/m²">
-                      <span class="drv-mega__label">Bếp &amp; Phòng ăn sạch dầu</span>
-                      <span class="drv-mega__count">64</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="02-catalog-collection.html?khong-gian=phong-ngu" class="drv-mega__link"
-                       data-drv-preview-img="assets/img/tile-wood-oak.svg"
-                       data-drv-preview-badge="Màu sắc ấm cúng"
-                       data-drv-preview-title="Gạch Phòng Ngủ Thư Thái"
-                       data-drv-preview-desc="Bề mặt mờ Satin dịu mắt dưới ánh đèn ngủ, cảm giác bước chân êm ái và ấm áp."
-                       data-drv-preview-price="Từ 295.000đ/m²">
-                      <span class="drv-mega__label">Phòng ngủ ấm cúng</span>
-                      <span class="drv-mega__count">58</span>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-
-              <!-- Ẩm ướt & Ngoài trời -->
-              <div class="drv-mega__subgroup">
-                <span class="drv-mega__subheading">
-                  <i class="ph ph-drop drv-icon--xs u-text-teal" aria-hidden="true"></i>
-                  <span>Ẩm Ướt &amp; Ngoại Thất</span>
-                </span>
-                <ul class="drv-mega__links">
-                  <li>
-                    <a href="02-catalog-collection.html?khong-gian=nha-tam" class="drv-mega__link"
-                       data-drv-preview-img="assets/img/room-bathroom-terrazzo.svg"
-                       data-drv-preview-badge="An toàn WC R10"
-                       data-drv-preview-title="Gạch Nhà Tắm &amp; WC Chống Trơn"
-                       data-drv-preview-desc="Độ nhám R10-R11 không đọng nước xà phòng, hạn chế tối đa rêu mốc chân tường."
-                       data-drv-preview-price="Từ 320.000đ/m²">
-                      <span class="drv-mega__label">Nhà tắm / WC chống trượt</span>
-                      <span class="drv-mega__count">86</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="02-catalog-collection.html?khong-gian=san-vuon" class="drv-mega__link"
-                       data-drv-preview-img="assets/img/room-outdoor-patio.svg"
-                       data-drv-preview-badge="Chịu tải 5 tấn"
-                       data-drv-preview-title="Đá Dày 20mm Sân Vườn Gara"
-                       data-drv-preview-desc="Xương đá đồng chất siêu cứng, có thể lát nổi trên chân đế hoặc trực tiếp trên bãi cỏ."
-                       data-drv-preview-price="Từ 490.000đ/m²">
-                      <span class="drv-mega__label">Sân vườn chịu lực 20mm</span>
-                      <span class="drv-mega__count">52</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="02-catalog-collection.html?khong-gian=mat-tien" class="drv-mega__link"
-                       data-drv-preview-img="assets/img/tile-structured-outdoor.svg"
-                       data-drv-preview-badge="Chống chịu thời tiết"
-                       data-drv-preview-title="Gạch Ốp Mặt Tiền &amp; Đại Sảnh"
-                       data-drv-preview-desc="Không phai màu dưới nắng mưa khắc nghiệt, chống bong tróc và bền vững trên 30 năm."
-                       data-drv-preview-price="Từ 365.000đ/m²">
-                      <span class="drv-mega__label">Gạch ốp mặt tiền &amp; sảnh</span>
-                      <span class="drv-mega__count">40</span>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            <!-- Col 3: Cấp 1 - Vân & Chất liệu -->
-            <div class="drv-mega__col">
-              <span class="drv-mega__heading">03. Vân &amp; Chất liệu (7)</span>
-              
-              <!-- Bề mặt & Họa tiết -->
-              <div class="drv-mega__subgroup">
-                <span class="drv-mega__subheading">
-                  <i class="ph ph-paint-brush drv-icon--xs u-text-teal" aria-hidden="true"></i>
-                  <span>Bề Mặt &amp; Họa Tiết</span>
-                </span>
-                <ul class="drv-mega__links">
-                  <li>
-                    <a href="02-catalog-collection.html?van-gach=van-da-marble" class="drv-mega__link"
-                       data-drv-preview-img="assets/img/tile-marble-calacatta.svg"
-                       data-drv-preview-badge="Calacatta Ý"
-                       data-drv-preview-title="Vân Đá Marble Ý Calacatta"
-                       data-drv-preview-desc="Dòng vân cẩm thạch trắng khói cao cấp, độ bóng sâu phản quang sang trọng."
-                       data-drv-preview-price="Từ 385.000đ/m²">
-                      <span class="drv-mega__label">
-                        <span class="drv-swatch-dot" style="background:#f3f4f6"></span>
-                        <span>Vân đá Marble Calacatta</span>
-                      </span>
-                      <span class="drv-mega__count">108</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="02-catalog-collection.html?van-gach=terrazzo" class="drv-mega__link"
-                       data-drv-preview-img="assets/img/tile-terrazzo-ivory.svg"
-                       data-drv-preview-badge="Hạt đá mộc mạc"
-                       data-drv-preview-title="Gạch Terrazzo Hạt Đá Nhuyễn"
-                       data-drv-preview-desc="Phối hạt đá tự nhiên tinh tế trên nền kem sáng, hợp phong cách Địa Trung Hải và Wabi Sabi."
-                       data-drv-preview-price="Từ 395.000đ/m²">
-                      <span class="drv-mega__label">
-                        <span class="drv-swatch-dot" style="background:#e7e5e4"></span>
-                        <span>Gạch Terrazzo hạt đá</span>
-                      </span>
-                      <span class="drv-mega__count">46</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="02-catalog-collection.html?van-gach=van-xi-mang" class="drv-mega__link"
-                       data-drv-preview-img="assets/img/tile-cement-grey.svg"
-                       data-drv-preview-badge="Minimalist Concrete"
-                       data-drv-preview-title="Gạch Vân Bê Tông Xi Măng Mộc"
-                       data-drv-preview-desc="Chất liệu xám lạnh tinh tế cho phong cách kiến trúc công nghiệp và tối giản hiện đại."
-                       data-drv-preview-price="Từ 245.000đ/m²">
-                      <span class="drv-mega__label">
-                        <span class="drv-swatch-dot" style="background:#94a3b8"></span>
-                        <span>Vân xi măng Minimalist</span>
-                      </span>
-                      <span class="drv-mega__count">62</span>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-
-              <!-- Xương đá & Công nghệ -->
-              <div class="drv-mega__subgroup">
-                <span class="drv-mega__subheading">
-                  <i class="ph ph-diamonds-four drv-icon--xs u-text-teal" aria-hidden="true"></i>
-                  <span>Xương Đá &amp; Công Nghệ</span>
-                </span>
-                <ul class="drv-mega__links">
-                  <li>
-                    <a href="02-catalog-collection.html?van-gach=da-nung-ket" class="drv-mega__link"
-                       data-drv-preview-img="assets/img/tile-sintered-emperador.svg"
-                       data-drv-preview-badge="Đỉnh cao vật liệu"
-                       data-drv-preview-title="Đá Nung Kết Sintered Stone"
-                       data-drv-preview-desc="Nung ở 1200°C ép 30.000 tấn, không trầy xước dao kéo, bề mặt kháng khuẩn tuyệt đối."
-                       data-drv-preview-price="Từ 550.000đ/m²">
-                      <span class="drv-mega__label">
-                        <span class="drv-swatch-dot" style="background:#1e293b"></span>
-                        <span>Đá nung kết Sintered</span>
-                      </span>
-                      <span class="drv-mega__count">29</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="02-catalog-collection.html" class="drv-mega__link"
-                       data-drv-preview-img="assets/img/tile-marble-calacatta.svg"
-                       data-drv-preview-badge="Độ hút nước ≤ 0.5%"
-                       data-drv-preview-title="Xương Đá Porcelain Đồng Chất"
-                       data-drv-preview-desc="Độ bền cơ học vượt trội gấp 3 lần ceramic thông thường, chịu va đập và chống thấm vĩnh viễn."
-                       data-drv-preview-price="Từ 260.000đ/m²">
-                      <span class="drv-mega__label">
-                        <span class="drv-swatch-dot" style="background:#f8fafc"></span>
-                        <span>Xương đá Porcelain</span>
-                      </span>
-                      <span class="drv-mega__count">310</span>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            <!-- Col 4: Cấp 1 - Kích thước chuẩn có hình tỷ lệ -->
-            <div class="drv-mega__col">
-              <span class="drv-mega__heading">04. Kích thước chuẩn (5)</span>
-              
-              <!-- Khổ lớn Big Slab -->
-              <div class="drv-mega__subgroup">
-                <span class="drv-mega__subheading">
-                  <i class="ph ph-arrows-out drv-icon--xs u-text-teal" aria-hidden="true"></i>
-                  <span>Khổ Lớn Big Slab</span>
-                </span>
-                <ul class="drv-mega__links">
-                  <li>
-                    <a href="02-catalog-collection.html?kich-thuoc=60x120" class="drv-mega__link"
-                       data-drv-preview-img="assets/img/tile-sintered-emperador.svg"
-                       data-drv-preview-badge="Khổ dài Big Slab"
-                       data-drv-preview-title="Gạch Khổ Lớn 60x120 cm"
-                       data-drv-preview-desc="Giảm 50% số đường ron trên mặt sàn rộng, vân đá liền mạch tăng vẻ khoáng đạt cho ngôi nhà."
-                       data-drv-preview-price="Từ 450.000đ/m²">
-                      <span class="drv-mega__label">
-                        <span class="drv-size-glyph drv-size-glyph--60x120"></span>
-                        <span>Gạch 60x120 cm</span>
-                      </span>
-                      <span class="drv-mega__count">78</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="02-catalog-collection.html?kich-thuoc=120x240" class="drv-mega__link"
-                       data-drv-preview-img="assets/img/room-living-calacatta.svg"
-                       data-drv-preview-badge="Khổ đại 1.2 x 2.4m"
-                       data-drv-preview-title="Đá Khổ Đại Tấm Liền 120x240 cm"
-                       data-drv-preview-desc="Đá nguyên tấm ốp tường kịch trần không mạch ngang, vẻ đẹp nguy nga như khách sạn 5 sao."
-                       data-drv-preview-price="Báo giá theo tấm">
-                      <span class="drv-mega__label">
-                        <span class="drv-size-glyph drv-size-glyph--60x120" style="width:16px;height:32px"></span>
-                        <span>Đá đại 120x240 cm</span>
-                      </span>
-                      <span class="drv-mega__count">15</span>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-
-              <!-- Khổ Tiêu Chuẩn -->
-              <div class="drv-mega__subgroup">
-                <span class="drv-mega__subheading">
-                  <i class="ph ph-bounding-box drv-icon--xs u-text-teal" aria-hidden="true"></i>
-                  <span>Khổ Tiêu Chuẩn</span>
-                </span>
-                <ul class="drv-mega__links">
-                  <li>
-                    <a href="02-catalog-collection.html?kich-thuoc=80x80" class="drv-mega__link"
-                       data-drv-preview-img="assets/img/tile-marble-calacatta.svg"
-                       data-drv-preview-badge="Chuẩn mực phòng khách"
-                       data-drv-preview-title="Gạch Vuông Chuẩn 80x80 cm"
-                       data-drv-preview-desc="Kích thước vàng cho nhà phố và căn hộ 60-120m², tỷ lệ hài hòa với mọi phong cách nội thất."
-                       data-drv-preview-price="Từ 385.000đ/m²">
-                      <span class="drv-mega__label">
-                        <span class="drv-size-glyph drv-size-glyph--80x80"></span>
-                        <span>Gạch 80x80 cm</span>
-                      </span>
-                      <span class="drv-mega__count">92</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="02-catalog-collection.html?kich-thuoc=60x60" class="drv-mega__link"
-                       data-drv-preview-img="assets/img/tile-cement-grey.svg"
-                       data-drv-preview-badge="Kinh tế &amp; Dễ thi công"
-                       data-drv-preview-title="Gạch Lát Nền 60x60 cm"
-                       data-drv-preview-desc="Lựa chọn tối ưu chi phí cho phòng ngủ, căn hộ dịch vụ và các hạng mục phụ trợ."
-                       data-drv-preview-price="Từ 215.000đ/m²">
-                      <span class="drv-mega__label">
-                        <span class="drv-size-glyph drv-size-glyph--60x60"></span>
-                        <span>Gạch 60x60 cm</span>
-                      </span>
-                      <span class="drv-mega__count">110</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="02-catalog-collection.html?kich-thuoc=30x60" class="drv-mega__link"
-                       data-drv-preview-img="assets/img/tile-decor-fluted.svg"
-                       data-drv-preview-badge="Khổ ốp tường quốc dân"
-                       data-drv-preview-title="Gạch Ốp Tường 30x60 cm"
-                       data-drv-preview-desc="Gạch ốp tường chuẩn mực cho toilet, phòng tắm và khu giặt sấy."
-                       data-drv-preview-price="Từ 195.000đ/m²">
-                      <span class="drv-mega__label">
-                        <span class="drv-size-glyph drv-size-glyph--30x60"></span>
-                        <span>Gạch ốp 30x60 cm</span>
-                      </span>
-                      <span class="drv-mega__count">95</span>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-
-              <a href="02-catalog-collection.html" class="drv-link u-text-xs" style="margin-top:auto">
-                <span>Xem tất cả 28 danh mục</span>
-                <i class="ph ph-arrow-right drv-icon--xs" aria-hidden="true"></i>
-              </a>
-            </div>
-
-            <!-- Col 5: Interactive Live Dynamic Preview Box (Option 2) -->
-            <div class="drv-mega__col drv-mega__col--featured">
-              <div class="l-stack l-stack--sm">
-                <div class="l-cluster l-cluster--between">
-                  <span id="drv-mega-preview-badge" class="drv-badge drv-badge--moss">Bán chạy phòng khách</span>
-                  <span id="drv-mega-preview-price" class="u-text-xs u-bold u-text-sale u-tabular">Từ 385.000đ/m²</span>
-                </div>
-                <img id="drv-mega-preview-img" src="assets/img/room-living-calacatta.svg" width="240" height="145" loading="lazy" decoding="async" alt="Phối cảnh gạch Dravit" class="u-rounded-sm u-bd drv-mega-preview__img">
-                <h3 id="drv-mega-preview-title" class="u-text-base u-bold">Gạch Lát Phòng Khách 80x80 Calacatta</h3>
-                <p id="drv-mega-preview-desc" class="u-text-xs u-text-muted">Vân mây trắng Ý sang trọng, mặt bóng kiếng chống bám bẩn, tạo hiệu ứng mở rộng không gian đại sảnh.</p>
-              </div>
-              <a id="drv-mega-preview-btn" href="02-catalog-collection.html?kich-thuoc=80x80" class="drv-btn drv-btn--sm drv-btn--full">
-                <span>Xem danh mục</span>
-                <i class="ph ph-arrow-right drv-icon--xs" aria-hidden="true"></i>
-              </a>
-            </div>
-          </div>
-
-          <!-- Bottom Quick Utility Strip -->
-          <div class="drv-mega__bottom">
-            <div class="l-cluster l-cluster--sm">
-              <span class="u-text-xs u-text-muted">
-                <i class="ph ph-headset drv-icon--xs u-text-teal" aria-hidden="true"></i>
-                <span>Hotline bóc tách số lượng theo bản vẽ:</span>
-                <strong class="u-text-navy u-tabular">0901.234.567</strong>
-              </span>
-            </div>
-            <div class="l-cluster l-cluster--sm">
-              <a href="09-about-showroom-contact-b2b.html#showroom" class="drv-link u-text-xs">
-                <i class="ph ph-map-pin drv-icon--xs" aria-hidden="true"></i>
-                <span>Xem mẫu thực tế tại Showroom 248 Nguyễn Xiển</span>
-              </a>
-              <button type="button" class="drv-btn drv-btn--soft drv-btn--sm" data-drv-action="dialog-open" data-drv-target="#drv-quote-modal">
-                <i class="ph ph-file-text drv-icon--xs" aria-hidden="true"></i>
-                <span>Báo giá chiết khấu công trình</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </header>
+  <!-- 1 & 2. GLOBAL PROTOTYPE BAR & HEADER (partials/header.html) -->
+  <drv-site-header data-partial="partials/header.html" data-active-page="02-catalog-collection.html"></drv-site-header>
 
   <main id="main-content">
     <!-- ====================================================================
-         1. CATALOG SILO HERO (/gach-phong-khach) + <dl> 4 STATS
+         1. COMPACT CATALOG SILO HEADER (/gach-phong-khach) + INLINE STATS
          ==================================================================== -->
     <section class="drv-cat-hero" aria-labelledby="silo-page-title">
       <div class="l-container">
-        <!-- Breadcrumb -->
-        <nav class="drv-breadcrumb u-mb-3" aria-label="Breadcrumb">
-          <a href="01-home.html">Trang chủ</a>
-          <span class="drv-breadcrumb__sep" aria-hidden="true">/</span>
-          <a href="02-catalog-collection.html">Gạch ốp lát</a>
-          <span class="drv-breadcrumb__sep" aria-hidden="true">/</span>
-          <span aria-current="page" class="u-bold u-text-navy">Gạch phòng khách</span>
-        </nav>
+        <!-- Top Meta Row: Breadcrumb + Guide Anchor -->
+        <div class="drv-cat-hero__top">
+          <nav class="drv-breadcrumb" aria-label="Breadcrumb">
+            <a href="01-home.html">Trang chủ</a>
+            <span class="drv-breadcrumb__sep" aria-hidden="true">/</span>
+            <a href="02-catalog-collection.html">Gạch ốp lát</a>
+            <span class="drv-breadcrumb__sep" aria-hidden="true">/</span>
+            <span aria-current="page" class="u-bold u-text-navy">Gạch phòng khách</span>
+          </nav>
 
-        <div class="drv-cat-hero__grid">
-          <!-- Left: H1 & Technical Intro (<= 60 words per Brand Voice §4.2) -->
-          <div>
-            <div class="drv-cat-hero__eyebrow">
-              <i class="ph-fill ph-squares-four drv-icon--xs" aria-hidden="true"></i>
-              <span>Danh mục không gian trọng tâm · 100% Xương đá Porcelain</span>
-            </div>
+          <a href="#seo-buying-guide" class="drv-link u-text-xs">
+            <i class="ph ph-book-open-text drv-icon--xs" aria-hidden="true"></i>
+            <span>Bảng chọn khổ gạch theo diện tích phòng</span>
+          </a>
+        </div>
+
+        <!-- Main Compact Bar: H1 + 1-Line Technical Summary | 3 Inline Stat Pills -->
+        <div class="drv-cat-hero__bar">
+          <div class="drv-cat-hero__main">
             <h1 id="silo-page-title" class="drv-cat-hero__title">
-              GẠCH LÁT NỀN &amp; ỐP TƯỜNG PHÒNG KHÁCH SANG TRỌNG
+              GẠCH LÁT NỀN &amp; ỐP TƯỜNG PHÒNG KHÁCH
             </h1>
             <p class="drv-cat-hero__intro">
-              Tuyển chọn các dòng gạch lát nền và ốp vách tivi phòng khách đạt chuẩn xương đá Porcelain hút nước <strong>E ≤ 0,5%</strong>, mài cạnh Rectified đi mạch ron siêu mảnh <strong>1,5 - 2 mm</strong>. Kết hợp bề mặt bóng kiếng mở rộng chiều sâu ánh sáng và bề mặt mờ mịn <strong>R9 - R10</strong> chống chói. Chọn nhanh kích thước hoặc vân gạch bên dưới để lọc mẫu khớp diện tích sàn.
+              Xương đá Porcelain hút nước <strong>E ≤ 0,5%</strong>, mài cạnh Rectified đi mạch ron <strong>1,5 - 2 mm</strong>, bề mặt bóng kiếng &amp; mờ mịn <strong>R9 - R10</strong> chống chói.
             </p>
           </div>
 
-          <!-- Right: <dl> 4 Technical Summary Stats -->
-          <dl class="drv-stat-dl" aria-label="Thông số tóm tắt danh mục Gạch phòng khách">
-            <div class="drv-stat-dl__cell">
-              <dt class="drv-stat-dl__dt">
-                <i class="ph ph-stack drv-icon--xs" style="color: var(--c-moss-600)" aria-hidden="true"></i>
-                <span>Quy mô bộ sưu tập</span>
-              </dt>
-              <dd class="drv-stat-dl__dd">124 mẫu sẵn kho</dd>
-            </div>
-            <div class="drv-stat-dl__cell">
-              <dt class="drv-stat-dl__dt">
-                <i class="ph ph-tag drv-icon--xs" style="color: var(--c-moss-600)" aria-hidden="true"></i>
-                <span>Đơn giá niêm yết</span>
-              </dt>
-              <dd class="drv-stat-dl__dd">Từ 265.000đ/m²</dd>
-            </div>
-            <div class="drv-stat-dl__cell">
-              <dt class="drv-stat-dl__dt">
-                <i class="ph ph-ruler drv-icon--xs" style="color: var(--c-moss-600)" aria-hidden="true"></i>
-                <span>Khổ gạch chủ đạo</span>
-              </dt>
-              <dd class="drv-stat-dl__dd">60x60, 80x80, 60x120</dd>
-            </div>
-            <div class="drv-stat-dl__cell">
-              <dt class="drv-stat-dl__dt">
-                <i class="ph-fill ph-seal-check drv-icon--xs" style="color: var(--c-moss-600)" aria-hidden="true"></i>
-                <span>Trải nghiệm thực tế</span>
-              </dt>
-              <dd class="drv-stat-dl__dd">Có mẫu tại kệ Showroom</dd>
-            </div>
-          </dl>
+          <ul class="drv-cat-hero__pills" aria-label="Thông số tóm tắt danh mục">
+            <li class="drv-cat-hero__pill">
+              <i class="ph ph-stack drv-icon--xs u-text-moss" aria-hidden="true"></i>
+              <strong class="u-tabular">124 mẫu sẵn kho</strong>
+            </li>
+            <li class="drv-cat-hero__pill">
+              <i class="ph ph-tag drv-icon--xs u-text-moss" aria-hidden="true"></i>
+              <span class="u-tabular">Từ <strong>265.000đ/m²</strong></span>
+            </li>
+            <li class="drv-cat-hero__pill drv-cat-hero__pill--amber">
+              <i class="ph-fill ph-seal-check drv-icon--xs" aria-hidden="true"></i>
+              <span>Có mẫu tại Showroom Sala</span>
+            </li>
+          </ul>
         </div>
       </div>
     </section>
@@ -876,17 +191,6 @@
          ==================================================================== -->
     <section class="drv-cat-silos-bar" aria-label="Phân nhánh nhanh theo kích thước và vân gạch">
       <div class="l-container">
-        <div class="drv-cat-silos-bar__header">
-          <span class="u-text-xs u-bold u-uppercase u-text-muted">
-            <i class="ph ph-funnel-simple drv-icon--xs" aria-hidden="true"></i>
-            Lọc nhanh theo phân nhánh phổ biến (Bấm để lọc tức thì):
-          </span>
-          <a href="#seo-buying-guide" class="drv-link u-text-xs">
-            <i class="ph ph-book-open-text drv-icon--xs" aria-hidden="true"></i>
-            Xem bảng chọn khổ gạch theo diện tích phòng
-          </a>
-        </div>
-
         <div class="drv-pill-row" role="list">
           <a href="02-catalog-collection.html?kich-thuoc=80x80" class="drv-silo-tile" role="listitem" data-silo-quick-filter="kich-thuoc" data-silo-value="80x80">
             <img class="drv-silo-tile__thumb" src="assets/img/tile-marble-calacatta.svg" width="48" height="48" alt="Gạch 80x80 cm">
@@ -1429,11 +733,11 @@
         <!-- ================================================================
              RIGHT MAIN AREA: ACTIVE FILTER CHIPS + 12 PRODUCT CARDS + LOAD MORE
              ================================================================ -->
-        <div>
+        <div class="drv-catalog-main">
           <!-- Status Toolbar & Active Filter Chips (FLT-14 Sort + Robots Matrix Indicator) -->
           <div class="drv-cat-toolbar">
             <div class="drv-cat-toolbar__top">
-              <div class="l-cluster l-cluster--sm">
+              <div class="l-cluster l-cluster--sm drv-cat-toolbar__left">
                 <!-- Desktop Sidebar Collapse Toggle (>=1024px) -->
                 <button type="button" class="drv-btn drv-btn--outline drv-btn--sm drv-desktop-filter-toggle" data-drv-toggle-sidebar aria-expanded="true" aria-controls="drv-filter-sidebar" title="Ẩn/Hiện cột bộ lọc để mở rộng không gian xem gạch (4 mẫu/hàng)">
                   <i class="ph ph-sidebar-simple drv-icon--xs" aria-hidden="true"></i>
@@ -1448,19 +752,19 @@
                   <span>Lọc 14 tiêu chí</span>
                 </button>
 
-                <p class="u-text-sm" aria-live="polite">
+                <p class="u-text-sm drv-cat-toolbar__count" aria-live="polite">
                   Đang hiển thị <strong class="u-tabular u-text-navy" data-catalog-count>12</strong> / <span class="u-tabular">124</span> mẫu gạch phòng khách
                 </p>
 
-                <span class="drv-badge drv-badge--showroom u-tabular" data-catalog-robots-badge title="Trạng thái SEO Robots tự động đổi theo số chiều lọc">
+                <span class="drv-badge drv-badge--showroom u-tabular drv-cat-toolbar__robots" data-catalog-robots-badge title="Trạng thái SEO Robots tự động đổi theo số chiều lọc">
                   robots: index, follow
                 </span>
               </div>
 
               <!-- FLT-14: Sort Select -->
-              <div class="l-cluster l-cluster--xs">
-                <label for="drv-catalog-sort" class="u-text-xs u-bold u-text-muted">Sắp xếp (14):</label>
-                <select id="drv-catalog-sort" class="drv-select" style="min-height: 36px; width: auto; padding-block: 4px; font-size: var(--fs-xs);">
+              <div class="l-cluster l-cluster--xs drv-cat-toolbar__sort">
+                <label for="drv-catalog-sort" class="u-text-xs u-bold u-text-muted drv-cat-toolbar__sort-label">Sắp xếp (14):</label>
+                <select id="drv-catalog-sort" class="drv-select drv-cat-toolbar__sort-select" style="min-height: 36px; width: auto; padding-block: 4px; font-size: var(--fs-xs);">
                   <option value="ban-chay">Bán chạy nhất</option>
                   <option value="moi-nhat">Mới cập nhật</option>
                   <option value="gia-tang">Giá m²: Thấp đến Cao</option>
@@ -1502,10 +806,19 @@
               <div class="drv-card__media">
                 <div class="drv-card__badges">
                   <span class="drv-badge drv-badge--sale">-14%</span>
+                  <span class="drv-badge drv-badge--hot">Bán chạy</span>
                   <span class="drv-badge drv-badge--showroom">Mẫu tại kệ</span>
                 </div>
                 <img class="drv-card__img drv-card__img--primary" src="assets/img/tile-marble-calacatta.svg" width="400" height="400" fetchpriority="high" decoding="async" alt="Gạch Lát Nền Dravit Vân Đá Marble Calacatta Trắng Khói 80x80 Bóng Kiếng">
                 <img class="drv-card__img drv-card__img--hover" src="assets/img/room-living-calacatta.svg" width="400" height="400" loading="lazy" decoding="async" alt="Phối cảnh phòng khách lát gạch Marble Calacatta 80x80 DRV-8801M">
+                <div class="drv-card__floats">
+                  <button type="button" class="drv-card__float-btn" onclick="window.Dravit.toast('Đã lưu mẫu DRV-8801M vào danh sách quan tâm.')" aria-label="Lưu mẫu DRV-8801M">
+                    <i class="ph ph-heart" aria-hidden="true"></i>
+                  </button>
+                  <button type="button" class="drv-card__float-btn" data-drv-action="add-to-cart" data-drv-sku="DRV-8801M" data-drv-qty="1 thùng" aria-label="Thêm DRV-8801M vào giỏ">
+                    <i class="ph ph-shopping-cart-simple" aria-hidden="true"></i>
+                  </button>
+                </div>
               </div>
               <div class="drv-card__meta">
                 <div class="drv-card__tags">
@@ -1526,9 +839,6 @@
                     </div>
                     <div class="drv-card__price-piece">≈ 246.400đ/viên</div>
                   </div>
-                  <a href="03-product-single.html" class="drv-card__action" aria-label="Tính số lượng và xem chi tiết DRV-8801M">
-                    <i class="ph ph-calculator drv-icon" aria-hidden="true"></i>
-                  </a>
                 </div>
               </div>
             </article>
@@ -1555,10 +865,19 @@
               data-created="202611">
               <div class="drv-card__media">
                 <div class="drv-card__badges">
+                  <span class="drv-badge drv-badge--teal">Mới 2026</span>
                   <span class="drv-badge drv-badge--showroom">Mẫu tại kệ</span>
                 </div>
                 <img class="drv-card__img drv-card__img--primary" src="assets/img/tile-terrazzo-ivory.svg" width="400" height="400" fetchpriority="high" decoding="async" alt="Gạch Lát Nền Dravit Terrazzo Kem Đá Hạt Nhuyễn 80x80 Mờ Mịn R10">
                 <img class="drv-card__img drv-card__img--hover" src="assets/img/room-bathroom-terrazzo.svg" width="400" height="400" loading="lazy" decoding="async" alt="Phối cảnh thực tế Gạch Terrazzo Kem Đá 80x80 DRV-TRZ80">
+                <div class="drv-card__floats">
+                  <button type="button" class="drv-card__float-btn" onclick="window.Dravit.toast('Đã lưu mẫu DRV-TRZ80 vào danh sách quan tâm.')" aria-label="Lưu mẫu DRV-TRZ80">
+                    <i class="ph ph-heart" aria-hidden="true"></i>
+                  </button>
+                  <button type="button" class="drv-card__float-btn" data-drv-action="add-to-cart" data-drv-sku="DRV-TRZ80" data-drv-qty="1 thùng" aria-label="Thêm DRV-TRZ80 vào giỏ">
+                    <i class="ph ph-shopping-cart-simple" aria-hidden="true"></i>
+                  </button>
+                </div>
               </div>
               <div class="drv-card__meta">
                 <div class="drv-card__tags">
@@ -1578,9 +897,6 @@
                     </div>
                     <div class="drv-card__price-piece">≈ 252.800đ/viên</div>
                   </div>
-                  <a href="03-product-single.html" class="drv-card__action" aria-label="Tính số lượng và xem chi tiết DRV-TRZ80">
-                    <i class="ph ph-calculator drv-icon" aria-hidden="true"></i>
-                  </a>
                 </div>
               </div>
             </article>
@@ -1608,10 +924,18 @@
               <div class="drv-card__media">
                 <div class="drv-card__badges">
                   <span class="drv-badge drv-badge--sale">-12%</span>
-                  <span class="drv-badge drv-badge--showroom">Mẫu tại kệ</span>
+                  <span class="drv-badge drv-badge--navy">Khổ lớn 60x120</span>
                 </div>
                 <img class="drv-card__img drv-card__img--primary" src="assets/img/tile-cement-grey.svg" width="400" height="400" fetchpriority="high" decoding="async" alt="Gạch Khổ Lớn Dravit Vân Đá Pietra Grey 60x120 Mờ Matt Chống Chói">
                 <img class="drv-card__img drv-card__img--hover" src="assets/img/room-kitchen-cement.svg" width="400" height="400" loading="lazy" decoding="async" alt="Phối cảnh phòng khách lát gạch khổ lớn 60x120 DRV-61209">
+                <div class="drv-card__floats">
+                  <button type="button" class="drv-card__float-btn" onclick="window.Dravit.toast('Đã lưu mẫu DRV-61209 vào danh sách quan tâm.')" aria-label="Lưu mẫu DRV-61209">
+                    <i class="ph ph-heart" aria-hidden="true"></i>
+                  </button>
+                  <button type="button" class="drv-card__float-btn" data-drv-action="add-to-cart" data-drv-sku="DRV-61209" data-drv-qty="1 thùng" aria-label="Thêm DRV-61209 vào giỏ">
+                    <i class="ph ph-shopping-cart-simple" aria-hidden="true"></i>
+                  </button>
+                </div>
               </div>
               <div class="drv-card__meta">
                 <div class="drv-card__tags">
@@ -1632,9 +956,6 @@
                     </div>
                     <div class="drv-card__price-piece">≈ 374.400đ/viên</div>
                   </div>
-                  <a href="03-product-single.html" class="drv-card__action" aria-label="Tính số lượng và xem chi tiết DRV-61209">
-                    <i class="ph ph-calculator drv-icon" aria-hidden="true"></i>
-                  </a>
                 </div>
               </div>
             </article>
@@ -1662,10 +983,18 @@
               <div class="drv-card__media">
                 <div class="drv-card__badges">
                   <span class="drv-badge drv-badge--sale">-13%</span>
-                  <span class="drv-badge drv-badge--showroom">Mẫu tại kệ</span>
+                  <span class="drv-badge drv-badge--moss">Chống trơn R10</span>
                 </div>
                 <img class="drv-card__img drv-card__img--primary" src="assets/img/tile-marble-calacatta.svg" width="400" height="400" loading="lazy" decoding="async" alt="Gạch Lát Nền Dravit Vân Đá Statuario Trắng Vân Mây 80x80 Mờ Matt R10">
                 <img class="drv-card__img drv-card__img--hover" src="assets/img/room-living-calacatta.svg" width="400" height="400" loading="lazy" decoding="async" alt="Phối cảnh Gạch Vân Đá Statuario 80x80 DRV-8824S">
+                <div class="drv-card__floats">
+                  <button type="button" class="drv-card__float-btn" onclick="window.Dravit.toast('Đã lưu mẫu DRV-8824S vào danh sách quan tâm.')" aria-label="Lưu mẫu DRV-8824S">
+                    <i class="ph ph-heart" aria-hidden="true"></i>
+                  </button>
+                  <button type="button" class="drv-card__float-btn" data-drv-action="add-to-cart" data-drv-sku="DRV-8824S" data-drv-qty="1 thùng" aria-label="Thêm DRV-8824S vào giỏ">
+                    <i class="ph ph-shopping-cart-simple" aria-hidden="true"></i>
+                  </button>
+                </div>
               </div>
               <div class="drv-card__meta">
                 <div class="drv-card__tags">
@@ -1686,9 +1015,6 @@
                     </div>
                     <div class="drv-card__price-piece">≈ 240.000đ/viên</div>
                   </div>
-                  <a href="03-product-single.html" class="drv-card__action" aria-label="Tính số lượng và xem chi tiết DRV-8824S">
-                    <i class="ph ph-calculator drv-icon" aria-hidden="true"></i>
-                  </a>
                 </div>
               </div>
             </article>
@@ -1716,10 +1042,18 @@
               <div class="drv-card__media">
                 <div class="drv-card__badges">
                   <span class="drv-badge drv-badge--sale">-12%</span>
-                  <span class="drv-badge drv-badge--showroom">Mẫu tại kệ</span>
+                  <span class="drv-badge drv-badge--champagne">Italian Design</span>
                 </div>
                 <img class="drv-card__img drv-card__img--primary" src="assets/img/tile-terrazzo-ivory.svg" width="400" height="400" loading="lazy" decoding="async" alt="Gạch Khổ Lớn Dravit Vân Đá Travertine Kem Cát 60x120 Carving Mờ">
                 <img class="drv-card__img drv-card__img--hover" src="assets/img/room-kitchen-cement.svg" width="400" height="400" loading="lazy" decoding="async" alt="Phối cảnh Gạch Travertine 60x120 DRV-61215">
+                <div class="drv-card__floats">
+                  <button type="button" class="drv-card__float-btn" onclick="window.Dravit.toast('Đã lưu mẫu DRV-61215 vào danh sách quan tâm.')" aria-label="Lưu mẫu DRV-61215">
+                    <i class="ph ph-heart" aria-hidden="true"></i>
+                  </button>
+                  <button type="button" class="drv-card__float-btn" data-drv-action="add-to-cart" data-drv-sku="DRV-61215" data-drv-qty="1 thùng" aria-label="Thêm DRV-61215 vào giỏ">
+                    <i class="ph ph-shopping-cart-simple" aria-hidden="true"></i>
+                  </button>
+                </div>
               </div>
               <div class="drv-card__meta">
                 <div class="drv-card__tags">
@@ -1740,9 +1074,6 @@
                     </div>
                     <div class="drv-card__price-piece">≈ 392.400đ/viên</div>
                   </div>
-                  <a href="03-product-single.html" class="drv-card__action" aria-label="Tính số lượng và xem chi tiết DRV-61215">
-                    <i class="ph ph-calculator drv-icon" aria-hidden="true"></i>
-                  </a>
                 </div>
               </div>
             </article>
@@ -1770,10 +1101,18 @@
               <div class="drv-card__media">
                 <div class="drv-card__badges">
                   <span class="drv-badge drv-badge--sale">-15%</span>
-                  <span class="drv-badge drv-badge--showroom">Mẫu tại kệ</span>
+                  <span class="drv-badge drv-badge--blue">Xương Porcelain</span>
                 </div>
                 <img class="drv-card__img drv-card__img--primary" src="assets/img/tile-cement-grey.svg" width="400" height="400" loading="lazy" decoding="async" alt="Gạch Lát Nền Dravit Vân Xi Măng Xám Nhạt 60x60 Matt Chống Trượt R10">
                 <img class="drv-card__img drv-card__img--hover" src="assets/img/room-kitchen-cement.svg" width="400" height="400" loading="lazy" decoding="async" alt="Phối cảnh Gạch Vân Xi Măng 60x60 DRV-6604C">
+                <div class="drv-card__floats">
+                  <button type="button" class="drv-card__float-btn" onclick="window.Dravit.toast('Đã lưu mẫu DRV-6604C vào danh sách quan tâm.')" aria-label="Lưu mẫu DRV-6604C">
+                    <i class="ph ph-heart" aria-hidden="true"></i>
+                  </button>
+                  <button type="button" class="drv-card__float-btn" data-drv-action="add-to-cart" data-drv-sku="DRV-6604C" data-drv-qty="1 thùng" aria-label="Thêm DRV-6604C vào giỏ">
+                    <i class="ph ph-shopping-cart-simple" aria-hidden="true"></i>
+                  </button>
+                </div>
               </div>
               <div class="drv-card__meta">
                 <div class="drv-card__tags">
@@ -1794,9 +1133,6 @@
                     </div>
                     <div class="drv-card__price-piece">≈ 95.400đ/viên</div>
                   </div>
-                  <a href="03-product-single.html" class="drv-card__action" aria-label="Tính số lượng và xem chi tiết DRV-6604C">
-                    <i class="ph ph-calculator drv-icon" aria-hidden="true"></i>
-                  </a>
                 </div>
               </div>
             </article>
@@ -1823,10 +1159,19 @@
               data-created="202609">
               <div class="drv-card__media">
                 <div class="drv-card__badges">
+                  <span class="drv-badge drv-badge--hot">Hot deal</span>
                   <span class="drv-badge drv-badge--showroom">Mẫu tại kệ</span>
                 </div>
                 <img class="drv-card__img drv-card__img--primary" src="assets/img/tile-marble-calacatta.svg" width="400" height="400" loading="lazy" decoding="async" alt="Gạch Lát Nền Dravit Vân Đá Onyx Kem Vàng 80x80 Bóng Kiếng Toàn Phần">
                 <img class="drv-card__img drv-card__img--hover" src="assets/img/room-living-calacatta.svg" width="400" height="400" loading="lazy" decoding="async" alt="Phối cảnh Gạch Vân Đá Onyx Kem Vàng 80x80 DRV-8812G">
+                <div class="drv-card__floats">
+                  <button type="button" class="drv-card__float-btn" onclick="window.Dravit.toast('Đã lưu mẫu DRV-8812G vào danh sách quan tâm.')" aria-label="Lưu mẫu DRV-8812G">
+                    <i class="ph ph-heart" aria-hidden="true"></i>
+                  </button>
+                  <button type="button" class="drv-card__float-btn" data-drv-action="add-to-cart" data-drv-sku="DRV-8812G" data-drv-qty="1 thùng" aria-label="Thêm DRV-8812G vào giỏ">
+                    <i class="ph ph-shopping-cart-simple" aria-hidden="true"></i>
+                  </button>
+                </div>
               </div>
               <div class="drv-card__meta">
                 <div class="drv-card__tags">
@@ -1846,9 +1191,6 @@
                     </div>
                     <div class="drv-card__price-piece">≈ 265.600đ/viên</div>
                   </div>
-                  <a href="03-product-single.html" class="drv-card__action" aria-label="Tính số lượng và xem chi tiết DRV-8812G">
-                    <i class="ph ph-calculator drv-icon" aria-hidden="true"></i>
-                  </a>
                 </div>
               </div>
             </article>
@@ -1875,10 +1217,19 @@
               data-created="202608">
               <div class="drv-card__media">
                 <div class="drv-card__badges">
-                  <span class="drv-badge drv-badge--showroom">Mẫu tại kệ</span>
+                  <span class="drv-badge drv-badge--teal">Hàng mới về</span>
+                  <span class="drv-badge drv-badge--amber">Sắp hết lô</span>
                 </div>
                 <img class="drv-card__img drv-card__img--primary" src="assets/img/tile-wood-oak.svg" width="400" height="400" loading="lazy" decoding="async" alt="Gạch Thanh Giả Gỗ Dravit Sồi Tự Nhiên 15x90 Xương Đá Porcelain R10">
                 <img class="drv-card__img drv-card__img--hover" src="assets/img/room-living-calacatta.svg" width="400" height="400" loading="lazy" decoding="async" alt="Phối cảnh lát xương cá Gạch Thanh Giả Gỗ 15x90 DRV-WD1590">
+                <div class="drv-card__floats">
+                  <button type="button" class="drv-card__float-btn" onclick="window.Dravit.toast('Đã lưu mẫu DRV-WD1590 vào danh sách quan tâm.')" aria-label="Lưu mẫu DRV-WD1590">
+                    <i class="ph ph-heart" aria-hidden="true"></i>
+                  </button>
+                  <button type="button" class="drv-card__float-btn" data-drv-action="add-to-cart" data-drv-sku="DRV-WD1590" data-drv-qty="1 thùng" aria-label="Thêm DRV-WD1590 vào giỏ">
+                    <i class="ph ph-shopping-cart-simple" aria-hidden="true"></i>
+                  </button>
+                </div>
               </div>
               <div class="drv-card__meta">
                 <div class="drv-card__tags">
@@ -1898,9 +1249,6 @@
                     </div>
                     <div class="drv-card__price-piece">≈ 45.225đ/viên</div>
                   </div>
-                  <a href="03-product-single.html" class="drv-card__action" aria-label="Tính số lượng và xem chi tiết DRV-WD1590">
-                    <i class="ph ph-calculator drv-icon" aria-hidden="true"></i>
-                  </a>
                 </div>
               </div>
             </article>
@@ -1927,11 +1275,19 @@
               data-created="202612">
               <div class="drv-card__media">
                 <div class="drv-card__badges">
+                  <span class="drv-badge drv-badge--purple">Đá nung kết</span>
                   <span class="drv-badge drv-badge--sale">-11%</span>
-                  <span class="drv-badge drv-badge--showroom">Mẫu tại kệ</span>
                 </div>
                 <img class="drv-card__img drv-card__img--primary" src="assets/img/tile-sintered-emperador.svg" width="400" height="400" loading="lazy" decoding="async" alt="Đá Nung Kết Khổ Lớn Dravit Armani Dark 60x120 Bề Mặt Carving Tinh Xảo">
                 <img class="drv-card__img drv-card__img--hover" src="assets/img/room-living-calacatta.svg" width="400" height="400" loading="lazy" decoding="async" alt="Phối cảnh Đá Nung Kết Armani Dark 60x120 DRV-SL1224">
+                <div class="drv-card__floats">
+                  <button type="button" class="drv-card__float-btn" onclick="window.Dravit.toast('Đã lưu mẫu DRV-SL1224 vào danh sách quan tâm.')" aria-label="Lưu mẫu DRV-SL1224">
+                    <i class="ph ph-heart" aria-hidden="true"></i>
+                  </button>
+                  <button type="button" class="drv-card__float-btn" data-drv-action="add-to-cart" data-drv-sku="DRV-SL1224" data-drv-qty="1 thùng" aria-label="Thêm DRV-SL1224 vào giỏ">
+                    <i class="ph ph-shopping-cart-simple" aria-hidden="true"></i>
+                  </button>
+                </div>
               </div>
               <div class="drv-card__meta">
                 <div class="drv-card__tags">
@@ -1952,9 +1308,6 @@
                     </div>
                     <div class="drv-card__price-piece">≈ 489.600đ/viên</div>
                   </div>
-                  <a href="03-product-single.html" class="drv-card__action" aria-label="Tính số lượng và xem chi tiết DRV-SL1224">
-                    <i class="ph ph-calculator drv-icon" aria-hidden="true"></i>
-                  </a>
                 </div>
               </div>
             </article>
@@ -1981,10 +1334,19 @@
               data-created="202609">
               <div class="drv-card__media">
                 <div class="drv-card__badges">
+                  <span class="drv-badge drv-badge--navy">Signature</span>
                   <span class="drv-badge drv-badge--showroom">Mẫu tại kệ</span>
                 </div>
                 <img class="drv-card__img drv-card__img--primary" src="assets/img/tile-sintered-emperador.svg" width="400" height="400" loading="lazy" decoding="async" alt="Đá Nung Kết Dravit Emperador Nâu Trầm 60x120 Bóng Kiếng Chống Trầy">
                 <img class="drv-card__img drv-card__img--hover" src="assets/img/room-living-calacatta.svg" width="400" height="400" loading="lazy" decoding="async" alt="Phối cảnh ốp vách tivi Đá Nung Kết Emperador 60x120 DRV-61230">
+                <div class="drv-card__floats">
+                  <button type="button" class="drv-card__float-btn" onclick="window.Dravit.toast('Đã lưu mẫu DRV-61230 vào danh sách quan tâm.')" aria-label="Lưu mẫu DRV-61230">
+                    <i class="ph ph-heart" aria-hidden="true"></i>
+                  </button>
+                  <button type="button" class="drv-card__float-btn" data-drv-action="add-to-cart" data-drv-sku="DRV-61230" data-drv-qty="1 thùng" aria-label="Thêm DRV-61230 vào giỏ">
+                    <i class="ph ph-shopping-cart-simple" aria-hidden="true"></i>
+                  </button>
+                </div>
               </div>
               <div class="drv-card__meta">
                 <div class="drv-card__tags">
@@ -2004,9 +1366,6 @@
                     </div>
                     <div class="drv-card__price-piece">≈ 460.800đ/viên</div>
                   </div>
-                  <a href="03-product-single.html" class="drv-card__action" aria-label="Tính số lượng và xem chi tiết DRV-61230">
-                    <i class="ph ph-calculator drv-icon" aria-hidden="true"></i>
-                  </a>
                 </div>
               </div>
             </article>
@@ -2034,10 +1393,18 @@
               <div class="drv-card__media">
                 <div class="drv-card__badges">
                   <span class="drv-badge drv-badge--sale">-15%</span>
-                  <span class="drv-badge drv-badge--showroom">Mẫu tại kệ</span>
+                  <span class="drv-badge drv-badge--teal">Xu hướng 2026</span>
                 </div>
                 <img class="drv-card__img drv-card__img--primary" src="assets/img/tile-decor-fluted.svg" width="400" height="400" loading="lazy" decoding="async" alt="Gạch Ốp Tường Dravit Sọc Đũa Kiến Trúc Kem Ngà 30x60 Mờ Mịn">
                 <img class="drv-card__img drv-card__img--hover" src="assets/img/room-bathroom-terrazzo.svg" width="400" height="400" loading="lazy" decoding="async" alt="Phối cảnh Gạch Ốp Tường Sọc Đũa 30x60 DRV-3608W">
+                <div class="drv-card__floats">
+                  <button type="button" class="drv-card__float-btn" onclick="window.Dravit.toast('Đã lưu mẫu DRV-3608W vào danh sách quan tâm.')" aria-label="Lưu mẫu DRV-3608W">
+                    <i class="ph ph-heart" aria-hidden="true"></i>
+                  </button>
+                  <button type="button" class="drv-card__float-btn" data-drv-action="add-to-cart" data-drv-sku="DRV-3608W" data-drv-qty="1 thùng" aria-label="Thêm DRV-3608W vào giỏ">
+                    <i class="ph ph-shopping-cart-simple" aria-hidden="true"></i>
+                  </button>
+                </div>
               </div>
               <div class="drv-card__meta">
                 <div class="drv-card__tags">
@@ -2058,9 +1425,6 @@
                     </div>
                     <div class="drv-card__price-piece">≈ 52.200đ/viên</div>
                   </div>
-                  <a href="03-product-single.html" class="drv-card__action" aria-label="Tính số lượng và xem chi tiết DRV-3608W">
-                    <i class="ph ph-calculator drv-icon" aria-hidden="true"></i>
-                  </a>
                 </div>
               </div>
             </article>
@@ -2086,9 +1450,20 @@
               data-popularity="80"
               data-created="202605">
               <div class="drv-card__media">
-                <div class="drv-card__badges"></div>
+                <div class="drv-card__badges">
+                  <span class="drv-badge drv-badge--moss">Chống trượt R11</span>
+                  <span class="drv-badge drv-badge--blue">Dày 12mm</span>
+                </div>
                 <img class="drv-card__img drv-card__img--primary" src="assets/img/tile-structured-outdoor.svg" width="400" height="400" loading="lazy" decoding="async" alt="Gạch Sân Vườn Dravit Đá Basalt Nhám Sần 60x60 Chống Trượt R11 Dày 12mm">
                 <img class="drv-card__img drv-card__img--hover" src="assets/img/room-outdoor-patio.svg" width="400" height="400" loading="lazy" decoding="async" alt="Phối cảnh hiên phòng khách nối sân vườn lát gạch DRV-OUT60">
+                <div class="drv-card__floats">
+                  <button type="button" class="drv-card__float-btn" onclick="window.Dravit.toast('Đã lưu mẫu DRV-OUT60 vào danh sách quan tâm.')" aria-label="Lưu mẫu DRV-OUT60">
+                    <i class="ph ph-heart" aria-hidden="true"></i>
+                  </button>
+                  <button type="button" class="drv-card__float-btn" data-drv-action="add-to-cart" data-drv-sku="DRV-OUT60" data-drv-qty="1 thùng" aria-label="Thêm DRV-OUT60 vào giỏ">
+                    <i class="ph ph-shopping-cart-simple" aria-hidden="true"></i>
+                  </button>
+                </div>
               </div>
               <div class="drv-card__meta">
                 <div class="drv-card__tags">
@@ -2108,9 +1483,6 @@
                     </div>
                     <div class="drv-card__price-piece">≈ 124.200đ/viên</div>
                   </div>
-                  <a href="03-product-single.html" class="drv-card__action" aria-label="Tính số lượng và xem chi tiết DRV-OUT60">
-                    <i class="ph ph-calculator drv-icon" aria-hidden="true"></i>
-                  </a>
                 </div>
               </div>
             </article>
@@ -2154,59 +1526,55 @@
         <!-- /#drv-catalog-layout -->
 
         <!-- ================================================================
-             FULL-WIDTH B2B & HOMEOWNER PROJECT QUOTE BANNER (100% Site Container)
+             FULL-WIDTH B2B & HOMEOWNER PROJECT QUOTE BANNER (2-Col Compact Navy)
              ================================================================ -->
         <div class="drv-cat-quote-banner">
-          <!-- Col 1: Value Proposition -->
-          <div>
-            <span class="drv-badge drv-badge--moss">Dành cho Chủ nhà xây mới · KTS · Nhà thầu</span>
-            <h2 class="drv-cat-quote-banner__title" style="color: var(--c-ivory);">
-              Bóc tách khối lượng gạch &amp; giữ Lô màu (Shade) miễn phí
+          <!-- Left (7/12): Value Proposition + 3 Inline Technical Perks -->
+          <div class="drv-cat-quote-banner__main">
+            <div class="l-cluster l-cluster--xs">
+              <span class="drv-badge drv-badge--moss">Hỗ trợ Chủ nhà · Thợ thầu · Kiến trúc sư</span>
+              <span class="drv-cat-quote-banner__kicker">Đơn hàng từ 30m² hoặc nguyên công trình</span>
+            </div>
+
+            <h2 class="drv-cat-quote-banner__title">
+              Bóc tách số thùng nguyên &amp; Giữ lô màu (Shade) miễn phí
             </h2>
-            <p class="drv-cat-quote-banner__desc" style="color: var(--c-champagne);">
-              Gửi bản vẽ mặt bằng hoặc diện tích sàn để kỹ thuật viên Dravit tính chuẩn số thùng nguyên, dự phòng hao hụt cắt góc và áp bảng chiết khấu sỉ theo tổng công trình.
+
+            <p class="drv-cat-quote-banner__desc">
+              Gửi bản vẽ mặt bằng hoặc diện tích sàn để kỹ thuật viên Dravit tính chuẩn số viên, dự phòng hao hụt cắt góc và áp bảng chiết khấu theo tổng khối lượng.
             </p>
+
+            <ul class="drv-cat-quote-banner__perks">
+              <li class="drv-cat-quote-banner__perk">
+                <i class="ph-fill ph-seal-check" aria-hidden="true"></i>
+                <span>Đồng nhất 100% Lô màu (Shade &amp; Caliber)</span>
+              </li>
+              <li class="drv-cat-quote-banner__perk">
+                <i class="ph-fill ph-arrows-clockwise" aria-hidden="true"></i>
+                <span>Đổi trả gạch dư nguyên thùng sau thi công</span>
+              </li>
+              <li class="drv-cat-quote-banner__perk">
+                <i class="ph-fill ph-cube" aria-hidden="true"></i>
+                <span>Đầy đủ file Map Texture 3D (SketchUp / 3dsMax)</span>
+              </li>
+            </ul>
           </div>
 
-          <!-- Col 2: 3 Technical Guarantees -->
-          <ul class="drv-cat-quote-banner__perks">
-            <li class="drv-cat-quote-banner__perk">
-              <i class="ph-fill ph-seal-check" aria-hidden="true"></i>
-              <div>
-                <strong>Đồng nhất 100% Lô màu (Shade &amp; Caliber)</strong><br>
-                <span style="color: var(--c-champagne);">Cam kết xuất kho cùng đợt nung, không lệch sắc độ sàn.</span>
-              </div>
-            </li>
-            <li class="drv-cat-quote-banner__perk">
-              <i class="ph-fill ph-calculator" aria-hidden="true"></i>
-              <div>
-                <strong>Báo giá chiết khấu theo m² &amp; thùng nguyên đai</strong><br>
-                <span style="color: var(--c-champagne);">Hỗ trợ nhận đổi trả gạch dư nguyên thùng sau thi công.</span>
-              </div>
-            </li>
-            <li class="drv-cat-quote-banner__perk">
-              <i class="ph-fill ph-cube" aria-hidden="true"></i>
-              <div>
-                <strong>Đủ thư viện Map Texture 3D chuẩn vật lý</strong><br>
-                <span style="color: var(--c-champagne);">File PBR độ phân giải cao cho KTS (SketchUp / 3dsMax).</span>
-              </div>
-            </li>
-          </ul>
-
-          <!-- Col 3: Action Box -->
+          <!-- Right (5/12): Direct Action Cluster -->
           <div class="drv-cat-quote-banner__actions">
-            <button type="button" class="drv-btn drv-btn--primary drv-btn--full" style="background-color: var(--c-ivory); color: var(--c-navy-900);" data-drv-action="dialog-open" data-drv-target="#drv-quote-modal">
+            <button type="button" class="drv-btn drv-btn--lg drv-btn--full drv-cat-quote-banner__btn-main" data-drv-action="dialog-open" data-drv-target="#drv-quote-modal">
               <i class="ph ph-file-text drv-icon" aria-hidden="true"></i>
               <span>Nhận bảng bóc tách &amp; báo giá sỉ</span>
             </button>
+
             <div class="drv-cat-quote-banner__sublinks">
-              <a href="tel:0901234567" class="drv-cat-quote-banner__sublink u-tabular">
+              <a href="tel:0909888777" class="drv-cat-quote-banner__sublink u-tabular">
                 <i class="ph ph-phone-call drv-icon--xs" aria-hidden="true"></i>
-                <span>Hotline Kỹ thuật: 0901.234.567</span>
+                <span>Hotline Kỹ thuật: 0909.888.777</span>
               </a>
               <a href="assets/img/tile-marble-calacatta.svg" download class="drv-cat-quote-banner__sublink">
                 <i class="ph ph-download-simple drv-icon--xs" aria-hidden="true"></i>
-                <span>Tải trọn bộ Map Texture 3D</span>
+                <span>Tải trọn bộ Map 3D</span>
               </a>
             </div>
           </div>
@@ -2219,7 +1587,7 @@
          ==================================================================== -->
     <section id="seo-buying-guide" class="l-section" style="background-color: var(--c-ivory); border-top: var(--bw);" aria-labelledby="seo-guide-heading">
       <div class="l-container">
-        <div class="l-split" style="grid-template-columns: 1fr; gap: var(--s-6);">
+        <div class="l-split" style="grid-template-columns: minmax(0, 1fr); gap: var(--s-6);">
 
           <!-- 4-Part Technical Buying Guide (Expandable) -->
           <article class="drv-seo-guide">
@@ -2588,329 +1956,8 @@
     </div>
   </dialog>
 
-  <!-- ======================================================================
-       SHARED DIALOG 1: B2B / PROJECT QUOTE MODAL (#drv-quote-modal)
-       ====================================================================== -->
-  <dialog id="drv-quote-modal" class="drv-dialog" aria-labelledby="quote-modal-title">
-    <div class="drv-dialog__head">
-      <h2 id="quote-modal-title" class="drv-dialog__title">
-        <i class="ph ph-file-text drv-icon" aria-hidden="true"></i>
-        <span>Yêu cầu báo giá sỉ &amp; công trình</span>
-      </h2>
-      <button type="button" class="drv-btn drv-btn--ghost drv-btn--icon" data-drv-action="dialog-close" aria-label="Đóng hộp thoại">
-        <i class="ph ph-x drv-icon--md" aria-hidden="true"></i>
-      </button>
-    </div>
-    <form class="drv-dialog__body" onsubmit="event.preventDefault(); window.Dravit.toast('Đã gửi yêu cầu báo giá! Chuyên viên kỹ thuật sẽ phản hồi qua Zalo trong 15 phút.'); this.closest('dialog').close();">
-      <p class="u-text-sm u-text-muted u-mb-4">
-        Nhận bảng bóc tách khối lượng (m² quy đổi ra thùng nguyên), giữ lô màu đồng nhất (Shade/Caliber) và chiết khấu thương mại cho đơn hàng từ 30m².
-      </p>
-      <div class="l-grid-2">
-        <div class="drv-field">
-          <label class="drv-label" for="q-name">Họ và tên <span class="drv-label__req">*</span></label>
-          <input id="q-name" type="text" class="drv-input" placeholder="Nguyễn Văn A" required>
-        </div>
-        <div class="drv-field">
-          <label class="drv-label" for="q-phone">Số điện thoại Zalo <span class="drv-label__req">*</span></label>
-          <input id="q-phone" type="tel" class="drv-input" placeholder="0901234567" required>
-        </div>
-      </div>
-      <div class="l-grid-2 u-mt-3">
-        <div class="drv-field">
-          <label class="drv-label" for="q-role">Vai trò của bạn</label>
-          <select id="q-role" class="drv-select">
-            <option value="homeowner">Chủ nhà đang xây / sửa nhà</option>
-            <option value="architect">Kiến trúc sư / Thiết kế nội thất</option>
-            <option value="contractor">Nhà thầu xây dựng / Đội thi công</option>
-          </select>
-        </div>
-        <div class="drv-field">
-          <label class="drv-label" for="q-area">Tổng diện tích dự kiến (m²)</label>
-          <input id="q-area" type="number" class="drv-input u-tabular" placeholder="VD: 85" min="10">
-        </div>
-      </div>
-      <div class="drv-field u-mt-3">
-        <label class="drv-label" for="q-note">Mã gạch quan tâm hoặc hạng mục cần tư vấn</label>
-        <textarea id="q-note" class="drv-textarea" rows="3" placeholder="VD: Cần báo giá mẫu DRV-8801M lát phòng khách 45m² và gạch nhà tắm chống trượt R10..."></textarea>
-      </div>
-      <div class="u-mt-4 u-flex u-justify-between u-items-center">
-        <span class="u-text-xs u-text-muted">
-          <i class="ph-fill ph-shield-check drv-icon--xs" style="color: var(--c-moss-600)" aria-hidden="true"></i>
-          Bảo mật thông tin 100% · Không gọi làm phiền
-        </span>
-        <button type="submit" class="drv-btn drv-btn--primary">
-          <i class="ph ph-paper-plane-tilt drv-icon" aria-hidden="true"></i>
-          <span>Gửi yêu cầu báo giá</span>
-        </button>
-      </div>
-    </form>
-  </dialog>
-
-  <!-- ======================================================================
-       SHARED DIALOG 2: MINI-CART DRAWER (#drv-minicart-drawer)
-       ====================================================================== -->
-  <dialog id="drv-minicart-drawer" class="drv-dialog drv-dialog--drawer-right" aria-labelledby="cart-drawer-title">
-    <div class="drv-dialog__head">
-      <h2 id="cart-drawer-title" class="drv-dialog__title">
-        <i class="ph ph-shopping-bag drv-icon" aria-hidden="true"></i>
-        <span>Giỏ hàng công trình (2 mẫu · 8 thùng)</span>
-      </h2>
-      <button type="button" class="drv-btn drv-btn--ghost drv-btn--icon" data-drv-action="dialog-close" aria-label="Đóng giỏ hàng">
-        <i class="ph ph-x drv-icon--md" aria-hidden="true"></i>
-      </button>
-    </div>
-    <div class="drv-dialog__body">
-      <div style="display: flex; flex-direction: column; gap: 16px;">
-        <!-- Item 1 -->
-        <div class="drv-surface u-p-3" style="display: grid; grid-template-columns: 64px 1fr; gap: 12px;">
-          <img src="assets/img/tile-marble-calacatta.svg" width="64" height="64" alt="DRV-8801M" style="border-radius: var(--r-sm); border: var(--bw);">
-          <div>
-            <div class="u-text-xs u-text-muted u-tabular">SKU: DRV-8801M · Khổ 80x80</div>
-            <a href="03-product-single.html" class="u-text-sm u-bold">Gạch Vân Đá Marble Calacatta Trắng Khói</a>
-            <div class="u-text-xs u-mt-1 u-tabular" style="color: var(--c-moss-600); font-weight: 600;">
-              15 viên (5 thùng = 9,60 m²)
-            </div>
-            <div class="u-flex u-justify-between u-items-center u-mt-2">
-              <span class="u-text-xs u-text-muted u-tabular">246.400đ/viên</span>
-              <strong class="u-text-sm u-tabular">3.696.000đ</strong>
-            </div>
-          </div>
-        </div>
-
-        <!-- Item 2 -->
-        <div class="drv-surface u-p-3" style="display: grid; grid-template-columns: 64px 1fr; gap: 12px;">
-          <img src="assets/img/tile-terrazzo-ivory.svg" width="64" height="64" alt="DRV-TRZ80" style="border-radius: var(--r-sm); border: var(--bw);">
-          <div>
-            <div class="u-text-xs u-text-muted u-tabular">SKU: DRV-TRZ80 · Khổ 80x80</div>
-            <a href="03-product-single.html" class="u-text-sm u-bold">Gạch Terrazzo Kem Đá Hạt Nhuyễn R10</a>
-            <div class="u-text-xs u-mt-1 u-tabular" style="color: var(--c-moss-600); font-weight: 600;">
-              9 viên (3 thùng = 5,76 m²)
-            </div>
-            <div class="u-flex u-justify-between u-items-center u-mt-2">
-              <span class="u-text-xs u-text-muted u-tabular">252.800đ/viên</span>
-              <strong class="u-text-sm u-tabular">2.275.200đ</strong>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="drv-alert drv-alert--info u-mt-4">
-        <i class="ph-fill ph-truck drv-icon" aria-hidden="true"></i>
-        <div class="u-text-xs">
-          <strong>Tổng khối lượng ước tính: ~338 kg (15,36 m²).</strong><br>
-          Phí vận chuyển xe tải/bốc xếp sẽ được báo chính xác sau khi xác nhận địa điểm giao hàng.
-        </div>
-      </div>
-    </div>
-    <div class="drv-dialog__foot">
-      <div class="u-flex u-justify-between u-items-center u-mb-3">
-        <span class="u-text-sm u-text-muted">Tạm tính tiền gạch:</span>
-        <strong class="u-text-lg u-tabular u-text-navy">5.971.200đ</strong>
-      </div>
-      <div class="l-grid-2">
-        <a href="04-cart.html" class="drv-btn drv-btn--secondary drv-btn--full">Xem giỏ hàng</a>
-        <a href="05-checkout.html" class="drv-btn drv-btn--primary drv-btn--full">Đặt hàng ngay</a>
-      </div>
-    </div>
-  </dialog>
-
-  <!-- ======================================================================
-       SHARED DIALOG 3: MOBILE MENU DRAWER (#drv-mobile-menu-drawer)
-       ====================================================================== -->
-  <dialog id="drv-mobile-menu-drawer" class="drv-dialog drv-dialog--drawer-left" aria-labelledby="mobile-menu-title">
-    <div class="drv-dialog__head">
-      <h2 id="mobile-menu-title" class="drv-dialog__title">Danh mục Gạch Dravit</h2>
-      <button type="button" class="drv-btn drv-btn--ghost drv-btn--icon" data-drv-action="dialog-close" aria-label="Đóng menu">
-        <i class="ph ph-x drv-icon--md" aria-hidden="true"></i>
-      </button>
-    </div>
-    <div class="drv-dialog__body">
-      <ul style="display: flex; flex-direction: column; gap: 10px;">
-        <li><a href="01-home.html" class="u-bold u-text-base">Trang chủ</a></li>
-        <li><a href="02-catalog-collection.html" class="u-bold u-text-base">Gạch phòng khách (124)</a></li>
-        <li><a href="02-catalog-collection.html?khong-gian=nha-tam" class="u-bold u-text-base">Gạch nhà tắm chống trượt (86)</a></li>
-        <li><a href="02-catalog-collection.html?kich-thuoc=80x80" class="u-bold u-text-base">Gạch lát nền 80x80 (92)</a></li>
-        <li><a href="02-catalog-collection.html?kich-thuoc=60x120" class="u-bold u-text-base">Gạch khổ lớn 60x120 (78)</a></li>
-        <li><a href="02-catalog-collection.html?van-gach=da-nung-ket" class="u-bold u-text-base">Đá nung kết Big Slab (29)</a></li>
-        <li><a href="07-blog-hub.html" class="u-bold u-text-base">Cẩm nang chọn gạch &amp; phối màu</a></li>
-        <li><a href="09-about-showroom-contact-b2b.html" class="u-bold u-text-base">Showroom &amp; Đối tác B2B</a></li>
-      </ul>
-    </div>
-  </dialog>
-
-  <!-- ======================================================================
-       6. GLOBAL LIGHT SHOWROOM & HOTLINE DOCK (Above Footer)
-       ====================================================================== -->
-  <section class="drv-footer-dock" aria-label="Trung tâm tư vấn kỹ thuật, Showroom và Báo giá công trình">
-    <div class="l-container">
-      <div class="drv-footer-dock__grid">
-        <!-- Ô 1: Hotline & Tư vấn Kỹ thuật -->
-        <div class="drv-footer-dock__item">
-          <div class="l-stack l-stack--xs">
-            <div class="drv-footer-dock__head">
-              <span class="drv-footer-dock__kicker">
-                <i class="ph ph-headset drv-icon--sm" aria-hidden="true"></i>
-                <span>Hotline &amp; Tư vấn Kỹ thuật</span>
-              </span>
-              <span class="drv-footer-dock__status drv-footer-dock__status--online">
-                <span class="drv-footer-dock__status-dot" aria-hidden="true"></span>
-                <span>8:00 – 21:00</span>
-              </span>
-            </div>
-            <a href="tel:0901234567" class="drv-footer-dock__hotline u-tabular">0901.234.567</a>
-            <p class="drv-footer-dock__desc">Tư vấn chuyên sâu độ chống trượt R9–R13, bóc tách số thùng theo bản vẽ &amp; kiểm tra tồn kho cùng lô màu (Shade) tức thì.</p>
-          </div>
-          <div class="drv-footer-dock__actions">
-            <a href="tel:0901234567" class="drv-footer-dock__action drv-footer-dock__action--outline">
-              <i class="ph ph-phone-call drv-icon--xs" aria-hidden="true"></i>
-              <span>Gọi ngay</span>
-            </a>
-            <a href="https://zalo.me/0901234567" class="drv-footer-dock__action drv-footer-dock__action--teal" target="_blank" rel="noopener">
-              <i class="ph ph-chat-circle-dots drv-icon--xs" aria-hidden="true"></i>
-              <span>Chat Zalo Kỹ thuật</span>
-            </a>
-          </div>
-        </div>
-
-        <!-- Ô 2: Showroom Flagship Hà Nội -->
-        <div class="drv-footer-dock__item">
-          <div class="l-stack l-stack--xs">
-            <div class="drv-footer-dock__head">
-              <span class="drv-footer-dock__kicker">
-                <i class="ph ph-map-pin drv-icon--sm" aria-hidden="true"></i>
-                <span>Showroom Trưng Bày Hà Nội</span>
-              </span>
-              <span class="drv-footer-dock__status drv-footer-dock__status--neutral">Mở cửa T2 – CN</span>
-            </div>
-            <span class="drv-footer-dock__title">248 Nguyễn Xiển, Thanh Xuân, Hà Nội</span>
-            <p class="drv-footer-dock__desc">Trải nghiệm thực tế 500+ mẫu gạch xương đá Porcelain, đá nung kết Big Slab dưới hệ đèn kiểm tra men 3000K – 6500K.</p>
-          </div>
-          <div class="drv-footer-dock__actions">
-            <a href="09-about-showroom-contact-b2b.html#showroom" class="drv-footer-dock__action drv-footer-dock__action--outline">
-              <i class="ph ph-navigation-arrow drv-icon--xs" aria-hidden="true"></i>
-              <span>Chỉ đường Maps</span>
-            </a>
-            <a href="09-about-showroom-contact-b2b.html" class="drv-footer-dock__action drv-footer-dock__action--navy">
-              <i class="ph ph-calendar-check drv-icon--xs" aria-hidden="true"></i>
-              <span>Đặt lịch xem mẫu</span>
-            </a>
-          </div>
-        </div>
-
-        <!-- Ô 3: Phòng Dự Án & Báo giá Công trình -->
-        <div class="drv-footer-dock__item">
-          <div class="l-stack l-stack--xs">
-            <div class="drv-footer-dock__head">
-              <span class="drv-footer-dock__kicker">
-                <i class="ph ph-file-text drv-icon--sm" aria-hidden="true"></i>
-                <span>Phòng Dự Án &amp; Nhà Thầu</span>
-              </span>
-              <span class="drv-footer-dock__status drv-footer-dock__status--amber">Chiết khấu B2B</span>
-            </div>
-            <span class="drv-footer-dock__title">Bóc tách khối lượng theo bản vẽ CAD / PDF</span>
-            <p class="drv-footer-dock__desc">Hỗ trợ bóc tách số viên, số thùng nguyên đai, giữ kho cùng lô màu &amp; xuất hóa đơn VAT 100% cho đơn hàng từ 30m².</p>
-          </div>
-          <div class="drv-footer-dock__actions">
-            <button type="button" class="drv-footer-dock__action drv-footer-dock__action--teal" data-drv-action="dialog-open" data-drv-target="#drv-quote-modal">
-              <i class="ph ph-paper-plane-tilt drv-icon--xs" aria-hidden="true"></i>
-              <span>Gửi bản vẽ nhận báo giá</span>
-            </button>
-            <a href="mailto:baogia@gachdravit.vn" class="drv-footer-dock__action drv-footer-dock__action--outline">
-              <i class="ph ph-envelope-simple drv-icon--xs" aria-hidden="true"></i>
-              <span>baogia@gachdravit.vn</span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ======================================================================
-       GLOBAL 4-COLUMN FOOTER
-       ====================================================================== -->
-  <footer class="drv-footer">
-    <div class="l-container">
-      <div class="drv-footer__grid">
-        <!-- Brand Column -->
-        <div>
-          <a href="01-home.html" class="drv-footer__brand" aria-label="Gạch Dravit">
-            <img class="drv-footer__logo-img" src="assets/img/logo-ivory.png" alt="DRAVIT" width="140" height="40">
-          </a>
-          <p class="drv-footer__desc">
-            Hệ thống phân phối gạch ốp lát xương đá Porcelain &amp; Đá nung kết cao cấp. Niêm yết minh bạch hai đơn vị giá (m² &amp; viên), quy đổi thùng nguyên chuẩn xác, giao hàng tận chân công trình.
-          </p>
-          <div class="u-mt-4 u-text-xs" style="display: flex; flex-direction: column; gap: 6px;">
-            <span><i class="ph ph-map-pin drv-icon--xs" aria-hidden="true"></i> Showroom: 248 Nguyễn Xiển, Quận Thanh Xuân, Hà Nội</span>
-            <span><i class="ph ph-warehouse drv-icon--xs" aria-hidden="true"></i> Tổng kho miền Bắc: KCN Thường Tín, Hà Nội</span>
-            <span class="u-tabular"><i class="ph ph-phone drv-icon--xs" aria-hidden="true"></i> Hotline / Zalo: 0901.234.567 (8:00 - 21:00)</span>
-            <span><i class="ph ph-envelope-simple drv-icon--xs" aria-hidden="true"></i> Email: baogia@gachdravit.vn</span>
-          </div>
-        </div>
-
-        <!-- Col 2: Danh mục trọng tâm -->
-        <div>
-          <h3 class="drv-footer__heading">Danh mục gạch</h3>
-          <ul class="drv-footer__list">
-            <li><a class="drv-footer__link" href="02-catalog-collection.html">Gạch lát nền phòng khách</a></li>
-            <li><a class="drv-footer__link" href="02-catalog-collection.html?khong-gian=nha-tam">Gạch nhà tắm chống trượt R10</a></li>
-            <li><a class="drv-footer__link" href="02-catalog-collection.html?kich-thuoc=80x80">Gạch khổ vuông 80x80 cm</a></li>
-            <li><a class="drv-footer__link" href="02-catalog-collection.html?kich-thuoc=60x120">Gạch khổ lớn 60x120 cm</a></li>
-            <li><a class="drv-footer__link" href="02-catalog-collection.html?van-gach=terrazzo">Gạch Terrazzo kiến trúc</a></li>
-            <li><a class="drv-footer__link" href="02-catalog-collection.html?van-gach=gia-go">Gạch thanh giả gỗ 15x90</a></li>
-          </ul>
-        </div>
-
-        <!-- Col 3: Hỗ trợ khách hàng -->
-        <div>
-          <h3 class="drv-footer__heading">Chính sách &amp; Dịch vụ</h3>
-          <ul class="drv-footer__list">
-            <li><a class="drv-footer__link" href="10-policies-search-404.html#van-chuyen">Chính sách vận chuyển &amp; hạ hàng</a></li>
-            <li><a class="drv-footer__link" href="10-policies-search-404.html#doi-tra">Đổi trả gạch dư nguyên thùng</a></li>
-            <li><a class="drv-footer__link" href="10-policies-search-404.html#bao-hanh">Bảo hành chất lượng xương &amp; men</a></li>
-            <li><a class="drv-footer__link" href="06-order-received-vietqr.html">Hướng dẫn thanh toán VietQR</a></li>
-            <li><a class="drv-footer__link" href="09-about-showroom-contact-b2b.html#b2b-partner">Chính sách chiết khấu KTS &amp; Thầu</a></li>
-          </ul>
-        </div>
-
-        <!-- Col 4: Cẩm nang & Công cụ -->
-        <div>
-          <h3 class="drv-footer__heading">Cẩm nang kỹ thuật</h3>
-          <ul class="drv-footer__list">
-            <li><a class="drv-footer__link" href="08-blog-single.html">Cách tính số thùng gạch &amp; % hao hụt</a></li>
-            <li><a class="drv-footer__link" href="07-blog-hub.html">Phân biệt xương Porcelain &amp; Ceramic</a></li>
-            <li><a class="drv-footer__link" href="07-blog-hub.html">Tiêu chuẩn chống trượt R9, R10, R11</a></li>
-            <li><a class="drv-footer__link" href="07-blog-hub.html">Kỹ thuật đi ron 1,5mm dùng ke cân bằng</a></li>
-            <li><a class="drv-footer__link" href="09-about-showroom-contact-b2b.html">Đặt lịch mượn mẫu gạch thực tế</a></li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="drv-footer__bottom">
-        <span>© 2026 Công ty TNHH Vật Liệu Kiến Trúc DRAVIT Việt Nam. MST: 0110987654.</span>
-        <span>Chuẩn thiết kế High-Craft Light Mode · Tốc độ &amp; Minh bạch kỹ thuật.</span>
-      </div>
-    </div>
-  </footer>
-
-  <!-- ======================================================================
-       MOBILE STICKY BOTTOM ACTION BAR (< 768px)
-       ====================================================================== -->
-  <nav class="drv-mobile-bar" aria-label="Thao tác nhanh trên điện thoại">
-    <div class="drv-mobile-bar__grid">
-      <a href="tel:0901234567" class="drv-mobile-bar__btn">
-        <i class="ph-fill ph-phone-call drv-icon--md" style="color: var(--c-moss-600)" aria-hidden="true"></i>
-        <span>Gọi điện</span>
-      </a>
-      <button type="button" class="drv-mobile-bar__btn" data-drv-action="dialog-open" data-drv-target="#drv-filter-drawer">
-        <i class="ph-fill ph-sliders-horizontal drv-icon--md" style="color: var(--c-navy-900)" aria-hidden="true"></i>
-        <span>Bộ lọc (14)</span>
-      </button>
-      <button type="button" class="drv-mobile-bar__btn drv-mobile-bar__btn--primary" data-drv-action="dialog-open" data-drv-target="#drv-quote-modal">
-        <i class="ph-fill ph-calculator drv-icon--md" aria-hidden="true"></i>
-        <span>Báo giá sỉ</span>
-      </button>
-    </div>
-  </nav>
+  <!-- 3–8. SHARED DIALOGS, SHOWROOM DOCK, GLOBAL FOOTER & MOBILE BAR (partials/footer.html) -->
+  <drv-site-footer data-partial="partials/footer.html"></drv-site-footer>
 
   <!-- ======================================================================
        SCRIPTS (Anime.js v3.2.2 + DRAVIT Vanilla ES2022 Modules)

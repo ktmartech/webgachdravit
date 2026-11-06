@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giỏ Hàng &amp; Kiểm Tra Khối Lượng Gạch (m², Thùng, kg) | DRAVIT</title>
+  <meta name="description" content="Kiểm tra số lượng viên gạch, quy đổi số thùng nguyên, diện tích m² thực nhận và tổng trọng lượng kg trước khi đặt hàng tại Gạch ốp lát chính hãng DRAVIT.">
+  <meta name="robots" content="noindex, follow">
+  <link rel="canonical" href="https://gachdravit.vn/gio-hang/">
+
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/bold/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/style.css">
+  <link rel="stylesheet" href="assets/css/main.css?v=20261106n">
+  <link rel="stylesheet" href="assets/css/pages.css?v=20261106n">
+</head>
+<body>
+  <a href="#main-content" class="drv-skip-link">Chuyển đến nội dung giỏ hàng</a>
+
+  <!-- 1 & 2. GLOBAL PROTOTYPE BAR & HEADER (partials/header.html) -->
+  <drv-site-header data-partial="partials/header.html" data-active-page="04-cart.html"></drv-site-header>
+
+  <main id="main-content">
+    <!-- ====================================================================
+         SECTION 1: BREADCRUMB, PAGE HEADER & 3-STEP COMMERCE PROGRESS BAR
+         ==================================================================== -->
+    <section class="l-section l-section--white u-bd-b" style="padding-block: var(--s-5)">
+      <div class="l-container l-stack l-stack--md">
+        <!-- Breadcrumb -->
+        <nav class="drv-breadcrumb" aria-label="Breadcrumb">
+          <a href="01-home.html">Trang chủ</a>
+          <span class="drv-breadcrumb__sep" aria-hidden="true">/</span>
+          <a href="02-catalog-collection.html">Gạch ốp lát</a>
+          <span class="drv-breadcrumb__sep" aria-hidden="true">/</span>
+          <span aria-current="page" class="u-bold u-text-navy">Giỏ hàng &amp; Kiểm tra khối lượng</span>
+        </nav>
+
+        <div class="l-cluster l-cluster--between">
+          <div class="l-stack l-stack--sm">
+            <span class="drv-sec-head__eyebrow" style="margin-bottom: 6px; display: inline-block;">Minh bạch đơn vị bán: Giao dịch theo Viên · Quy đổi Thùng, m² &amp; kg</span>
+            <h1 style="line-height: 1.25; margin-top: 2px;">GIỎ HÀNG &amp; BẢNG KÊ KHỐI LƯỢNG CÔNG TRÌNH</h1>
+          </div>
+
+          <div class="l-cluster l-cluster--xs">
+            <a href="02-catalog-collection.html" class="drv-btn drv-btn--outline drv-btn--sm">
+              <i class="ph ph-arrow-left drv-icon--xs" aria-hidden="true"></i>
+              <span>Chọn thêm mẫu gạch</span>
+            </a>
+            <button type="button" class="drv-btn drv-btn--soft drv-btn--sm" data-drv-action="cart-export-quote">
+              <i class="ph ph-file-pdf drv-icon--xs" aria-hidden="true"></i>
+              <span>Xuất bảng báo giá PDF / Zalo</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 3-Step Checkout Flow Indicator (Architectural Grout-Line Grid) -->
+        <nav class="drv-cart-steps" aria-label="Tiến trình đặt hàng 3 bước">
+          <div class="drv-cart-step is-active" aria-current="step">
+            <span class="drv-cart-step__num" aria-hidden="true">01</span>
+            <div class="drv-cart-step__text">
+              <span class="drv-cart-step__title">Giỏ hàng &amp; Quy đổi khối lượng</span>
+              <span class="drv-cart-step__sub">Kiểm tra số viên, số thùng nguyên, m² và tổng kg</span>
+            </div>
+          </div>
+
+          <a href="05-checkout.html" class="drv-cart-step">
+            <span class="drv-cart-step__num" aria-hidden="true">02</span>
+            <div class="drv-cart-step__text">
+              <span class="drv-cart-step__title">Thông tin giao hàng công trình</span>
+              <span class="drv-cart-step__sub">Địa chỉ 2 cấp (34 Tỉnh/TP) &amp; Chọn COD / VietQR</span>
+            </div>
+          </a>
+
+          <a href="06-order-received.html" class="drv-cart-step">
+            <span class="drv-cart-step__num" aria-hidden="true">03</span>
+            <div class="drv-cart-step__text">
+              <span class="drv-cart-step__title">Xác nhận lô gạch &amp; Báo phí vận chuyển</span>
+              <span class="drv-cart-step__sub">Nhân viên gọi chốt cước xe tối ưu trong 15 - 30 phút</span>
+            </div>
+          </a>
+        </nav>
+
+        <!-- Prototype Interactive State Toolbar (Step 5 Requirement: Mini-Cart & Empty State Switcher) -->
+        <div class="drv-cart-demo-bar" role="region" aria-label="Thanh công cụ kiểm thử trạng thái Giỏ hàng">
+          <div class="l-cluster l-cluster--xs">
+            <span class="drv-badge drv-badge--moss">Chế độ xem thử UI/UX</span>
+            <span class="u-text-xs u-text-muted">Chuyển đổi nhanh giữa các trạng thái giỏ hàng và ngăn kéo Mini-Cart:</span>
+          </div>
+          <div class="l-cluster l-cluster--xs">
+            <button type="button" class="drv-chip is-active" data-drv-action="cart-toggle-empty" data-drv-state="filled" aria-pressed="true">
+              <i class="ph ph-check-circle drv-icon--xs" aria-hidden="true"></i>
+              <span>Giỏ hàng có sản phẩm (<span data-cart-sku-count>2</span>)</span>
+            </button>
+            <button type="button" class="drv-chip" data-drv-action="cart-toggle-empty" data-drv-state="empty" aria-pressed="false">
+              <i class="ph ph-shopping-bag-open drv-icon--xs" aria-hidden="true"></i>
+              <span>Xem Giỏ hàng trống (Empty State)</span>
+            </button>
+            <button type="button" class="drv-btn drv-btn--outline drv-btn--sm" data-drv-action="dialog-open" data-drv-target="#drv-minicart-drawer">
+              <i class="ph ph-sidebar-simple drv-icon--xs" aria-hidden="true"></i>
+              <span>Mở Mini-Cart Drawer</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SECTION 2: MAIN CART WORKSPACE (FILLED STATE vs EMPTY STATE)
+         ==================================================================== -->
+    <section class="l-section" aria-label="Chi tiết giỏ hàng">
+      <div class="l-container">
+
+        <!-- ================================================================
+             2A. FILLED CART STATE (#drv-cart-filled)
+             ================================================================ -->
+        <div id="drv-cart-filled" class="drv-cart-layout">
+          <!-- LEFT COLUMN (8/12): MULTI-UNIT CART LEDGER + CROSS-SELL + SHADE GUARANTEE -->
+          <div class="l-stack l-stack--lg">
+
+            <!-- 1. Multi-Unit Cart Ledger Table -->
+            <div class="drv-cart-ledger">
+              <div class="drv-cart-ledger__head" aria-hidden="true">
+                <span>Sản phẩm &amp; Quy cách</span>
+                <span>Đơn giá niêm yết</span>
+                <span>Số lượng &amp; Quy đổi</span>
+                <span class="u-text-right">Thành tiền</span>
+              </div>
+
+              <!-- ROW 1: Gạch lát nền DRV-8801M (Model: area_pack) -->
+              <article class="drv-cart-item" data-cart-row data-cart-sku="DRV-8801M" data-cart-default="true">
+                <!-- Col 1: Product Info & Lot Meta -->
+                <div class="drv-cart-item__product">
+                  <a href="03-product-single.html" aria-label="Xem chi tiết Gạch Lát Nền Dravit Vân Đá Marble Calacatta 80x80">
+                    <img src="assets/img/tile-marble-calacatta.svg" width="80" height="80" decoding="async" alt="Gạch Lát Nền Dravit Vân Đá Marble Calacatta 80x80 DRV-8801M" class="drv-cart-item__thumb">
+                  </a>
+                  <div class="drv-cart-item__info">
+                    <div class="drv-cart-item__meta">
+                      <span class="drv-cart-item__meta-sku">DRV-8801M</span>
+                      <span aria-hidden="true">·</span>
+                      <span class="drv-cart-item__meta-tag">Lô Shade V2</span>
+                    </div>
+                    <a href="03-product-single.html" class="drv-cart-item__title" data-row-title title="Gạch Lát Nền Dravit Vân Đá Marble Calacatta Trắng Khói 80x80 Bóng Kiếng">
+                      Gạch Lát Nền Dravit Marble Calacatta Trắng Khói 80x80
+                    </a>
+                    <p class="drv-cart-item__pack-spec">
+                      <i class="ph ph-package drv-icon--xs u-text-moss" aria-hidden="true"></i>
+                      <span>Quy cách: <strong>1 thùng = 3 viên = 1,92 m²</strong> · 42 kg/thùng</span>
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Col 2: Dual Price (đ/m² Primary + đ/viên WC Transaction Unit) -->
+                <div class="drv-cart-item__price-col">
+                  <span class="u-text-xs u-text-muted u-only-mobile">Đơn giá niêm yết:</span>
+                  <span class="drv-cart-item__price-main">385.000đ<small class="u-text-xs u-text-muted">/m²</small></span>
+                  <span class="drv-cart-item__price-sub">246.400đ/viên (0,64 m²) · 739.200đ/thùng</span>
+                </div>
+
+                <!-- Col 3: <drv-qty-input> Stepper + Box Quick-Action + Live Conversion -->
+                <div class="drv-cart-item__qty-col">
+                  <drv-qty-input
+                    data-model="area_pack"
+                    data-price-unit="246400"
+                    data-area-piece="0.64"
+                    data-pieces-per-box="3"
+                    data-weight-piece="14"
+                    data-unit-label="viên">
+                    <div class="l-stack l-stack--2xs">
+                      <div class="drv-cart-qty-inline">
+                        <div class="drv-stepper drv-stepper--cart">
+                          <button type="button" class="drv-stepper__btn drv-stepper__btn--prev" data-qty-step="-1" aria-label="Giảm 1 viên gạch DRV-8801M">
+                            <i class="ph ph-minus drv-icon--xs" aria-hidden="true"></i>
+                          </button>
+                          <input id="cart-qty-8801m" type="number" class="drv-stepper__input" value="18" min="1" step="1" aria-label="Số lượng viên gạch DRV-8801M">
+                          <button type="button" class="drv-stepper__btn drv-stepper__btn--next" data-qty-step="1" aria-label="Tăng 1 viên gạch DRV-8801M">
+                            <i class="ph ph-plus drv-icon--xs" aria-hidden="true"></i>
+                          </button>
+                        </div>
+
+                        <button type="button" class="drv-cart-btn-box" data-qty-add-box title="Cộng thêm 1 thùng nguyên (3 viên = 1,92 m²)">
+                          <i class="ph ph-plus drv-icon--xs" aria-hidden="true"></i>
+                          <span>1 thùng (3 viên)</span>
+                        </button>
+                      </div>
+
+                      <!-- Live Conversion Output -->
+                      <div class="drv-cart-conv-pill" aria-live="polite">
+                        <i class="ph ph-arrows-left-right drv-icon--xs u-text-moss" aria-hidden="true"></i>
+                        <span data-row-conversion>= 6 thùng · 11,52 m² · 252 kg</span>
+                      </div>
+
+                      <!-- Smart Loose-Piece Alert (Shown automatically when qty is not a multiple of 3) -->
+                      <div class="drv-cart-loose-warn" data-row-loose-warning hidden role="status">
+                        <span class="l-cluster l-cluster--xs">
+                          <i class="ph-fill ph-warning-circle drv-icon--xs" aria-hidden="true"></i>
+                          <span data-row-loose-text>Đang lẻ viên - Khuyên lấy chẵn thùng nguyên để an toàn vận chuyển.</span>
+                        </span>
+                        <button type="button" class="drv-btn drv-btn--outline drv-btn--sm" data-qty-round-box>
+                          <span>Làm tròn chẵn thùng</span>
+                        </button>
+                      </div>
+                    </div>
+                  </drv-qty-input>
+                </div>
+
+                <!-- Col 4: Line Subtotal & Inline Remove Action -->
+                <div class="drv-cart-item__total-col" aria-live="polite">
+                  <div class="drv-cart-item__total-head">
+                    <span class="u-text-xs u-text-muted u-only-mobile">Thành tiền:</span>
+                    <button type="button" class="drv-cart-item__del-btn" data-cart-remove aria-label="Xóa Gạch Lát Nền Dravit Vân Đá Marble Calacatta 80x80 khỏi giỏ hàng" title="Xóa mặt hàng này">
+                      <i class="ph ph-trash drv-icon" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                  <strong class="drv-cart-item__subtotal" data-row-subtotal>4.435.200đ</strong>
+                  <span class="u-text-xs u-text-muted">Đã gồm thuế VAT</span>
+                </div>
+              </article>
+
+              <!-- ROW 2: Keo chà ron Dravit (Model: pack) -->
+              <article class="drv-cart-item" data-cart-row data-cart-sku="DRV-RON01" data-cart-default="true">
+                <!-- Col 1: Product Info -->
+                <div class="drv-cart-item__product">
+                  <a href="03-product-single.html" aria-label="Xem chi tiết Keo Chà Ron Chống Thấm Dravit Trắng Sứ">
+                    <img src="assets/img/tile-grout-pack.svg" width="80" height="80" loading="lazy" decoding="async" alt="Keo Chà Ron Chống Thấm Dravit Trắng Sứ Túi 2kg DRV-RON01" class="drv-cart-item__thumb">
+                  </a>
+                  <div class="drv-cart-item__info">
+                    <div class="drv-cart-item__meta">
+                      <span class="drv-cart-item__meta-sku">DRV-RON01</span>
+                      <span aria-hidden="true">·</span>
+                      <span class="drv-cart-item__meta-tag">Màu #01 Trắng Sứ</span>
+                    </div>
+                    <a href="03-product-single.html" class="drv-cart-item__title" data-row-title title="Keo Chà Ron Chống Thấm & Chống Bám Bẩn Dravit Trắng Sứ (Túi 2kg)">
+                      Keo Chà Ron Chống Thấm Dravit Trắng Sứ (Túi 2kg)
+                    </a>
+                    <p class="drv-cart-item__pack-spec">
+                      <i class="ph ph-shield-check drv-icon--xs u-text-moss" aria-hidden="true"></i>
+                      <span>Định mức: <strong>1 túi (2kg) chà ~3,5 - 4 m²</strong> gạch 80x80 (ron 2mm)</span>
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Col 2: Dual Price (pack model: đ/túi + đ/kg) -->
+                <div class="drv-cart-item__price-col">
+                  <span class="u-text-xs u-text-muted u-only-mobile">Đơn giá niêm yết:</span>
+                  <span class="drv-cart-item__price-main">85.000đ<small class="u-text-xs u-text-muted">/túi</small></span>
+                  <span class="drv-cart-item__price-sub">42.500đ/kg (Túi 2kg)</span>
+                </div>
+
+                <!-- Col 3: <drv-qty-input> for Pack -->
+                <div class="drv-cart-item__qty-col">
+                  <drv-qty-input
+                    data-model="pack"
+                    data-price-unit="85000"
+                    data-pieces-per-box="1"
+                    data-weight-piece="2"
+                    data-unit-label="túi">
+                    <div class="l-stack l-stack--2xs">
+                      <div class="drv-cart-qty-inline">
+                        <div class="drv-stepper drv-stepper--cart">
+                          <button type="button" class="drv-stepper__btn drv-stepper__btn--prev" data-qty-step="-1" aria-label="Giảm 1 túi keo chà ron DRV-RON01">
+                            <i class="ph ph-minus drv-icon--xs" aria-hidden="true"></i>
+                          </button>
+                          <input id="cart-qty-ron01" type="number" class="drv-stepper__input" value="3" min="1" step="1" aria-label="Số lượng túi keo chà ron DRV-RON01">
+                          <button type="button" class="drv-stepper__btn drv-stepper__btn--next" data-qty-step="1" aria-label="Tăng 1 túi keo chà ron DRV-RON01">
+                            <i class="ph ph-plus drv-icon--xs" aria-hidden="true"></i>
+                          </button>
+                        </div>
+
+                        <button type="button" class="drv-cart-btn-box" data-qty-add-box title="Thêm 1 túi 2kg">
+                          <i class="ph ph-plus drv-icon--xs" aria-hidden="true"></i>
+                          <span>1 túi (2kg)</span>
+                        </button>
+                      </div>
+
+                      <div class="drv-cart-conv-pill" aria-live="polite">
+                        <i class="ph ph-scales drv-icon--xs u-text-moss" aria-hidden="true"></i>
+                        <span data-row-conversion>= 3 túi · 6 kg</span>
+                      </div>
+                    </div>
+                  </drv-qty-input>
+                </div>
+
+                <!-- Col 4: Line Subtotal & Inline Remove Action -->
+                <div class="drv-cart-item__total-col" aria-live="polite">
+                  <div class="drv-cart-item__total-head">
+                    <span class="u-text-xs u-text-muted u-only-mobile">Thành tiền:</span>
+                    <button type="button" class="drv-cart-item__del-btn" data-cart-remove aria-label="Xóa Keo Chà Ron Dravit Trắng Sứ khỏi giỏ hàng" title="Xóa mặt hàng này">
+                      <i class="ph ph-trash drv-icon" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                  <strong class="drv-cart-item__subtotal" data-row-subtotal>255.000đ</strong>
+                  <span class="u-text-xs u-text-muted">Đủ dùng cho ~11,5 m²</span>
+                </div>
+              </article>
+
+              <!-- ROW 3 (OPTIONAL CROSS-SELL ITEM 1 - Hidden until user clicks "+ Thêm vào giỏ" below) -->
+              <article class="drv-cart-item" data-cart-row data-cart-sku="DRV-KEO-C2" data-cart-crosssell="true" hidden>
+                <div class="drv-cart-item__product">
+                  <a href="03-product-single.html" aria-label="Keo Dán Gạch Xương Đá Dravit C2-Pro Bao 25kg">
+                    <img src="assets/img/tile-grout-pack.svg" width="80" height="80" loading="lazy" decoding="async" alt="Keo Dán Gạch Xương Đá Dravit C2-Pro Bao 25kg" class="drv-cart-item__thumb">
+                  </a>
+                  <div class="drv-cart-item__info">
+                    <div class="drv-cart-item__meta">
+                      <span class="drv-cart-item__meta-sku">DRV-KEO-C2</span>
+                      <span aria-hidden="true">·</span>
+                      <span class="drv-cart-item__meta-tag">Tiêu chuẩn C2</span>
+                    </div>
+                    <a href="03-product-single.html" class="drv-cart-item__title" data-row-title title="Keo Dán Gạch Xương Đá Dravit C2-Pro Chống Bong Tróc (Bao 25kg)">
+                      Keo Dán Gạch Xương Đá Dravit C2-Pro (Bao 25kg)
+                    </a>
+                    <p class="drv-cart-item__pack-spec">
+                      <i class="ph ph-package drv-icon--xs u-text-moss" aria-hidden="true"></i>
+                      <span>Định mức: <strong>1 bao 25kg dán ~4 - 5 m²</strong> gạch khổ 80x80</span>
+                    </p>
+                  </div>
+                </div>
+
+                <div class="drv-cart-item__price-col">
+                  <span class="u-text-xs u-text-muted u-only-mobile">Đơn giá niêm yết:</span>
+                  <span class="drv-cart-item__price-main">195.000đ<small class="u-text-xs u-text-muted">/bao</small></span>
+                  <span class="drv-cart-item__price-sub">7.800đ/kg (Bao 25kg)</span>
+                </div>
+
+                <div class="drv-cart-item__qty-col">
+                  <drv-qty-input
+                    data-model="pack"
+                    data-price-unit="195000"
+                    data-pieces-per-box="1"
+                    data-weight-piece="25"
+                    data-unit-label="bao">
+                    <div class="l-stack l-stack--2xs">
+                      <div class="drv-cart-qty-inline">
+                        <div class="drv-stepper drv-stepper--cart">
+                          <button type="button" class="drv-stepper__btn drv-stepper__btn--prev" data-qty-step="-1" aria-label="Giảm 1 bao keo dán gạch DRV-KEO-C2">
+                            <i class="ph ph-minus drv-icon--xs" aria-hidden="true"></i>
+                          </button>
+                          <input type="number" class="drv-stepper__input" value="3" min="1" step="1" aria-label="Số lượng bao keo dán gạch DRV-KEO-C2">
+                          <button type="button" class="drv-stepper__btn drv-stepper__btn--next" data-qty-step="1" aria-label="Tăng 1 bao keo dán gạch DRV-KEO-C2">
+                            <i class="ph ph-plus drv-icon--xs" aria-hidden="true"></i>
+                          </button>
+                        </div>
+                        <button type="button" class="drv-cart-btn-box" data-qty-add-box title="Thêm 1 bao 25kg">
+                          <i class="ph ph-plus drv-icon--xs" aria-hidden="true"></i>
+                          <span>1 bao (25kg)</span>
+                        </button>
+                      </div>
+                      <div class="drv-cart-conv-pill" aria-live="polite">
+                        <i class="ph ph-scales drv-icon--xs u-text-moss" aria-hidden="true"></i>
+                        <span data-row-conversion>= 3 bao · 75 kg</span>
+                      </div>
+                    </div>
+                  </drv-qty-input>
+                </div>
+
+                <div class="drv-cart-item__total-col" aria-live="polite">
+                  <div class="drv-cart-item__total-head">
+                    <span class="u-text-xs u-text-muted u-only-mobile">Thành tiền:</span>
+                    <button type="button" class="drv-cart-item__del-btn" data-cart-remove aria-label="Xóa Keo Dán Gạch Dravit C2-Pro khỏi giỏ hàng" title="Xóa mặt hàng này">
+                      <i class="ph ph-trash drv-icon" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                  <strong class="drv-cart-item__subtotal" data-row-subtotal>585.000đ</strong>
+                  <span class="u-text-xs u-text-muted">Đã gồm thuế VAT</span>
+                </div>
+              </article>
+
+              <!-- ROW 4 (OPTIONAL CROSS-SELL ITEM 2 - Hidden until user clicks "+ Thêm vào giỏ" below) -->
+              <article class="drv-cart-item" data-cart-row data-cart-sku="DRV-KE-15" data-cart-crosssell="true" hidden>
+                <div class="drv-cart-item__product">
+                  <a href="03-product-single.html" aria-label="Bộ Ke Cân Bằng Phẳng Mặt Gạch & Đường Ron 1,5mm">
+                    <img src="assets/img/detail-grout-line.svg" width="80" height="80" loading="lazy" decoding="async" alt="Bộ Ke Cân Bằng Phẳng Mặt Gạch 1,5mm DRV-KE-15" class="drv-cart-item__thumb">
+                  </a>
+                  <div class="drv-cart-item__info">
+                    <div class="drv-cart-item__meta">
+                      <span class="drv-cart-item__meta-sku">DRV-KE-15</span>
+                      <span aria-hidden="true">·</span>
+                      <span class="drv-cart-item__meta-tag">Mạch ron 1,5mm</span>
+                    </div>
+                    <a href="03-product-single.html" class="drv-cart-item__title" data-row-title title="Bộ Ke Cân Bằng Phẳng Mặt Gạch & Đường Ron 1,5mm (Túi 100 bộ)">
+                      Bộ Ke Cân Bằng Mặt Gạch &amp; Đường Ron 1,5mm (100 bộ)
+                    </a>
+                    <p class="drv-cart-item__pack-spec">
+                      <i class="ph ph-squares-four drv-icon--xs u-text-moss" aria-hidden="true"></i>
+                      <span>Căn phẳng 4 góc gạch khổ lớn 80x80</span>
+                    </p>
+                  </div>
+                </div>
+
+                <div class="drv-cart-item__price-col">
+                  <span class="u-text-xs u-text-muted u-only-mobile">Đơn giá niêm yết:</span>
+                  <span class="drv-cart-item__price-main">65.000đ<small class="u-text-xs u-text-muted">/túi</small></span>
+                  <span class="drv-cart-item__price-sub">650đ/bộ (Túi 100 bộ)</span>
+                </div>
+
+                <div class="drv-cart-item__qty-col">
+                  <drv-qty-input
+                    data-model="pack"
+                    data-price-unit="65000"
+                    data-pieces-per-box="1"
+                    data-weight-piece="0.5"
+                    data-unit-label="túi">
+                    <div class="l-stack l-stack--2xs">
+                      <div class="drv-cart-qty-inline">
+                        <div class="drv-stepper drv-stepper--cart">
+                          <button type="button" class="drv-stepper__btn drv-stepper__btn--prev" data-qty-step="-1" aria-label="Giảm 1 túi ke cân bằng DRV-KE-15">
+                            <i class="ph ph-minus drv-icon--xs" aria-hidden="true"></i>
+                          </button>
+                          <input type="number" class="drv-stepper__input" value="1" min="1" step="1" aria-label="Số lượng túi ke cân bằng DRV-KE-15">
+                          <button type="button" class="drv-stepper__btn drv-stepper__btn--next" data-qty-step="1" aria-label="Tăng 1 túi ke cân bằng DRV-KE-15">
+                            <i class="ph ph-plus drv-icon--xs" aria-hidden="true"></i>
+                          </button>
+                        </div>
+                        <button type="button" class="drv-cart-btn-box" data-qty-add-box title="Thêm 1 túi 100 bộ">
+                          <i class="ph ph-plus drv-icon--xs" aria-hidden="true"></i>
+                          <span>1 túi (100 bộ)</span>
+                        </button>
+                      </div>
+                      <div class="drv-cart-conv-pill" aria-live="polite">
+                        <i class="ph ph-scales drv-icon--xs u-text-moss" aria-hidden="true"></i>
+                        <span data-row-conversion>= 1 túi · 0,5 kg</span>
+                      </div>
+                    </div>
+                  </drv-qty-input>
+                </div>
+
+                <div class="drv-cart-item__total-col" aria-live="polite">
+                  <div class="drv-cart-item__total-head">
+                    <span class="u-text-xs u-text-muted u-only-mobile">Thành tiền:</span>
+                    <button type="button" class="drv-cart-item__del-btn" data-cart-remove aria-label="Xóa Bộ Ke Cân Bằng Đường Ron 1,5mm khỏi giỏ hàng" title="Xóa mặt hàng này">
+                      <i class="ph ph-trash drv-icon" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                  <strong class="drv-cart-item__subtotal" data-row-subtotal>65.000đ</strong>
+                  <span class="u-text-xs u-text-muted">Đã gồm thuế VAT</span>
+                </div>
+              </article>
+
+              <!-- Ledger Footer Bar -->
+              <div class="drv-cart-ledger__foot">
+                <div class="l-cluster l-cluster--xs u-text-xs u-text-muted">
+                  <i class="ph-fill ph-check-square drv-icon--sm u-text-moss" aria-hidden="true"></i>
+                  <span>Số lượng giao dịch tính theo <strong>số nguyên viên / túi</strong>. Hệ thống tự động quy đổi số thùng và trọng lượng thực tế.</span>
+                </div>
+                <div class="l-cluster l-cluster--xs">
+                  <button type="button" class="drv-btn drv-btn--ghost drv-btn--sm" data-drv-action="cart-restore-demo">
+                    <i class="ph ph-arrow-counter-clockwise drv-icon--xs" aria-hidden="true"></i>
+                    <span>Đặt lại số lượng mặc định</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. Frequently Bought Together (FBT) Bundle Block (Option 1: Amazon/Tiki High-Converting CRO) -->
+            <div class="drv-fbt-bundle" role="region" aria-label="Gói vật tư thi công thường mua cùng nhau">
+              <div class="drv-fbt-bundle__head">
+                <div class="l-cluster l-cluster--xs">
+                  <span class="drv-badge drv-badge--moss u-bold">BẮT BUỘC CHO GẠCH PORCELAIN 80x80</span>
+                  <span class="u-text-xs u-text-muted">Định mức tính theo 11,52 m² trong giỏ</span>
+                </div>
+                <h2 class="u-text-base u-bold u-text-navy u-m-0">
+                  Thường mua cùng nhau: Vật tư thi công đồng bộ chống bong tróc &amp; mấp mô sàn
+                </h2>
+                <p class="u-text-xs u-text-muted u-m-0">
+                  Gạch xương đá Porcelain E ≤ 0,5% không hút nước, cần dùng keo dán gạch C2 chuyên dụng thay thế hồ dầu xi măng và ke cân bằng phẳng ron. Giao cùng chuyến xe gạch — Miễn phí cước phụ kiện.
+                </p>
+              </div>
+
+              <div class="drv-fbt-bundle__body">
+                <!-- Left: Interactive Checkbox Items List -->
+                <div class="drv-fbt-list" role="group" aria-label="Chọn vật tư mua kèm">
+                  <!-- Item 1: Tile Adhesive C2 -->
+                  <label class="drv-fbt-item" for="fbt-check-c2">
+                    <input
+                      type="checkbox"
+                      id="fbt-check-c2"
+                      class="drv-fbt-item__check"
+                      checked
+                      data-fbt-price="585000"
+                      data-fbt-sku="DRV-KEO-C2"
+                      data-fbt-name="Keo Dán Gạch C2-Pro (3 bao)"
+                      aria-label="Chọn mua kèm 3 bao Keo dán gạch C2-Pro">
+                    <img
+                      src="assets/img/tile-grout-pack.svg"
+                      width="64"
+                      height="64"
+                      loading="lazy"
+                      decoding="async"
+                      alt="Keo Dán Gạch Xương Đá Dravit C2-Pro"
+                      class="drv-fbt-item__thumb">
+                    <div class="drv-fbt-item__info">
+                      <div class="l-cluster l-cluster--xs">
+                        <span class="drv-cart-item__meta">
+                          <span class="drv-cart-item__meta-tag">Khuyên dùng: 3 bao</span>
+                          <span aria-hidden="true">·</span>
+                          <span>Đủ lát 11,52 m²</span>
+                        </span>
+                        <span class="drv-badge drv-badge--outline u-text-xs">Tiêu chuẩn C2</span>
+                      </div>
+                      <div class="drv-fbt-item__title">
+                        Keo Dán Gạch Xương Đá Dravit C2-Pro (3 bao x 25kg)
+                      </div>
+                      <div class="drv-fbt-item__price">
+                        <strong class="u-text-base u-text-navy">585.000đ</strong>
+                        <span class="u-text-muted">(195.000đ/bao · Bám dính cao chống bong rộp)</span>
+                      </div>
+                    </div>
+                  </label>
+
+                  <!-- Item 2: Leveling Clips -->
+                  <label class="drv-fbt-item" for="fbt-check-ke">
+                    <input
+                      type="checkbox"
+                      id="fbt-check-ke"
+                      class="drv-fbt-item__check"
+                      checked
+                      data-fbt-price="65000"
+                      data-fbt-sku="DRV-KE-15"
+                      data-fbt-name="Bộ Ke Cân Bằng (1 túi)"
+                      aria-label="Chọn mua kèm 1 túi Bộ ke cân bằng ron 1,5mm">
+                    <img
+                      src="assets/img/detail-grout-line.svg"
+                      width="64"
+                      height="64"
+                      loading="lazy"
+                      decoding="async"
+                      alt="Bộ ke cân bằng đường ron 1,5mm"
+                      class="drv-fbt-item__thumb">
+                    <div class="drv-fbt-item__info">
+                      <div class="l-cluster l-cluster--xs">
+                        <span class="drv-cart-item__meta">
+                          <span class="drv-cart-item__meta-tag">Chuẩn mạch 1,5mm</span>
+                          <span aria-hidden="true">·</span>
+                          <span>Túi 100 bộ</span>
+                        </span>
+                        <span class="drv-badge drv-badge--outline u-text-xs">Chống chênh mép</span>
+                      </div>
+                      <div class="drv-fbt-item__title">
+                        Bộ Ke Cân Bằng Phẳng Mặt Gạch Khổ Lớn 80x80 (Túi 100 bộ)
+                      </div>
+                      <div class="drv-fbt-item__price">
+                        <strong class="u-text-base u-text-navy">65.000đ</strong>
+                        <span class="u-text-muted">(Giữ mặt sàn phẳng tuyệt đối giữa 4 góc gạch)</span>
+                      </div>
+                    </div>
+                  </label>
+                </div>
+
+                <!-- Right: High-Converting Summary & 1-Click Action Box -->
+                <div class="drv-fbt-summary" aria-live="polite">
+                  <span class="drv-fbt-summary__label">Tổng cộng thêm (<span data-fbt-count>2</span> món):</span>
+                  <div class="drv-fbt-summary__total" data-fbt-total>650.000đ</div>
+                  <span class="drv-fbt-summary__note">Đã gồm VAT · Giao cùng xe gạch</span>
+
+                  <button
+                    type="button"
+                    class="drv-btn drv-btn--moss drv-btn--lg drv-fbt-btn"
+                    data-drv-action="cart-fbt-submit">
+                    <i class="ph-bold ph-plus-circle drv-icon" aria-hidden="true"></i>
+                    <span>THÊM VẬT TƯ VÀO ĐƠN</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. 3-Column Responsibility & Logistics Guarantee Box (Brand Voice: Trách nhiệm & Đáng tin) -->
+            <div class="l-grout-grid l-grid--3" aria-label="Cam kết kiểm hàng và vận chuyển của DRAVIT">
+              <div class="u-bg-white u-pad-4 l-stack l-stack--xs">
+                <div class="l-cluster l-cluster--xs">
+                  <i class="ph-fill ph-seal-check drv-icon u-text-moss" aria-hidden="true"></i>
+                  <h3 class="u-text-sm u-bold">Cam kết trùng 100% Lô màu (Shade)</h3>
+                </div>
+                <p class="u-text-xs u-text-muted">
+                  Kho Dravit kiểm tra mã lô nung (Shade) và cỡ gạch (Caliber) trên từng vỏ thùng trước khi xuất kho, đảm bảo toàn bộ mặt sàn đồng nhất sắc độ.
+                </p>
+              </div>
+
+              <div class="u-bg-white u-pad-4 l-stack l-stack--xs">
+                <div class="l-cluster l-cluster--xs">
+                  <i class="ph-fill ph-truck drv-icon u-text-moss" aria-hidden="true"></i>
+                  <h3 class="u-text-sm u-bold">Bảo hiểm 1 đổi 1 gạch mẻ cạnh</h3>
+                </div>
+                <p class="u-text-xs u-text-muted">
+                  Kiện gạch được bọc góc chống sốc khi lên xe. Nếu phát sinh viên nứt vỡ do vận chuyển, Dravit bù mới miễn phí hoặc trừ trực tiếp vào hóa đơn.
+                </p>
+              </div>
+
+              <div class="u-bg-white u-pad-4 l-stack l-stack--xs">
+                <div class="l-cluster l-cluster--xs">
+                  <i class="ph-fill ph-warehouse drv-icon u-text-moss" aria-hidden="true"></i>
+                  <h3 class="u-text-sm u-bold">Giữ lô gạch miễn phí 15 ngày</h3>
+                </div>
+                <p class="u-text-xs u-text-muted">
+                  Chủ nhà có thể đặt chốt giữ lô gạch đẹp ngay hôm nay và hẹn lịch giao cuốn chiếu theo đúng ngày đội thợ bắt đầu cán nền.
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- RIGHT COLUMN (4/12 STICKY): ORDER SUMMARY & WEIGHT LOGISTICS -->
+          <aside class="drv-summary-box drv-summary-box--sticky" aria-labelledby="cart-summary-heading" aria-live="polite">
+            <div class="l-cluster l-cluster--between u-bd-b" style="padding-bottom: var(--s-3)">
+              <h2 id="cart-summary-heading" class="u-text-lg">Tóm tắt khối lượng &amp; Đơn hàng</h2>
+              <span class="drv-badge drv-badge--showroom u-tabular"><span data-cart-sku-count>2</span> mã vật tư</span>
+            </div>
+
+            <!-- 4-Cell Physical Volume & Weight Breakdown Grid -->
+            <div class="drv-cart-metrics">
+              <div class="drv-cart-metric">
+                <span class="drv-cart-metric__label">Tổng diện tích gạch</span>
+                <strong class="drv-cart-metric__val u-text-moss" data-cart-total-m2>11,52 m²</strong>
+              </div>
+              <div class="drv-cart-metric">
+                <span class="drv-cart-metric__label">Quy cách đóng gói</span>
+                <strong class="drv-cart-metric__val" data-cart-total-boxes>6 thùng (18 viên)</strong>
+              </div>
+              <div class="drv-cart-metric">
+                <span class="drv-cart-metric__label">Tổng trọng lượng</span>
+                <strong class="drv-cart-metric__val" data-cart-total-kg>258 kg</strong>
+              </div>
+              <div class="drv-cart-metric">
+                <span class="drv-cart-metric__label">Kiểm tra lô xuất kho</span>
+                <strong class="drv-cart-metric__val u-text-moss">Cùng lô Shade V2</strong>
+              </div>
+            </div>
+
+            <!-- Recommended Vehicle Indicator -->
+            <div class="drv-summary-row">
+              <span class="u-text-muted">Phương tiện giao dự kiến:</span>
+              <strong class="u-text-navy u-text-xs" data-cart-vehicle-hint>Xe tải nhẹ 500kg - 1 tấn (Giao tận chân công trình)</strong>
+            </div>
+
+            <div class="drv-summary-row">
+              <span class="u-text-muted">Phí vận chuyển công trình:</span>
+              <span class="u-text-moss u-bold">Báo sau khi xác nhận đơn</span>
+            </div>
+
+            <!-- Empathetic Service Tone Notice (docs/07_UI_UX_Page_Specs.md §6 & docs/10 §2.2) -->
+            <div class="drv-shipping-notice">
+              <div class="l-cluster l-cluster--xs">
+                <i class="ph-fill ph-info drv-icon--sm u-text-navy" aria-hidden="true"></i>
+                <strong class="u-text-navy">Vì sao phí vận chuyển được báo sau khi đặt đơn?</strong>
+              </div>
+              <p>
+                Đơn hàng gạch có trọng lượng lớn (<strong class="u-tabular" data-cart-total-kg>258 kg</strong>). Sau khi bạn đặt đơn, nhân viên điều vận Dravit sẽ kiểm tra địa hình giao hàng (đường lớn hay hẻm xe tải nhỏ) để báo mức cước xe ghép/xe tải tiết kiệm nhất trước khi bạn thanh toán.
+              </p>
+            </div>
+
+            <!-- Grand Subtotal Row -->
+            <div class="drv-summary-row drv-summary-row--total">
+              <div class="l-stack l-stack--2xs">
+                <span>Tổng tạm tính:</span>
+                <span class="u-text-xs u-text-muted" style="font-weight: 500">(Đã gồm VAT · Chưa gồm phí vận chuyển)</span>
+              </div>
+              <span class="u-text-sale u-text-xl" data-cart-total-price>4.690.200đ</span>
+            </div>
+
+            <!-- Primary & Secondary Conversion Actions -->
+            <div class="l-stack l-stack--sm">
+              <a href="05-checkout.html" class="drv-btn drv-btn--lg drv-btn--full">
+                <span>TIẾN HÀNH ĐẶT HÀNG</span>
+                <i class="ph ph-arrow-right drv-icon" aria-hidden="true"></i>
+              </a>
+
+              <button type="button" class="drv-btn drv-btn--outline drv-btn--full" data-drv-action="cart-export-quote">
+                <i class="ph ph-file-text drv-icon" aria-hidden="true"></i>
+                <span>Xuất bảng báo giá PDF / Gửi qua Zalo</span>
+              </button>
+            </div>
+
+            <!-- Project / B2B Discount Prompt -->
+            <div class="u-bg-ivory u-bd u-rounded-sm u-pad-3 l-stack l-stack--xs">
+              <div class="l-cluster l-cluster--between">
+                <span class="u-text-xs u-bold u-text-navy">Đặt cho nhà mới hoặc đơn từ 30m²?</span>
+                <button type="button" class="drv-link u-text-xs u-bold" data-drv-action="dialog-open" data-drv-target="#drv-quote-modal" data-drv-product="Giỏ hàng hiện tại (DRV-8801M + Keo chà ron)">
+                  <span>Nhận chiết khấu công trình</span>
+                  <i class="ph ph-caret-right drv-icon--xs" aria-hidden="true"></i>
+                </button>
+              </div>
+              <p class="u-text-xs u-text-muted">
+                Gửi bản vẽ mặt bằng hoặc danh mục mã gạch qua Zalo <a href="https://zalo.me/0909888777" class="u-bold u-text-moss">0909.888.777</a> để nhận bảng bóc tách khối lượng theo từng phòng.
+              </p>
+            </div>
+          </aside>
+        </div>
+
+        <!-- ================================================================
+             2B. EMPTY CART STATE (#drv-cart-empty — Hidden by default)
+             ================================================================ -->
+        <div id="drv-cart-empty" class="drv-cart-empty-box" hidden aria-live="polite">
+          <div class="drv-cart-empty-box__icon" aria-hidden="true">
+            <i class="ph ph-shopping-bag-open"></i>
+          </div>
+
+          <div class="l-stack l-stack--xs" style="max-width: 54ch">
+            <span class="drv-sec-head__eyebrow">Giỏ hàng của bạn đang trống</span>
+            <h2>CHƯA CÓ MẪU GẠCH HOẶC VẬT TƯ NÀO TRONG GIỎ HÀNG</h2>
+            <p class="u-text-sm u-text-muted">
+              Bạn có thể chọn mẫu gạch theo không gian phòng, kích thước viên gạch và sử dụng công cụ quy đổi <strong>m² sang số viên, số thùng nguyên</strong> ngay trên từng trang sản phẩm.
+            </p>
+          </div>
+
+          <!-- Primary Action + Restore Demo Action -->
+          <div class="l-cluster l-cluster--sm" style="justify-content: center">
+            <a href="02-catalog-collection.html" class="drv-btn drv-btn--lg">
+              <i class="ph ph-grid-four drv-icon" aria-hidden="true"></i>
+              <span>Khám phá 28 Bộ sưu tập Gạch</span>
+            </a>
+            <button type="button" class="drv-btn drv-btn--moss drv-btn--lg" data-drv-action="cart-restore-demo">
+              <i class="ph ph-arrow-counter-clockwise drv-icon" aria-hidden="true"></i>
+              <span>Khôi phục 2 sản phẩm mẫu để xem thử</span>
+            </button>
+          </div>
+
+          <!-- 4 Quick Silo Entry Cards (IL-01) -->
+          <div class="l-grout-grid l-grid--4" style="width: 100%; max-width: 960px; text-align: left">
+            <a href="02-catalog-collection.html?nhom=lat-nen" class="u-bg-white u-pad-4 l-stack l-stack--xs">
+              <span class="u-text-xs u-bold u-text-moss">180 mẫu sẵn kho</span>
+              <strong class="u-text-base u-text-navy">Gạch Lát Nền Porcelain</strong>
+              <span class="u-text-xs u-text-muted">Khổ 60x60, 80x80, 60x120 chịu lực cao</span>
+            </a>
+
+            <a href="02-catalog-collection.html?khong-gian=phong-khach" class="u-bg-white u-pad-4 l-stack l-stack--xs">
+              <span class="u-text-xs u-bold u-text-moss">124 mẫu sẵn kho</span>
+              <strong class="u-text-base u-text-navy">Gạch Phòng Khách</strong>
+              <span class="u-text-xs u-text-muted">Vân đá Marble, Terrazzo &amp; Khổ lớn ít ron</span>
+            </a>
+
+            <a href="02-catalog-collection.html?khong-gian=nha-tam" class="u-bg-white u-pad-4 l-stack l-stack--xs">
+              <span class="u-text-xs u-bold u-text-moss">95 mẫu sẵn kho</span>
+              <strong class="u-text-base u-text-navy">Gạch Nhà Tắm Chống Trơn</strong>
+              <span class="u-text-xs u-text-muted">Bề mặt Matt nhám chuẩn R10 - R11 an toàn</span>
+            </a>
+
+            <a href="09-showroom-about-quote.html#showroom" class="u-bg-white u-pad-4 l-stack l-stack--xs">
+              <span class="u-text-xs u-bold u-text-moss">Showroom KĐT Sala</span>
+              <strong class="u-text-base u-text-navy">Xem Mẫu Thực Tế Tại Kệ</strong>
+              <span class="u-text-xs u-text-muted">Trải nghiệm bề mặt &amp; màu sắc dưới ánh đèn thực</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SECTION 3: RECENTLY VIEWED / SAME SILO RECOMMENDATIONS (IL-06)
+         ==================================================================== -->
+    <section class="l-section l-section--white u-bd-t" aria-labelledby="cart-related-heading">
+      <div class="l-container l-stack l-stack--lg">
+        <div class="drv-sec-head">
+          <div class="drv-sec-head__titles">
+            <span class="drv-sec-head__eyebrow">Chọn thêm gạch đồng bộ cho các phòng khác</span>
+            <h2 id="cart-related-heading" class="drv-sec-head__title">MẪU GẠCH PHỐI ĐỒNG BỘ CHO NHÀ TẮM, PHÒNG NGỦ &amp; BAN CÔNG</h2>
+          </div>
+          <a href="02-catalog-collection.html" class="drv-btn drv-btn--outline drv-btn--sm">
+            <span>Xem toàn bộ 28 danh mục</span>
+            <i class="ph ph-arrow-right drv-icon--xs" aria-hidden="true"></i>
+          </a>
+        </div>
+
+        <div class="l-grid l-grid--4" data-drv-stagger>
+          <!-- Card 1 -->
+          <article class="drv-card">
+            <div class="drv-card__media">
+              <div class="drv-card__badges">
+                <span class="drv-badge drv-badge--showroom">Có mẫu tại kệ</span>
+                <span class="drv-badge drv-badge--outline">R10 Chống trơn</span>
+              </div>
+              <a href="03-product-single.html" tabindex="-1" aria-hidden="true">
+                <img class="drv-card__img drv-card__img--primary" src="assets/img/tile-terrazzo-ivory.svg" width="400" height="400" loading="lazy" decoding="async" alt="Gạch Terrazzo Kem Hạt Nhỏ Dravit 60x60 DRV-TRZ60">
+                <img class="drv-card__img drv-card__img--hover" src="assets/img/room-bathroom-terrazzo.svg" width="400" height="400" loading="lazy" decoding="async" alt="Phối cảnh nhà tắm lát gạch Terrazzo 60x60 DRV-TRZ60">
+              </a>
+            </div>
+            <div class="drv-card__body">
+              <div class="drv-card__meta">
+                <span>SKU: DRV-TRZ60</span>
+                <span class="drv-card__meta-sep" aria-hidden="true"></span>
+                <span>60x60 cm</span>
+                <span class="drv-card__meta-sep" aria-hidden="true"></span>
+                <span>Porcelain Matt</span>
+              </div>
+              <h3 class="drv-card__title">
+                <a href="03-product-single.html">Gạch Lát Nền Nhà Tắm Dravit Terrazzo Kem Hạt Nhỏ 60x60 Mờ Matt</a>
+              </h3>
+              <div class="drv-card__price-box">
+                <div class="drv-card__price-main">320.000đ<small>/m²</small></div>
+                <div class="drv-card__price-sub">115.200đ/viên · 1 thùng 4 viên = 1,44 m²</div>
+              </div>
+              <div class="drv-card__foot">
+                <a href="03-product-single.html" class="drv-btn drv-btn--outline drv-btn--sm drv-btn--full">
+                  <i class="ph ph-calculator drv-icon--xs" aria-hidden="true"></i>
+                  <span>Tính số viên &amp; Xem mẫu</span>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 2 -->
+          <article class="drv-card">
+            <div class="drv-card__media">
+              <div class="drv-card__badges">
+                <span class="drv-badge drv-badge--showroom">Có mẫu tại kệ</span>
+              </div>
+              <a href="03-product-single.html" tabindex="-1" aria-hidden="true">
+                <img class="drv-card__img drv-card__img--primary" src="assets/img/tile-wood-oak.svg" width="400" height="400" loading="lazy" decoding="async" alt="Gạch giả gỗ Sồi Tự Nhiên 15x90 DRV-WD1590">
+                <img class="drv-card__img drv-card__img--hover" src="assets/img/room-bedroom-wood.svg" width="400" height="400" loading="lazy" decoding="async" alt="Phòng ngủ lát gạch giả gỗ Sồi 15x90 DRV-WD1590">
+              </a>
+            </div>
+            <div class="drv-card__body">
+              <div class="drv-card__meta">
+                <span>SKU: DRV-WD1590</span>
+                <span class="drv-card__meta-sep" aria-hidden="true"></span>
+                <span>15x90 cm</span>
+                <span class="drv-card__meta-sep" aria-hidden="true"></span>
+                <span>Vân gỗ Matt</span>
+              </div>
+              <h3 class="drv-card__title">
+                <a href="03-product-single.html">Gạch Giả Gỗ Dravit Sồi Tự Nhiên 15x90 Xương Đá Chống Ẩm Phòng Ngủ</a>
+              </h3>
+              <div class="drv-card__price-box">
+                <div class="drv-card__price-main">365.000đ<small>/m²</small></div>
+                <div class="drv-card__price-sub">49.275đ/viên · 1 thùng 8 viên = 1,08 m²</div>
+              </div>
+              <div class="drv-card__foot">
+                <a href="03-product-single.html" class="drv-btn drv-btn--outline drv-btn--sm drv-btn--full">
+                  <i class="ph ph-calculator drv-icon--xs" aria-hidden="true"></i>
+                  <span>Tính số viên &amp; Xem mẫu</span>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 3 -->
+          <article class="drv-card">
+            <div class="drv-card__media">
+              <div class="drv-card__badges">
+                <span class="drv-badge drv-badge--moss">Khổ lớn ít ron</span>
+              </div>
+              <a href="03-product-single.html" tabindex="-1" aria-hidden="true">
+                <img class="drv-card__img drv-card__img--primary" src="assets/img/tile-sintered-emperador.svg" width="400" height="400" loading="lazy" decoding="async" alt="Gạch 60x120 Vân Đá Emperador DRV-61209">
+                <img class="drv-card__img drv-card__img--hover" src="assets/img/room-facade-stone.svg" width="400" height="400" loading="lazy" decoding="async" alt="Ốp mặt tiền gạch vân đá 60x120 DRV-61209">
+              </a>
+            </div>
+            <div class="drv-card__body">
+              <div class="drv-card__meta">
+                <span>SKU: DRV-61209</span>
+                <span class="drv-card__meta-sep" aria-hidden="true"></span>
+                <span>60x120 cm</span>
+                <span class="drv-card__meta-sep" aria-hidden="true"></span>
+                <span>Đá nung kết</span>
+              </div>
+              <h3 class="drv-card__title">
+                <a href="03-product-single.html">Gạch Khổ Lớn Dravit Vân Đá Emperador Xám Khói 60x120 Bóng Kiếng</a>
+              </h3>
+              <div class="drv-card__price-box">
+                <div class="drv-card__price-main">520.000đ<small>/m²</small></div>
+                <div class="drv-card__price-sub">374.400đ/viên · 1 thùng 2 viên = 1,44 m²</div>
+              </div>
+              <div class="drv-card__foot">
+                <a href="03-product-single.html" class="drv-btn drv-btn--outline drv-btn--sm drv-btn--full">
+                  <i class="ph ph-calculator drv-icon--xs" aria-hidden="true"></i>
+                  <span>Tính số viên &amp; Xem mẫu</span>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 4 -->
+          <article class="drv-card">
+            <div class="drv-card__media">
+              <div class="drv-card__badges">
+                <span class="drv-badge drv-badge--outline">R11 Sân vườn</span>
+              </div>
+              <a href="03-product-single.html" tabindex="-1" aria-hidden="true">
+                <img class="drv-card__img drv-card__img--primary" src="assets/img/tile-structured-outdoor.svg" width="400" height="400" loading="lazy" decoding="async" alt="Gạch sân vườn chống trơn R11 60x60 DRV-SV60">
+                <img class="drv-card__img drv-card__img--hover" src="assets/img/room-outdoor-patio.svg" width="400" height="400" loading="lazy" decoding="async" alt="Sân thượng lát gạch nhám R11 DRV-SV60">
+              </a>
+            </div>
+            <div class="drv-card__body">
+              <div class="drv-card__meta">
+                <span>SKU: DRV-SV60</span>
+                <span class="drv-card__meta-sep" aria-hidden="true"></span>
+                <span>60x60 cm</span>
+                <span class="drv-card__meta-sep" aria-hidden="true"></span>
+                <span>Dày 12mm · R11</span>
+              </div>
+              <h3 class="drv-card__title">
+                <a href="03-product-single.html">Gạch Sân Vườn &amp; Sân Thượng Dravit Đá Bazan Nhám Sần 60x60 Chịu Lực</a>
+              </h3>
+              <div class="drv-card__price-box">
+                <div class="drv-card__price-main">345.000đ<small>/m²</small></div>
+                <div class="drv-card__price-sub">124.200đ/viên · 1 thùng 4 viên = 1,44 m²</div>
+              </div>
+              <div class="drv-card__foot">
+                <a href="03-product-single.html" class="drv-btn drv-btn--outline drv-btn--sm drv-btn--full">
+                  <i class="ph ph-calculator drv-icon--xs" aria-hidden="true"></i>
+                  <span>Tính số viên &amp; Xem mẫu</span>
+                </a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ======================================================================
+       PAGE-SPECIFIC DIALOG: BẢNG BÁO GIÁ TẠM TÍNH (PDF / ZALO EXPORT)
+       ====================================================================== -->
+  <dialog id="drv-cart-quote-preview" class="drv-dialog" aria-labelledby="cart-quote-preview-title">
+    <div class="drv-dialog__head">
+      <div class="l-stack l-stack--2xs">
+        <span class="u-text-xs u-bold u-uppercase u-text-moss">Phiếu bóc tách khối lượng &amp; dự toán vật tư</span>
+        <h2 id="cart-quote-preview-title" class="u-text-lg">Bảng báo giá tạm tính Gạch ốp lát DRAVIT</h2>
+      </div>
+      <button type="button" class="drv-btn drv-btn--sm drv-btn--ghost drv-btn--icon" data-drv-action="dialog-close" aria-label="Đóng bảng báo giá">
+        <i class="ph ph-x drv-icon" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <div class="drv-dialog__body l-stack l-stack--md">
+      <div class="l-cluster l-cluster--between u-bg-ivory u-bd u-rounded-sm u-pad-3 u-text-xs">
+        <div>
+          <strong class="u-text-navy">CÔNG TY TNHH DRAVIT - VẬT TƯ HOÀN THIỆN TRỌN GÓI</strong>
+          <div class="u-text-muted">Showroom: Khu đô thị Sala, Đường Nguyễn Cơ Thạch, TP. Thủ Đức, TP.HCM</div>
+        </div>
+        <div class="u-tabular">
+          <div>Hotline/Zalo: <strong>0909.888.777</strong></div>
+          <div>Hiệu lực báo giá: <strong>07 ngày</strong></div>
+        </div>
+      </div>
+
+      <table class="drv-quote-sheet-table">
+        <thead>
+          <tr>
+            <th style="width: 44px">#</th>
+            <th>Tên vật tư &amp; Quy cách đóng gói</th>
+            <th style="width: 110px">Số lượng</th>
+            <th style="width: 130px">Thành tiền</th>
+          </tr>
+        </thead>
+        <tbody id="drv-quote-preview-rows">
+          <!-- Populated dynamically from current cart rows by unit-calc.js -->
+        </tbody>
+      </table>
+
+      <div class="u-bg-champagne u-bd u-rounded-sm u-pad-3 l-stack l-stack--xs u-text-xs">
+        <div class="l-cluster l-cluster--between">
+          <span>Tổng diện tích gạch quy đổi: <strong data-cart-total-m2>11,52 m²</strong></span>
+          <span>Tổng trọng lượng ước tính: <strong data-cart-total-kg>258 kg</strong></span>
+          <span>Tổng tạm tính: <strong class="u-text-sale u-text-sm" data-cart-total-price>4.690.200đ</strong></span>
+        </div>
+        <p class="u-text-muted">
+          Ghi chú: Giá trên đã bao gồm thuế VAT, cam kết xuất hàng cùng 1 lô màu (Shade/Caliber). Phí vận chuyển được báo riêng theo địa chỉ công trình.
+        </p>
+      </div>
+    </div>
+
+    <div class="drv-dialog__foot l-cluster l-cluster--between">
+      <button
+        type="button"
+        id="drv-quote-copy-zalo"
+        class="drv-btn drv-btn--outline drv-btn--sm"
+        data-drv-action="copy-text"
+        data-drv-value="Bảng báo giá tạm tính DRAVIT"
+        data-drv-feedback="Đã chép nội dung gửi Zalo">
+        <i class="ph ph-copy drv-icon--xs" aria-hidden="true"></i>
+        <span>Sao chép nội dung gửi Zalo gia đình / chủ đầu tư</span>
+      </button>
+
+      <div class="l-cluster l-cluster--xs">
+        <button type="button" class="drv-btn drv-btn--soft drv-btn--sm" data-drv-action="cart-print-quote">
+          <i class="ph ph-printer drv-icon--xs" aria-hidden="true"></i>
+          <span>In / Lưu PDF</span>
+        </button>
+        <a href="05-checkout.html" class="drv-btn drv-btn--sm">
+          <span>Tiến hành đặt hàng</span>
+          <i class="ph ph-arrow-right drv-icon--xs" aria-hidden="true"></i>
+        </a>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- 3–8. SHARED DIALOGS, SHOWROOM DOCK, GLOBAL FOOTER & MOBILE BAR (partials/footer.html) -->
+  <drv-site-footer data-partial="partials/footer.html"></drv-site-footer>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.min.js"></script>
+  <script defer src="assets/js/core.js"></script>
+  <script defer src="assets/js/unit-calc.js"></script>
+  <script defer src="assets/js/catalog-mock.js"></script>
+</body>
+</html>
