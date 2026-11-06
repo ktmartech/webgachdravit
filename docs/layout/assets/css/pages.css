@@ -1254,9 +1254,9 @@
   }
 
   .drv-cat-hero__title {
-    font-family: var(--font-display);
-    font-size: var(--fs-2xl);
-    line-height: 1.16;
+    font-family: var(--f-display);
+    font-size: var(--fs-h1);
+    line-height: var(--lh-tight);
     letter-spacing: 0.02em;
     text-transform: uppercase;
     color: var(--c-navy-900);
@@ -1482,6 +1482,27 @@
     }
   }
 
+  /* Catalog 3-Column Responsive Product Grid */
+  .drv-catalog-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--s-3);
+  }
+
+  @media (min-width: 640px) {
+    .drv-catalog-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--s-4);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .drv-catalog-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--s-4);
+    }
+  }
+
   /* Mid/Bottom Catalog B2B Quote Callout */
   .drv-cat-quote-banner {
     margin-top: var(--s-6);
@@ -1557,8 +1578,8 @@
   }
 
   .drv-seo-guide__h2 {
-    font-family: var(--font-display);
-    font-size: var(--fs-xl);
+    font-family: var(--f-display);
+    font-size: var(--fs-h2);
     text-transform: uppercase;
     letter-spacing: 0.02em;
     color: var(--c-navy-900);
