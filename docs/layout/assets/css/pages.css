@@ -1330,26 +1330,16 @@
     display: none;
   }
 
-  @media (min-width: 1024px) {
-    .drv-filter-sidebar {
-      display: block;
-      position: sticky;
-      top: calc(var(--header-h-desktop) + var(--s-3));
-      max-height: calc(100vh - var(--header-h-desktop) - var(--s-5));
-      overflow-y: auto;
-      scrollbar-width: thin;
-      scrollbar-color: var(--c-navy-200) transparent;
-    }
-  }
-
   .drv-filter-box {
     background-color: var(--c-white);
     border: var(--bw);
     border-radius: var(--r-md);
-    overflow: hidden;
   }
 
   .drv-filter-box__head {
+    position: sticky;
+    top: 0;
+    z-index: 4;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -1358,6 +1348,7 @@
     background-color: var(--c-navy-900);
     color: var(--c-ivory);
     border-bottom: var(--bw);
+    border-radius: calc(var(--r-md) - 1px) calc(var(--r-md) - 1px) 0 0;
     min-height: 48px;
     box-sizing: border-box;
   }
@@ -1416,6 +1407,9 @@
   }
 
   .drv-filter-subbar {
+    position: sticky;
+    top: 48px;
+    z-index: 3;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -1445,6 +1439,10 @@
 
   .drv-filter-group:last-child {
     border-bottom: none;
+  }
+
+  .drv-filter-group:last-child .drv-filter-group__body {
+    border-radius: 0 0 calc(var(--r-md) - 1px) calc(var(--r-md) - 1px);
   }
 
   .drv-filter-group__title {
@@ -1493,8 +1491,11 @@
     padding-inline: 10px;
   }
 
-  /* Catalog Toolbar & Active Filter Chips */
+  /* Catalog Toolbar & Active Filter Chips (Sticky Top Control Bar) */
   .drv-cat-toolbar {
+    position: sticky;
+    top: calc(var(--header-h-current, var(--header-h-desktop, 112px)) + 8px);
+    z-index: calc(var(--z-header) - 2);
     display: flex;
     flex-direction: column;
     gap: var(--s-3);
@@ -1503,6 +1504,34 @@
     border: var(--bw);
     border-radius: var(--r-sm);
     margin-bottom: var(--s-4);
+    transition: box-shadow var(--dur-fast) ease,
+                border-color var(--dur-fast) ease,
+                padding var(--dur-fast) ease;
+  }
+
+  /* Mask the 8px gap above the sticky toolbar so scrolling cards never peek through */
+  .drv-cat-toolbar::before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: -2px;
+    right: -2px;
+    height: 9px;
+    background-color: var(--c-bg-page);
+    pointer-events: none;
+  }
+
+  .drv-cat-toolbar.is-stuck {
+    padding: var(--s-2) var(--s-4);
+    background-color: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(8px);
+    border-color: var(--c-navy-400);
+    box-shadow: 0 8px 24px -4px rgb(8 58 79 / 0.14);
+  }
+
+  /* Auto-collapse empty chip placeholder row while scrolling to maximize product viewport */
+  .drv-cat-toolbar.is-stuck:not(.has-active-filters) .drv-cat-toolbar__bottom {
+    display: none;
   }
 
   .drv-cat-toolbar__top {
@@ -1540,6 +1569,20 @@
     display: none;
   }
 
+  /* Base Responsive Product Grid (1 col mobile -> 2 cols tablet -> 3/4 cols desktop) */
+  .drv-catalog-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--s-3);
+  }
+
+  @media (min-width: 640px) {
+    .drv-catalog-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--s-4);
+    }
+  }
+
   @media (min-width: 1024px) {
     .drv-mobile-filter-trigger {
       display: none;
@@ -1573,6 +1616,7 @@
       display: grid;
       grid-template-columns: 280px minmax(0, 1fr);
       gap: var(--s-6);
+      align-items: start;
       transition: grid-template-columns 0.4s cubic-bezier(0.16, 1, 0.3, 1),
                   gap 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
@@ -1580,15 +1624,16 @@
     .drv-filter-sidebar {
       display: block;
       position: sticky;
-      top: calc(var(--header-h-desktop) + var(--s-3));
-      max-height: calc(100vh - var(--header-h-desktop) - var(--s-5));
+      top: calc(var(--header-h-current, var(--header-h-desktop, 112px)) + 8px);
+      max-height: calc(100dvh - var(--header-h-current, var(--header-h-desktop, 112px)) - 16px);
       overflow-y: auto;
+      overscroll-behavior: contain;
       scrollbar-width: thin;
       scrollbar-color: var(--c-navy-200) transparent;
       width: 280px;
       min-width: 280px;
+      align-self: start;
       opacity: 1;
-      transform: translateX(0);
       visibility: visible;
       transition: opacity 0.25s ease,
                   transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
@@ -1610,7 +1655,6 @@
     }
 
     .drv-catalog-grid {
-      display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: var(--s-4);
       transition: grid-template-columns 0.4s cubic-bezier(0.16, 1, 0.3, 1);

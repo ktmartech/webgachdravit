@@ -514,10 +514,44 @@
       this.progressBar = document.querySelector('[data-catalog-progress]');
       this.robotsBadge = document.querySelector('[data-catalog-robots-badge]');
       this.mobileDrawer = document.getElementById('drv-filter-drawer');
+      this.toolbar = document.querySelector('.drv-cat-toolbar');
+      this._activeFilterCount = 0;
 
       this._bindEvents();
+      this._initStickyToolbarObserver();
       this._applyUrlInitialParams();
       this.applyFilters();
+    }
+
+    _initStickyToolbarObserver() {
+      if (!this.toolbar) return;
+      const updateStickyState = () => {
+        const rect = this.toolbar.getBoundingClientRect();
+        const headerH =
+          parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h-current')) || 112;
+        this.toolbar.classList.toggle('is-stuck', rect.top <= headerH + 12 && window.scrollY > 220);
+      };
+      window.addEventListener('scroll', updateStickyState, { passive: true });
+      updateStickyState();
+    }
+
+    _updateSidebarToggleLabels(isCollapsed) {
+      const collapsedText =
+        this._activeFilterCount > 0 ? `Hiện bộ lọc (${this._activeFilterCount} đang chọn)` : 'Hiện bộ lọc (14)';
+      document.querySelectorAll('[data-drv-toggle-sidebar]').forEach((btn) => {
+        btn.setAttribute('aria-expanded', String(!isCollapsed));
+        btn.classList.toggle('is-active', isCollapsed);
+        const lbl = btn.querySelector('[data-sidebar-toggle-label]');
+        if (lbl) {
+          lbl.textContent = isCollapsed ? collapsedText : 'Ẩn bộ lọc';
+        }
+        const icon = btn.querySelector('i.ph');
+        if (icon && btn.classList.contains('drv-desktop-filter-toggle')) {
+          icon.className = isCollapsed
+            ? 'ph-fill ph-sliders-horizontal drv-icon--xs'
+            : 'ph ph-sidebar-simple drv-icon--xs';
+        }
+      });
     }
 
     _bindEvents() {
@@ -629,20 +663,7 @@
           const splitEl = document.getElementById('drv-catalog-layout') || document.querySelector('.l-split--catalog');
           if (splitEl) {
             const isCollapsed = splitEl.classList.toggle('is-filter-collapsed');
-            document.querySelectorAll('[data-drv-toggle-sidebar]').forEach((btn) => {
-              btn.setAttribute('aria-expanded', String(!isCollapsed));
-              btn.classList.toggle('is-active', isCollapsed);
-              const lbl = btn.querySelector('[data-sidebar-toggle-label]');
-              if (lbl) {
-                lbl.textContent = isCollapsed ? 'Hiện bộ lọc (14)' : 'Ẩn bộ lọc';
-              }
-              const icon = btn.querySelector('i.ph');
-              if (icon && btn.classList.contains('drv-desktop-filter-toggle')) {
-                icon.className = isCollapsed
-                  ? 'ph-fill ph-sliders-horizontal drv-icon--xs'
-                  : 'ph ph-sidebar-simple drv-icon--xs';
-              }
-            });
+            this._updateSidebarToggleLabels(isCollapsed);
 
             // Smooth Anime.js stagger on cards re-layout
             if (window.anime) {
@@ -931,6 +952,16 @@
       }
 
       this._renderActiveChips(st, sortMode);
+
+      // Keep product grid in viewport if user filtered while scrolled deep down
+      if (this._hasRenderedOnce && this.grid) {
+        const gridRect = this.grid.getBoundingClientRect();
+        if (gridRect.bottom < 220) {
+          const splitEl = document.getElementById('drv-catalog-layout') || this.grid;
+          splitEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+      this._hasRenderedOnce = true;
     }
 
     _renderActiveChips(st, sortMode) {
@@ -958,6 +989,15 @@
       });
       if (st.showroom) {
         activeItems.push({ key: 'showroom', val: 'showroom', label: FACET_LABELS.showroom });
+      }
+
+      this._activeFilterCount = activeItems.length;
+      if (this.toolbar) {
+        this.toolbar.classList.toggle('has-active-filters', activeItems.length > 0);
+      }
+      const splitEl = document.getElementById('drv-catalog-layout') || document.querySelector('.l-split--catalog');
+      if (splitEl) {
+        this._updateSidebarToggleLabels(splitEl.classList.contains('is-filter-collapsed'));
       }
 
       // Update Robots Matrix Indicator (index,follow vs noindex,follow per docs/05_Faceted_Filter_AJAX.md)

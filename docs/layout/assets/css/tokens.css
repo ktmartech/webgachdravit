@@ -102,6 +102,8 @@
     --sec-pad-y: var(--s-7);
     --header-top-h: 68px;
     --header-nav-h: 44px;
+    --header-h-desktop: calc(var(--header-top-h) + var(--header-nav-h));
+    --header-h-current: var(--header-top-h);
     --mobile-bar-h: 56px;
 
     /* 8. Shape, Grout Lines & Elevation */
@@ -143,6 +145,12 @@
       --container-pad: var(--s-5);
       --grid-gap: var(--s-5);
       --sec-pad-y: var(--s-8);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    :root {
+      --header-h-current: var(--header-h-desktop);
     }
   }
 

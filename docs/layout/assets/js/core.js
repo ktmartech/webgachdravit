@@ -543,6 +543,19 @@
   function initScrollObservers() {
     const header = document.querySelector('.drv-header');
     if (header) {
+      const syncHeaderHeight = () => {
+        const h = header.offsetHeight;
+        if (h > 0) {
+          document.documentElement.style.setProperty('--header-h-current', `${h}px`);
+        }
+      };
+      syncHeaderHeight();
+      if ('ResizeObserver' in window) {
+        new ResizeObserver(syncHeaderHeight).observe(header);
+      } else {
+        window.addEventListener('resize', syncHeaderHeight, { passive: true });
+      }
+
       let lastY = window.scrollY;
       window.addEventListener(
         'scroll',
