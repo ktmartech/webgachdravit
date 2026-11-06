@@ -30,19 +30,23 @@
   ];
 
   /* ==========================================================================
-     2. Mock Product Database (16 Authentic Tile SKUs)
+     2. Mock Product Database (12 Authentic Tile SKUs with Full 14-Facet Meta)
      ========================================================================== */
   const DRV_MOCK_PRODUCTS = [
     {
       sku: 'DRV-8801M',
       title: 'Gạch Lát Nền Dravit Vân Đá Marble Calacatta Trắng Khói 80x80 Bóng Kiếng',
       url: '03-product-single.html',
+      usage: 'lat-nen',
+      space: 'phong-khach,mat-tien',
       size: '80x80',
       surface: 'bong-kieng',
       surfaceLabel: 'Bóng kiếng',
       color: 'trang',
       pattern: 'van-da-marble',
-      space: ['phong-khach', 'mat-tien'],
+      origin: 'dravit-signature',
+      style: 'luxury',
+      shape: 'vuong',
       dcof: 'r9',
       water: 'duoi-05',
       thickness: '10mm',
@@ -53,6 +57,7 @@
       discount: '-14%',
       showroom: true,
       popularity: 98,
+      created: 202612,
       img1: 'assets/img/tile-marble-calacatta.svg',
       img2: 'assets/img/room-living-calacatta.svg',
     },
@@ -60,12 +65,16 @@
       sku: 'DRV-TRZ80',
       title: 'Gạch Lát Nền Dravit Terrazzo Kem Đá Hạt Nhuyễn 80x80 Mờ Mịn R10',
       url: '03-product-single.html',
+      usage: 'lat-nen',
+      space: 'phong-khach,phong-bep,nha-tam',
       size: '80x80',
       surface: 'mo-matt',
       surfaceLabel: 'Matt R10',
       color: 'kem',
       pattern: 'terrazzo',
-      space: ['phong-khach', 'phong-bep', 'nha-tam'],
+      origin: 'dravit-signature',
+      style: 'wabi-sabi',
+      shape: 'vuong',
       dcof: 'r10',
       water: 'duoi-05',
       thickness: '10mm',
@@ -76,6 +85,7 @@
       discount: '',
       showroom: true,
       popularity: 95,
+      created: 202611,
       img1: 'assets/img/tile-terrazzo-ivory.svg',
       img2: 'assets/img/room-bathroom-terrazzo.svg',
     },
@@ -83,12 +93,16 @@
       sku: 'DRV-61209',
       title: 'Gạch Khổ Lớn Dravit Vân Đá Pietra Grey 60x120 Mờ Matt Chống Chói',
       url: '03-product-single.html',
+      usage: 'lat-nen',
+      space: 'phong-khach,nha-tam,mat-tien',
       size: '60x120',
       surface: 'mo-matt',
       surfaceLabel: 'Matt R10',
       color: 'xam',
       pattern: 'van-da-marble',
-      space: ['phong-khach', 'nha-tam', 'mat-tien'],
+      origin: 'nhap-khau-an-do',
+      style: 'hien-dai',
+      shape: 'chu-nhat',
       dcof: 'r10',
       water: 'duoi-05',
       thickness: '10mm',
@@ -99,6 +113,7 @@
       discount: '-12%',
       showroom: true,
       popularity: 92,
+      created: 202610,
       img1: 'assets/img/tile-cement-grey.svg',
       img2: 'assets/img/room-kitchen-cement.svg',
     },
@@ -106,12 +121,16 @@
       sku: 'DRV-WD1590',
       title: 'Gạch Thanh Giả Gỗ Dravit Sồi Tự Nhiên 15x90 Xương Đá Porcelain R10',
       url: '03-product-single.html',
+      usage: 'lat-nen',
+      space: 'phong-ngu,phong-khach',
       size: '15x90',
       surface: 'mo-matt',
       surfaceLabel: 'Vân gỗ R10',
       color: 'nau-go',
       pattern: 'gia-go',
-      space: ['phong-ngu', 'phong-khach'],
+      origin: 'viet-nam-xuat-khau',
+      style: 'indochine',
+      shape: 'thanh-dai',
       dcof: 'r10',
       water: 'duoi-05',
       thickness: '9.5mm',
@@ -122,6 +141,7 @@
       discount: '',
       showroom: true,
       popularity: 88,
+      created: 202608,
       img1: 'assets/img/tile-wood-oak.svg',
       img2: 'assets/img/room-living-calacatta.svg',
     },
@@ -129,12 +149,16 @@
       sku: 'DRV-6604C',
       title: 'Gạch Lát Nền Dravit Vân Xi Măng Xám Nhạt 60x60 Matt Chống Trượt R10',
       url: '03-product-single.html',
+      usage: 'lat-nen',
+      space: 'phong-bep,nha-tam,phong-khach',
       size: '60x60',
       surface: 'mo-matt',
       surfaceLabel: 'Matt R10',
       color: 'xam',
       pattern: 'van-xi-mang',
-      space: ['phong-bep', 'nha-tam', 'phong-khach'],
+      origin: 'viet-nam-xuat-khau',
+      style: 'toi-gian',
+      shape: 'vuong',
       dcof: 'r10',
       water: 'duoi-05',
       thickness: '9.5mm',
@@ -145,6 +169,7 @@
       discount: '-15%',
       showroom: true,
       popularity: 90,
+      created: 202607,
       img1: 'assets/img/tile-cement-grey.svg',
       img2: 'assets/img/room-kitchen-cement.svg',
     },
@@ -152,12 +177,16 @@
       sku: 'DRV-SL1224',
       title: 'Đá Nung Kết Khổ Lớn Dravit Armani Dark 60x120 Bề Mặt Carving Tinh Xảo',
       url: '03-product-single.html',
+      usage: 'lat-nen',
+      space: 'phong-khach,mat-tien',
       size: '60x120',
       surface: 'carving',
       surfaceLabel: 'Carving R10',
       color: 'den-than',
       pattern: 'da-nung-ket',
-      space: ['phong-khach', 'mat-tien'],
+      origin: 'nhap-khau-y',
+      style: 'luxury',
+      shape: 'chu-nhat',
       dcof: 'r10',
       water: 'duoi-01',
       thickness: '12mm',
@@ -168,6 +197,7 @@
       discount: '-11%',
       showroom: true,
       popularity: 86,
+      created: 202612,
       img1: 'assets/img/tile-sintered-emperador.svg',
       img2: 'assets/img/room-living-calacatta.svg',
     },
@@ -175,12 +205,16 @@
       sku: 'DRV-OUT60',
       title: 'Gạch Sân Vườn Dravit Đá Basalt Nhám Sần 60x60 Chống Trượt R11 Dày 12mm',
       url: '03-product-single.html',
+      usage: 'lat-nen',
+      space: 'san-vuon,nha-tam',
       size: '60x60',
       surface: 'nham-san',
       surfaceLabel: 'Nhám R11',
       color: 'xam',
       pattern: 'van-xi-mang',
-      space: ['san-vuon', 'nha-tam'],
+      origin: 'viet-nam-xuat-khau',
+      style: 'hien-dai',
+      shape: 'vuong',
       dcof: 'r11',
       water: 'duoi-05',
       thickness: '12mm',
@@ -191,6 +225,7 @@
       discount: '',
       showroom: false,
       popularity: 80,
+      created: 202605,
       img1: 'assets/img/tile-structured-outdoor.svg',
       img2: 'assets/img/room-outdoor-patio.svg',
     },
@@ -198,12 +233,16 @@
       sku: 'DRV-3608W',
       title: 'Gạch Ốp Tường Dravit Sọc Đũa Kiến Trúc Kem Ngà 30x60 Mờ Mịn',
       url: '03-product-single.html',
+      usage: 'op-tuong',
+      space: 'nha-tam,phong-bep,phong-khach',
       size: '30x60',
       surface: 'mo-matt',
       surfaceLabel: 'Matt R9',
       color: 'kem',
       pattern: 'terrazzo',
-      space: ['nha-tam', 'phong-bep'],
+      origin: 'dravit-signature',
+      style: 'wabi-sabi',
+      shape: 'chu-nhat',
       dcof: 'r9',
       water: '05-3',
       thickness: '8.5mm',
@@ -214,6 +253,7 @@
       discount: '-15%',
       showroom: true,
       popularity: 84,
+      created: 202606,
       img1: 'assets/img/tile-decor-fluted.svg',
       img2: 'assets/img/room-bathroom-terrazzo.svg',
     },
@@ -221,12 +261,16 @@
       sku: 'DRV-8812G',
       title: 'Gạch Lát Nền Dravit Vân Đá Onyx Kem Vàng 80x80 Bóng Kiếng Toàn Phần',
       url: '03-product-single.html',
+      usage: 'lat-nen',
+      space: 'phong-khach',
       size: '80x80',
       surface: 'bong-kieng',
       surfaceLabel: 'Bóng kiếng',
       color: 'kem',
       pattern: 'van-da-marble',
-      space: ['phong-khach'],
+      origin: 'nhap-khau-an-do',
+      style: 'luxury',
+      shape: 'vuong',
       dcof: 'r9',
       water: 'duoi-05',
       thickness: '10mm',
@@ -237,6 +281,7 @@
       discount: '',
       showroom: true,
       popularity: 89,
+      created: 202609,
       img1: 'assets/img/tile-marble-calacatta.svg',
       img2: 'assets/img/room-living-calacatta.svg',
     },
@@ -244,12 +289,16 @@
       sku: 'DRV-61215',
       title: 'Gạch Khổ Lớn Dravit Vân Đá Travertine Kem Cát 60x120 Carving Mờ',
       url: '03-product-single.html',
+      usage: 'lat-nen',
+      space: 'phong-khach,mat-tien',
       size: '60x120',
       surface: 'carving',
       surfaceLabel: 'Carving R10',
       color: 'kem',
       pattern: 'van-da-marble',
-      space: ['phong-khach', 'mat-tien'],
+      origin: 'nhap-khau-tbn',
+      style: 'wabi-sabi',
+      shape: 'chu-nhat',
       dcof: 'r10',
       water: 'duoi-05',
       thickness: '10mm',
@@ -260,17 +309,83 @@
       discount: '-12%',
       showroom: true,
       popularity: 91,
+      created: 202611,
       img1: 'assets/img/tile-terrazzo-ivory.svg',
       img2: 'assets/img/room-kitchen-cement.svg',
+    },
+    {
+      sku: 'DRV-8824S',
+      title: 'Gạch Lát Nền Dravit Vân Đá Statuario Trắng Vân Mây 80x80 Mờ Matt R10',
+      url: '03-product-single.html',
+      usage: 'lat-nen',
+      space: 'phong-khach,phong-ngu',
+      size: '80x80',
+      surface: 'mo-matt',
+      surfaceLabel: 'Matt R10',
+      color: 'trang',
+      pattern: 'van-da-marble',
+      origin: 'dravit-signature',
+      style: 'hien-dai',
+      shape: 'vuong',
+      dcof: 'r10',
+      water: 'duoi-05',
+      thickness: '10mm',
+      priceBand: '350k-600k',
+      priceM2: 375000,
+      regularPriceM2: 430000,
+      pricePiece: 240000,
+      discount: '-13%',
+      showroom: true,
+      popularity: 93,
+      created: 202610,
+      img1: 'assets/img/tile-marble-calacatta.svg',
+      img2: 'assets/img/room-living-calacatta.svg',
+    },
+    {
+      sku: 'DRV-61230',
+      title: 'Đá Nung Kết Dravit Emperador Nâu Trầm 60x120 Bóng Kiếng Chống Trầy',
+      url: '03-product-single.html',
+      usage: 'op-tuong',
+      space: 'phong-khach,mat-tien',
+      size: '60x120',
+      surface: 'bong-kieng',
+      surfaceLabel: 'Bóng kiếng',
+      color: 'nau-go',
+      pattern: 'da-nung-ket',
+      origin: 'nhap-khau-y',
+      style: 'indochine',
+      shape: 'chu-nhat',
+      dcof: 'r9',
+      water: 'duoi-01',
+      thickness: '12mm',
+      priceBand: 'tren-600k',
+      priceM2: 640000,
+      regularPriceM2: 0,
+      pricePiece: 460800,
+      discount: '',
+      showroom: true,
+      popularity: 85,
+      created: 202609,
+      img1: 'assets/img/tile-sintered-emperador.svg',
+      img2: 'assets/img/room-living-calacatta.svg',
     },
   ];
 
   const FACET_LABELS = {
+    'lat-nen': 'Công năng: Gạch lát nền',
+    'op-tuong': 'Công năng: Gạch ốp tường',
+    'phong-khach': 'Không gian: Phòng khách',
+    'phong-ngu': 'Không gian: Phòng ngủ',
+    'phong-bep': 'Không gian: Phòng bếp',
+    'nha-tam': 'Không gian: Nhà tắm / WC',
+    'san-vuon': 'Không gian: Sân vườn / Ngoài trời',
+    'mat-tien': 'Không gian: Mặt tiền',
     '80x80': 'Kích thước: 80x80 cm',
     '60x120': 'Kích thước: 60x120 cm',
     '60x60': 'Kích thước: 60x60 cm',
     '30x60': 'Kích thước: 30x60 cm',
     '15x90': 'Kích thước: 15x90 cm',
+    '120x240': 'Kích thước: 120x240 cm',
     'bong-kieng': 'Bề mặt: Bóng kiếng',
     'mo-matt': 'Bề mặt: Mờ (Matt)',
     'nham-san': 'Bề mặt: Nhám sần (Structured)',
@@ -285,6 +400,19 @@
     'gia-go': 'Gạch giả gỗ',
     'van-xi-mang': 'Vân xi măng',
     'da-nung-ket': 'Đá nung kết',
+    'dravit-signature': 'BST: Dravit Signature',
+    'nhap-khau-y': 'Xuất xứ: Nhập khẩu Ý',
+    'nhap-khau-tbn': 'Xuất xứ: Tây Ban Nha',
+    'nhap-khau-an-do': 'Xuất xứ: Ấn Độ',
+    'viet-nam-xuat-khau': 'Xuất xứ: VN Xuất khẩu',
+    'hien-dai': 'Phong cách: Hiện đại',
+    'toi-gian': 'Phong cách: Tối giản (Minimalist)',
+    'wabi-sabi': 'Phong cách: Wabi-Sabi / Japandi',
+    'indochine': 'Phong cách: Đông Dương (Indochine)',
+    'luxury': 'Phong cách: Sang trọng (Luxury)',
+    'vuong': 'Hình dạng: Vuông',
+    'chu-nhat': 'Hình dạng: Chữ nhật',
+    'thanh-dai': 'Hình dạng: Thanh thẻ dài',
     'duoi-200k': 'Giá: Dưới 200.000đ/m²',
     '200k-350k': 'Giá: 200.000đ - 350.000đ/m²',
     '350k-600k': 'Giá: 350.000đ - 600.000đ/m²',
@@ -299,7 +427,7 @@
     '9.5mm': 'Độ dày: 9,5 mm',
     '10mm': 'Độ dày: 10 mm',
     '12mm': 'Độ dày: 12 mm',
-    'showroom': 'Có mẫu tại Showroom',
+    'showroom': 'Có mẫu tại kệ Showroom',
   };
 
   /* ==========================================================================
@@ -321,17 +449,23 @@
     return `
       <article class="drv-card"
         data-product-card
+        data-usage="${item.usage || 'lat-nen'}"
+        data-space="${item.space || 'phong-khach'}"
         data-size="${item.size}"
         data-surface="${item.surface}"
         data-color="${item.color}"
         data-pattern="${item.pattern}"
+        data-origin="${item.origin || 'dravit-signature'}"
+        data-style="${item.style || 'hien-dai'}"
+        data-shape="${item.shape || 'vuong'}"
         data-price-band="${item.priceBand}"
         data-dcof="${item.dcof}"
         data-water="${item.water}"
         data-thickness="${item.thickness}"
         data-showroom="${item.showroom ? 'true' : 'false'}"
         data-price-m2="${item.priceM2}"
-        data-popularity="${item.popularity}">
+        data-popularity="${item.popularity}"
+        data-created="${item.created || 202610}">
         <div class="drv-card__media">
           <div class="drv-card__badges">${badgesHtml}</div>
           <img class="drv-card__img drv-card__img--primary" src="${item.img1}" width="400" height="400" loading="lazy" decoding="async" alt="${item.title}">
@@ -373,10 +507,13 @@
       this.grid = document.getElementById('drv-catalog-grid');
       this.chipsContainer = document.getElementById('drv-active-chips');
       this.countEls = document.querySelectorAll('[data-catalog-count]');
+      this.totalEls = document.querySelectorAll('[data-catalog-total]');
       this.sortSelect = document.getElementById('drv-catalog-sort');
       this.emptyState = document.getElementById('drv-catalog-empty');
       this.loadMoreWrap = document.getElementById('drv-load-more-wrap');
       this.progressBar = document.querySelector('[data-catalog-progress]');
+      this.robotsBadge = document.querySelector('[data-catalog-robots-badge]');
+      this.mobileDrawer = document.getElementById('drv-filter-drawer');
 
       this._bindEvents();
       this._applyUrlInitialParams();
@@ -384,15 +521,20 @@
     }
 
     _bindEvents() {
-      this.addEventListener('change', () => this.applyFilters());
+      this.addEventListener('change', (event) => {
+        this._syncInputToMirror(event.target, this.mobileDrawer);
+        this.applyFilters();
+      });
 
       this.addEventListener('click', (event) => {
         const chipBtn = event.target.closest('[data-facet-chip]');
         if (chipBtn) {
           event.preventDefault();
           const isPressed = chipBtn.getAttribute('aria-pressed') === 'true';
-          chipBtn.setAttribute('aria-pressed', String(!isPressed));
-          chipBtn.classList.toggle('is-active', !isPressed);
+          const nextState = !isPressed;
+          chipBtn.setAttribute('aria-pressed', String(nextState));
+          chipBtn.classList.toggle('is-active', nextState);
+          this._syncChipToMirror(chipBtn.dataset.facet, chipBtn.dataset.value, nextState, this.mobileDrawer);
           this.applyFilters();
           return;
         }
@@ -404,11 +546,38 @@
         }
       });
 
+      if (this.mobileDrawer) {
+        this.mobileDrawer.addEventListener('change', (event) => {
+          this._syncInputToMirror(event.target, this);
+          this.applyFilters();
+        });
+
+        this.mobileDrawer.addEventListener('click', (event) => {
+          const chipBtn = event.target.closest('[data-facet-chip]');
+          if (chipBtn) {
+            event.preventDefault();
+            const isPressed = chipBtn.getAttribute('aria-pressed') === 'true';
+            const nextState = !isPressed;
+            chipBtn.setAttribute('aria-pressed', String(nextState));
+            chipBtn.classList.toggle('is-active', nextState);
+            this._syncChipToMirror(chipBtn.dataset.facet, chipBtn.dataset.value, nextState, this);
+            this.applyFilters();
+            return;
+          }
+
+          const resetBtn = event.target.closest('[data-filter-reset]');
+          if (resetBtn) {
+            event.preventDefault();
+            this.resetAll();
+          }
+        });
+      }
+
       if (this.sortSelect) {
         this.sortSelect.addEventListener('change', () => this.applyFilters());
       }
 
-      // Active Chips removal & Global reset buttons
+      // Active Chips removal, Sub-Silo quick filters, Load More & SEO Toggle
       document.addEventListener('click', (event) => {
         const removeChip = event.target.closest('[data-remove-filter]');
         if (removeChip) {
@@ -427,6 +596,22 @@
           return;
         }
 
+        const quickSilo = event.target.closest('[data-silo-quick-filter]');
+        if (quickSilo) {
+          event.preventDefault();
+          const fKey = quickSilo.dataset.siloQuickFilter;
+          const fVal = quickSilo.dataset.siloValue;
+          const alreadyActive = quickSilo.classList.contains('is-active');
+          this.resetAll(false);
+          document.querySelectorAll('[data-silo-quick-filter]').forEach((el) => el.classList.remove('is-active'));
+          if (!alreadyActive && fKey && fVal) {
+            quickSilo.classList.add('is-active');
+            this._activateFacetValue(fKey, fVal);
+          }
+          this.applyFilters();
+          return;
+        }
+
         const loadMoreBtn = event.target.closest('[data-drv-load-more]');
         if (loadMoreBtn && this.grid) {
           event.preventDefault();
@@ -435,33 +620,86 @@
           loadMoreBtn.hidden = true;
           this.applyFilters();
           if (window.Dravit) window.Dravit.toast('Đã tải thêm 6 mẫu gạch trong danh mục.');
+          return;
         }
+
+        const seoToggleBtn = event.target.closest('[data-drv-seo-toggle]');
+        if (seoToggleBtn) {
+          event.preventDefault();
+          const contentBox = document.getElementById('drv-seo-guide-content');
+          if (contentBox) {
+            const isCollapsed = contentBox.classList.toggle('is-collapsed');
+            seoToggleBtn.setAttribute('aria-expanded', String(!isCollapsed));
+            const labelSpan = seoToggleBtn.querySelector('[data-seo-toggle-label]');
+            const iconEl = seoToggleBtn.querySelector('i.ph');
+            if (labelSpan) {
+              labelSpan.textContent = isCollapsed
+                ? 'Xem toàn bộ hướng dẫn chọn gạch phòng khách'
+                : 'Thu gọn hướng dẫn';
+            }
+            if (iconEl) {
+              iconEl.className = isCollapsed ? 'ph ph-caret-down drv-icon' : 'ph ph-caret-up drv-icon';
+            }
+          }
+        }
+      });
+    }
+
+    _syncChipToMirror(facet, value, isPressed, container) {
+      if (!container) return;
+      const mirrorBtn = container.querySelector(`[data-facet-chip][data-facet="${facet}"][data-value="${value}"]`);
+      if (mirrorBtn) {
+        mirrorBtn.setAttribute('aria-pressed', String(isPressed));
+        mirrorBtn.classList.toggle('is-active', isPressed);
+      }
+    }
+
+    _syncInputToMirror(inputEl, container) {
+      if (!container || !inputEl || !inputEl.name) return;
+      if (inputEl.type === 'radio') {
+        container.querySelectorAll(`input[type="radio"][name="${inputEl.name}"]`).forEach((r) => {
+          r.checked = r.value === inputEl.value;
+        });
+      } else if (inputEl.type === 'checkbox') {
+        const mirrorChk = container.querySelector(`input[type="checkbox"][name="${inputEl.name}"][value="${inputEl.value}"]`);
+        if (mirrorChk) mirrorChk.checked = inputEl.checked;
+      }
+    }
+
+    _activateFacetValue(facetName, facetVal) {
+      [this, this.mobileDrawer].forEach((root) => {
+        if (!root) return;
+        const chip = root.querySelector(`[data-facet-chip][data-facet="${facetName}"][data-value="${facetVal}"]`);
+        if (chip) {
+          chip.setAttribute('aria-pressed', 'true');
+          chip.classList.add('is-active');
+        }
+        const chk = root.querySelector(`input[name="${facetName}"][value="${facetVal}"]`);
+        if (chk) chk.checked = true;
       });
     }
 
     _applyUrlInitialParams() {
       const params = new URLSearchParams(window.location.search);
-      const sizeParam = params.get('kich-thuoc');
-      if (sizeParam) {
-        const btn = this.querySelector(`[data-facet-chip][data-facet="kich-thuoc"][data-value="${sizeParam}"]`);
-        if (btn) {
-          btn.setAttribute('aria-pressed', 'true');
-          btn.classList.add('is-active');
+      ['kich-thuoc', 'mau-sac', 'van-gach', 'be-mat', 'khong-gian', 'cong-nang', 'do-day', 'dcof'].forEach((paramKey) => {
+        const val = params.get(paramKey);
+        if (val) {
+          this._activateFacetValue(paramKey, val);
         }
-      }
-      const patternParam = params.get('van-gach');
-      if (patternParam) {
-        const chk = this.querySelector(`input[name="van-gach"][value="${patternParam}"]`);
-        if (chk) chk.checked = true;
-      }
+      });
     }
 
     getActiveState() {
       const state = {
+        usage: [],
+        space: [],
         size: [],
         surface: [],
         color: [],
         pattern: [],
+        origin: [],
+        style: [],
+        shape: [],
         priceBand: [],
         dcof: [],
         water: [],
@@ -479,11 +717,26 @@
       this.querySelectorAll('input[type="checkbox"]:checked, input[type="radio"]:checked').forEach((inp) => {
         if (!inp.value) return;
         switch (inp.name) {
+          case 'cong-nang':
+            state.usage.push(inp.value);
+            break;
+          case 'khong-gian':
+            state.space.push(inp.value);
+            break;
           case 'be-mat':
             state.surface.push(inp.value);
             break;
           case 'van-gach':
             state.pattern.push(inp.value);
+            break;
+          case 'bo-suu-tap':
+            state.origin.push(inp.value);
+            break;
+          case 'phong-cach':
+            state.style.push(inp.value);
+            break;
+          case 'hinh-dang':
+            state.shape.push(inp.value);
             break;
           case 'gia':
             state.priceBand.push(inp.value);
@@ -509,38 +762,45 @@
     }
 
     _uncheckFilter(facetKey, facetVal) {
-      if (facetKey === 'size' || facetKey === 'color') {
-        const attrName = facetKey === 'size' ? 'kich-thuoc' : 'mau-sac';
-        const btn = this.querySelector(`[data-facet-chip][data-facet="${attrName}"][data-value="${facetVal}"]`);
-        if (btn) {
-          btn.setAttribute('aria-pressed', 'false');
-          btn.classList.remove('is-active');
+      [this, this.mobileDrawer].forEach((root) => {
+        if (!root) return;
+        if (facetKey === 'size' || facetKey === 'color') {
+          const attrName = facetKey === 'size' ? 'kich-thuoc' : 'mau-sac';
+          const btn = root.querySelector(`[data-facet-chip][data-facet="${attrName}"][data-value="${facetVal}"]`);
+          if (btn) {
+            btn.setAttribute('aria-pressed', 'false');
+            btn.classList.remove('is-active');
+          }
+        } else if (facetKey === 'showroom') {
+          const chk = root.querySelector('input[name="showroom"]');
+          if (chk) chk.checked = false;
+        } else {
+          const inp = root.querySelector(`input[value="${facetVal}"]`);
+          if (inp) inp.checked = false;
+          if (facetKey === 'priceBand') {
+            const allRadio = root.querySelector('input[name="gia"][value=""]');
+            if (allRadio) allRadio.checked = true;
+          }
         }
-      } else if (facetKey === 'showroom') {
-        const chk = this.querySelector('input[name="showroom"]');
-        if (chk) chk.checked = false;
-      } else {
-        const inp = this.querySelector(`input[value="${facetVal}"]`);
-        if (inp) inp.checked = false;
-        if (facetKey === 'priceBand') {
-          const allRadio = this.querySelector('input[name="gia"][value=""]');
-          if (allRadio) allRadio.checked = true;
-        }
-      }
+      });
     }
 
-    resetAll() {
-      this.querySelectorAll('[data-facet-chip]').forEach((btn) => {
-        btn.setAttribute('aria-pressed', 'false');
-        btn.classList.remove('is-active');
+    resetAll(triggerApply = true) {
+      [this, this.mobileDrawer].forEach((root) => {
+        if (!root) return;
+        root.querySelectorAll('[data-facet-chip]').forEach((btn) => {
+          btn.setAttribute('aria-pressed', 'false');
+          btn.classList.remove('is-active');
+        });
+        root.querySelectorAll('input[type="checkbox"]').forEach((chk) => {
+          chk.checked = false;
+        });
+        root.querySelectorAll('input[type="radio"]').forEach((rad) => {
+          rad.checked = rad.value === '';
+        });
       });
-      this.querySelectorAll('input[type="checkbox"]').forEach((chk) => {
-        chk.checked = false;
-      });
-      this.querySelectorAll('input[type="radio"]').forEach((rad) => {
-        rad.checked = rad.value === '';
-      });
-      this.applyFilters();
+      document.querySelectorAll('[data-silo-quick-filter]').forEach((el) => el.classList.remove('is-active'));
+      if (triggerApply) this.applyFilters();
     }
 
     applyFilters() {
@@ -551,10 +811,16 @@
       let visibleCount = 0;
 
       cards.forEach((card) => {
+        const cardSpaces = (card.dataset.space || '').split(',');
+        const matchUsage = st.usage.length === 0 || st.usage.includes(card.dataset.usage);
+        const matchSpace = st.space.length === 0 || st.space.some((sp) => cardSpaces.includes(sp));
         const matchSize = st.size.length === 0 || st.size.includes(card.dataset.size);
         const matchSurface = st.surface.length === 0 || st.surface.includes(card.dataset.surface);
         const matchColor = st.color.length === 0 || st.color.includes(card.dataset.color);
         const matchPattern = st.pattern.length === 0 || st.pattern.includes(card.dataset.pattern);
+        const matchOrigin = st.origin.length === 0 || st.origin.includes(card.dataset.origin);
+        const matchStyle = st.style.length === 0 || st.style.includes(card.dataset.style);
+        const matchShape = st.shape.length === 0 || st.shape.includes(card.dataset.shape);
         const matchPrice = st.priceBand.length === 0 || st.priceBand.includes(card.dataset.priceBand);
         const matchDcof = st.dcof.length === 0 || st.dcof.includes(card.dataset.dcof);
         const matchWater = st.water.length === 0 || st.water.includes(card.dataset.water);
@@ -562,10 +828,15 @@
         const matchShowroom = !st.showroom || card.dataset.showroom === 'true';
 
         const isMatch =
+          matchUsage &&
+          matchSpace &&
           matchSize &&
           matchSurface &&
           matchColor &&
           matchPattern &&
+          matchOrigin &&
+          matchStyle &&
+          matchShape &&
           matchPrice &&
           matchDcof &&
           matchWater &&
@@ -583,8 +854,11 @@
         const priceB = Number(b.dataset.priceM2 || 0);
         const popA = Number(a.dataset.popularity || 0);
         const popB = Number(b.dataset.popularity || 0);
+        const createdA = Number(a.dataset.created || 0);
+        const createdB = Number(b.dataset.created || 0);
         if (sortMode === 'gia-tang') return priceA - priceB;
         if (sortMode === 'gia-giam') return priceB - priceA;
+        if (sortMode === 'moi-nhat') return createdB - createdA;
         return popB - popA;
       });
       sortedCards.forEach((c) => this.grid.appendChild(c));
@@ -605,14 +879,28 @@
         this.progressBar.style.transform = `scaleX(${ratio})`;
       }
 
-      this._renderActiveChips(st);
+      this._renderActiveChips(st, sortMode);
     }
 
-    _renderActiveChips(st) {
+    _renderActiveChips(st, sortMode) {
       if (!this.chipsContainer) return;
 
       const activeItems = [];
-      ['size', 'surface', 'color', 'pattern', 'priceBand', 'dcof', 'water', 'thickness'].forEach((key) => {
+      [
+        'usage',
+        'space',
+        'size',
+        'surface',
+        'color',
+        'pattern',
+        'origin',
+        'style',
+        'shape',
+        'priceBand',
+        'dcof',
+        'water',
+        'thickness',
+      ].forEach((key) => {
         st[key].forEach((val) => {
           activeItems.push({ key, val, label: FACET_LABELS[val] || val });
         });
@@ -621,9 +909,18 @@
         activeItems.push({ key: 'showroom', val: 'showroom', label: FACET_LABELS.showroom });
       }
 
+      // Update Robots Matrix Indicator (index,follow vs noindex,follow per docs/05_Faceted_Filter_AJAX.md)
+      if (this.robotsBadge) {
+        const isNoindex = activeItems.length >= 2 || (sortMode && sortMode !== 'ban-chay');
+        this.robotsBadge.textContent = isNoindex ? 'robots: noindex, follow' : 'robots: index, follow';
+        this.robotsBadge.className = isNoindex
+          ? 'drv-badge drv-badge--outline u-tabular'
+          : 'drv-badge drv-badge--showroom u-tabular';
+      }
+
       if (activeItems.length === 0) {
         this.chipsContainer.innerHTML =
-          '<span class="u-text-xs u-text-muted">Chưa chọn bộ lọc phụ (Đang xem tất cả mẫu trong Silo)</span>';
+          '<span class="u-text-xs u-text-muted">Chưa chọn bộ lọc phụ (Đang xem toàn bộ mẫu gạch phòng khách)</span>';
         return;
       }
 
