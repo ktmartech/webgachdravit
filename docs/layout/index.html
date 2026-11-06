@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DRAVIT — Layout Prototypes Directory</title>
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/fonts.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--f-body, system-ui, sans-serif);
+      background-color: var(--c-ivory, #F8FAFC);
+      color: var(--c-text-main, #0B192C);
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+    }
+    .wrap {
+      max-width: 720px;
+      width: 100%;
+    }
+    .head {
+      margin-bottom: 32px;
+      border-bottom: 2px solid var(--c-navy-900, #083A4F);
+      padding-bottom: 16px;
+    }
+    h1 {
+      font-family: var(--f-display, sans-serif);
+      font-size: 32px;
+      color: var(--c-navy-900, #083A4F);
+      letter-spacing: 0.02em;
+    }
+    p {
+      color: #475569;
+      font-size: 15px;
+      margin-top: 6px;
+    }
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      background: #FFFFFF;
+      border: 1px solid var(--c-navy-200, #E2E8F0);
+      border-radius: 8px;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(11, 25, 44, 0.04);
+    }
+    .card:hover {
+      border-color: var(--c-navy-900, #083A4F);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(11, 25, 44, 0.08);
+    }
+    .card-title {
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--c-navy-900, #083A4F);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-desc {
+      font-size: 13px;
+      color: #64748B;
+      margin-top: 4px;
+    }
+    .badge {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 4px;
+      background: #FEF3C7;
+      color: #92400E;
+    }
+    .badge--teal {
+      background: #CCFBF1;
+      color: #0F766E;
+    }
+    .arrow {
+      font-size: 20px;
+      color: var(--c-navy-600, #386172);
+      transition: transform 0.2s;
+    }
+    .card:hover .arrow {
+      transform: translateX(4px);
+      color: var(--c-navy-900, #083A4F);
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="head">
+      <h1>DRAVIT — LAYOUT PROTOTYPES</h1>
+      <p>Danh mục xem trực tiếp các giao diện kiến trúc HTML5/CSS3 trên Raw Githack.</p>
+    </div>
+
+    <div class="list">
+      <a href="01-home.html" class="card">
+        <div>
+          <div class="card-title">
+            <span>01-home.html — Trang chủ (Homepage)</span>
+            <span class="badge">Bright Bento Hero</span>
+          </div>
+          <div class="card-desc">8 Section kiến trúc hoàn chỉnh: Hero Bento 8/4, 4 Cam kết, Bento Không gian, Catalog Explorer Tabs, Sơ đồ tỷ lệ thực, Ưu đãi lẻ lô, Showroom &amp; Cẩm nang.</div>
+        </div>
+        <i class="ph ph-arrow-right arrow"></i>
+      </a>
+
+      <a href="00-ui-kit.html" class="card">
+        <div>
+          <div class="card-title">
+            <span>00-ui-kit.html — UI Kit &amp; Shell</span>
+            <span class="badge badge--teal">Design Tokens</span>
+          </div>
+          <div class="card-desc">Bảng màu, kiểu chữ Anton + Quicksand, icons Phosphor, nút bấm, badges, cards, dialogs, Header sticky 2 tầng, Mega Menu &amp; Mobile Bar.</div>
+        </div>
+        <i class="ph ph-arrow-right arrow"></i>
+      </a>
+    </div>
+  </div>
+</body>
+</html>
