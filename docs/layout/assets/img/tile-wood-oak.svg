@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+  <defs>
+    <linearGradient id="wood-base" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#C89D6C"/>
+      <stop offset="50%" stop-color="#B68856"/>
+      <stop offset="100%" stop-color="#A37545"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="600" fill="#E7E2CE"/>
+  <!-- 3 Wood Planks 15x90 Layout -->
+  <g stroke="#7A542E" stroke-width="2">
+    <rect x="36" y="40" width="168" height="520" fill="url(#wood-base)"/>
+    <rect x="216" y="40" width="168" height="520" fill="url(#wood-base)"/>
+    <rect x="396" y="40" width="168" height="520" fill="url(#wood-base)"/>
+  </g>
+  <!-- Wood Grain Cathedrals -->
+  <g fill="none" stroke="#7A542E" stroke-opacity="0.38" stroke-width="2.5">
+    <path d="M70,40 Q120,180 75,340 T95,560"/>
+    <path d="M110,40 Q155,210 115,390 T135,560"/>
+    <path d="M255,40 Q305,160 265,310 T280,560"/>
+    <path d="M300,40 Q345,230 305,410 T325,560"/>
+    <path d="M435,40 Q485,190 440,360 T465,560"/>
+    <path d="M480,40 Q525,240 490,420 T510,560"/>
+  </g>
+</svg>
+

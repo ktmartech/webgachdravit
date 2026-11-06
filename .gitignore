@@ -1,0 +1,22 @@
+# WordPress Core & Configurations
+wp-admin/
+wp-includes/
+wp-content/
+wp-*.php
+index.php
+license.txt
+readme.html
+xmlrpc.php
+local-xdebuginfo.php
+.htaccess
+wp-config.php
+wp-config-sample.php
+
+# Local dev & system files
+*.log
+.DS_Store
+Thumbs.db
+node_modules/
+
+# Agent skills old & temp
+.agents/skills-old/

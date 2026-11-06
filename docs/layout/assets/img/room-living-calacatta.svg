@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <linearGradient id="wall-grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#E7E2CE"/>
+      <stop offset="100%" stop-color="#D5CFC0"/>
+    </linearGradient>
+    <linearGradient id="floor-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#EDEAE2"/>
+      <stop offset="100%" stop-color="#FAF9F5"/>
+    </linearGradient>
+  </defs>
+  <!-- Architectural Living Room Wall -->
+  <rect width="800" height="330" fill="url(#wall-grad)"/>
+  <!-- Vertical Wall Grout Lines (60x120 Slabs) -->
+  <g stroke="#B8B09E" stroke-width="1.5">
+    <line x1="160" y1="0" x2="160" y2="330"/>
+    <line x1="320" y1="0" x2="320" y2="330"/>
+    <line x1="480" y1="0" x2="480" y2="330"/>
+    <line x1="640" y1="0" x2="640" y2="330"/>
+  </g>
+  <!-- Architectural Window Light -->
+  <rect x="520" y="30" width="220" height="240" fill="#F5F4F0" stroke="#083A4F" stroke-width="4"/>
+  <line x1="630" y1="30" x2="630" y2="270" stroke="#083A4F" stroke-width="3"/>
+  <!-- Minimalist Sofa Silhouette -->
+  <rect x="90" y="215" width="350" height="95" rx="6" fill="#083A4F"/>
+  <rect x="75" y="245" width="380" height="75" rx="6" fill="#386172"/>
+  <rect x="110" y="185" width="145" height="50" rx="4" fill="#3C7D7C"/>
+  <rect x="265" y="185" width="145" height="50" rx="4" fill="#3C7D7C"/>
+  <!-- 80x80 Calacatta Porcelain Floor with Perspective 1.5mm Grout Grid -->
+  <polygon points="0,330 800,330 800,600 0,600" fill="url(#floor-grad)"/>
+  <g stroke="#9CB0B9" stroke-width="1.5">
+    <line x1="0" y1="330" x2="800" y2="330" stroke="#083A4F" stroke-width="2"/>
+    <line x1="0" y1="385" x2="800" y2="385"/>
+    <line x1="0" y1="455" x2="800" y2="455"/>
+    <line x1="0" y1="540" x2="800" y2="540"/>
+    <line x1="160" y1="330" x2="40" y2="600"/>
+    <line x1="300" y1="330" x2="230" y2="600"/>
+    <line x1="440" y1="330" x2="440" y2="600"/>
+    <line x1="580" y1="330" x2="650" y2="600"/>
+    <line x1="720" y1="330" x2="840" y2="600"/>
+  </g>
+  <!-- Subtle Marble Veins on Floor Tiles -->
+  <g stroke="#9CB0B9" stroke-width="2.5" stroke-opacity="0.35" fill="none">
+    <path d="M120,410 C190,425 230,395 290,435"/>
+    <path d="M350,480 C440,460 510,515 610,490"/>
+    <path d="M180,555 C270,575 340,545 420,585"/>
+  </g>
+</svg>
+

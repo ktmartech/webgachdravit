@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+  <!-- 10mm Rectified Porcelain Tile Body Cross-Section -->
+  <rect width="600" height="600" fill="#F5F4F0"/>
+  <g transform="translate(60, 170)">
+    <!-- Top Glaze Surface -->
+    <polygon points="0,80 180,0 480,0 300,80" fill="#FFFFFF" stroke="#083A4F" stroke-width="3"/>
+    <!-- 10mm Dense Porcelain Body (Front Edge) -->
+    <polygon points="0,80 300,80 300,155 0,155" fill="#9CB0B9" stroke="#083A4F" stroke-width="3"/>
+    <!-- 10mm Dense Porcelain Body (Side Rectified 90-deg Edge) -->
+    <polygon points="300,80 480,0 480,75 300,155" fill="#6A8994" stroke="#083A4F" stroke-width="3"/>
+    <!-- Dimension Callout Lines -->
+    <line x1="-24" y1="80" x2="-24" y2="155" stroke="#3C7D7C" stroke-width="4"/>
+    <line x1="-34" y1="80" x2="-14" y2="80" stroke="#3C7D7C" stroke-width="3"/>
+    <line x1="-34" y1="155" x2="-14" y2="155" stroke="#3C7D7C" stroke-width="3"/>
+  </g>
+</svg>
+

@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <!-- Minimalist Spa Bathroom with Terrazzo R10 -->
+  <rect width="800" height="380" fill="#E3EEED"/>
+  <!-- 30x60 Wall Tile Grout Grid -->
+  <g stroke="#9CB0B9" stroke-width="1.2">
+    <line x1="0" y1="95" x2="800" y2="95"/>
+    <line x1="0" y1="190" x2="800" y2="190"/>
+    <line x1="0" y1="285" x2="800" y2="285"/>
+    <line x1="160" y1="0" x2="160" y2="380"/>
+    <line x1="320" y1="0" x2="320" y2="380"/>
+    <line x1="480" y1="0" x2="480" y2="380"/>
+    <line x1="640" y1="0" x2="640" y2="380"/>
+  </g>
+  <!-- Architectural Mirror & Floating Vanity -->
+  <rect x="150" y="45" width="180" height="210" rx="90" fill="#F5F4F0" stroke="#083A4F" stroke-width="4"/>
+  <rect x="110" y="275" width="260" height="65" rx="4" fill="#083A4F"/>
+  <rect x="195" y="255" width="90" height="20" rx="4" fill="#FFFFFF" stroke="#9CB0B9" stroke-width="2"/>
+  <!-- Freestanding Bathtub -->
+  <path d="M470,260 L730,260 C725,355 690,380 600,380 C510,380 475,355 470,260 Z" fill="#FFFFFF" stroke="#9CB0B9" stroke-width="3"/>
+  <!-- Terrazzo R10 Anti-Slip Floor -->
+  <rect x="0" y="380" width="800" height="220" fill="#E7E2CE"/>
+  <g stroke="#9CB0B9" stroke-width="1.5">
+    <line x1="0" y1="380" x2="800" y2="380" stroke="#083A4F" stroke-width="2"/>
+    <line x1="0" y1="450" x2="800" y2="450"/>
+    <line x1="0" y1="530" x2="800" y2="530"/>
+    <line x1="200" y1="380" x2="110" y2="600"/>
+    <line x1="400" y1="380" x2="400" y2="600"/>
+    <line x1="600" y1="380" x2="690" y2="600"/>
+  </g>
+  <g fill="#3C7D7C" opacity="0.55">
+    <circle cx="150" cy="420" r="5"/>
+    <circle cx="280" cy="490" r="6"/>
+    <circle cx="520" cy="480" r="5"/>
+    <circle cx="640" cy="560" r="7"/>
+    <circle cx="330" cy="565" r="5"/>
+  </g>
+</svg>
+
