@@ -623,6 +623,38 @@
           return;
         }
 
+        const sidebarToggleBtn = event.target.closest('[data-drv-toggle-sidebar]');
+        if (sidebarToggleBtn) {
+          event.preventDefault();
+          const splitEl = document.getElementById('drv-catalog-layout') || document.querySelector('.l-split--catalog');
+          if (splitEl) {
+            const isCollapsed = splitEl.classList.toggle('is-filter-collapsed');
+            document.querySelectorAll('[data-drv-toggle-sidebar]').forEach((btn) => {
+              btn.setAttribute('aria-expanded', String(!isCollapsed));
+              const lbl = btn.querySelector('[data-sidebar-toggle-label]');
+              if (lbl) {
+                lbl.textContent = isCollapsed ? 'Hiện bộ lọc (14)' : 'Ẩn bộ lọc';
+              }
+            });
+          }
+          return;
+        }
+
+        const collapseFacetsBtn = event.target.closest('[data-drv-collapse-facets]');
+        if (collapseFacetsBtn) {
+          event.preventDefault();
+          const detailsList = Array.from(this.querySelectorAll('details.drv-filter-group'));
+          const anyOpen = detailsList.some((d) => d.open);
+          detailsList.forEach((d) => {
+            d.open = !anyOpen;
+          });
+          const lbl = collapseFacetsBtn.querySelector('[data-collapse-facets-label]');
+          if (lbl) {
+            lbl.textContent = anyOpen ? 'Mở rộng tất cả' : 'Thu gọn nhóm';
+          }
+          return;
+        }
+
         const seoToggleBtn = event.target.closest('[data-drv-seo-toggle]');
         if (seoToggleBtn) {
           event.preventDefault();

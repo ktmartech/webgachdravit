@@ -12,8 +12,8 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/bold/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/style.css">
-  <link rel="stylesheet" href="assets/css/main.css">
-  <link rel="stylesheet" href="assets/css/pages.css">
+  <link rel="stylesheet" href="assets/css/main.css?v=20261106c">
+  <link rel="stylesheet" href="assets/css/pages.css?v=20261106c">
 
   <!-- JSON-LD Structured Data: BreadcrumbList + CollectionPage + ItemList + FAQPage -->
   <script type="application/ld+json">
@@ -959,19 +959,33 @@
          3. MAIN CATALOG SPLIT: 14-FACET SIDEBAR (280px) + PRODUCT GRID (3 COLS)
          ==================================================================== -->
     <section class="l-section--tight" aria-label="Bộ lọc và danh sách sản phẩm">
-      <div class="l-container l-split l-split--catalog">
+      <div class="l-container">
+        <div id="drv-catalog-layout" class="l-split l-split--catalog">
 
         <!-- ================================================================
              LEFT SIDEBAR: <drv-filter-form> (14 Facets FLT-01..FLT-14)
              ================================================================ -->
-        <aside class="drv-filter-sidebar" aria-label="Bộ lọc kỹ thuật 14 tiêu chí">
+        <aside id="drv-filter-sidebar" class="drv-filter-sidebar" aria-label="Bộ lọc kỹ thuật 14 tiêu chí">
           <drv-filter-form class="drv-filter-box" style="display: block;">
             <div class="drv-filter-box__head">
               <span class="drv-filter-box__head-title">
                 <i class="ph-fill ph-sliders-horizontal drv-icon" aria-hidden="true"></i>
-                <span>Bộ lọc 14 tiêu chí</span>
+                <span>Bộ lọc (14)</span>
               </span>
-              <button type="button" class="drv-filter-box__reset" data-filter-reset>Đặt lại</button>
+              <div class="drv-filter-box__actions">
+                <button type="button" class="drv-filter-box__reset" data-filter-reset>Đặt lại</button>
+                <button type="button" class="drv-filter-box__collapse-btn" data-drv-toggle-sidebar aria-expanded="true" title="Thu gọn cột lọc để mở rộng lưới 4 sản phẩm/hàng">
+                  <i class="ph ph-sidebar-simple drv-icon--xs" aria-hidden="true"></i>
+                  <span>Thu gọn</span>
+                </button>
+              </div>
+            </div>
+            <div class="drv-filter-subbar">
+              <span>Đang mở 3/13 nhóm lọc</span>
+              <button type="button" class="drv-filter-subbar__btn" data-drv-collapse-facets>
+                <i class="ph ph-arrows-in-line-vertical drv-icon--xs" aria-hidden="true"></i>
+                <span data-collapse-facets-label>Thu gọn nhóm</span>
+              </button>
             </div>
 
             <!-- Facet Extra: Có mẫu tại Showroom -->
@@ -1101,8 +1115,8 @@
               </div>
             </details>
 
-            <!-- FLT-03: Loại gạch & Hệ vân — Mở sẵn -->
-            <details class="drv-filter-group" open>
+            <!-- FLT-03: Loại gạch & Hệ vân -->
+            <details class="drv-filter-group">
               <summary class="drv-filter-group__title">
                 <span>4. Hệ vân &amp; Chất liệu</span>
                 <i class="ph ph-caret-down drv-icon--xs drv-filter-group__caret" aria-hidden="true"></i>
@@ -1136,8 +1150,8 @@
               </div>
             </details>
 
-            <!-- FLT-13: Khoảng giá theo m² — Mở sẵn -->
-            <details class="drv-filter-group" open>
+            <!-- FLT-13: Khoảng giá theo m² -->
+            <details class="drv-filter-group">
               <summary class="drv-filter-group__title">
                 <span>5. Khoảng giá (đ/m²)</span>
                 <i class="ph ph-caret-down drv-icon--xs drv-filter-group__caret" aria-hidden="true"></i>
@@ -1227,7 +1241,7 @@
             </details>
 
             <!-- FLT-10: Độ chống trượt DCOF / R-Rating (Spec Technical Filter) -->
-            <details class="drv-filter-group" open>
+            <details class="drv-filter-group">
               <summary class="drv-filter-group__title">
                 <span>8. Chống trượt (R9 - R13)</span>
                 <i class="ph ph-caret-down drv-icon--xs drv-filter-group__caret" aria-hidden="true"></i>
@@ -1420,7 +1434,13 @@
           <!-- Status Toolbar & Active Filter Chips (FLT-14 Sort + Robots Matrix Indicator) -->
           <div class="drv-cat-toolbar">
             <div class="drv-cat-toolbar__top">
-              <div class="u-flex u-items-center u-gap-3 u-flex-wrap">
+              <div class="l-cluster l-cluster--sm">
+                <!-- Desktop Sidebar Collapse Toggle (>=1024px) -->
+                <button type="button" class="drv-btn drv-btn--outline drv-btn--sm drv-desktop-filter-toggle" data-drv-toggle-sidebar aria-expanded="true" aria-controls="drv-filter-sidebar" title="Ẩn/Hiện cột bộ lọc để mở rộng không gian xem gạch (4 mẫu/hàng)">
+                  <i class="ph ph-sidebar-simple drv-icon--xs" aria-hidden="true"></i>
+                  <span data-sidebar-toggle-label>Ẩn bộ lọc</span>
+                </button>
+
                 <!-- Mobile Filter Button (<1024px) -->
                 <button type="button" class="drv-btn drv-btn--secondary drv-btn--sm drv-mobile-filter-trigger" data-drv-action="dialog-open" data-drv-target="#drv-filter-drawer">
                   <i class="ph-fill ph-sliders-horizontal drv-icon" aria-hidden="true"></i>
@@ -1437,7 +1457,7 @@
               </div>
 
               <!-- FLT-14: Sort Select -->
-              <div class="u-flex u-items-center u-gap-2">
+              <div class="l-cluster l-cluster--xs">
                 <label for="drv-catalog-sort" class="u-text-xs u-bold u-text-muted">Sắp xếp (14):</label>
                 <select id="drv-catalog-sort" class="drv-select" style="min-height: 36px; width: auto; padding-block: 4px; font-size: var(--fs-xs);">
                   <option value="ban-chay">Bán chạy nhất</option>
@@ -2127,38 +2147,66 @@
               <i class="ph ph-arrow-down drv-icon" aria-hidden="true"></i>
             </button>
           </div>
+        </div>
+        <!-- /RIGHT MAIN AREA -->
+        </div>
+        <!-- /#drv-catalog-layout -->
 
-          <!-- B2B & Homeowner Project Quote Banner -->
-          <div class="drv-cat-quote-banner">
-            <div>
-              <span class="drv-badge drv-badge--moss">Dành cho Chủ nhà xây mới · KTS · Nhà thầu</span>
-              <h2 class="drv-cat-quote-banner__title">
-                Bóc tách khối lượng gạch &amp; giữ Lô màu (Shade) miễn phí
-              </h2>
-              <p class="drv-cat-quote-banner__desc">
-                Gửi bản vẽ mặt bằng hoặc diện tích sàn để kỹ thuật viên Dravit tính chuẩn số thùng nguyên, dự phòng hao hụt cắt góc và áp bảng chiết khấu sỉ theo tổng công trình.
-              </p>
-              <ul class="drv-cat-quote-banner__checklist">
-                <li><i class="ph-bold ph-check drv-icon--xs u-text-moss" aria-hidden="true"></i><span>Đảm bảo 100% cùng lô sản xuất (Shade &amp; Caliber)</span></li>
-                <li><i class="ph-bold ph-check drv-icon--xs u-text-moss" aria-hidden="true"></i><span>Báo giá chiết khấu trực tiếp theo m² &amp; thùng nguyên đai</span></li>
-                <li><i class="ph-bold ph-check drv-icon--xs u-text-moss" aria-hidden="true"></i><span>Đủ thư viện Map Texture 3D cho KTS &amp; Thiết kế nội thất</span></li>
-              </ul>
-            </div>
-            <div class="drv-cat-quote-banner__actions">
-              <button type="button" class="drv-btn drv-btn--primary drv-btn--full" style="background-color: var(--c-ivory); color: var(--c-navy-900);" data-drv-action="dialog-open" data-drv-target="#drv-quote-modal">
-                <i class="ph ph-file-text drv-icon" aria-hidden="true"></i>
-                <span>Nhận bảng bóc tách &amp; báo giá sỉ</span>
-              </button>
-              <div class="drv-cat-quote-banner__sublinks">
-                <a href="tel:0901234567" class="drv-cat-quote-banner__sublink u-tabular">
-                  <i class="ph ph-phone-call drv-icon--xs" aria-hidden="true"></i>
-                  <span>Hotline Kỹ thuật: 0901.234.567</span>
-                </a>
-                <a href="assets/img/tile-marble-calacatta.svg" download class="drv-cat-quote-banner__sublink">
-                  <i class="ph ph-cube drv-icon--xs" aria-hidden="true"></i>
-                  <span>Tải trọn bộ Map Texture 3D</span>
-                </a>
+        <!-- ================================================================
+             FULL-WIDTH B2B & HOMEOWNER PROJECT QUOTE BANNER (100% Site Container)
+             ================================================================ -->
+        <div class="drv-cat-quote-banner">
+          <!-- Col 1: Value Proposition -->
+          <div>
+            <span class="drv-badge drv-badge--moss">Dành cho Chủ nhà xây mới · KTS · Nhà thầu</span>
+            <h2 class="drv-cat-quote-banner__title" style="color: var(--c-ivory);">
+              Bóc tách khối lượng gạch &amp; giữ Lô màu (Shade) miễn phí
+            </h2>
+            <p class="drv-cat-quote-banner__desc" style="color: var(--c-champagne);">
+              Gửi bản vẽ mặt bằng hoặc diện tích sàn để kỹ thuật viên Dravit tính chuẩn số thùng nguyên, dự phòng hao hụt cắt góc và áp bảng chiết khấu sỉ theo tổng công trình.
+            </p>
+          </div>
+
+          <!-- Col 2: 3 Technical Guarantees -->
+          <ul class="drv-cat-quote-banner__perks">
+            <li class="drv-cat-quote-banner__perk">
+              <i class="ph-fill ph-seal-check" aria-hidden="true"></i>
+              <div>
+                <strong>Đồng nhất 100% Lô màu (Shade &amp; Caliber)</strong><br>
+                <span style="color: var(--c-champagne);">Cam kết xuất kho cùng đợt nung, không lệch sắc độ sàn.</span>
               </div>
+            </li>
+            <li class="drv-cat-quote-banner__perk">
+              <i class="ph-fill ph-calculator" aria-hidden="true"></i>
+              <div>
+                <strong>Báo giá chiết khấu theo m² &amp; thùng nguyên đai</strong><br>
+                <span style="color: var(--c-champagne);">Hỗ trợ nhận đổi trả gạch dư nguyên thùng sau thi công.</span>
+              </div>
+            </li>
+            <li class="drv-cat-quote-banner__perk">
+              <i class="ph-fill ph-cube" aria-hidden="true"></i>
+              <div>
+                <strong>Đủ thư viện Map Texture 3D chuẩn vật lý</strong><br>
+                <span style="color: var(--c-champagne);">File PBR độ phân giải cao cho KTS (SketchUp / 3dsMax).</span>
+              </div>
+            </li>
+          </ul>
+
+          <!-- Col 3: Action Box -->
+          <div class="drv-cat-quote-banner__actions">
+            <button type="button" class="drv-btn drv-btn--primary drv-btn--full" style="background-color: var(--c-ivory); color: var(--c-navy-900);" data-drv-action="dialog-open" data-drv-target="#drv-quote-modal">
+              <i class="ph ph-file-text drv-icon" aria-hidden="true"></i>
+              <span>Nhận bảng bóc tách &amp; báo giá sỉ</span>
+            </button>
+            <div class="drv-cat-quote-banner__sublinks">
+              <a href="tel:0901234567" class="drv-cat-quote-banner__sublink u-tabular">
+                <i class="ph ph-phone-call drv-icon--xs" aria-hidden="true"></i>
+                <span>Hotline Kỹ thuật: 0901.234.567</span>
+              </a>
+              <a href="assets/img/tile-marble-calacatta.svg" download class="drv-cat-quote-banner__sublink">
+                <i class="ph ph-download-simple drv-icon--xs" aria-hidden="true"></i>
+                <span>Tải trọn bộ Map Texture 3D</span>
+              </a>
             </div>
           </div>
         </div>
@@ -2867,8 +2915,8 @@
        SCRIPTS (Anime.js v3.2.2 + DRAVIT Vanilla ES2022 Modules)
        ====================================================================== -->
   <script defer src="https://cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.min.js"></script>
-  <script defer src="assets/js/core.js"></script>
-  <script defer src="assets/js/unit-calc.js"></script>
-  <script defer src="assets/js/catalog-mock.js"></script>
+  <script defer src="assets/js/core.js?v=20261106c"></script>
+  <script defer src="assets/js/unit-calc.js?v=20261106c"></script>
+  <script defer src="assets/js/catalog-mock.js?v=20261106c"></script>
 </body>
 </html>
