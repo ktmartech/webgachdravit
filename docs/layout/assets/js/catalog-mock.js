@@ -631,11 +631,30 @@
             const isCollapsed = splitEl.classList.toggle('is-filter-collapsed');
             document.querySelectorAll('[data-drv-toggle-sidebar]').forEach((btn) => {
               btn.setAttribute('aria-expanded', String(!isCollapsed));
+              btn.classList.toggle('is-active', isCollapsed);
               const lbl = btn.querySelector('[data-sidebar-toggle-label]');
               if (lbl) {
                 lbl.textContent = isCollapsed ? 'Hiện bộ lọc (14)' : 'Ẩn bộ lọc';
               }
+              const icon = btn.querySelector('i.ph');
+              if (icon && btn.classList.contains('drv-desktop-filter-toggle')) {
+                icon.className = isCollapsed
+                  ? 'ph-fill ph-sliders-horizontal drv-icon--xs'
+                  : 'ph ph-sidebar-simple drv-icon--xs';
+              }
             });
+
+            // Smooth Anime.js stagger on cards re-layout
+            if (window.anime) {
+              window.anime({
+                targets: '#drv-catalog-grid .drv-card',
+                opacity: [0.7, 1],
+                scale: [0.98, 1],
+                delay: window.anime.stagger(20),
+                duration: 320,
+                easing: 'easeOutQuad',
+              });
+            }
           }
           return;
         }
