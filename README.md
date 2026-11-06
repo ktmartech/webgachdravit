@@ -85,6 +85,7 @@ Dự án phát triển nền tảng kỹ thuật số hoàn chỉnh cho thương
 Bộ giao diện mẫu (Prototypes) nằm hoàn toàn trong thư mục `docs/layout/` viết bằng HTML5 ngữ nghĩa, CSS Layers (`@layer reset, tokens, base, layout, components, utilities`) và JavaScript Vanilla, không phụ thuộc thư viện build nặng.
 
 ### Xem nhanh trên trình duyệt
+
 1. Mở file [docs/layout/00-ui-kit.html](docs/layout/00-ui-kit.html) để kiểm tra:
    - Toàn bộ tokens màu sắc, kiểu chữ Anton & Quicksand, icons Phosphor.
    - Thư viện components: Nút bấm, thẻ sản phẩm, badges trạng thái kho, dialog popup báo giá.
@@ -100,7 +101,9 @@ Bộ giao diện mẫu (Prototypes) nằm hoàn toàn trong thư mục `docs/lay
    - **Section 8:** Cẩm nang kỹ thuật ốp lát & Bài viết chuyên sâu.
 
 ### Kiểm thử Responsive & Khắc phục lỗi tràn ngang (Overflow)
+
 Tất cả các layout đều được kiểm thử tự động qua Chrome DevTools Protocol (CDP) tại các breakpoint:
+
 - Mobile: `360px`, `390px` (iPhone 12/13/14)
 - Tablet: `768px` (iPad Portrait), `1024px` (iPad Landscape)
 - Desktop: `1280px`, `1366px`, `1440px`, `1920px` (Full HD)
@@ -120,7 +123,4 @@ Khi phát triển thêm tính năng hoặc chuyển đổi template sang WordPre
 
 ## 6. Bản quyền & Thông tin liên hệ
 
-- **Đơn vị chủ quản:** Công ty Cổ phần Gạch Ốp Lát DRAVIT
-- **Địa chỉ Showroom:** Khu đô thị Sala, TP. Thủ Đức, TP. Hồ Chí Minh
 - **Website:** [https://gachdravit.vn](https://gachdravit.vn)
-- **Hotline kỹ thuật & dự án:** 0903 000 000
