@@ -263,27 +263,6 @@
           this.updateRow();
           return;
         }
-
-        const boxBtn = event.target.closest('[data-qty-add-box]');
-        if (boxBtn && this.input) {
-          event.preventDefault();
-          const nextVal = Number(this.input.value || 1) + this.piecesPerBox;
-          this.input.value = String(nextVal);
-          this.updateRow();
-          return;
-        }
-
-        const roundBtn = event.target.closest('[data-qty-round-box]');
-        if (roundBtn && this.input && this.model === 'area_pack') {
-          event.preventDefault();
-          const cur = Math.max(1, Math.round(Number(this.input.value || 1)));
-          const rounded = Math.ceil(cur / this.piecesPerBox) * this.piecesPerBox;
-          this.input.value = String(rounded);
-          this.updateRow();
-          if (window.Dravit) {
-            window.Dravit.toast(`Đã làm tròn lên ${rounded} viên (${rounded / this.piecesPerBox} thùng nguyên).`);
-          }
-        }
       });
 
       if (this.input) {
@@ -429,6 +408,37 @@
         el.textContent = formatVnd(totalVnd);
       }
     });
+
+    // Option 4.1 (BOQ Quote Cart): Tiered Volume Discount & Final Estimated Total
+    let discountPercent = 0;
+    if (totalM2 >= 100) {
+      discountPercent = 8;
+    } else if (totalM2 >= 30) {
+      discountPercent = 5;
+    }
+    const discountAmount = Math.round((totalVnd * discountPercent) / 100);
+    const finalVnd = Math.max(0, totalVnd - discountAmount);
+
+    document.querySelectorAll('[data-boq-discount-rate]').forEach((el) => {
+      el.textContent = `${discountPercent}%`;
+    });
+    document.querySelectorAll('[data-boq-discount-amount]').forEach((el) => {
+      el.textContent = discountAmount > 0 ? `-${formatVnd(discountAmount)}` : '0đ';
+    });
+    document.querySelectorAll('[data-boq-final-price]').forEach((el) => {
+      const prev = Number(el.dataset.lastVal || finalVnd);
+      el.dataset.lastVal = String(finalVnd);
+      if (prev !== finalVnd && window.Dravit?.motion?.animateNumber) {
+        window.Dravit.motion.animateNumber(el, prev, finalVnd, formatVnd, 280);
+      } else {
+        el.textContent = formatVnd(finalVnd);
+      }
+    });
+
+    document.querySelectorAll('.drv-boq-tier[data-boq-tier]').forEach((tierEl) => {
+      const tierVal = Number(tierEl.dataset.boqTier || 0);
+      tierEl.classList.toggle('is-active', tierVal === discountPercent);
+    });
   }
 
   function setCartEmptyState(isEmpty) {
@@ -452,6 +462,60 @@
 
   // Handle Cart Row Removal, State Toggles, Cross-sell & Quote Export
   document.addEventListener('click', (event) => {
+    // Row Detail Drawer Toggle (Phương án 1: Khay chi tiết toàn dòng)
+    const toggleDetailBtn = event.target.closest('[data-drv-action="cart-toggle-row-detail"]');
+    if (toggleDetailBtn) {
+      event.preventDefault();
+      const row = toggleDetailBtn.closest('[data-cart-row]');
+      if (row) {
+        const drawer = row.querySelector('[data-cart-row-drawer]');
+        if (drawer) {
+          const isExpanded = !drawer.hidden;
+          drawer.hidden = isExpanded;
+          toggleDetailBtn.classList.toggle('is-expanded', !isExpanded);
+          toggleDetailBtn.setAttribute('aria-expanded', String(!isExpanded));
+          const labelSpan = toggleDetailBtn.querySelector('[data-toggle-label]');
+          if (labelSpan) {
+            labelSpan.textContent = !isExpanded ? 'Thu gọn chi tiết' : 'Xem chi tiết & quy đổi';
+          }
+        }
+      }
+      return;
+    }
+
+    // Quick Add Box Button (Hỗ trợ nút bấm cả trong và ngoài Drawer)
+    const boxBtn = event.target.closest('[data-qty-add-box]');
+    if (boxBtn) {
+      event.preventDefault();
+      const row = boxBtn.closest('[data-cart-row]');
+      const qtyEl = row ? row.querySelector('drv-qty-input') : null;
+      if (qtyEl && qtyEl.input) {
+        const step = qtyEl.piecesPerBox || 1;
+        const nextVal = Number(qtyEl.input.value || 1) + step;
+        qtyEl.input.value = String(nextVal);
+        qtyEl.updateRow();
+      }
+      return;
+    }
+
+    // Quick Round Box Button (Làm tròn thùng nguyên)
+    const roundBtn = event.target.closest('[data-qty-round-box]');
+    if (roundBtn) {
+      event.preventDefault();
+      const row = roundBtn.closest('[data-cart-row]');
+      const qtyEl = row ? row.querySelector('drv-qty-input') : null;
+      if (qtyEl && qtyEl.input && qtyEl.model === 'area_pack') {
+        const cur = Math.max(1, Math.round(Number(qtyEl.input.value || 1)));
+        const rounded = Math.ceil(cur / qtyEl.piecesPerBox) * qtyEl.piecesPerBox;
+        qtyEl.input.value = String(rounded);
+        qtyEl.updateRow();
+        if (window.Dravit) {
+          window.Dravit.toast(`Đã làm tròn lên ${rounded} viên (${rounded / qtyEl.piecesPerBox} thùng nguyên).`);
+        }
+      }
+      return;
+    }
+
     const removeBtn = event.target.closest('[data-cart-remove]');
     if (removeBtn) {
       event.preventDefault();
@@ -466,7 +530,7 @@
           row.hidden = true;
         }
         recalculateCartTotals();
-        if (window.Dravit) window.Dravit.toast('Đã xóa sản phẩm khỏi giỏ hàng.');
+        if (window.Dravit) window.Dravit.toast('Đã xóa hạng mục khỏi danh sách.');
 
         const cartPageContainer = document.getElementById('drv-cart-filled');
         if (cartPageContainer) {
@@ -510,11 +574,42 @@
       document.querySelectorAll('[data-cart-row]').forEach((r) => {
         if (r.dataset.cartDefault === 'true' || !r.dataset.cartCrosssell) {
           r.hidden = false;
+        } else {
+          r.hidden = true;
         }
       });
       setCartEmptyState(false);
       recalculateCartTotals();
-      if (window.Dravit) window.Dravit.toast('Đã khôi phục 2 sản phẩm mẫu vào giỏ hàng.');
+      if (window.Dravit) window.Dravit.toast('Đã khôi phục danh sách sản phẩm mẫu.');
+      return;
+    }
+
+    const quickAddBtn = event.target.closest('[data-drv-action="boq-quick-add"]');
+    if (quickAddBtn) {
+      event.preventDefault();
+      const selectEl = document.querySelector('[data-boq-quick-select]');
+      const targetSku = selectEl?.value;
+      if (!targetSku) return;
+
+      const targetRows = document.querySelectorAll(`[data-cart-row][data-cart-sku="${targetSku}"]`);
+      if (targetRows.length > 0) {
+        targetRows.forEach((row) => {
+          if (row.hidden) {
+            row.hidden = false;
+          } else {
+            const qtyEl = row.querySelector('drv-qty-input');
+            if (qtyEl && qtyEl.input) {
+              const step = qtyEl.piecesPerBox || 1;
+              qtyEl.input.value = String(Number(qtyEl.input.value || 1) + step);
+              qtyEl.updateRow(true);
+            }
+          }
+        });
+        setCartEmptyState(false);
+        recalculateCartTotals();
+        if (window.Dravit?.motion?.bounceCartBadge) window.Dravit.motion.bounceCartBadge();
+        if (window.Dravit) window.Dravit.toast(`Đã thêm mã ${targetSku} vào danh sách báo giá.`);
+      }
       return;
     }
 
@@ -598,15 +693,44 @@
       return;
     }
 
-    const exportQuoteBtn = event.target.closest('[data-drv-action="cart-export-quote"]');
+    const exportQuoteBtn = event.target.closest(
+      '[data-drv-action="cart-export-quote"], [data-drv-action="boq-download-pdf"]'
+    );
     if (exportQuoteBtn) {
       event.preventDefault();
       populateCartQuotePreview();
       const modal = document.getElementById('drv-cart-quote-preview');
       if (modal && typeof modal.showModal === 'function') {
         modal.showModal();
+      } else {
+        window.print();
+      }
+      return;
+    }
+
+    const downloadCsvBtn = event.target.closest('[data-drv-action="boq-download-csv"]');
+    if (downloadCsvBtn) {
+      event.preventDefault();
+      exportBoqToCsv();
+      return;
+    }
+
+    const copyZaloBtn = event.target.closest(
+      '[data-drv-action="boq-copy-zalo"], [data-drv-action="boq-send-zalo-direct"]'
+    );
+    if (copyZaloBtn) {
+      populateCartQuotePreview();
+      const zaloText = document.getElementById('drv-quote-copy-zalo')?.dataset.drvValue || '';
+      if (zaloText && navigator.clipboard) {
+        navigator.clipboard.writeText(zaloText).catch(() => {});
+      }
+      if (copyZaloBtn.dataset.drvAction === 'boq-copy-zalo') {
+        event.preventDefault();
+        if (window.Dravit) {
+          window.Dravit.toast('Đã sao chép bảng báo giá chi tiết để dán vào Zalo.');
+        }
       } else if (window.Dravit) {
-        window.Dravit.toast('Đã tạo bảng tóm tắt khối lượng & báo giá tạm tính.');
+        window.Dravit.toast('Đã chép sẵn nội dung báo giá vào bộ nhớ tạm để gửi Zalo.');
       }
       return;
     }
@@ -614,6 +738,7 @@
     const printQuoteBtn = event.target.closest('[data-drv-action="cart-print-quote"]');
     if (printQuoteBtn) {
       event.preventDefault();
+      populateCartQuotePreview();
       window.print();
     }
   });
@@ -622,6 +747,39 @@
     const fbtCheck = event.target.closest('.drv-fbt-item__check');
     if (fbtCheck) {
       updateFbtBundleSummary();
+    }
+  });
+
+  document.addEventListener('submit', (event) => {
+    const leadForm = event.target.closest('#drv-boq-lead-form');
+    if (!leadForm) return;
+    event.preventDefault();
+
+    const nameInput = leadForm.querySelector('[name="lead_name"]');
+    const phoneInput = leadForm.querySelector('[name="lead_phone"]');
+    const roleSelect = leadForm.querySelector('[name="lead_role"]');
+    const statusBox = document.getElementById('drv-boq-lead-status');
+
+    const nameVal = nameInput?.value?.trim() || '';
+    const phoneVal = phoneInput?.value?.trim() || '';
+    const roleVal = roleSelect?.value || 'Khách hàng';
+
+    if (!nameVal || !phoneVal) {
+      if (window.Dravit) {
+        window.Dravit.toast('Vui lòng nhập Họ tên và Số điện thoại Zalo để nhận báo giá.');
+      }
+      return;
+    }
+
+    const totalM2 = document.querySelector('[data-cart-total-m2]')?.textContent || '';
+    const finalPrice = document.querySelector('[data-boq-final-price]')?.textContent || '';
+
+    if (statusBox) {
+      statusBox.hidden = false;
+      statusBox.textContent = `Đã tiếp nhận yêu cầu báo giá #BG-2026-1106 của ${nameVal} (${roleVal}). Chuyên viên Trần Minh Quân sẽ gửi bảng báo giá chiết khấu (${totalM2} · ${finalPrice}) qua Zalo ${phoneVal} trong 15 phút.`;
+    }
+    if (window.Dravit) {
+      window.Dravit.toast(`Đã gửi danh sách báo giá tới chuyên viên tư vấn Dravit!`);
     }
   });
 
@@ -658,50 +816,188 @@
 
   function populateCartQuotePreview() {
     const tbody = document.getElementById('drv-quote-preview-rows');
+    const printTbody = document.getElementById('drv-a4-print-rows');
     const copyBtn = document.getElementById('drv-quote-copy-zalo');
+    const projectInput = document.querySelector('[data-boq-project-input]');
+    const projectName = projectInput?.value?.trim() || 'Khách hàng công trình DRAVIT';
+
+    document.querySelectorAll('[data-preview-project-name], [data-print-project-name]').forEach((el) => {
+      el.textContent = projectName;
+    });
+
     const cartPageContainer = document.getElementById('drv-cart-filled') || document;
     const rows = Array.from(cartPageContainer.querySelectorAll('[data-cart-row]')).filter((r) => !r.hidden);
+    const hasPriceCol = Boolean(document.querySelector('#drv-cart-quote-preview th:nth-child(5)'));
 
     let html = '';
-    const zaloLines = ['[BẢNG TẠM TÍNH KHỐI LƯỢNG GẠCH DRAVIT]'];
+    let printHtml = '';
+    const zaloLines = [`[PHIẾU BÁO GIÁ & KHỐI LƯỢNG GẠCH DRAVIT - #BG-2026-1106]`, `Công trình: ${projectName}`];
     let idx = 1;
 
     rows.forEach((row) => {
       const sku = row.dataset.cartSku || '';
       const title = row.querySelector('[data-row-title]')?.textContent?.trim() || sku;
+      const specs = row.querySelector('[data-row-specs]')?.textContent?.replace(/\s+/g, ' ').trim() || '';
+      const zoneSelect = row.querySelector('[data-row-zone]');
+      const zone = zoneSelect ? zoneSelect.value : '';
+      const priceText =
+        row.querySelector('[data-row-price-text]')?.dataset.rowPriceText ||
+        row.querySelector('.drv-cart-item__price-main')?.textContent?.trim() ||
+        '';
       const conv = row.querySelector('[data-row-conversion]')?.textContent?.trim() || '';
       const sub = row.querySelector('[data-row-subtotal]')?.textContent?.trim() || '';
       const qtyComp = row.querySelector('drv-qty-input');
       const st = qtyComp?.getState ? qtyComp.getState() : { qty: 1 };
       const unitLabel = qtyComp?.unitLabel || 'đơn vị';
 
-      html += `
+      if (hasPriceCol) {
+        html += `
+          <tr>
+            <td class="u-tabular">${idx}</td>
+            <td>
+              ${zone ? `<div class="u-text-xs u-bold u-text-moss">[${zone}]</div>` : ''}
+              <strong class="u-text-navy">${title}</strong>
+              <div class="u-text-xs u-text-muted u-tabular">Mã SKU: <strong>${sku}</strong> ${specs ? `· ${specs}` : ''}</div>
+            </td>
+            <td class="u-tabular u-text-xs">${priceText}</td>
+            <td class="u-tabular">
+              <strong>${st.qty} ${unitLabel}</strong>
+              <div class="u-text-xs u-text-muted">${conv}</div>
+            </td>
+            <td class="u-tabular u-bold u-text-navy u-text-right">${sub}</td>
+          </tr>
+        `;
+      } else {
+        html += `
+          <tr>
+            <td class="u-tabular">${idx}</td>
+            <td>
+              <strong class="u-text-navy">${title}</strong>
+              <div class="u-text-xs u-text-muted u-tabular">Mã: ${sku} ${conv}</div>
+            </td>
+            <td class="u-tabular u-bold">${st.qty} ${unitLabel}</td>
+            <td class="u-tabular u-bold u-text-navy">${sub}</td>
+          </tr>
+        `;
+      }
+
+      printHtml += `
         <tr>
           <td class="u-tabular">${idx}</td>
           <td>
-            <strong class="u-text-navy">${title}</strong>
-            <div class="u-text-xs u-text-muted u-tabular">Mã: ${sku} ${conv}</div>
+            ${zone ? `<div><strong>Hạng mục: ${zone}</strong></div>` : ''}
+            <strong>${title}</strong>
+            <div style="font-size: 9pt; color: #386172;">Mã SKU: ${sku} ${specs ? `· ${specs}` : ''}</div>
           </td>
-          <td class="u-tabular u-bold">${st.qty} ${unitLabel}</td>
-          <td class="u-tabular u-bold u-text-navy">${sub}</td>
+          <td class="u-tabular">${priceText}</td>
+          <td class="u-tabular"><strong>${st.qty} ${unitLabel}</strong><br><span style="font-size: 9pt;">${conv}</span></td>
+          <td class="u-tabular" style="text-align: right;"><strong>${sub}</strong></td>
         </tr>
       `;
-      zaloLines.push(`${idx}. ${title} (${sku}): ${st.qty} ${unitLabel} ${conv} -> ${sub}`);
+
+      zaloLines.push(
+        `${idx}. ${zone ? `[${zone}] ` : ''}${title} (${sku}) | ĐG: ${priceText} | SL: ${st.qty} ${unitLabel} (${conv}) -> ${sub}`
+      );
       idx += 1;
     });
 
     if (tbody) tbody.innerHTML = html;
+    if (printTbody) printTbody.innerHTML = printHtml;
 
     const totalM2 = document.querySelector('[data-cart-total-m2]')?.textContent || '0 m²';
     const totalKg = document.querySelector('[data-cart-total-kg]')?.textContent || '0 kg';
     const totalPrice = document.querySelector('[data-cart-total-price]')?.textContent || '0đ';
+    const discountRate = document.querySelector('[data-boq-discount-rate]')?.textContent || '0%';
+    const finalPrice = document.querySelector('[data-boq-final-price]')?.textContent || totalPrice;
 
     zaloLines.push(`• Tổng diện tích gạch: ${totalM2}`);
     zaloLines.push(`• Tổng trọng lượng: ${totalKg}`);
-    zaloLines.push(`• Tổng tạm tính (chưa gồm phí xe): ${totalPrice}`);
+    zaloLines.push(`• Tổng niêm yết: ${totalPrice} (Chiết khấu công trình: ${discountRate})`);
+    zaloLines.push(`• TỔNG DỰ TOÁN TẠM TÍNH: ${finalPrice}`);
 
     if (copyBtn) {
       copyBtn.dataset.drvValue = zaloLines.join('\n');
+    }
+  }
+
+  function exportBoqToCsv() {
+    const projectInput = document.querySelector('[data-boq-project-input]');
+    const projectName = projectInput?.value?.trim() || 'Cong trinh DRAVIT';
+    const cartPageContainer = document.getElementById('drv-cart-filled') || document;
+    const rows = Array.from(cartPageContainer.querySelectorAll('[data-cart-row]')).filter((r) => !r.hidden);
+
+    const escapeCsv = (str) => `"${String(str || '').replace(/"/g, '""')}"`;
+    const csvRows = [
+      ['BANG BAO GIA VA BOC TACH KHOI LUONG VAT TU DRAVIT - #BG-2026-1106'],
+      ['Cong trinh / Khach hang:', projectName],
+      [],
+      [
+        'STT',
+        'Hang muc op lat',
+        'Ma SKU',
+        'Ten san pham',
+        'Thong so ky thuat',
+        'Don gia niem yet',
+        'So luong giao dich',
+        'Quy doi thung / m2 / kg',
+        'Thanh tien tam tinh',
+      ],
+    ];
+
+    rows.forEach((row, index) => {
+      const sku = row.dataset.cartSku || '';
+      const title = row.querySelector('[data-row-title]')?.textContent?.trim() || sku;
+      const specs = row.querySelector('[data-row-specs]')?.textContent?.replace(/\s+/g, ' ').trim() || '';
+      const zone = row.querySelector('[data-row-zone]')?.value || 'Chung';
+      const priceText =
+        row.querySelector('[data-row-price-text]')?.dataset.rowPriceText ||
+        row.querySelector('.drv-cart-item__price-main')?.textContent?.trim() ||
+        '';
+      const conv = row.querySelector('[data-row-conversion]')?.textContent?.trim() || '';
+      const sub = row.querySelector('[data-row-subtotal]')?.textContent?.trim() || '';
+      const qtyComp = row.querySelector('drv-qty-input');
+      const st = qtyComp?.getState ? qtyComp.getState() : { qty: 1 };
+      const unitLabel = qtyComp?.unitLabel || 'don vi';
+
+      csvRows.push([
+        index + 1,
+        zone,
+        sku,
+        title,
+        specs,
+        priceText,
+        `${st.qty} ${unitLabel}`,
+        conv,
+        sub,
+      ]);
+    });
+
+    const totalM2 = document.querySelector('[data-cart-total-m2]')?.textContent || '';
+    const totalBoxes = document.querySelector('[data-cart-total-boxes]')?.textContent || '';
+    const totalKg = document.querySelector('[data-cart-total-kg]')?.textContent || '';
+    const totalPrice = document.querySelector('[data-cart-total-price]')?.textContent || '';
+    const discountRate = document.querySelector('[data-boq-discount-rate]')?.textContent || '0%';
+    const discountAmount = document.querySelector('[data-boq-discount-amount]')?.textContent || '0đ';
+    const finalPrice = document.querySelector('[data-boq-final-price]')?.textContent || totalPrice;
+
+    csvRows.push([]);
+    csvRows.push(['', 'Tong dien tich gach:', totalM2, 'Tong dong goi:', totalBoxes, 'Tong trong luong:', totalKg, 'Tong niem yet:', totalPrice]);
+    csvRows.push(['', '', '', '', '', '', `Chiet khau (${discountRate}):`, '', discountAmount]);
+    csvRows.push(['', '', '', '', '', '', 'TONG DU TOAN TAM TINH:', '', finalPrice]);
+
+    const csvString = '\uFEFF' + csvRows.map((r) => r.map(escapeCsv).join(',')).join('\r\n');
+    const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'Bao-Gia-Gach-Dravit-BG20261106.csv';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    if (window.Dravit) {
+      window.Dravit.toast('Đã tải xuống file Excel dự toán (Bao-Gia-Gach-Dravit-BG20261106.csv).');
     }
   }
 

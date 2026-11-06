@@ -99,17 +99,18 @@
                   <span class="drv-badge drv-badge--amber" data-order-status-badge>Chờ xác nhận phí giao</span>
                 </div>
                 <div class="l-cluster l-cluster--xs">
-                  <h1 class="drv-order-banner__id">Đơn hàng #DRV-202688</h1>
-                  <button
-                    type="button"
-                    class="drv-btn drv-btn--soft drv-btn--sm"
-                    data-drv-action="copy-text"
-                    data-drv-value="DRV-202688"
-                    data-drv-feedback="Đã chép mã"
-                    title="Sao chép mã đơn hàng">
-                    <i class="ph ph-copy drv-icon--xs" aria-hidden="true"></i>
-                    <span>Sao chép</span>
-                  </button>
+                  <h1 class="drv-order-banner__id">
+                    <span>Đơn hàng #DRV-202688</span>
+                    <button
+                      type="button"
+                      class="drv-btn-copy-inline"
+                      data-drv-action="copy-text"
+                      data-drv-value="DRV-202688"
+                      aria-label="Sao chép mã đơn hàng"
+                      title="Sao chép mã đơn hàng">
+                      <i class="ph ph-copy" aria-hidden="true"></i>
+                    </button>
+                  </h1>
                 </div>
               </div>
             </div>
@@ -247,8 +248,8 @@
                     <!-- Row 1: Bank Name -->
                     <div class="drv-bank-row" role="row">
                       <span class="drv-bank-row__label" role="rowheader">Ngân hàng</span>
-                      <strong class="drv-bank-row__val" role="cell">MBBank (Ngân hàng TMCP Quân Đội)</strong>
-                      <span class="drv-bank-row__action">
+                      <span class="drv-bank-row__cell" role="cell">
+                        <strong class="drv-bank-row__val">MBBank (Ngân hàng TMCP Quân Đội)</strong>
                         <span class="drv-badge drv-badge--outline u-text-xs">Chi nhánh TP. HCM</span>
                       </span>
                     </div>
@@ -256,75 +257,71 @@
                     <!-- Row 2: Account Number -->
                     <div class="drv-bank-row" role="row">
                       <span class="drv-bank-row__label" role="rowheader">Số tài khoản</span>
-                      <strong class="drv-bank-row__val u-text-navy" role="cell">0938258668</strong>
-                      <div class="drv-bank-row__action">
+                      <span class="drv-bank-row__cell" role="cell">
+                        <strong class="drv-bank-row__val u-text-navy">0938258668</strong>
                         <button
                           type="button"
-                          class="drv-btn drv-btn--soft drv-btn--sm"
+                          class="drv-btn-copy-inline"
                           data-drv-action="copy-text"
                           data-drv-value="0938258668"
-                          data-drv-feedback="Đã chép STK"
+                          aria-label="Sao chép số tài khoản"
                           title="Sao chép số tài khoản">
-                          <i class="ph ph-copy drv-icon--xs" aria-hidden="true"></i>
-                          <span>Sao chép</span>
+                          <i class="ph ph-copy" aria-hidden="true"></i>
                         </button>
-                      </div>
+                      </span>
                     </div>
 
                     <!-- Row 3: Account Name -->
                     <div class="drv-bank-row" role="row">
                       <span class="drv-bank-row__label" role="rowheader">Chủ tài khoản</span>
-                      <strong class="drv-bank-row__val u-text-navy" role="cell">CONG TY TNHH DRAVIT VIET NAM</strong>
-                      <div class="drv-bank-row__action">
+                      <span class="drv-bank-row__cell" role="cell">
+                        <strong class="drv-bank-row__val u-text-navy">CONG TY TNHH DRAVIT VIET NAM</strong>
                         <button
                           type="button"
-                          class="drv-btn drv-btn--soft drv-btn--sm"
+                          class="drv-btn-copy-inline"
                           data-drv-action="copy-text"
                           data-drv-value="CONG TY TNHH DRAVIT VIET NAM"
-                          data-drv-feedback="Đã chép tên"
+                          aria-label="Sao chép tên chủ tài khoản"
                           title="Sao chép tên chủ tài khoản">
-                          <i class="ph ph-copy drv-icon--xs" aria-hidden="true"></i>
-                          <span>Sao chép</span>
+                          <i class="ph ph-copy" aria-hidden="true"></i>
                         </button>
-                      </div>
+                      </span>
                     </div>
 
                     <!-- Row 4: Amount -->
                     <div class="drv-bank-row" role="row">
                       <span class="drv-bank-row__label" role="rowheader">Số tiền thanh toán</span>
-                      <strong class="drv-bank-row__val u-text-sale" role="cell" data-bank-amount>Chờ chốt tổng cuối</strong>
-                      <div class="drv-bank-row__action">
+                      <span class="drv-bank-row__cell" role="cell">
+                        <strong class="drv-bank-row__val u-text-sale" data-bank-amount>Chờ chốt tổng cuối</strong>
                         <button
                           type="button"
-                          class="drv-btn drv-btn--soft drv-btn--sm"
+                          class="drv-btn-copy-inline"
                           data-drv-action="copy-text"
                           data-drv-value="4690200"
-                          data-drv-feedback="Đã chép tiền"
                           data-bank-amount-btn
                           disabled
+                          aria-label="Sao chép số tiền"
                           title="Chưa có số tiền chính xác">
-                          <i class="ph ph-copy drv-icon--xs" aria-hidden="true"></i>
-                          <span>Sao chép</span>
+                          <i class="ph ph-copy" aria-hidden="true"></i>
                         </button>
-                      </div>
+                      </span>
                     </div>
 
                     <!-- Row 5: Reference / Transfer Content -->
                     <div class="drv-bank-row" role="row">
                       <span class="drv-bank-row__label" role="rowheader">Nội dung CK</span>
-                      <strong class="drv-bank-row__val u-text-navy" role="cell">DRV202688</strong>
-                      <div class="drv-bank-row__action">
+                      <span class="drv-bank-row__cell" role="cell">
+                        <strong class="drv-bank-row__val u-text-navy">DRV202688</strong>
                         <button
                           type="button"
-                          class="drv-btn drv-btn--soft drv-btn--sm"
+                          class="drv-btn-copy-inline"
                           data-drv-action="copy-text"
                           data-drv-value="DRV202688"
-                          data-drv-feedback="Đã chép mã"
+                          aria-label="Sao chép nội dung chuyển khoản"
                           title="Sao chép nội dung chuyển khoản">
-                          <i class="ph ph-copy drv-icon--xs" aria-hidden="true"></i>
-                          <span>Sao chép</span>
+                          <i class="ph ph-copy" aria-hidden="true"></i>
                         </button>
-                      </div>
+                      </span>
                     </div>
                   </div>
 

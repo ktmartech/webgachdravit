@@ -778,6 +778,62 @@
     width: var(--_h);
   }
 
+  /* 4.4b Inline Clean Flat Copy Button (No background, No border, Inherit text font-size, Inline with text) */
+  .drv-btn-copy-inline {
+    background: transparent !important;
+    background-color: transparent !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 0 0 0.35em !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    vertical-align: middle !important;
+    line-height: 1 !important;
+    font-size: 1em !important;
+    color: var(--c-navy-500) !important;
+    cursor: pointer !important;
+    width: auto !important;
+    height: auto !important;
+    transition: color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out) !important;
+  }
+
+  .drv-btn-copy-inline i,
+  .drv-btn-copy-inline [class*="ph-"] {
+    font-size: 1em !important;
+    width: 1em !important;
+    height: 1em !important;
+    line-height: 1 !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+  }
+
+  .drv-btn-copy-inline:hover {
+    background: transparent !important;
+    background-color: transparent !important;
+    color: var(--c-moss-600) !important;
+    transform: scale(1.15) !important;
+  }
+
+  .drv-btn-copy-inline:active {
+    transform: scale(0.92) !important;
+  }
+
+  .drv-btn-copy-inline:focus-visible {
+    outline: 2px solid var(--c-moss-500) !important;
+    outline-offset: 2px !important;
+    border-radius: var(--r-2xs) !important;
+  }
+
+  .drv-btn-copy-inline:disabled {
+    cursor: not-allowed !important;
+    opacity: 0.35 !important;
+    transform: none !important;
+    color: var(--c-navy-300) !important;
+  }
+
   /* Text Link Button with 200ms Underline Draw */
   .drv-link {
     display: inline-flex;

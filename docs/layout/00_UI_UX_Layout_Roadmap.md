@@ -25,6 +25,7 @@ docs/layout/
 ├── 02-catalog-collection.html       # Step 3: Trang Danh mục Silo & 14 Bộ lọc AJAX
 ├── 03-product-single.html           # Step 4: Trang Chi tiết Sản phẩm & Bộ tính m² ⇄ Viên
 ├── 04-cart.html                     # Step 5: Trang Giỏ hàng & Mini-Cart Drawer
+├── 04.1-quote-cart.html             # Step 5.1 (Option 4.1): Trang Danh sách Báo giá Tổng (BOQ), Tải PDF/Excel & Tư vấn Sỉ
 ├── 05-checkout.html                 # Step 6: Trang Thanh toán 2 cột (Địa chỉ 2 cấp + Báo phí sau)
 ├── 06-order-received.html           # Step 7: Trang Đặt hàng Thành công & VietQR 2 trạng thái
 ├── 07-blog-archive.html             # Step 8: Trang Danh sách Cẩm nang (Editorial Bento)
@@ -45,6 +46,7 @@ docs/layout/
 | **Step 3** | `02-catalog-collection.html` | `dravit-filter-seo-geo`, `dravit-frontend-ui`, `dravit-catalog-commerce` | `ui-ux-designer`, `page-cro`, `seo-structure-architect`, `fixing-accessibility`, `fixing-motion-performance` |
 | **Step 4** | `03-product-single.html` | `dravit-catalog-commerce`, `dravit-frontend-ui`, `dravit-filter-seo-geo` | `page-cro`, `frontend-design`, `javascript-pro`, `fixing-accessibility`, `copywriting` |
 | **Step 5** | `04-cart.html` | `dravit-catalog-commerce`, `dravit-frontend-ui`, `dravit-security-testing` | `page-cro`, `ui-ux-designer`, `baseline-ui`, `fixing-accessibility` |
+| **Step 5.1** | `04.1-quote-cart.html` | `dravit-catalog-commerce`, `dravit-frontend-ui`, `dravit-coding-standards` | `page-cro`, `form-cro`, `ui-ux-designer`, `baseline-ui`, `fixing-accessibility` |
 | **Step 6** | `05-checkout.html` | `dravit-catalog-commerce`, `dravit-frontend-ui`, `dravit-security-testing` | `form-cro`, `page-cro`, `fixing-accessibility`, `wcag-audit-patterns`, `copywriting` |
 | **Step 7** | `06-order-received.html` | `dravit-catalog-commerce`, `dravit-frontend-ui` | `ui-ux-designer`, `page-cro`, `copywriting`, `baseline-ui` |
 | **Step 8** | `07-blog-archive.html` | `dravit-frontend-ui`, `dravit-filter-seo-geo` | `design-taste-frontend`, `seo-structure-architect`, `ui-ux-designer`, `avoid-ai-writing` |
@@ -190,6 +192,17 @@ docs/layout/
   2. Tương tác tăng/giảm số lượng viên (hoặc nút nhanh `[+1 thùng (3 viên)]`) tự động tính lại số thùng, diện tích `m²`, tổng `kg` và thành tiền.
   3. Cột **Tóm tắt đơn hàng Sticky**: Tổng số mã · Tổng diện tích `m²` · Tổng số thùng · Tổng trọng lượng `kg` · Ghi chú vận chuyển · Nút `[TIẾN HÀNH ĐẶT HÀNG]`.
   4. Nút bật xem thử **Mini-Cart Drawer** và nút chuyển xem thử trạng thái **Giỏ hàng trống**.
+
+---
+
+### STEP 5.1 (OPTION 4.1): Trang Danh sách Báo giá Tổng & Dự toán Công trình (BOQ) — `04.1-quote-cart.html`
+
+- **Mục tiêu:** Phục vụ khách hàng mua sỉ, nhà thầu, KTS hoặc chủ nhà xây trọn gói cần lập **Bảng báo giá tổng hợp (BOQ)** giữ nguyên đầy đủ thông số kỹ thuật + đơn giá niêm yết (`đ/m²` & `đ/viên`), hỗ trợ tải danh sách PDF chuẩn A4 / Excel (`.csv`) và kết nối trực tiếp nhân viên tư vấn dự án.
+- **Hạng mục UI/UX hoàn thiện:**
+  1. **Header Phiếu Báo Giá (`#BG-2026-1106`)**: Cho phép nhập tên công trình/chủ đầu tư để in trực tiếp lên tiêu đề file PDF; thanh chuyển nhanh giữa `Option 4.0 (Giỏ đặt lẻ)` và `Option 4.1 (Danh sách báo giá tổng)`.
+  2. **Thanh Thêm nhanh mã SKU (`Quick SKU Add`)** + **Bảng kê BOQ giữ nguyên thông số kỹ thuật** (kích thước mm, độ hút nước `E ≤ 0,5%`, chống trượt `R9/R10`, lô `Shade V1/V2`, chọn *Hạng mục/Vị trí ốp lát* cho từng dòng).
+  3. **Thanh Bậc Chiết Khấu Sản Lượng Tự Động**: Tự động tính mức chiết khấu công trình (`0%` / `-5%` từ `30 m²` / `-8%` trên `100 m²`) khi tăng/giảm số lượng.
+  4. **Cột phải Sticky (Tải báo giá & Liên hệ tư vấn)**: Cụm nút **`[TẢI BẢNG BÁO GIÁ PDF (A4)]`** (kèm bản in `@media print` chuẩn A4), **`[Tải file Excel (.CSV)]`**, **`[Chép gửi Zalo]`** và **Khối Liên hệ Chuyên viên Tư vấn Dự án B2B** (Chat Zalo / Gọi trực tiếp / Form để lại SĐT nhận báo giá chiết khấu chính thức).
 
 ---
 

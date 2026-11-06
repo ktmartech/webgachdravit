@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/bold/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/style.css">
   <link rel="stylesheet" href="assets/css/main.css?v=20261106s">
-  <link rel="stylesheet" href="assets/css/pages.css?v=20261106s">
+  <link rel="stylesheet" href="assets/css/pages.css?v=20261106u">
 
   <!-- JSON-LD Structured Data: BreadcrumbList (IL-04) + Product (Dual UnitPriceSpecification C62 & MTK) -->
   <script type="application/ld+json">
@@ -859,38 +859,51 @@
           <div class="drv-pdp-header">
             <h1 id="pdp-product-title" class="drv-pdp-title">
               <span data-pdp-title-text>Gạch lát nền Dravit Vân Đá Marble Calacatta Trắng Khói 80x80 DRV-8801M</span>
-              <button type="button" class="drv-pdp-copy-inline" data-drv-action="copy-sku" data-drv-value="Gạch lát nền Dravit Vân Đá Marble Calacatta Trắng Khói 80x80 DRV-8801M" data-drv-feedback="Đã chép" aria-label="Sao chép tên và mã sản phẩm">
-                <i class="ph ph-copy drv-icon" aria-hidden="true"></i>
+              <button type="button" class="drv-btn-copy-inline" data-drv-action="copy-sku" data-drv-value="Gạch lát nền Dravit Vân Đá Marble Calacatta Trắng Khói 80x80 DRV-8801M" aria-label="Sao chép tên và mã sản phẩm" title="Sao chép tên và mã">
+                <i class="ph ph-copy" aria-hidden="true"></i>
               </button>
             </h1>
 
             <div class="drv-pdp-meta-row">
               <span class="drv-pdp-meta-item">
                 <span>SKU: <strong class="u-text-navy" data-pdp-sku>DRV-8801M</strong></span>
-                <button type="button" class="drv-pdp-copy-inline" data-pdp-sku-copy data-drv-action="copy-sku" data-drv-value="DRV-8801M" data-drv-feedback="Đã chép" aria-label="Sao chép mã SKU DRV-8801M">
-                  <i class="ph ph-copy drv-icon--xs" aria-hidden="true"></i>
+                <button type="button" class="drv-btn-copy-inline" data-pdp-sku-copy data-drv-action="copy-sku" data-drv-value="DRV-8801M" aria-label="Sao chép mã SKU DRV-8801M" title="Sao chép mã SKU">
+                  <i class="ph ph-copy" aria-hidden="true"></i>
                 </button>
               </span>
               <span class="drv-pdp-meta-item">
                 <span class="drv-status-dot" aria-hidden="true"></span>
                 <strong class="u-text-navy">Còn hàng</strong>
               </span>
-              <span class="drv-pdp-meta-item">
-                <i class="ph ph-heart drv-icon--xs" aria-hidden="true"></i>
-                <span>18</span>
+              <span class="drv-pdp-meta-item u-text-muted">
+                <i class="ph ph-map-pin drv-icon--xs" aria-hidden="true"></i>
+                <span>Kệ B-04 Showroom</span>
               </span>
             </div>
           </div>
 
-          <!-- 2. Clean Dual Price Display -->
-          <div class="drv-pdp-price-block">
-            <div class="drv-pdp-price-main">
-              <span class="drv-pdp-price-m2" data-pdp-price-m2>385.000đ/m²</span>
-              <span class="drv-pdp-price-old" data-pdp-price-old>450.000đ</span>
-              <span class="drv-pdp-price-discount" data-pdp-price-discount>-14%</span>
+          <!-- 2. Clean Dual Price Display + Quick Actions (Wishlist & Share) -->
+          <div class="drv-pdp-price-bar">
+            <div class="drv-pdp-price-block">
+              <div class="drv-pdp-price-main">
+                <span class="drv-pdp-price-m2" data-pdp-price-m2>385.000đ/m²</span>
+                <span class="drv-pdp-price-old" data-pdp-price-old>450.000đ</span>
+                <span class="drv-pdp-price-discount" data-pdp-price-discount>-14%</span>
+              </div>
+              <div class="drv-pdp-price-piece" data-pdp-price-piece>
+                ≈ 246.400đ/viên
+              </div>
             </div>
-            <div class="drv-pdp-price-piece" data-pdp-price-piece>
-              246.400đ/viên
+
+            <div class="drv-pdp-quick-actions" aria-label="Tác vụ nhanh">
+              <button type="button" class="drv-pdp-action-btn" onclick="window.Dravit.toast('Đã lưu DRV-8801M vào danh sách yêu thích.')" aria-label="Lưu vào danh sách yêu thích" title="Lưu yêu thích">
+                <i class="ph ph-heart drv-icon" aria-hidden="true"></i>
+                <span class="drv-pdp-action-count">18</span>
+              </button>
+              <button type="button" class="drv-pdp-action-btn" onclick="if(navigator.share){navigator.share({title:document.title,url:location.href})}else{navigator.clipboard.writeText(location.href);window.Dravit.toast('Đã sao chép liên kết sản phẩm!')}" aria-label="Chia sẻ sản phẩm" title="Chia sẻ liên kết">
+                <i class="ph ph-share-network drv-icon" aria-hidden="true"></i>
+                <span class="drv-pdp-action-count">Share</span>
+              </button>
             </div>
           </div>
 

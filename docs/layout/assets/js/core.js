@@ -278,12 +278,19 @@
         const value = actionEl.dataset.drvValue || actionEl.textContent.trim();
         await copyToClipboard(value);
         const origLabel = actionEl.innerHTML;
-        const feedback = actionEl.dataset.drvFeedback || 'Đã chép';
-        actionEl.innerHTML = `<i class="ph ph-check" aria-hidden="true"></i> <span>${feedback}</span>`;
-        toast(`Đã sao chép mã: ${value}`);
+        const hasTextSpan = !!actionEl.querySelector('span');
+        const feedback = actionEl.dataset.drvFeedback || '';
+
+        if (hasTextSpan && feedback) {
+          actionEl.innerHTML = `<i class="ph-bold ph-check" aria-hidden="true"></i> <span>${feedback}</span>`;
+        } else {
+          actionEl.innerHTML = `<i class="ph-bold ph-check u-text-moss" aria-hidden="true"></i>`;
+        }
+
+        toast(`Đã sao chép: ${value}`);
         window.setTimeout(() => {
           actionEl.innerHTML = origLabel;
-        }, 1800);
+        }, 1600);
         break;
       }
 
