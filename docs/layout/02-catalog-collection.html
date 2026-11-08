@@ -12,8 +12,8 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/bold/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/style.css">
-  <link rel="stylesheet" href="assets/css/main.css?v=20261106s">
-  <link rel="stylesheet" href="assets/css/pages.css?v=20261106s">
+  <link rel="stylesheet" href="assets/css/main.css?v=20261107j">
+  <link rel="stylesheet" href="assets/css/pages.css?v=20261107j">
 
   <!-- JSON-LD Structured Data: BreadcrumbList + CollectionPage + ItemList + FAQPage -->
   <script type="application/ld+json">
@@ -292,17 +292,17 @@
             </div>
 
             <!-- Facet Extra: Có mẫu tại Showroom -->
-            <div class="drv-filter-group">
-              <div class="drv-filter-group__body" style="background-color: var(--c-moss-100);">
-                <label class="drv-check">
-                  <input type="checkbox" class="drv-check__input" name="showroom" value="showroom">
-                  <span class="drv-check__label u-bold">
-                    <i class="ph-fill ph-seal-check drv-icon--xs" style="color: var(--c-moss-600)" aria-hidden="true"></i>
-                    Có mẫu thực tế tại kệ
+            <div class="drv-filter-group drv-filter-group--showroom">
+              <label class="drv-filter-showroom-card">
+                <input type="checkbox" class="drv-check__input" name="showroom" value="showroom">
+                <span class="drv-filter-showroom-card__content">
+                  <span class="drv-filter-showroom-card__title">
+                    <i class="ph-fill ph-seal-check drv-icon--xs" aria-hidden="true"></i>
+                    <span>Có mẫu thực tế tại kệ</span>
                   </span>
-                  <span class="drv-check__count">(11)</span>
-                </label>
-              </div>
+                </span>
+                <span class="drv-check__count u-tabular">11</span>
+              </label>
             </div>
 
             <!-- FLT-04: Kích thước (Chips) — Mở sẵn -->
@@ -749,11 +749,12 @@
                 <!-- Mobile Filter Button (<1024px) -->
                 <button type="button" class="drv-btn drv-btn--secondary drv-btn--sm drv-mobile-filter-trigger" data-drv-action="dialog-open" data-drv-target="#drv-filter-drawer">
                   <i class="ph-fill ph-sliders-horizontal drv-icon" aria-hidden="true"></i>
-                  <span>Lọc 14 tiêu chí</span>
+                  <span>Bộ lọc</span>
+                  <span class="drv-mobile-filter-trigger__badge u-tabular" data-mobile-filter-count>14</span>
                 </button>
 
                 <p class="u-text-sm drv-cat-toolbar__count" aria-live="polite">
-                  Đang hiển thị <strong class="u-tabular u-text-navy" data-catalog-count>12</strong> / <span class="u-tabular">124</span> mẫu gạch phòng khách
+                  <span class="drv-cat-toolbar__count-prefix">Đang hiển thị </span><strong class="u-tabular u-text-navy" data-catalog-count>12</strong> / <span class="u-tabular">124</span> mẫu<span class="drv-cat-toolbar__count-suffix"> gạch phòng khách</span>
                 </p>
 
                 <span class="drv-badge drv-badge--showroom u-tabular drv-cat-toolbar__robots" data-catalog-robots-badge title="Trạng thái SEO Robots tự động đổi theo số chiều lọc">
@@ -764,7 +765,7 @@
               <!-- FLT-14: Sort Select -->
               <div class="l-cluster l-cluster--xs drv-cat-toolbar__sort">
                 <label for="drv-catalog-sort" class="u-text-xs u-bold u-text-muted drv-cat-toolbar__sort-label">Sắp xếp (14):</label>
-                <select id="drv-catalog-sort" class="drv-select drv-cat-toolbar__sort-select" style="min-height: 36px; width: auto; padding-block: 4px; font-size: var(--fs-xs);">
+                <select id="drv-catalog-sort" class="drv-select drv-cat-toolbar__sort-select" aria-label="Sắp xếp danh sách mẫu gạch">
                   <option value="ban-chay">Bán chạy nhất</option>
                   <option value="moi-nhat">Mới cập nhật</option>
                   <option value="gia-tang">Giá m²: Thấp đến Cao</option>
@@ -839,6 +840,9 @@
                     </div>
                     <div class="drv-card__price-piece">≈ 246.400đ/viên</div>
                   </div>
+                  <button type="button" class="drv-card__action" data-drv-action="add-to-cart" data-drv-sku="DRV-8801M" data-drv-qty="1 thùng" aria-label="Thêm DRV-8801M vào giỏ">
+                    <i class="ph ph-shopping-cart-simple drv-icon" aria-hidden="true"></i>
+                  </button>
                 </div>
               </div>
             </article>
@@ -897,6 +901,9 @@
                     </div>
                     <div class="drv-card__price-piece">≈ 252.800đ/viên</div>
                   </div>
+                  <button type="button" class="drv-card__action" data-drv-action="add-to-cart" data-drv-sku="DRV-TRZ80" data-drv-qty="1 thùng" aria-label="Thêm DRV-TRZ80 vào giỏ">
+                    <i class="ph ph-shopping-cart-simple drv-icon" aria-hidden="true"></i>
+                  </button>
                 </div>
               </div>
             </article>
@@ -956,6 +963,9 @@
                     </div>
                     <div class="drv-card__price-piece">≈ 374.400đ/viên</div>
                   </div>
+                  <button type="button" class="drv-card__action" data-drv-action="add-to-cart" data-drv-sku="DRV-61209" data-drv-qty="1 thùng" aria-label="Thêm DRV-61209 vào giỏ">
+                    <i class="ph ph-shopping-cart-simple drv-icon" aria-hidden="true"></i>
+                  </button>
                 </div>
               </div>
             </article>
@@ -1015,6 +1025,9 @@
                     </div>
                     <div class="drv-card__price-piece">≈ 240.000đ/viên</div>
                   </div>
+                  <button type="button" class="drv-card__action" data-drv-action="add-to-cart" data-drv-sku="DRV-8824S" data-drv-qty="1 thùng" aria-label="Thêm DRV-8824S vào giỏ">
+                    <i class="ph ph-shopping-cart-simple drv-icon" aria-hidden="true"></i>
+                  </button>
                 </div>
               </div>
             </article>
@@ -1074,6 +1087,9 @@
                     </div>
                     <div class="drv-card__price-piece">≈ 392.400đ/viên</div>
                   </div>
+                  <button type="button" class="drv-card__action" data-drv-action="add-to-cart" data-drv-sku="DRV-61215" data-drv-qty="1 thùng" aria-label="Thêm DRV-61215 vào giỏ">
+                    <i class="ph ph-shopping-cart-simple drv-icon" aria-hidden="true"></i>
+                  </button>
                 </div>
               </div>
             </article>
@@ -1133,6 +1149,9 @@
                     </div>
                     <div class="drv-card__price-piece">≈ 95.400đ/viên</div>
                   </div>
+                  <button type="button" class="drv-card__action" data-drv-action="add-to-cart" data-drv-sku="DRV-6604C" data-drv-qty="1 thùng" aria-label="Thêm DRV-6604C vào giỏ">
+                    <i class="ph ph-shopping-cart-simple drv-icon" aria-hidden="true"></i>
+                  </button>
                 </div>
               </div>
             </article>
@@ -1191,6 +1210,9 @@
                     </div>
                     <div class="drv-card__price-piece">≈ 265.600đ/viên</div>
                   </div>
+                  <button type="button" class="drv-card__action" data-drv-action="add-to-cart" data-drv-sku="DRV-8812G" data-drv-qty="1 thùng" aria-label="Thêm DRV-8812G vào giỏ">
+                    <i class="ph ph-shopping-cart-simple drv-icon" aria-hidden="true"></i>
+                  </button>
                 </div>
               </div>
             </article>
@@ -1249,6 +1271,9 @@
                     </div>
                     <div class="drv-card__price-piece">≈ 45.225đ/viên</div>
                   </div>
+                  <button type="button" class="drv-card__action" data-drv-action="add-to-cart" data-drv-sku="DRV-WD1590" data-drv-qty="1 thùng" aria-label="Thêm DRV-WD1590 vào giỏ">
+                    <i class="ph ph-shopping-cart-simple drv-icon" aria-hidden="true"></i>
+                  </button>
                 </div>
               </div>
             </article>
@@ -1275,8 +1300,8 @@
               data-created="202612">
               <div class="drv-card__media">
                 <div class="drv-card__badges">
-                  <span class="drv-badge drv-badge--purple">Đá nung kết</span>
                   <span class="drv-badge drv-badge--sale">-11%</span>
+                  <span class="drv-badge drv-badge--purple">Đá nung kết</span>
                 </div>
                 <img class="drv-card__img drv-card__img--primary" src="assets/img/tile-sintered-emperador.svg" width="400" height="400" loading="lazy" decoding="async" alt="Đá Nung Kết Khổ Lớn Dravit Armani Dark 60x120 Bề Mặt Carving Tinh Xảo">
                 <img class="drv-card__img drv-card__img--hover" src="assets/img/room-living-calacatta.svg" width="400" height="400" loading="lazy" decoding="async" alt="Phối cảnh Đá Nung Kết Armani Dark 60x120 DRV-SL1224">
@@ -1308,6 +1333,9 @@
                     </div>
                     <div class="drv-card__price-piece">≈ 489.600đ/viên</div>
                   </div>
+                  <button type="button" class="drv-card__action" data-drv-action="add-to-cart" data-drv-sku="DRV-SL1224" data-drv-qty="1 thùng" aria-label="Thêm DRV-SL1224 vào giỏ">
+                    <i class="ph ph-shopping-cart-simple drv-icon" aria-hidden="true"></i>
+                  </button>
                 </div>
               </div>
             </article>
@@ -1366,6 +1394,9 @@
                     </div>
                     <div class="drv-card__price-piece">≈ 460.800đ/viên</div>
                   </div>
+                  <button type="button" class="drv-card__action" data-drv-action="add-to-cart" data-drv-sku="DRV-61230" data-drv-qty="1 thùng" aria-label="Thêm DRV-61230 vào giỏ">
+                    <i class="ph ph-shopping-cart-simple drv-icon" aria-hidden="true"></i>
+                  </button>
                 </div>
               </div>
             </article>
@@ -1425,6 +1456,9 @@
                     </div>
                     <div class="drv-card__price-piece">≈ 52.200đ/viên</div>
                   </div>
+                  <button type="button" class="drv-card__action" data-drv-action="add-to-cart" data-drv-sku="DRV-3608W" data-drv-qty="1 thùng" aria-label="Thêm DRV-3608W vào giỏ">
+                    <i class="ph ph-shopping-cart-simple drv-icon" aria-hidden="true"></i>
+                  </button>
                 </div>
               </div>
             </article>
@@ -1483,6 +1517,9 @@
                     </div>
                     <div class="drv-card__price-piece">≈ 124.200đ/viên</div>
                   </div>
+                  <button type="button" class="drv-card__action" data-drv-action="add-to-cart" data-drv-sku="DRV-OUT60" data-drv-qty="1 thùng" aria-label="Thêm DRV-OUT60 vào giỏ">
+                    <i class="ph ph-shopping-cart-simple drv-icon" aria-hidden="true"></i>
+                  </button>
                 </div>
               </div>
             </article>
@@ -1792,35 +1829,58 @@
   <!-- ======================================================================
        MOBILE FILTER BOTTOM SHEET / DRAWER (<dialog id="drv-filter-drawer">)
        ====================================================================== -->
-  <dialog id="drv-filter-drawer" class="drv-dialog drv-dialog--bottom-sheet" aria-labelledby="mobile-filter-title">
-    <div class="drv-dialog__head">
-      <h2 id="mobile-filter-title" class="drv-dialog__title">
-        <i class="ph-fill ph-sliders-horizontal drv-icon" aria-hidden="true"></i>
-        <span>Bộ lọc gạch (14 tiêu chí)</span>
-      </h2>
-      <div class="u-flex u-items-center u-gap-2">
-        <button type="button" class="drv-link u-text-xs" data-filter-reset>Đặt lại</button>
-        <button type="button" class="drv-btn drv-btn--ghost drv-btn--icon" data-drv-action="dialog-close" aria-label="Đóng bộ lọc">
+  <dialog id="drv-filter-drawer" class="drv-dialog drv-dialog--bottom-sheet drv-filter-sheet" aria-labelledby="mobile-filter-title">
+    <div class="drv-filter-sheet__handle" aria-hidden="true"></div>
+
+    <div class="drv-dialog__head drv-filter-sheet__head">
+      <div class="drv-filter-sheet__title-wrap">
+        <h2 id="mobile-filter-title" class="drv-dialog__title">
+          <i class="ph-fill ph-sliders-horizontal drv-icon" aria-hidden="true"></i>
+          <span>Bộ lọc gạch</span>
+          <span class="drv-filter-sheet__badge u-tabular" data-drawer-active-badge>14 tiêu chí</span>
+        </h2>
+      </div>
+      <div class="drv-filter-sheet__head-actions">
+        <button type="button" class="drv-filter-sheet__collapse-btn" data-drv-collapse-facets-mobile>
+          <i class="ph ph-arrows-in-line-vertical drv-icon--xs" aria-hidden="true"></i>
+          <span data-collapse-facets-mobile-label>Thu gọn</span>
+        </button>
+        <button type="button" class="drv-btn drv-btn--ghost drv-btn--icon drv-filter-sheet__close" data-drv-action="dialog-close" aria-label="Đóng bộ lọc">
           <i class="ph ph-x drv-icon--md" aria-hidden="true"></i>
         </button>
       </div>
     </div>
 
-    <div class="drv-dialog__body" style="padding: 0;">
-      <!-- Showroom Filter -->
-      <div class="drv-filter-group">
-        <div class="drv-filter-group__body" style="background-color: var(--c-moss-100);">
-          <label class="drv-check">
-            <input type="checkbox" class="drv-check__input" name="showroom" value="showroom">
-            <span class="drv-check__label u-bold">Có mẫu thực tế tại kệ Showroom</span>
-            <span class="drv-check__count">(11)</span>
-          </label>
-        </div>
+    <!-- Sticky Active Filter Chips Strip Inside Mobile Sheet -->
+    <div id="drv-drawer-active-bar" class="drv-filter-sheet__active-bar" hidden>
+      <div id="drv-drawer-active-chips" class="drv-filter-sheet__active-chips" aria-label="Tiêu chí đang chọn"></div>
+    </div>
+
+    <div class="drv-dialog__body drv-filter-sheet__body">
+      <!-- Showroom Filter Card -->
+      <div class="drv-filter-group drv-filter-group--showroom">
+        <label class="drv-filter-showroom-card">
+          <input type="checkbox" class="drv-check__input" name="showroom" value="showroom">
+          <span class="drv-filter-showroom-card__content">
+            <span class="drv-filter-showroom-card__title">
+              <i class="ph-fill ph-seal-check drv-icon--xs" aria-hidden="true"></i>
+              <span>Có mẫu thực tế tại kệ Showroom</span>
+            </span>
+            <span class="drv-filter-showroom-card__sub">Sờ tận tay bề mặt &amp; mượn mẫu về công trình</span>
+          </span>
+          <span class="drv-check__count u-tabular">11</span>
+        </label>
       </div>
 
-      <!-- Kích thước -->
-      <div class="drv-filter-group">
-        <div class="drv-filter-group__title">1. Kích thước (cm)</div>
+      <!-- FLT-04: 1. Kích thước (cm) — Mở sẵn -->
+      <details class="drv-filter-group" open>
+        <summary class="drv-filter-group__title">
+          <span>1. Kích thước (cm)</span>
+          <span class="drv-filter-group__meta">
+            <span class="drv-filter-group__selected-badge u-tabular" data-group-selected-count hidden>0</span>
+            <i class="ph ph-caret-down drv-icon--xs drv-filter-group__caret" aria-hidden="true"></i>
+          </span>
+        </summary>
         <div class="drv-filter-group__body">
           <div class="drv-filter-chips-grid">
             <button type="button" class="drv-chip drv-chip--square" data-facet-chip data-facet="kich-thuoc" data-value="80x80" aria-pressed="false">
@@ -1838,13 +1898,22 @@
             <button type="button" class="drv-chip drv-chip--square" data-facet-chip data-facet="kich-thuoc" data-value="15x90" aria-pressed="false">
               <span>15x90</span><span class="drv-chip__count">(1)</span>
             </button>
+            <button type="button" class="drv-chip drv-chip--square" disabled aria-disabled="true" title="Tạm hết mẫu trong Silo này">
+              <span>120x240</span><span class="drv-chip__count">(0)</span>
+            </button>
           </div>
         </div>
-      </div>
+      </details>
 
-      <!-- Bề mặt -->
-      <div class="drv-filter-group">
-        <div class="drv-filter-group__title">2. Bề mặt gạch</div>
+      <!-- FLT-07: 2. Bề mặt gạch — Mở sẵn -->
+      <details class="drv-filter-group" open>
+        <summary class="drv-filter-group__title">
+          <span>2. Bề mặt gạch</span>
+          <span class="drv-filter-group__meta">
+            <span class="drv-filter-group__selected-badge u-tabular" data-group-selected-count hidden>0</span>
+            <i class="ph ph-caret-down drv-icon--xs drv-filter-group__caret" aria-hidden="true"></i>
+          </span>
+        </summary>
         <div class="drv-filter-group__body">
           <label class="drv-check">
             <input type="checkbox" class="drv-check__input" name="be-mat" value="mo-matt">
@@ -1858,99 +1927,416 @@
           </label>
           <label class="drv-check">
             <input type="checkbox" class="drv-check__input" name="be-mat" value="carving">
-            <span class="drv-check__label">Hiệu ứng Carving</span>
+            <span class="drv-check__label">Hiệu ứng rãnh khắc Carving</span>
             <span class="drv-check__count">(2)</span>
           </label>
           <label class="drv-check">
             <input type="checkbox" class="drv-check__input" name="be-mat" value="nham-san">
-            <span class="drv-check__label">Nhám sần R11</span>
+            <span class="drv-check__label">Nhám sần R11 (Structured)</span>
             <span class="drv-check__count">(1)</span>
           </label>
         </div>
-      </div>
+      </details>
 
-      <!-- Màu sắc -->
-      <div class="drv-filter-group">
-        <div class="drv-filter-group__title">3. Tông màu</div>
+      <!-- FLT-06: 3. Tông màu chủ đạo — Mở sẵn -->
+      <details class="drv-filter-group" open>
+        <summary class="drv-filter-group__title">
+          <span>3. Tông màu chủ đạo</span>
+          <span class="drv-filter-group__meta">
+            <span class="drv-filter-group__selected-badge u-tabular" data-group-selected-count hidden>0</span>
+            <i class="ph ph-caret-down drv-icon--xs drv-filter-group__caret" aria-hidden="true"></i>
+          </span>
+        </summary>
         <div class="drv-filter-group__body">
           <div class="drv-filter-chips-grid">
             <button type="button" class="drv-chip drv-chip--square" data-facet-chip data-facet="mau-sac" data-value="kem" aria-pressed="false">
-              <span>Kem đá</span><span class="drv-chip__count">(4)</span>
+              <span class="u-flex u-items-center u-gap-2">
+                <span class="drv-swatch-dot" style="background-color: #EDE6D8;"></span>
+                <span>Kem đá</span>
+              </span>
+              <span class="drv-chip__count">(4)</span>
             </button>
             <button type="button" class="drv-chip drv-chip--square" data-facet-chip data-facet="mau-sac" data-value="xam" aria-pressed="false">
-              <span>Xám</span><span class="drv-chip__count">(3)</span>
+              <span class="u-flex u-items-center u-gap-2">
+                <span class="drv-swatch-dot" style="background-color: #9CA3AF;"></span>
+                <span>Xám</span>
+              </span>
+              <span class="drv-chip__count">(3)</span>
             </button>
             <button type="button" class="drv-chip drv-chip--square" data-facet-chip data-facet="mau-sac" data-value="trang" aria-pressed="false">
-              <span>Trắng</span><span class="drv-chip__count">(2)</span>
+              <span class="u-flex u-items-center u-gap-2">
+                <span class="drv-swatch-dot" style="background-color: #FBF9F5;"></span>
+                <span>Trắng</span>
+              </span>
+              <span class="drv-chip__count">(2)</span>
             </button>
             <button type="button" class="drv-chip drv-chip--square" data-facet-chip data-facet="mau-sac" data-value="nau-go" aria-pressed="false">
-              <span>Nâu gỗ</span><span class="drv-chip__count">(2)</span>
+              <span class="u-flex u-items-center u-gap-2">
+                <span class="drv-swatch-dot" style="background-color: #9A6B46;"></span>
+                <span>Nâu gỗ</span>
+              </span>
+              <span class="drv-chip__count">(2)</span>
+            </button>
+            <button type="button" class="drv-chip drv-chip--square" data-facet-chip data-facet="mau-sac" data-value="den-than" aria-pressed="false">
+              <span class="u-flex u-items-center u-gap-2">
+                <span class="drv-swatch-dot" style="background-color: #1F2937;"></span>
+                <span>Đen than</span>
+              </span>
+              <span class="drv-chip__count">(1)</span>
             </button>
           </div>
         </div>
-      </div>
+      </details>
 
-      <!-- Hệ vân -->
-      <div class="drv-filter-group">
-        <div class="drv-filter-group__title">4. Hệ vân &amp; Chất liệu</div>
+      <!-- FLT-03: 4. Hệ vân & Chất liệu -->
+      <details class="drv-filter-group">
+        <summary class="drv-filter-group__title">
+          <span>4. Hệ vân &amp; Chất liệu</span>
+          <span class="drv-filter-group__meta">
+            <span class="drv-filter-group__selected-badge u-tabular" data-group-selected-count hidden>0</span>
+            <i class="ph ph-caret-down drv-icon--xs drv-filter-group__caret" aria-hidden="true"></i>
+          </span>
+        </summary>
         <div class="drv-filter-group__body">
           <label class="drv-check">
             <input type="checkbox" class="drv-check__input" name="van-gach" value="van-da-marble">
-            <span class="drv-check__label">Vân đá Marble</span>
+            <span class="drv-check__label">Vân đá tự nhiên (Marble)</span>
             <span class="drv-check__count">(5)</span>
           </label>
           <label class="drv-check">
             <input type="checkbox" class="drv-check__input" name="van-gach" value="terrazzo">
-            <span class="drv-check__label">Hạt đá Terrazzo</span>
+            <span class="drv-check__label">Hạt đá mài Terrazzo</span>
             <span class="drv-check__count">(2)</span>
           </label>
           <label class="drv-check">
             <input type="checkbox" class="drv-check__input" name="van-gach" value="van-xi-mang">
-            <span class="drv-check__label">Vân xi măng</span>
+            <span class="drv-check__label">Vân xi măng (Concrete)</span>
             <span class="drv-check__count">(2)</span>
           </label>
           <label class="drv-check">
             <input type="checkbox" class="drv-check__input" name="van-gach" value="da-nung-ket">
-            <span class="drv-check__label">Đá nung kết</span>
+            <span class="drv-check__label">Đá nung kết (Sintered Stone)</span>
             <span class="drv-check__count">(2)</span>
           </label>
           <label class="drv-check">
             <input type="checkbox" class="drv-check__input" name="van-gach" value="gia-go">
-            <span class="drv-check__label">Gạch giả gỗ</span>
+            <span class="drv-check__label">Vân gỗ sồi / óc chó</span>
             <span class="drv-check__count">(1)</span>
           </label>
         </div>
-      </div>
+      </details>
 
-      <!-- Khoảng giá -->
-      <div class="drv-filter-group">
-        <div class="drv-filter-group__title">5. Khoảng giá (đ/m²)</div>
+      <!-- FLT-13: 5. Khoảng giá theo m² -->
+      <details class="drv-filter-group">
+        <summary class="drv-filter-group__title">
+          <span>5. Khoảng giá (đ/m²)</span>
+          <span class="drv-filter-group__meta">
+            <span class="drv-filter-group__selected-badge u-tabular" data-group-selected-count hidden>0</span>
+            <i class="ph ph-caret-down drv-icon--xs drv-filter-group__caret" aria-hidden="true"></i>
+          </span>
+        </summary>
         <div class="drv-filter-group__body">
           <label class="drv-check">
             <input type="radio" class="drv-check__input" name="gia" value="" checked>
             <span class="drv-check__label">Tất cả mức giá</span>
+            <span class="drv-check__count">(12)</span>
           </label>
           <label class="drv-check">
             <input type="radio" class="drv-check__input" name="gia" value="200k-350k">
             <span class="drv-check__label">200.000đ - 350.000đ/m²</span>
+            <span class="drv-check__count">(4)</span>
           </label>
           <label class="drv-check">
             <input type="radio" class="drv-check__input" name="gia" value="350k-600k">
             <span class="drv-check__label">350.000đ - 600.000đ/m²</span>
+            <span class="drv-check__count">(6)</span>
           </label>
           <label class="drv-check">
             <input type="radio" class="drv-check__input" name="gia" value="tren-600k">
             <span class="drv-check__label">Trên 600.000đ/m²</span>
+            <span class="drv-check__count">(2)</span>
           </label>
         </div>
-      </div>
+      </details>
+
+      <!-- FLT-01: 6. Công năng ốp lát -->
+      <details class="drv-filter-group">
+        <summary class="drv-filter-group__title">
+          <span>6. Công năng ốp lát</span>
+          <span class="drv-filter-group__meta">
+            <span class="drv-filter-group__selected-badge u-tabular" data-group-selected-count hidden>0</span>
+            <i class="ph ph-caret-down drv-icon--xs drv-filter-group__caret" aria-hidden="true"></i>
+          </span>
+        </summary>
+        <div class="drv-filter-group__body">
+          <label class="drv-check">
+            <input type="checkbox" class="drv-check__input" name="cong-nang" value="lat-nen">
+            <span class="drv-check__label">Gạch lát nền chịu lực</span>
+            <span class="drv-check__count">(10)</span>
+          </label>
+          <label class="drv-check">
+            <input type="checkbox" class="drv-check__input" name="cong-nang" value="op-tuong">
+            <span class="drv-check__label">Gạch ốp tường / vách Tivi</span>
+            <span class="drv-check__count">(2)</span>
+          </label>
+        </div>
+      </details>
+
+      <!-- FLT-02: 7. Không gian ứng dụng -->
+      <details class="drv-filter-group">
+        <summary class="drv-filter-group__title">
+          <span>7. Không gian ứng dụng</span>
+          <span class="drv-filter-group__meta">
+            <span class="drv-filter-group__selected-badge u-tabular" data-group-selected-count hidden>0</span>
+            <i class="ph ph-caret-down drv-icon--xs drv-filter-group__caret" aria-hidden="true"></i>
+          </span>
+        </summary>
+        <div class="drv-filter-group__body">
+          <label class="drv-check">
+            <input type="checkbox" class="drv-check__input" name="khong-gian" value="phong-khach">
+            <span class="drv-check__label">Phòng khách &amp; Sảnh</span>
+            <span class="drv-check__count">(11)</span>
+          </label>
+          <label class="drv-check">
+            <input type="checkbox" class="drv-check__input" name="khong-gian" value="mat-tien">
+            <span class="drv-check__label">Ốp mặt tiền / Vách thông tầng</span>
+            <span class="drv-check__count">(6)</span>
+          </label>
+          <label class="drv-check">
+            <input type="checkbox" class="drv-check__input" name="khong-gian" value="nha-tam">
+            <span class="drv-check__label">Nhà tắm / Khu ướt</span>
+            <span class="drv-check__count">(5)</span>
+          </label>
+          <label class="drv-check">
+            <input type="checkbox" class="drv-check__input" name="khong-gian" value="phong-bep">
+            <span class="drv-check__label">Phòng bếp &amp; Phòng ăn</span>
+            <span class="drv-check__count">(3)</span>
+          </label>
+          <label class="drv-check">
+            <input type="checkbox" class="drv-check__input" name="khong-gian" value="phong-ngu">
+            <span class="drv-check__label">Phòng ngủ ấm cúng</span>
+            <span class="drv-check__count">(2)</span>
+          </label>
+          <label class="drv-check">
+            <input type="checkbox" class="drv-check__input" name="khong-gian" value="san-vuon">
+            <span class="drv-check__label">Ban công &amp; Sân vườn</span>
+            <span class="drv-check__count">(1)</span>
+          </label>
+        </div>
+      </details>
+
+      <!-- FLT-10: 8. Chống trượt (R9 - R13) -->
+      <details class="drv-filter-group">
+        <summary class="drv-filter-group__title">
+          <span>8. Chống trượt (R9 - R13)</span>
+          <span class="drv-filter-group__meta">
+            <span class="drv-filter-group__selected-badge u-tabular" data-group-selected-count hidden>0</span>
+            <i class="ph ph-caret-down drv-icon--xs drv-filter-group__caret" aria-hidden="true"></i>
+          </span>
+        </summary>
+        <div class="drv-filter-group__body">
+          <label class="drv-check">
+            <input type="checkbox" class="drv-check__input" name="dcof" value="r9">
+            <span class="drv-check__label">R9: Khu vực khô, sảnh</span>
+            <span class="drv-check__count">(4)</span>
+          </label>
+          <label class="drv-check">
+            <input type="checkbox" class="drv-check__input" name="dcof" value="r10">
+            <span class="drv-check__label">R10: Bếp, nhà tắm, an toàn trẻ nhỏ</span>
+            <span class="drv-check__count">(7)</span>
+          </label>
+          <label class="drv-check">
+            <input type="checkbox" class="drv-check__input" name="dcof" value="r11">
+            <span class="drv-check__label">R11: Sân ướt, hiên ngoài trời</span>
+            <span class="drv-check__count">(1)</span>
+          </label>
+          <label class="drv-check drv-check--disabled">
+            <input type="checkbox" class="drv-check__input" disabled>
+            <span class="drv-check__label">R12 - R13: Dốc hầm, hồ bơi</span>
+            <span class="drv-check__count">(0)</span>
+          </label>
+        </div>
+      </details>
+
+      <!-- FLT-11: 9. Độ hút nước (TCVN) -->
+      <details class="drv-filter-group">
+        <summary class="drv-filter-group__title">
+          <span>9. Độ hút nước (TCVN)</span>
+          <span class="drv-filter-group__meta">
+            <span class="drv-filter-group__selected-badge u-tabular" data-group-selected-count hidden>0</span>
+            <i class="ph ph-caret-down drv-icon--xs drv-filter-group__caret" aria-hidden="true"></i>
+          </span>
+        </summary>
+        <div class="drv-filter-group__body">
+          <label class="drv-check">
+            <input type="checkbox" class="drv-check__input" name="do-hut-nuoc" value="duoi-01">
+            <span class="drv-check__label">E ≤ 0,1% (Đá nung kết siêu đặc)</span>
+            <span class="drv-check__count">(2)</span>
+          </label>
+          <label class="drv-check">
+            <input type="checkbox" class="drv-check__input" name="do-hut-nuoc" value="duoi-05">
+            <span class="drv-check__label">E ≤ 0,5% (Xương đá Porcelain)</span>
+            <span class="drv-check__count">(9)</span>
+          </label>
+          <label class="drv-check">
+            <input type="checkbox" class="drv-check__input" name="do-hut-nuoc" value="05-3">
+            <span class="drv-check__label">0,5% &lt; E ≤ 3% (Bán sứ ốp tường)</span>
+            <span class="drv-check__count">(1)</span>
+          </label>
+        </div>
+      </details>
+
+      <!-- FLT-12: 10. Độ dày viên gạch -->
+      <details class="drv-filter-group">
+        <summary class="drv-filter-group__title">
+          <span>10. Độ dày viên gạch</span>
+          <span class="drv-filter-group__meta">
+            <span class="drv-filter-group__selected-badge u-tabular" data-group-selected-count hidden>0</span>
+            <i class="ph ph-caret-down drv-icon--xs drv-filter-group__caret" aria-hidden="true"></i>
+          </span>
+        </summary>
+        <div class="drv-filter-group__body">
+          <label class="drv-check">
+            <input type="checkbox" class="drv-check__input" name="do-day" value="8.5mm">
+            <span class="drv-check__label">8,5 mm (Ốp tường nhẹ tải)</span>
+            <span class="drv-check__count">(1)</span>
+          </label>
+          <label class="drv-check">
+            <input type="checkbox" class="drv-check__input" name="do-day" value="9.5mm">
+            <span class="drv-check__label">9,5 mm (Tiêu chuẩn lát nền)</span>
+            <span class="drv-check__count">(2)</span>
+          </label>
+          <label class="drv-check">
+            <input type="checkbox" class="drv-check__input" name="do-day" value="10mm">
+            <span class="drv-check__label">10,0 mm (Xương dày chống cong)</span>
+            <span class="drv-check__count">(6)</span>
+          </label>
+          <label class="drv-check">
+            <input type="checkbox" class="drv-check__input" name="do-day" value="12mm">
+            <span class="drv-check__label">12,0 mm (Chịu tải cao / Sân xe)</span>
+            <span class="drv-check__count">(3)</span>
+          </label>
+          <label class="drv-check drv-check--disabled">
+            <input type="checkbox" class="drv-check__input" disabled>
+            <span class="drv-check__label">20,0 mm (Đá sân vườn kê đôn)</span>
+            <span class="drv-check__count">(0)</span>
+          </label>
+        </div>
+      </details>
+
+      <!-- FLT-05: 11. Bộ sưu tập & Xuất xứ -->
+      <details class="drv-filter-group">
+        <summary class="drv-filter-group__title">
+          <span>11. Bộ sưu tập &amp; Xuất xứ</span>
+          <span class="drv-filter-group__meta">
+            <span class="drv-filter-group__selected-badge u-tabular" data-group-selected-count hidden>0</span>
+            <i class="ph ph-caret-down drv-icon--xs drv-filter-group__caret" aria-hidden="true"></i>
+          </span>
+        </summary>
+        <div class="drv-filter-group__body">
+          <label class="drv-check">
+            <input type="checkbox" class="drv-check__input" name="bo-suu-tap" value="dravit-signature">
+            <span class="drv-check__label">Dravit Signature</span>
+            <span class="drv-check__count">(4)</span>
+          </label>
+          <label class="drv-check">
+            <input type="checkbox" class="drv-check__input" name="bo-suu-tap" value="viet-nam-xuat-khau">
+            <span class="drv-check__label">Nhà máy VN đạt chuẩn Xuất khẩu</span>
+            <span class="drv-check__count">(3)</span>
+          </label>
+          <label class="drv-check">
+            <input type="checkbox" class="drv-check__input" name="bo-suu-tap" value="nhap-khau-an-do">
+            <span class="drv-check__label">Nhập khẩu Ấn Độ</span>
+            <span class="drv-check__count">(2)</span>
+          </label>
+          <label class="drv-check">
+            <input type="checkbox" class="drv-check__input" name="bo-suu-tap" value="nhap-khau-y">
+            <span class="drv-check__label">Công nghệ / Nhập khẩu Ý</span>
+            <span class="drv-check__count">(2)</span>
+          </label>
+          <label class="drv-check">
+            <input type="checkbox" class="drv-check__input" name="bo-suu-tap" value="nhap-khau-tbn">
+            <span class="drv-check__label">Nhập khẩu Tây Ban Nha</span>
+            <span class="drv-check__count">(1)</span>
+          </label>
+        </div>
+      </details>
+
+      <!-- FLT-08: 12. Phong cách thiết kế -->
+      <details class="drv-filter-group">
+        <summary class="drv-filter-group__title">
+          <span>12. Phong cách thiết kế</span>
+          <span class="drv-filter-group__meta">
+            <span class="drv-filter-group__selected-badge u-tabular" data-group-selected-count hidden>0</span>
+            <i class="ph ph-caret-down drv-icon--xs drv-filter-group__caret" aria-hidden="true"></i>
+          </span>
+        </summary>
+        <div class="drv-filter-group__body">
+          <label class="drv-check">
+            <input type="checkbox" class="drv-check__input" name="phong-cach" value="hien-dai">
+            <span class="drv-check__label">Hiện đại (Modern)</span>
+            <span class="drv-check__count">(3)</span>
+          </label>
+          <label class="drv-check">
+            <input type="checkbox" class="drv-check__input" name="phong-cach" value="wabi-sabi">
+            <span class="drv-check__label">Wabi-Sabi / Japandi</span>
+            <span class="drv-check__count">(3)</span>
+          </label>
+          <label class="drv-check">
+            <input type="checkbox" class="drv-check__input" name="phong-cach" value="luxury">
+            <span class="drv-check__label">Sang trọng (Luxury)</span>
+            <span class="drv-check__count">(3)</span>
+          </label>
+          <label class="drv-check">
+            <input type="checkbox" class="drv-check__input" name="phong-cach" value="indochine">
+            <span class="drv-check__label">Đông Dương (Indochine)</span>
+            <span class="drv-check__count">(2)</span>
+          </label>
+          <label class="drv-check">
+            <input type="checkbox" class="drv-check__input" name="phong-cach" value="toi-gian">
+            <span class="drv-check__label">Tối giản (Minimalist)</span>
+            <span class="drv-check__count">(1)</span>
+          </label>
+        </div>
+      </details>
+
+      <!-- FLT-09: 13. Hình dạng viên gạch -->
+      <details class="drv-filter-group">
+        <summary class="drv-filter-group__title">
+          <span>13. Hình dạng viên gạch</span>
+          <span class="drv-filter-group__meta">
+            <span class="drv-filter-group__selected-badge u-tabular" data-group-selected-count hidden>0</span>
+            <i class="ph ph-caret-down drv-icon--xs drv-filter-group__caret" aria-hidden="true"></i>
+          </span>
+        </summary>
+        <div class="drv-filter-group__body">
+          <label class="drv-check">
+            <input type="checkbox" class="drv-check__input" name="hinh-dang" value="vuong">
+            <span class="drv-check__label">Hình vuông (60x60, 80x80)</span>
+            <span class="drv-check__count">(6)</span>
+          </label>
+          <label class="drv-check">
+            <input type="checkbox" class="drv-check__input" name="hinh-dang" value="chu-nhat">
+            <span class="drv-check__label">Hình chữ nhật (30x60, 60x120)</span>
+            <span class="drv-check__count">(5)</span>
+          </label>
+          <label class="drv-check">
+            <input type="checkbox" class="drv-check__input" name="hinh-dang" value="thanh-dai">
+            <span class="drv-check__label">Thanh dài giả gỗ (15x90)</span>
+            <span class="drv-check__count">(1)</span>
+          </label>
+        </div>
+      </details>
     </div>
 
-    <div class="drv-dialog__foot">
-      <div class="u-flex u-gap-2">
-        <button type="button" class="drv-btn drv-btn--secondary" data-filter-reset>Xóa lọc</button>
-        <button type="button" class="drv-btn drv-btn--primary drv-btn--full" data-drv-action="dialog-close">
-          <span>Xem <strong data-catalog-count>12</strong> mẫu gạch phù hợp</span>
+    <div class="drv-dialog__foot drv-filter-sheet__foot">
+      <div class="drv-filter-sheet__foot-grid">
+        <button type="button" class="drv-btn drv-btn--outline drv-filter-sheet__reset-btn" data-filter-reset disabled>
+          <i class="ph ph-arrow-counter-clockwise drv-icon--xs" aria-hidden="true"></i>
+          <span data-filter-reset-label>Thiết lập lại</span>
+        </button>
+        <button type="button" class="drv-btn drv-btn--primary drv-filter-sheet__apply-btn" data-drv-action="dialog-close">
+          <span>Xem <strong class="u-tabular" data-catalog-count>12</strong> mẫu gạch phù hợp</span>
         </button>
       </div>
     </div>
@@ -1963,8 +2349,8 @@
        SCRIPTS (Anime.js v3.2.2 + DRAVIT Vanilla ES2022 Modules)
        ====================================================================== -->
   <script defer src="https://cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.min.js"></script>
-  <script defer src="assets/js/core.js?v=20261106e"></script>
-  <script defer src="assets/js/unit-calc.js?v=20261106e"></script>
-  <script defer src="assets/js/catalog-mock.js?v=20261106e"></script>
+  <script defer src="assets/js/core.js?v=20261107f"></script>
+  <script defer src="assets/js/unit-calc.js?v=20261107f"></script>
+  <script defer src="assets/js/catalog-mock.js?v=20261107f"></script>
 </body>
 </html>

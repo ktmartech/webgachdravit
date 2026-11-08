@@ -87,6 +87,7 @@
     /* 6. Spacing Scale (4px / 8px Architectural Rhythm) */
     --s-1: 0.25rem;   /* 4px */
     --s-2: 0.5rem;    /* 8px */
+    --s-2-5: 0.625rem; /* 10px */
     --s-3: 0.75rem;   /* 12px */
     --s-4: 1rem;      /* 16px */
     --s-5: 1.5rem;    /* 24px */

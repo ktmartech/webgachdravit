@@ -487,9 +487,9 @@
               <div class="drv-card__price-main">${priceHtml}</div>
               <div class="drv-card__price-piece">≈ ${formatVnd(item.pricePiece)}/viên</div>
             </div>
-            <a href="${item.url}" class="drv-card__action" aria-label="Tính số lượng và xem chi tiết ${item.sku}">
-              <i class="ph ph-calculator drv-icon" aria-hidden="true"></i>
-            </a>
+            <button type="button" class="drv-card__action" data-drv-action="add-to-cart" data-drv-sku="${item.sku}" data-drv-qty="1 thùng" aria-label="Thêm ${item.sku} vào giỏ">
+              <i class="ph ph-shopping-cart-simple drv-icon" aria-hidden="true"></i>
+            </button>
           </div>
         </div>
       </article>
@@ -525,11 +525,23 @@
 
     _initStickyToolbarObserver() {
       if (!this.toolbar) return;
+      let lastScrollY = window.scrollY;
       const updateStickyState = () => {
+        const currentY = window.scrollY;
         const rect = this.toolbar.getBoundingClientRect();
         const headerH =
           parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h-current')) || 112;
-        this.toolbar.classList.toggle('is-stuck', rect.top <= headerH + 12 && window.scrollY > 220);
+        const isStuck = rect.top <= headerH + 12 && currentY > 180;
+        this.toolbar.classList.toggle('is-stuck', isStuck);
+
+        if (!isStuck) {
+          this.toolbar.classList.remove('is-hidden-scroll');
+        } else if (currentY > lastScrollY + 8 && currentY > 260) {
+          this.toolbar.classList.add('is-hidden-scroll');
+        } else if (currentY < lastScrollY - 6) {
+          this.toolbar.classList.remove('is-hidden-scroll');
+        }
+        lastScrollY = currentY;
       };
       window.addEventListener('scroll', updateStickyState, { passive: true });
       updateStickyState();
@@ -691,6 +703,21 @@
           const lbl = collapseFacetsBtn.querySelector('[data-collapse-facets-label]');
           if (lbl) {
             lbl.textContent = anyOpen ? 'Mở rộng tất cả' : 'Thu gọn nhóm';
+          }
+          return;
+        }
+
+        const collapseMobileBtn = event.target.closest('[data-drv-collapse-facets-mobile]');
+        if (collapseMobileBtn && this.mobileDrawer) {
+          event.preventDefault();
+          const detailsList = Array.from(this.mobileDrawer.querySelectorAll('details.drv-filter-group'));
+          const anyOpen = detailsList.some((d) => d.open);
+          detailsList.forEach((d) => {
+            d.open = !anyOpen;
+          });
+          const lbl = collapseMobileBtn.querySelector('[data-collapse-facets-mobile-label]');
+          if (lbl) {
+            lbl.textContent = anyOpen ? 'Mở tất cả' : 'Thu gọn';
           }
           return;
         }
@@ -1000,13 +1027,17 @@
         this._updateSidebarToggleLabels(splitEl.classList.contains('is-filter-collapsed'));
       }
 
+      // Sync mobile toolbar trigger badge, drawer header badge, reset button & group badges
+      this._updateMobileFilterControls(activeItems);
+      this._updateGroupSelectedCounts();
+
       // Update Robots Matrix Indicator (index,follow vs noindex,follow per docs/05_Faceted_Filter_AJAX.md)
       if (this.robotsBadge) {
         const isNoindex = activeItems.length >= 2 || (sortMode && sortMode !== 'ban-chay');
         this.robotsBadge.textContent = isNoindex ? 'robots: noindex, follow' : 'robots: index, follow';
         this.robotsBadge.className = isNoindex
-          ? 'drv-badge drv-badge--outline u-tabular'
-          : 'drv-badge drv-badge--showroom u-tabular';
+          ? 'drv-badge drv-badge--outline u-tabular drv-cat-toolbar__robots'
+          : 'drv-badge drv-badge--showroom u-tabular drv-cat-toolbar__robots';
       }
 
       if (activeItems.length === 0) {
@@ -1029,6 +1060,76 @@
         ${chipsHtml}
         <button type="button" class="drv-link u-text-xs" data-clear-all-filters>Xóa tất cả</button>
       `;
+    }
+
+    _updateMobileFilterControls(activeItems) {
+      const count = activeItems.length;
+      const hasActive = count > 0;
+
+      // 1. Mobile toolbar trigger button badge
+      document.querySelectorAll('.drv-mobile-filter-trigger').forEach((btn) => {
+        btn.classList.toggle('has-active', hasActive);
+        const badge = btn.querySelector('[data-mobile-filter-count]');
+        if (badge) {
+          badge.textContent = hasActive ? String(count) : '14';
+        }
+      });
+
+      if (!this.mobileDrawer) return;
+
+      // 2. Drawer header badge
+      const headerBadge = this.mobileDrawer.querySelector('[data-drawer-active-badge]');
+      if (headerBadge) {
+        headerBadge.textContent = hasActive ? `Đang lọc ${count}` : '14 tiêu chí';
+        headerBadge.classList.toggle('is-active', hasActive);
+      }
+
+      // 3. Sticky active chips bar inside mobile drawer
+      const activeBar = this.mobileDrawer.querySelector('#drv-drawer-active-bar');
+      const activeChipsEl = this.mobileDrawer.querySelector('#drv-drawer-active-chips');
+      if (activeBar && activeChipsEl) {
+        activeBar.hidden = !hasActive;
+        if (hasActive) {
+          activeChipsEl.innerHTML = activeItems
+            .map(
+              (item) => `
+              <button type="button" class="drv-chip drv-chip--square is-active" data-remove-filter data-facet-key="${item.key}" data-facet-val="${item.val}">
+                <span>${item.label}</span>
+                <i class="ph ph-x drv-icon--xs" aria-hidden="true"></i>
+              </button>`
+            )
+            .join('');
+        } else {
+          activeChipsEl.innerHTML = '';
+        }
+      }
+
+      // 4. Footer Reset button state & label
+      this.mobileDrawer.querySelectorAll('.drv-filter-sheet__reset-btn').forEach((btn) => {
+        btn.disabled = !hasActive;
+        const lbl = btn.querySelector('[data-filter-reset-label]');
+        if (lbl) {
+          lbl.textContent = hasActive ? `Xóa lọc (${count})` : 'Thiết lập lại';
+        }
+      });
+    }
+
+    _updateGroupSelectedCounts() {
+      [this, this.mobileDrawer].forEach((root) => {
+        if (!root) return;
+        root.querySelectorAll('details.drv-filter-group').forEach((groupEl) => {
+          const chipCount = groupEl.querySelectorAll('[data-facet-chip][aria-pressed="true"]').length;
+          const inputCount = Array.from(
+            groupEl.querySelectorAll('input[type="checkbox"]:checked, input[type="radio"]:checked')
+          ).filter((inp) => inp.value !== '').length;
+          const totalSelected = chipCount + inputCount;
+          const badge = groupEl.querySelector('[data-group-selected-count]');
+          if (badge) {
+            badge.hidden = totalSelected === 0;
+            badge.textContent = String(totalSelected);
+          }
+        });
+      });
     }
   }
 
@@ -1106,11 +1207,25 @@
       const prodHeadingEl = drop.querySelector('[data-search-prod-heading]');
       const viewAllEl = drop.querySelector('[data-search-view-all]');
 
+      const syncSearchToggleBtn = (open) => {
+        const root = headerEl || document;
+        root.querySelectorAll('[data-drv-action="search-toggle"]').forEach((btn) => {
+          btn.setAttribute('aria-expanded', String(open));
+          const icon = btn.querySelector('i');
+          if (icon) {
+            icon.className = open
+              ? 'ph ph-x drv-icon drv-icon--sm'
+              : 'ph ph-magnifying-glass drv-icon drv-icon--sm';
+          }
+        });
+      };
+
       const openSearchOverlay = () => {
         wrapper.classList.add('is-open');
         if (headerEl) headerEl.classList.add('has-search-open');
         backdrop.hidden = false;
         drop.hidden = false;
+        syncSearchToggleBtn(true);
       };
 
       const closeSearchOverlay = () => {
@@ -1118,6 +1233,7 @@
         if (headerEl) headerEl.classList.remove('has-search-open');
         backdrop.hidden = true;
         drop.hidden = true;
+        syncSearchToggleBtn(false);
       };
 
       const runSearch = (rawQuery) => {

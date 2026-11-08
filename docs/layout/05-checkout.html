@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="assets/css/main.css?v=20261106p">
   <link rel="stylesheet" href="assets/css/pages.css?v=20261106p">
 </head>
-<body>
+<body class="drv-checkout-page" data-page="checkout">
   <a href="#main-content" class="drv-skip-link">Chuyển đến biểu mẫu thanh toán</a>
 
   <!-- ======================================================================
@@ -56,13 +56,15 @@
       </div>
 
       <div class="drv-checkout-topbar__support">
-        <a href="04-cart.html" class="drv-btn drv-btn--soft drv-btn--sm">
+        <a href="04-cart.html" class="drv-btn drv-btn--soft drv-btn--sm drv-checkout-topbar__back-btn">
           <i class="ph ph-arrow-left drv-icon--xs" aria-hidden="true"></i>
-          <span>Quay lại giỏ hàng</span>
+          <span class="u-hide-mobile">Quay lại giỏ hàng</span>
+          <span class="drv-checkout-topbar__mobile-text">Giỏ hàng</span>
         </a>
-        <a href="tel:0909888777" class="drv-btn drv-btn--outline drv-btn--sm u-tabular">
+        <a href="tel:0909888777" class="drv-btn drv-btn--outline drv-btn--sm u-tabular drv-checkout-topbar__phone-btn">
           <i class="ph ph-phone-call drv-icon--xs u-text-moss" aria-hidden="true"></i>
-          <span>Hỗ trợ: 0909.888.777</span>
+          <span class="u-hide-mobile">Hỗ trợ: 0909.888.777</span>
+          <span class="drv-checkout-topbar__mobile-text">0909.888.777</span>
         </a>
         <a href="https://zalo.me/0909888777" class="drv-btn drv-btn--moss drv-btn--sm u-hide-mobile">
           <i class="ph ph-chat-circle-dots drv-icon--xs" aria-hidden="true"></i>
@@ -74,22 +76,24 @@
 
   <main id="main-content">
     <!-- ====================================================================
-         SECTION 1: PAGE HEADER, 3-STEP PROGRESS BAR & DEMO STATE SWITCHER
+         SECTION 1: BREADCRUMB, PAGE HEADER & 3-STEP COMMERCE PROGRESS BAR
          ==================================================================== -->
-    <section class="l-section l-section--white u-bd-bottom">
+    <section class="l-section l-section--white u-bd-b drv-checkout-hero-sec" style="padding-block: var(--s-5)">
       <div class="l-container l-stack l-stack--md">
-        <div class="l-cluster l-cluster--between">
-          <div class="l-stack l-stack--xs">
-            <span class="drv-sec-head__eyebrow">Bước 02/03 · Biểu mẫu 6 trường tinh gọn · Địa chỉ hành chính 2 cấp (34 Tỉnh/TP)</span>
-            <h1>THÔNG TIN GIAO HÀNG &amp; PHƯƠNG THỨC THANH TOÁN</h1>
-          </div>
+        <!-- Breadcrumb -->
+        <nav class="drv-breadcrumb" aria-label="Breadcrumb">
+          <a href="01-home.html">Trang chủ</a>
+          <span class="drv-breadcrumb__sep" aria-hidden="true">/</span>
+          <a href="02-catalog-collection.html">Gạch ốp lát</a>
+          <span class="drv-breadcrumb__sep" aria-hidden="true">/</span>
+          <a href="04-cart.html">Giỏ hàng</a>
+          <span class="drv-breadcrumb__sep" aria-hidden="true">/</span>
+          <span aria-current="page" class="u-bold u-text-navy">Thanh toán &amp; Giao hàng</span>
+        </nav>
 
-          <div class="l-cluster l-cluster--xs">
-            <span class="drv-badge drv-badge--moss">
-              <i class="ph-fill ph-shield-check drv-icon--xs" aria-hidden="true"></i>
-              <span>Giữ tồn kho cùng lô Shade V2 ngay khi đặt</span>
-            </span>
-          </div>
+        <div class="l-stack l-stack--sm">
+          <span class="drv-sec-head__eyebrow" style="margin-bottom: 6px; display: inline-block;">Bước 02/03 · Biểu mẫu 6 trường tinh gọn · Địa chỉ hành chính 2 cấp (34 Tỉnh/TP)</span>
+          <h1 style="line-height: 1.25; margin-top: 2px;">THÔNG TIN GIAO HÀNG &amp; PHƯƠNG THỨC THANH TOÁN</h1>
         </div>
 
         <!-- 3-Step Commerce Progress Bar (Architectural Grout-Line Grid) -->
@@ -99,7 +103,8 @@
             <div class="drv-cart-step__text">
               <span class="drv-cart-step__title">
                 <i class="ph-fill ph-check-circle drv-icon--xs u-text-moss" aria-hidden="true"></i>
-                <span>Giỏ hàng &amp; Quy đổi khối lượng</span>
+                <span class="u-hide-mobile">Giỏ hàng &amp; Quy đổi khối lượng</span>
+                <span class="drv-cart-step__mobile-label">Giỏ hàng</span>
               </span>
               <span class="drv-cart-step__sub">Đã chọn 2 mã · 11,52 m² (6 thùng + 3 túi · 258 kg)</span>
             </div>
@@ -108,7 +113,10 @@
           <div class="drv-cart-step is-active" aria-current="step">
             <span class="drv-cart-step__num" aria-hidden="true">02</span>
             <div class="drv-cart-step__text">
-              <span class="drv-cart-step__title">Thông tin giao hàng công trình</span>
+              <span class="drv-cart-step__title">
+                <span class="u-hide-mobile">Thông tin giao hàng công trình</span>
+                <span class="drv-cart-step__mobile-label">Giao hàng</span>
+              </span>
               <span class="drv-cart-step__sub">Địa chỉ 2 cấp (34 Tỉnh/TP) &amp; Chọn COD / VietQR</span>
             </div>
           </div>
@@ -116,8 +124,11 @@
           <a href="06-order-received.html" class="drv-cart-step">
             <span class="drv-cart-step__num" aria-hidden="true">03</span>
             <div class="drv-cart-step__text">
-              <span class="drv-cart-step__title">Xác nhận lô gạch &amp; Báo phí vận chuyển</span>
-              <span class="drv-cart-step__sub">Nhân viên gọi chốt cước xe tối ưu trong 15 - 30 phút</span>
+              <span class="drv-cart-step__title">
+                <span class="u-hide-mobile">Tư vấn chốt đơn &amp; Báo cước</span>
+                <span class="drv-cart-step__mobile-label">Chốt đơn</span>
+              </span>
+              <span class="drv-cart-step__sub">Chuyên viên liên hệ xác nhận trong 15 - 30 phút</span>
             </div>
           </a>
         </nav>
@@ -155,6 +166,62 @@
          ==================================================================== -->
     <section class="l-section" aria-label="Biểu mẫu thông tin giao hàng và tóm tắt đơn hàng">
       <div class="l-container">
+        <!-- Mobile-Only Expandable Order Summary Bar (Clean Flat CRO) -->
+        <details class="drv-checkout-mobile-summary" aria-label="Xem tóm tắt đơn hàng">
+          <summary class="drv-checkout-mobile-summary__toggle">
+            <div class="drv-checkout-mobile-summary__left">
+              <i class="ph-bold ph-shopping-cart drv-icon--xs u-text-moss" aria-hidden="true"></i>
+              <span>Đơn hàng: 2 mã · 11,52 m²</span>
+              <i class="ph ph-caret-down drv-checkout-mobile-summary__arrow" aria-hidden="true"></i>
+            </div>
+            <strong class="drv-checkout-mobile-summary__total">4.690.200đ</strong>
+          </summary>
+          <div class="drv-checkout-mobile-summary__content">
+            <div class="drv-checkout-items">
+              <div class="drv-checkout-item">
+                <img src="assets/img/tile-marble-calacatta.svg" width="48" height="48" alt="Gạch Marble Calacatta" class="drv-checkout-item__thumb">
+                <div class="drv-checkout-item__body">
+                  <div class="drv-checkout-item__header-row">
+                    <span class="drv-checkout-item__name">Gạch Marble Calacatta 80x80</span>
+                    <strong class="drv-checkout-item__total">4.435.200đ</strong>
+                  </div>
+                  <div class="drv-checkout-item__sub-row">
+                    <span class="drv-checkout-item__spec">6 thùng · 11,52 m² · Shade V2</span>
+                    <span class="drv-checkout-item__unit">385.000đ/m²</span>
+                  </div>
+                </div>
+              </div>
+              <div class="drv-checkout-item">
+                <img src="assets/img/tile-grout-pack.svg" width="48" height="48" alt="Keo Chà Ron Trắng Sứ" class="drv-checkout-item__thumb">
+                <div class="drv-checkout-item__body">
+                  <div class="drv-checkout-item__header-row">
+                    <span class="drv-checkout-item__name">Keo Chà Ron Trắng Sứ (2kg)</span>
+                    <strong class="drv-checkout-item__total">255.000đ</strong>
+                  </div>
+                  <div class="drv-checkout-item__sub-row">
+                    <span class="drv-checkout-item__spec">3 túi (6 kg) · Màu #01</span>
+                    <span class="drv-checkout-item__unit">85.000đ/túi</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="drv-checkout-mobile-summary__breakdown">
+              <div class="drv-summary-row">
+                <span class="u-text-muted">Tạm tính vật tư (2 mã):</span>
+                <strong class="u-text-navy">4.690.200đ</strong>
+              </div>
+              <div class="drv-summary-row">
+                <span class="u-text-muted">Kiểm tra trùng lô màu:</span>
+                <span class="u-text-moss u-bold">Miễn phí</span>
+              </div>
+              <div class="drv-summary-row">
+                <span class="u-text-muted">Phí vận chuyển (258 kg):</span>
+                <span class="u-text-moss u-bold">Chuyên viên báo khi chốt đơn</span>
+              </div>
+            </div>
+          </div>
+        </details>
+
         <form
           id="drv-checkout-form"
           class="drv-checkout-layout"
@@ -181,19 +248,19 @@
               </div>
 
               <div class="drv-checkout-block__body">
-                <div class="drv-checkout-grid-2">
+                <div class="drv-checkout-grid-2 drv-checkout-grid-2--mobile">
                   <!-- Field 1: Full Name (billing_first_name) -->
                   <div class="drv-field">
                     <label for="billing_first_name" class="drv-label">
-                      <span>Họ và tên người nhận <span class="drv-label__req" aria-hidden="true">*</span></span>
-                      <span class="drv-label__hint">Chủ nhà hoặc Giám sát</span>
+                      <span>Họ và tên <span class="drv-label__req" aria-hidden="true">*</span></span>
+                      <span class="drv-label__hint u-hide-mobile">Chủ nhà hoặc Giám sát</span>
                     </label>
                     <input
                       type="text"
                       id="billing_first_name"
                       name="billing_first_name"
                       class="drv-input"
-                      value="Nguyễn Thanh Tùng (Chủ nhà)"
+                      value="Nguyễn Thanh Tùng"
                       placeholder="Ví dụ: Nguyễn Văn An"
                       autocomplete="name"
                       required
@@ -205,8 +272,8 @@
                   <!-- Field 2: Phone Number (billing_phone) -->
                   <div class="drv-field">
                     <label for="billing_phone" class="drv-label">
-                      <span>Số điện thoại liên hệ <span class="drv-label__req" aria-hidden="true">*</span></span>
-                      <span id="hint-billing-phone" class="drv-label__hint">Gọi chốt phí xe &amp; giao hàng</span>
+                      <span>Số điện thoại <span class="drv-label__req" aria-hidden="true">*</span></span>
+                      <span id="hint-billing-phone" class="drv-label__hint u-hide-mobile">Gọi chốt phí xe &amp; giao hàng</span>
                     </label>
                     <input
                       type="tel"
@@ -258,21 +325,13 @@
               </div>
 
               <div class="drv-checkout-block__body">
-                <!-- 2-Level Address Explanation Strip (D-16) -->
-                <div class="drv-address-rule-bar">
-                  <i class="ph-fill ph-map-pin-line drv-icon--sm u-text-moss" aria-hidden="true"></i>
-                  <div>
-                    <strong>Biểu mẫu địa chỉ 2 cấp tinh gọn (từ 01/07/2025):</strong> Quý khách chỉ cần chọn <strong>Tỉnh/Thành phố (34 đơn vị)</strong> và <strong>Phường/Xã</strong> tương ứng (đã lược bỏ cấp Quận/Huyện cũ và Mã bưu điện rườm rà).
-                  </div>
-                </div>
-
                 <!-- Cascading Select Row: Tỉnh/Thành phố (34) -> Phường/Xã -->
-                <div class="drv-checkout-grid-2">
+                <div class="drv-checkout-grid-2 drv-checkout-grid-2--mobile">
                   <!-- Field 4: Province (billing_state) -->
                   <div class="drv-field">
                     <label for="billing_state" class="drv-label">
-                      <span>Tỉnh / Thành phố <span class="drv-label__req" aria-hidden="true">*</span></span>
-                      <span class="drv-label__hint">34 Tỉnh/Thành phố</span>
+                      <span>Tỉnh / TP <span class="drv-label__req" aria-hidden="true">*</span></span>
+                      <span class="drv-label__hint u-hide-mobile">34 Tỉnh/Thành phố</span>
                     </label>
                     <select
                       id="billing_state"
@@ -285,7 +344,7 @@
                       data-drv-default="HCM"
                       aria-describedby="err-billing-state"
                       data-error-empty="Vui lòng chọn Tỉnh / Thành phố giao hàng.">
-                      <option value="">-- Chọn Tỉnh / Thành phố --</option>
+                      <option value="">-- Chọn Tỉnh / TP --</option>
                     </select>
                     <span id="err-billing-state" class="drv-field__error" role="alert" hidden></span>
                   </div>
@@ -294,7 +353,7 @@
                   <div class="drv-field">
                     <label for="billing_city" class="drv-label">
                       <span>Phường / Xã <span class="drv-label__req" aria-hidden="true">*</span></span>
-                      <span class="drv-label__hint">Tự động nạp theo Tỉnh/TP</span>
+                      <span class="drv-label__hint u-hide-mobile">Tự động nạp theo Tỉnh/TP</span>
                     </label>
                     <select
                       id="billing_city"
@@ -514,12 +573,9 @@
 
               <div class="drv-checkout-block__body">
                 <div class="drv-ship-method-card">
-                  <div class="drv-ship-method-card__top">
-                    <div class="l-cluster l-cluster--xs">
-                      <i class="ph-fill ph-truck drv-icon u-text-moss" aria-hidden="true"></i>
-                      <strong class="u-text-base u-text-navy">Giao gạch bằng Xe tải / Chành xe công trình</strong>
-                    </div>
-                    <span class="drv-badge drv-badge--moss">Phí vận chuyển: Báo sau khi xác nhận đơn</span>
+                  <div class="l-cluster l-cluster--xs">
+                    <i class="ph-fill ph-truck drv-icon u-text-moss" aria-hidden="true"></i>
+                    <strong class="u-text-base u-text-navy">Giao gạch bằng Xe tải / Chành xe công trình</strong>
                   </div>
 
                   <p class="u-text-xs u-text-muted">
@@ -533,8 +589,8 @@
                       <span class="u-text-muted">Hệ thống tạm khóa 6 thùng <strong>DRV-8801M</strong> cùng lô <strong>Shade V2</strong> tại kho cho đơn của bạn.</span>
                     </div>
                     <div class="drv-ship-steps-mini__item">
-                      <strong class="u-text-navy">2. Báo cước xe trong 15 - 30 phút</strong>
-                      <span class="u-text-muted">Điều vận Dravit tra cứu lộ trình &amp; loại xe vào hẻm để báo mức cước tiết kiệm nhất.</span>
+                      <strong class="u-text-navy">2. Chuyên viên tư vấn liên hệ</strong>
+                      <span class="u-text-muted">Chuyên viên kiểm tra lộ trình &amp; loại xe vào hẻm để báo mức cước tiết kiệm nhất.</span>
                     </div>
                     <div class="drv-ship-steps-mini__item">
                       <strong class="u-text-navy">3. Đồng ý mới xuất kho</strong>
@@ -571,7 +627,6 @@
                         <i class="ph ph-qr-code drv-icon u-text-moss" aria-hidden="true"></i>
                         <span>Chuyển khoản ngân hàng qua mã VietQR (NAPAS 24/7)</span>
                       </span>
-                      <span class="drv-badge drv-badge--moss">Khuyên dùng · Nhanh &amp; Chính xác</span>
                     </div>
 
                     <p class="drv-pay-card__desc">
@@ -584,7 +639,7 @@
                         <strong>Lưu ý quan trọng: Quý khách chưa cần chuyển khoản ở bước này.</strong>
                       </div>
                       <p class="u-text-muted">
-                        Ngay sau khi nhân viên Dravit gọi xác nhận tồn kho cùng lô màu và chốt phí vận chuyển, hệ thống sẽ cập nhật <strong>Tổng thanh toán cuối cùng</strong> và hiển thị mã <strong>VietQR chính xác</strong> trên trang đơn hàng cũng như gửi qua Zalo / Email của bạn.
+                        Ngay sau khi chuyên viên tư vấn Dravit liên hệ chốt đơn và xác nhận cùng lô màu, hệ thống sẽ cập nhật <strong>Tổng thanh toán cuối cùng</strong> và hiển thị mã <strong>VietQR chính xác</strong> trên trang đơn hàng cũng như gửi qua Zalo / Email của bạn.
                       </p>
                     </div>
                   </label>
@@ -629,43 +684,33 @@
                RIGHT COLUMN (5/12 STICKY): ORDER SUMMARY, SHADE COMMITMENT & CTA
                ============================================================== -->
           <aside class="drv-summary-box drv-summary-box--sticky" aria-labelledby="checkout-summary-heading">
-            <div class="l-cluster l-cluster--between u-bd-bottom">
-              <div class="l-stack l-stack--2xs">
-                <span class="u-text-xs u-bold u-uppercase u-text-moss">Kiểm tra khối lượng &amp; Đơn vị quy đổi</span>
-                <h2 id="checkout-summary-heading" class="u-text-lg">Tóm tắt đơn hàng công trình (2 mã)</h2>
-              </div>
+            <div class="l-cluster l-cluster--between u-bd-bottom" style="padding-bottom: var(--s-3);">
+              <h2 id="checkout-summary-heading" class="u-text-base u-bold u-text-navy" style="margin: 0;">Tóm tắt đơn hàng (2 mã)</h2>
               <a href="04-cart.html" class="drv-btn drv-btn--outline drv-btn--sm">
                 <i class="ph ph-pencil-simple drv-icon--xs" aria-hidden="true"></i>
                 <span>Sửa giỏ</span>
               </a>
             </div>
 
-            <!-- 1. Compact Multi-Unit Line Items List (vien / thung / m² / kg) -->
+            <!-- 1. Compact Line Items List -->
             <div class="drv-checkout-items" role="list" aria-label="Danh sách sản phẩm trong đơn hàng">
               <!-- Item 1: Tile DRV-8801M (area_pack) -->
               <div class="drv-checkout-item" role="listitem">
                 <img
                   src="assets/img/tile-marble-calacatta.svg"
-                  width="64"
-                  height="64"
+                  width="56"
+                  height="56"
                   decoding="async"
-                  alt="Gạch Lát Nền Dravit Vân Đá Marble Calacatta 80x80 DRV-8801M"
+                  alt="Gạch Lát Nền Dravit Marble Calacatta 80x80"
                   class="drv-checkout-item__thumb">
                 <div class="drv-checkout-item__body">
-                  <div class="l-cluster l-cluster--between">
-                    <span class="drv-badge drv-badge--outline">SKU: DRV-8801M</span>
-                    <span class="u-text-xs u-bold u-text-moss">Cùng lô Shade V2</span>
+                  <div class="drv-checkout-item__header-row">
+                    <span class="drv-checkout-item__name">Gạch Lát Nền Marble Calacatta 80x80</span>
+                    <strong class="drv-checkout-item__total">4.435.200đ</strong>
                   </div>
-                  <div class="drv-checkout-item__title">
-                    Gạch Lát Nền Dravit Vân Đá Marble Calacatta Trắng Khói 80x80 Bóng Kiếng
-                  </div>
-                  <div class="drv-cart-conv-pill">
-                    <i class="ph ph-package drv-icon--xs u-text-moss" aria-hidden="true"></i>
-                    <span>SL: <strong>18 viên</strong> = 6 thùng · 11,52 m² · 252 kg</span>
-                  </div>
-                  <div class="drv-checkout-item__price-row">
-                    <span class="u-text-xs u-text-muted">246.400đ/viên (385.000đ/m²)</span>
-                    <strong class="u-text-base u-text-navy">4.435.200đ</strong>
+                  <div class="drv-checkout-item__sub-row">
+                    <span class="drv-checkout-item__spec">6 thùng (18 viên · 11,52 m²) · Lô Shade V2</span>
+                    <span class="drv-checkout-item__unit">385.000đ/m²</span>
                   </div>
                 </div>
               </div>
@@ -674,27 +719,20 @@
               <div class="drv-checkout-item" role="listitem">
                 <img
                   src="assets/img/tile-grout-pack.svg"
-                  width="64"
-                  height="64"
+                  width="56"
+                  height="56"
                   loading="lazy"
                   decoding="async"
-                  alt="Keo Chà Ron Chống Thấm Dravit Trắng Sứ Túi 2kg DRV-RON01"
+                  alt="Keo Chà Ron Chống Thấm Dravit Trắng Sứ"
                   class="drv-checkout-item__thumb">
                 <div class="drv-checkout-item__body">
-                  <div class="l-cluster l-cluster--between">
-                    <span class="drv-badge drv-badge--outline">SKU: DRV-RON01</span>
-                    <span class="u-text-xs u-text-muted">Màu #01 Trắng Sứ</span>
+                  <div class="drv-checkout-item__header-row">
+                    <span class="drv-checkout-item__name">Keo Chà Ron Chống Thấm Dravit (Túi 2kg)</span>
+                    <strong class="drv-checkout-item__total">255.000đ</strong>
                   </div>
-                  <div class="drv-checkout-item__title">
-                    Keo Chà Ron Chống Thấm &amp; Chống Bám Bẩn Dravit Trắng Sứ (Túi 2kg)
-                  </div>
-                  <div class="drv-cart-conv-pill">
-                    <i class="ph ph-scales drv-icon--xs u-text-moss" aria-hidden="true"></i>
-                    <span>SL: <strong>3 túi</strong> = 6 kg (Đủ chà ~11,5 m²)</span>
-                  </div>
-                  <div class="drv-checkout-item__price-row">
-                    <span class="u-text-xs u-text-muted">85.000đ/túi (42.500đ/kg)</span>
-                    <strong class="u-text-base u-text-navy">255.000đ</strong>
+                  <div class="drv-checkout-item__sub-row">
+                    <span class="drv-checkout-item__spec">3 túi (6 kg) · Màu Trắng Sứ #01</span>
+                    <span class="drv-checkout-item__unit">85.000đ/túi</span>
                   </div>
                 </div>
               </div>
@@ -734,12 +772,12 @@
 
               <div class="drv-summary-row">
                 <span class="u-text-muted">Phương thức thanh toán:</span>
-                <strong class="u-text-navy u-text-xs" data-checkout-pay-summary>Chuyển khoản VietQR (Sau khi chốt phí giao)</strong>
+                <strong class="u-text-navy u-text-xs" data-checkout-pay-summary>Chuyển khoản VietQR (Sau khi chốt đơn)</strong>
               </div>
 
               <div class="drv-summary-row">
                 <span class="u-text-muted">Phí vận chuyển (258 kg):</span>
-                <span class="u-text-moss u-bold">Báo sau khi xác nhận đơn</span>
+                <span class="u-text-moss u-bold">Chuyên viên báo khi chốt đơn</span>
               </div>
             </div>
 
@@ -753,28 +791,28 @@
             </div>
 
             <!-- 4. Pre-Submit Shade/Caliber & Shipping Quote Commitment Box (--c-champagne, Page CRO & Spec §6) -->
-            <div class="drv-checkout-guarantee" role="note" aria-label="Cam kết kiểm tra trùng lô màu và báo phí vận chuyển">
+            <div class="drv-checkout-guarantee" role="note" aria-label="Cam kết đơn hàng online và hỗ trợ tư vấn">
               <div class="l-cluster l-cluster--xs">
                 <i class="ph-fill ph-seal-check drv-icon--sm u-text-navy" aria-hidden="true"></i>
-                <strong class="u-text-navy">Cam kết kiểm tra trùng lô màu &amp; Báo phí vận chuyển tối ưu</strong>
+                <strong class="u-text-navy">Cam kết đơn hàng &amp; Quy trình xác nhận</strong>
               </div>
 
               <p>
-                Vì gạch ốp lát có trọng lượng lớn (<strong class="u-tabular">258 kg</strong>), nhân viên Dravit sẽ gọi xác nhận tồn kho <strong>cùng lô màu (Shade V2)</strong> và báo phí vận chuyển tốt nhất trước khi giao hàng.
+                Đơn hàng được tiếp nhận tức thì. <strong>Chuyên viên tư vấn Dravit sẽ liên hệ trực tiếp</strong> để kiểm tra cùng lô màu (<strong>Shade V2</strong>), tối ưu cước vận chuyển và chốt đơn hàng nhanh chóng.
               </p>
 
               <ul class="drv-checkout-guarantee__list">
                 <li class="drv-checkout-guarantee__item">
                   <i class="ph-bold ph-check drv-icon--xs u-text-moss" aria-hidden="true"></i>
-                  <span>Xuất kho 100% thùng gạch trùng mã màu (<strong>Shade</strong>) và kích thước chuẩn (<strong>Caliber</strong>).</span>
+                  <span>Chuyên viên tư vấn liên hệ trong 15 - 30 phút để xác nhận chi tiết đơn và báo phí cước xe tốt nhất.</span>
                 </li>
                 <li class="drv-checkout-guarantee__item">
                   <i class="ph-bold ph-check drv-icon--xs u-text-moss" aria-hidden="true"></i>
-                  <span>Không phát sinh chi phí ẩn · Nếu phí vận chuyển chưa phù hợp, bạn có thể hủy đơn miễn phí.</span>
+                  <span>Cam kết xuất kho 100% thùng gạch trùng mã màu (<strong>Shade</strong>) và kích thước chuẩn (<strong>Caliber</strong>).</span>
                 </li>
                 <li class="drv-checkout-guarantee__item">
                   <i class="ph-bold ph-check drv-icon--xs u-text-moss" aria-hidden="true"></i>
-                  <span>Bảo hiểm bù mới 1 đổi 1 tại chân công trình nếu có viên nứt vỡ do vận chuyển.</span>
+                  <span>Minh bạch &amp; an tâm: Bạn chỉ thanh toán khi đã đồng ý với phí vận chuyển và chốt đơn hàng.</span>
                 </li>
               </ul>
             </div>
@@ -790,9 +828,9 @@
                   checked
                   required
                   aria-describedby="err-checkout-terms"
-                  data-error-empty="Vui lòng đánh dấu đồng ý với Điều khoản & Chính sách vận chuyển để đặt hàng.">
+                  data-error-empty="Vui lòng xác nhận đồng ý với điều khoản mua hàng để tiếp tục.">
                 <span class="u-text-xs">
-                  Tôi đã kiểm tra số lượng viên/thùng và đồng ý với <a href="10-policies-search-404.html#shipping" class="u-bold u-text-moss" target="_blank" rel="noopener">Điều khoản &amp; Chính sách vận chuyển, đồng kiểm</a> của DRAVIT.
+                  Tôi xác nhận thông tin đơn hàng và đồng ý với <a href="10-policies-search-404.html#shipping" class="u-bold u-text-moss" target="_blank" rel="noopener">Điều khoản mua hàng &amp; Chính sách giao nhận</a> của DRAVIT.
                 </span>
               </label>
               <span id="err-checkout-terms" class="drv-field__error" role="alert" hidden></span>
@@ -802,11 +840,11 @@
             <div class="l-stack l-stack--xs">
               <button type="submit" class="drv-btn drv-btn--lg drv-btn--full">
                 <i class="ph-bold ph-check-circle drv-icon" aria-hidden="true"></i>
-                <span>ĐẶT HÀNG - CHỜ XÁC NHẬN PHÍ GIAO</span>
+                <span>XÁC NHẬN ĐẶT HÀNG</span>
               </button>
 
               <p class="u-text-xs u-text-muted u-text-center" data-checkout-submit-sub>
-                Nhân viên Dravit sẽ gọi xác nhận và báo phí vận chuyển trước khi giao (15 - 30 phút trong giờ làm việc).
+                Chưa cần chuyển khoản ngay · Chuyên viên tư vấn sẽ liên hệ chốt đơn và gửi mã VietQR.
               </p>
             </div>
           </aside>
@@ -814,6 +852,21 @@
         </form>
       </div>
     </section>
+
+    <!-- Mobile Fixed Bottom Action Bar (Sticky CTA - D-04 & Mobile CRO) -->
+    <div class="drv-checkout-sticky-cta" aria-label="Thao tác đặt hàng nhanh trên di động">
+      <div class="drv-checkout-sticky-cta__inner">
+        <div class="drv-checkout-sticky-cta__info">
+          <span class="drv-checkout-sticky-cta__label">Tổng tạm tính (2 mã):</span>
+          <strong class="drv-checkout-sticky-cta__price">4.690.200đ</strong>
+          <span class="drv-checkout-sticky-cta__sub">Đã gồm VAT · Báo ship sau</span>
+        </div>
+        <button type="submit" form="drv-checkout-form" class="drv-btn drv-btn--lg drv-checkout-sticky-cta__btn">
+          <i class="ph-bold ph-check-circle drv-icon" aria-hidden="true"></i>
+          <span>ĐẶT HÀNG</span>
+        </button>
+      </div>
+    </div>
   </main>
 
   <!-- 3–8. SHARED DIALOGS, SHOWROOM DOCK, GLOBAL FOOTER & MOBILE BAR (partials/footer.html) -->

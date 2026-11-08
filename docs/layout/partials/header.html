@@ -21,7 +21,7 @@
 <header class="drv-header">
   <!-- Tier 1: Brand, Instant Search, Showroom & Cart -->
   <div class="l-container drv-header__top">
-    <button type="button" class="drv-btn drv-btn--outline drv-btn--sm drv-btn--icon u-only-mobile" data-drv-action="dialog-open" data-drv-target="#drv-mobile-menu-drawer" aria-label="Mở danh mục điều hướng">
+    <button type="button" class="drv-btn drv-btn--ghost drv-btn--sm drv-btn--icon drv-header__menu-btn u-only-mobile" data-drv-action="dialog-open" data-drv-target="#drv-mobile-menu-drawer" aria-label="Mở danh mục điều hướng">
       <i class="ph ph-list drv-icon" aria-hidden="true"></i>
     </button>
 
@@ -83,9 +83,15 @@
         <i class="ph ph-file-text drv-icon drv-icon--sm" aria-hidden="true"></i>
         <span>Báo giá công trình</span>
       </button>
-      <button type="button" class="drv-btn drv-btn--outline drv-btn--sm" data-drv-action="dialog-open" data-drv-target="#drv-minicart-drawer" aria-label="Mở giỏ hàng">
-        <i class="ph ph-shopping-bag drv-icon drv-icon--sm" aria-hidden="true"></i>
-        <span>Giỏ (<span data-drv-cart-count class="u-tabular">2</span>)</span>
+      <button type="button" class="drv-btn drv-btn--ghost drv-btn--sm drv-btn--icon drv-header__search-toggle" data-drv-action="search-toggle" aria-label="Mở tìm kiếm" aria-expanded="false" aria-controls="global-search-input">
+        <i class="ph ph-magnifying-glass drv-icon drv-icon--sm" aria-hidden="true"></i>
+      </button>
+      <button type="button" class="drv-btn drv-btn--outline drv-btn--sm drv-header__cart-btn" data-drv-action="dialog-open" data-drv-target="#drv-minicart-drawer" aria-label="Mở giỏ hàng">
+        <span class="drv-header__cart-icon-wrap">
+          <i class="ph ph-shopping-bag drv-icon drv-icon--sm" aria-hidden="true"></i>
+          <span class="drv-header__cart-badge u-tabular" data-drv-cart-count>2</span>
+        </span>
+        <span class="drv-header__cart-text">Giỏ (<span data-drv-cart-count class="u-tabular">2</span>)</span>
       </button>
     </div>
   </div>

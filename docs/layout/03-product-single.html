@@ -12,8 +12,8 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/bold/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/style.css">
-  <link rel="stylesheet" href="assets/css/main.css?v=20261106s">
-  <link rel="stylesheet" href="assets/css/pages.css?v=20261106u">
+  <link rel="stylesheet" href="assets/css/main.css?v=20261107l">
+  <link rel="stylesheet" href="assets/css/pages.css?v=20261107l">
 
   <!-- JSON-LD Structured Data: BreadcrumbList (IL-04) + Product (Dual UnitPriceSpecification C62 & MTK) -->
   <script type="application/ld+json">
@@ -166,7 +166,7 @@
   <header class="drv-header">
     <!-- Tier 1: Brand, Instant Search, Showroom & Cart -->
     <div class="l-container drv-header__top">
-      <button type="button" class="drv-btn drv-btn--outline drv-btn--sm drv-btn--icon u-only-mobile" data-drv-action="dialog-open" data-drv-target="#drv-mobile-menu-drawer" aria-label="Mở danh mục điều hướng">
+      <button type="button" class="drv-btn drv-btn--ghost drv-btn--sm drv-btn--icon drv-header__menu-btn u-only-mobile" data-drv-action="dialog-open" data-drv-target="#drv-mobile-menu-drawer" aria-label="Mở danh mục điều hướng">
         <i class="ph ph-list drv-icon" aria-hidden="true"></i>
       </button>
 
@@ -228,9 +228,15 @@
           <i class="ph ph-file-text drv-icon drv-icon--sm" aria-hidden="true"></i>
           <span>Báo giá công trình</span>
         </button>
-        <button type="button" class="drv-btn drv-btn--outline drv-btn--sm" data-drv-action="dialog-open" data-drv-target="#drv-minicart-drawer" aria-label="Mở giỏ hàng">
-          <i class="ph ph-shopping-bag drv-icon drv-icon--sm" aria-hidden="true"></i>
-          <span>Giỏ (<span data-drv-cart-count class="u-tabular">2</span>)</span>
+        <button type="button" class="drv-btn drv-btn--ghost drv-btn--sm drv-btn--icon drv-header__search-toggle" data-drv-action="search-toggle" aria-label="Mở tìm kiếm" aria-expanded="false" aria-controls="global-search-input">
+          <i class="ph ph-magnifying-glass drv-icon drv-icon--sm" aria-hidden="true"></i>
+        </button>
+        <button type="button" class="drv-btn drv-btn--outline drv-btn--sm drv-header__cart-btn" data-drv-action="dialog-open" data-drv-target="#drv-minicart-drawer" aria-label="Mở giỏ hàng">
+          <span class="drv-header__cart-icon-wrap">
+            <i class="ph ph-shopping-bag drv-icon drv-icon--sm" aria-hidden="true"></i>
+            <span class="drv-header__cart-badge u-tabular" data-drv-cart-count>2</span>
+          </span>
+          <span class="drv-header__cart-text">Giỏ (<span data-drv-cart-count class="u-tabular">2</span>)</span>
         </button>
       </div>
     </div>
@@ -807,7 +813,7 @@
               <img src="assets/img/tile-marble-calacatta.svg" width="520" height="520" fetchpriority="high" decoding="async" alt="Cận cảnh mặt vân gạch Marble Calacatta 80x80 DRV-8801M">
               <button type="button" class="drv-pdp-gallery__map-pill" data-drv-action="download-map" data-drv-sku="DRV-8801M" aria-label="Tải bộ Map gạch 3D 6 faces cho SketchUp, 3dsMax và AutoCAD">
                 <span>Tải map gạch</span>
-                <i class="ph-bold ph-download-simple drv-icon--xs" aria-hidden="true"></i>
+                <i class="ph ph-download-simple drv-icon--xs" aria-hidden="true"></i>
               </button>
             </figure>
 
@@ -1107,11 +1113,11 @@
             <!-- Top 4 Service Perks -->
             <div class="drv-pdp-perks">
               <button type="button" class="drv-pdp-perk" data-drv-action="dialog-open" data-drv-target="#drv-quote-modal">
-                <span class="drv-pdp-perk__badge">Free</span>
                 <span class="drv-pdp-perk__icon" aria-hidden="true">
+                  <span class="drv-pdp-perk__badge">Free</span>
                   <i class="ph-fill ph-cube"></i>
                 </span>
-                <span>Phối cảnh 3D nhà của bạn <i class="ph-bold ph-caret-right" aria-hidden="true"></i></span>
+                <span>Phối cảnh 3D<br>nhà bạn <i class="ph ph-caret-right" aria-hidden="true"></i></span>
               </button>
 
               <div class="drv-pdp-perk">
@@ -1263,7 +1269,7 @@
 
           <div class="drv-pdp-mini-grid" data-drv-stagger>
             <!-- Card 1: DRV-8802M -->
-            <article class="drv-card">
+            <article class="drv-card" data-showroom="true">
               <div class="drv-card__media">
                 <div class="drv-card__badges">
                   <span class="drv-badge drv-badge--teal">Mới 2026</span>
@@ -1298,12 +1304,15 @@
                     </div>
                     <div class="drv-card__price-piece">≈ 252.800đ/viên</div>
                   </div>
+                  <button type="button" class="drv-card__action" data-drv-action="add-to-cart" data-drv-sku="DRV-8802M" data-drv-qty="1 thùng (3 viên = 1,92 m²)" aria-label="Thêm DRV-8802M vào giỏ">
+                    <i class="ph ph-shopping-cart-simple drv-icon" aria-hidden="true"></i>
+                  </button>
                 </div>
               </div>
             </article>
 
             <!-- Card 2: DRV-8824S -->
-            <article class="drv-card">
+            <article class="drv-card" data-showroom="true">
               <div class="drv-card__media">
                 <div class="drv-card__badges">
                   <span class="drv-badge drv-badge--sale">-13%</span>
@@ -1339,12 +1348,15 @@
                     </div>
                     <div class="drv-card__price-piece">≈ 240.000đ/viên</div>
                   </div>
+                  <button type="button" class="drv-card__action" data-drv-action="add-to-cart" data-drv-sku="DRV-8824S" data-drv-qty="1 thùng (3 viên = 1,92 m²)" aria-label="Thêm DRV-8824S vào giỏ">
+                    <i class="ph ph-shopping-cart-simple drv-icon" aria-hidden="true"></i>
+                  </button>
                 </div>
               </div>
             </article>
 
             <!-- Card 3: DRV-TRZ80 -->
-            <article class="drv-card">
+            <article class="drv-card" data-showroom="true">
               <div class="drv-card__media">
                 <div class="drv-card__badges">
                   <span class="drv-badge drv-badge--hot">Bán chạy</span>
@@ -1364,7 +1376,7 @@
               <div class="drv-card__meta">
                 <div class="drv-card__tags">
                   <span class="drv-card__tag">80x80</span>
-                  <span class="drv-card__tag">Mờ mịn R10</span>
+                  <span class="drv-card__tag">Matt R10</span>
                 </div>
                 <span class="drv-card__sku">DRV-TRZ80</span>
               </div>
@@ -1379,12 +1391,15 @@
                     </div>
                     <div class="drv-card__price-piece">≈ 252.800đ/viên</div>
                   </div>
+                  <button type="button" class="drv-card__action" data-drv-action="add-to-cart" data-drv-sku="DRV-TRZ80" data-drv-qty="1 thùng (3 viên = 1,92 m²)" aria-label="Thêm DRV-TRZ80 vào giỏ">
+                    <i class="ph ph-shopping-cart-simple drv-icon" aria-hidden="true"></i>
+                  </button>
                 </div>
               </div>
             </article>
 
             <!-- Card 4: DRV-8805C -->
-            <article class="drv-card">
+            <article class="drv-card" data-showroom="false">
               <div class="drv-card__media">
                 <div class="drv-card__badges">
                   <span class="drv-badge drv-badge--blue">Xương Porcelain</span>
@@ -1403,7 +1418,7 @@
               <div class="drv-card__meta">
                 <div class="drv-card__tags">
                   <span class="drv-card__tag">80x80</span>
-                  <span class="drv-card__tag">Matt xi măng</span>
+                  <span class="drv-card__tag">Xi măng</span>
                 </div>
                 <span class="drv-card__sku">DRV-8805C</span>
               </div>
@@ -1418,12 +1433,15 @@
                     </div>
                     <div class="drv-card__price-piece">≈ 217.600đ/viên</div>
                   </div>
+                  <button type="button" class="drv-card__action" data-drv-action="add-to-cart" data-drv-sku="DRV-8805C" data-drv-qty="1 thùng (3 viên = 1,92 m²)" aria-label="Thêm DRV-8805C vào giỏ">
+                    <i class="ph ph-shopping-cart-simple drv-icon" aria-hidden="true"></i>
+                  </button>
                 </div>
               </div>
             </article>
 
             <!-- Card 5: DRV-61201M -->
-            <article class="drv-card">
+            <article class="drv-card" data-showroom="true">
               <div class="drv-card__media">
                 <div class="drv-card__badges">
                   <span class="drv-badge drv-badge--sale">-12%</span>
@@ -1459,12 +1477,15 @@
                     </div>
                     <div class="drv-card__price-piece">≈ 349.200đ/viên</div>
                   </div>
+                  <button type="button" class="drv-card__action" data-drv-action="add-to-cart" data-drv-sku="DRV-61201M" data-drv-qty="1 thùng (2 viên = 1,44 m²)" aria-label="Thêm DRV-61201M vào giỏ">
+                    <i class="ph ph-shopping-cart-simple drv-icon" aria-hidden="true"></i>
+                  </button>
                 </div>
               </div>
             </article>
 
             <!-- Card 6: DRV-8810P -->
-            <article class="drv-card">
+            <article class="drv-card" data-showroom="true">
               <div class="drv-card__media">
                 <div class="drv-card__badges">
                   <span class="drv-badge drv-badge--champagne">Italian Design</span>
@@ -1499,12 +1520,15 @@
                     </div>
                     <div class="drv-card__price-piece">≈ 262.400đ/viên</div>
                   </div>
+                  <button type="button" class="drv-card__action" data-drv-action="add-to-cart" data-drv-sku="DRV-8810P" data-drv-qty="1 thùng (3 viên = 1,92 m²)" aria-label="Thêm DRV-8810P vào giỏ">
+                    <i class="ph ph-shopping-cart-simple drv-icon" aria-hidden="true"></i>
+                  </button>
                 </div>
               </div>
             </article>
 
             <!-- Card 7: DRV-6601M -->
-            <article class="drv-card">
+            <article class="drv-card" data-showroom="true">
               <div class="drv-card__media">
                 <div class="drv-card__badges">
                   <span class="drv-badge drv-badge--sale">-14%</span>
@@ -1540,12 +1564,15 @@
                     </div>
                     <div class="drv-card__price-piece">≈ 117.000đ/viên</div>
                   </div>
+                  <button type="button" class="drv-card__action" data-drv-action="add-to-cart" data-drv-sku="DRV-6601M" data-drv-qty="1 thùng (4 viên = 1,44 m²)" aria-label="Thêm DRV-6601M vào giỏ">
+                    <i class="ph ph-shopping-cart-simple drv-icon" aria-hidden="true"></i>
+                  </button>
                 </div>
               </div>
             </article>
 
             <!-- Card 8: DRV-61209 -->
-            <article class="drv-card">
+            <article class="drv-card" data-showroom="true">
               <div class="drv-card__media">
                 <div class="drv-card__badges">
                   <span class="drv-badge drv-badge--sale">-12%</span>
@@ -1581,6 +1608,9 @@
                     </div>
                     <div class="drv-card__price-piece">≈ 374.400đ/viên</div>
                   </div>
+                  <button type="button" class="drv-card__action" data-drv-action="add-to-cart" data-drv-sku="DRV-61209" data-drv-qty="1 thùng (2 viên = 1,44 m²)" aria-label="Thêm DRV-61209 vào giỏ">
+                    <i class="ph ph-shopping-cart-simple drv-icon" aria-hidden="true"></i>
+                  </button>
                 </div>
               </div>
             </article>
@@ -1728,16 +1758,17 @@
 
       <div class="drv-sticky-purchase__right">
         <div class="drv-sticky-purchase__price-col">
-          <strong class="u-text-lg u-text-sale u-tabular" data-sync-calc-total>4.435.200đ</strong>
-          <span class="u-text-xs u-text-muted u-tabular">385.000đ/m² · <del>450.000đ</del></span>
+          <span class="drv-sticky-purchase__mobile-meta u-tabular" data-sync-calc-sticky-meta>11,52 m² · 18 viên (6 thùng)</span>
+          <strong class="drv-sticky-purchase__total u-text-sale u-tabular" data-sync-calc-total>4.435.200đ</strong>
+          <span class="drv-sticky-purchase__unit-price u-text-xs u-text-muted u-tabular">385.000đ/m² · <del>450.000đ</del></span>
         </div>
 
         <div class="drv-sticky-purchase__actions-col">
           <div class="drv-sticky-purchase__btns">
-            <a href="05-checkout.html" class="drv-btn-pill drv-btn-pill--navy" style="min-height: 40px; padding-inline: 22px; font-size: var(--fs-sm);">
+            <a href="05-checkout.html" class="drv-btn-pill drv-btn-pill--navy drv-sticky-purchase__btn">
               <span>Mua ngay</span>
             </a>
-            <button type="button" class="drv-btn-pill drv-btn-pill--soft" style="min-height: 40px; padding-inline: 18px; font-size: var(--fs-sm);"
+            <button type="button" class="drv-btn-pill drv-btn-pill--soft drv-sticky-purchase__btn"
               data-drv-action="add-to-cart"
               data-drv-sku="DRV-8801M"
               data-drv-sync-calc="true"
@@ -2130,7 +2161,7 @@
        SCRIPTS (Anime.js v3.2.2 + DRAVIT Vanilla ES2022 Modules)
        ====================================================================== -->
   <script defer src="https://cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.min.js"></script>
-  <script defer src="assets/js/core.js?v=20261106o"></script>
-  <script defer src="assets/js/unit-calc.js?v=20261106o"></script>
+  <script defer src="assets/js/core.js?v=20261107d"></script>
+  <script defer src="assets/js/unit-calc.js?v=20261107d"></script>
 </body>
 </html>

@@ -188,7 +188,7 @@
 
     if (dialog.open && !dialog.classList.contains('is-closing')) {
       dialog.classList.add('is-closing');
-      window.setTimeout(finishClose, 210);
+      window.setTimeout(finishClose, 235);
     } else {
       finishClose();
     }
@@ -220,7 +220,9 @@
 
     // Close Instant Search dropdown & backdrop when clicking outside
     document.querySelectorAll('.drv-search.is-open').forEach((searchWrap) => {
-      const clickedInsideFormOrDrop = event.target.closest('.drv-search__form, .drv-search-drop');
+      const clickedInsideFormOrDrop = event.target.closest(
+        '.drv-search__form, .drv-search-drop, [data-drv-action="search-toggle"]'
+      );
       if (!clickedInsideFormOrDrop) {
         if (typeof searchWrap._closeSearchOverlay === 'function') {
           searchWrap._closeSearchOverlay();
@@ -231,6 +233,11 @@
           const bd = searchWrap.querySelector('[data-drv-search-backdrop]');
           if (drop) drop.hidden = true;
           if (bd) bd.hidden = true;
+          document.querySelectorAll('[data-drv-action="search-toggle"]').forEach((btn) => {
+            btn.setAttribute('aria-expanded', 'false');
+            const icon = btn.querySelector('i');
+            if (icon) icon.className = 'ph ph-magnifying-glass drv-icon drv-icon--sm';
+          });
         }
       }
     });
@@ -307,6 +314,43 @@
         document.querySelectorAll('[data-drv-action="mega-toggle"]').forEach((btn) => {
           btn.setAttribute('aria-expanded', String(willOpen));
         });
+        break;
+      }
+
+      case 'search-toggle': {
+        event.preventDefault();
+        const headerEl = actionEl.closest('.drv-header') || document.querySelector('.drv-header');
+        const searchWrap = headerEl?.querySelector('.drv-search');
+        if (!searchWrap) break;
+        const isOpen = searchWrap.classList.contains('is-open');
+        if (isOpen) {
+          if (typeof searchWrap._closeSearchOverlay === 'function') {
+            searchWrap._closeSearchOverlay();
+          } else {
+            searchWrap.classList.remove('is-open');
+            headerEl?.classList.remove('has-search-open');
+            const drop = searchWrap.querySelector('.drv-search-drop');
+            const bd = searchWrap.querySelector('[data-drv-search-backdrop]');
+            if (drop) drop.hidden = true;
+            if (bd) bd.hidden = true;
+          }
+          actionEl.setAttribute('aria-expanded', 'false');
+          const icon = actionEl.querySelector('i');
+          if (icon) icon.className = 'ph ph-magnifying-glass drv-icon drv-icon--sm';
+        } else {
+          searchWrap.classList.add('is-open');
+          headerEl?.classList.add('has-search-open');
+          actionEl.setAttribute('aria-expanded', 'true');
+          const icon = actionEl.querySelector('i');
+          if (icon) icon.className = 'ph ph-x drv-icon drv-icon--sm';
+          const input = searchWrap.querySelector('.drv-search__input');
+          if (input) {
+            window.requestAnimationFrame(() => {
+              input.focus();
+              input.click();
+            });
+          }
+        }
         break;
       }
 
@@ -504,7 +548,14 @@
     }
   });
 
-  // Restore scroll when any native <dialog> closes via Escape key
+  // Animate out & restore scroll when any native <dialog> closes via Escape key
+  document.addEventListener('cancel', (event) => {
+    if (event.target && event.target.tagName === 'DIALOG') {
+      event.preventDefault();
+      closeDialog(event.target);
+    }
+  }, true);
+
   document.addEventListener('close', (event) => {
     if (event.target && event.target.tagName === 'DIALOG') {
       document.body.style.overflow = '';
@@ -811,13 +862,16 @@
           return;
         }
 
-        const submitBtn = form.querySelector('[type="submit"]');
-        if (submitBtn) {
+        const submitBtns = [
+          ...form.querySelectorAll('[type="submit"]'),
+          ...(form.id ? document.querySelectorAll(`[type="submit"][form="${form.id}"]`) : [])
+        ];
+        submitBtns.forEach((submitBtn) => {
           submitBtn.disabled = true;
           submitBtn.setAttribute('aria-busy', 'true');
           submitBtn.innerHTML =
-            '<i class="ph ph-spinner drv-icon" aria-hidden="true"></i> <span>ĐANG KHỞI TẠO ĐƠN HÀNG #DRV-202688...</span>';
-        }
+            '<i class="ph ph-spinner drv-icon" aria-hidden="true"></i> <span>ĐANG XỬ LÝ...</span>';
+        });
 
         const successRedirect = form.dataset.drvRedirect;
         const successMsg =
@@ -881,13 +935,13 @@
       const isVietQr = checked.value === 'bacs';
       document.querySelectorAll('[data-checkout-pay-summary]').forEach((el) => {
         el.textContent = isVietQr
-          ? 'Chuyển khoản VietQR (Sau khi chốt phí giao)'
+          ? 'Chuyển khoản VietQR (Sau khi chốt đơn)'
           : 'Tiền mặt khi nhận hàng (COD / Đồng kiểm)';
       });
       document.querySelectorAll('[data-checkout-submit-sub]').forEach((el) => {
         el.textContent = isVietQr
-          ? 'Chưa cần chuyển khoản ngay · Mã VietQR sẽ được tạo sau khi nhân viên báo phí vận chuyển.'
-          : 'Nhân viên Dravit sẽ gọi xác nhận lô gạch & báo phí vận chuyển trước khi xuất kho giao COD.';
+          ? 'Chưa cần chuyển khoản ngay · Chuyên viên tư vấn sẽ liên hệ chốt đơn và gửi mã VietQR.'
+          : 'Chuyên viên tư vấn sẽ liên hệ chốt đơn và xác nhận lịch giao hàng tận công trình.';
       });
     };
 
@@ -949,7 +1003,7 @@
           if (vatEmail) vatEmail.value = 'ketoan@kientrucnhaviet.vn';
           toast('Đã điền dữ liệu mẫu: Nhà thầu công trình Đồng Nai (Kèm xuất hóa đơn VAT).');
         } else {
-          if (nameInput) nameInput.value = 'Nguyễn Thanh Tùng (Chủ nhà)';
+          if (nameInput) nameInput.value = 'Nguyễn Thanh Tùng';
           if (phoneInput) phoneInput.value = '0909385880';
           if (emailInput) emailInput.value = 'tung.nguyen@gmail.com';
           if (provSelect) {
@@ -1012,6 +1066,7 @@
 
     const setOrderDemoState = (state) => {
       const stateBadge = document.querySelector('[data-order-status-badge]');
+      const heroDescEl = document.querySelector('[data-order-hero-desc]');
       const shipFeeEl = document.querySelector('[data-order-ship-fee]');
       const grandTotalEl = document.querySelector('[data-order-grand-total]');
       const qrWatermark = document.querySelector('[data-qr-watermark]');
@@ -1030,17 +1085,20 @@
       if (state === 'awaiting-quote') {
         if (stateBadge) {
           stateBadge.className = 'drv-badge drv-badge--amber';
-          stateBadge.textContent = 'Chờ xác nhận phí giao';
+          stateBadge.textContent = 'Chờ chuyên viên liên hệ';
+        }
+        if (heroDescEl) {
+          heroDescEl.textContent = 'Chuyên viên tư vấn Dravit sẽ liên hệ số 0912 345 678 trong 15 - 30 phút để xác nhận lô gạch (Shade V2) và chốt đơn hàng.';
         }
         if (shipFeeEl) {
           shipFeeEl.className = 'u-text-moss u-bold';
-          shipFeeEl.textContent = 'Báo sau khi nhân viên gọi';
+          shipFeeEl.textContent = 'Chuyên viên báo khi chốt đơn';
         }
         if (grandTotalEl) {
           grandTotalEl.textContent = '4.690.200đ';
         }
         if (qrWatermark) qrWatermark.hidden = false;
-        if (bankAmountEl) bankAmountEl.textContent = 'Chờ chốt tổng cuối';
+        if (bankAmountEl) bankAmountEl.textContent = 'Chờ chốt đơn';
         if (bankAmountBtn) {
           bankAmountBtn.disabled = true;
           bankAmountBtn.title = 'Chưa có số tiền chính xác';
@@ -1051,11 +1109,14 @@
         if (timelineSteps[2]) timelineSteps[2].className = 'drv-timeline__step is-pending';
         if (timelineSteps[3]) timelineSteps[3].className = 'drv-timeline__step is-pending';
 
-        toast('Mô phỏng: Đơn mới đặt — Chờ nhân viên gọi chốt phí vận chuyển (wc-cho-xac-nhan).');
+        toast('Mô phỏng: Đơn mới đặt — Chờ chuyên viên liên hệ chốt đơn hàng.');
       } else if (state === 'quote-confirmed') {
         if (stateBadge) {
           stateBadge.className = 'drv-badge drv-badge--moss';
-          stateBadge.textContent = 'Đã chốt phí · Chờ chuyển khoản VietQR';
+          stateBadge.textContent = 'Đã chốt đơn · Chờ chuyển khoản VietQR';
+        }
+        if (heroDescEl) {
+          heroDescEl.textContent = 'Đơn hàng đã được chốt cước vận chuyển (350.000đ). Quý khách vui lòng quét mã VietQR bên dưới để hoàn tất thanh toán.';
         }
         if (shipFeeEl) {
           shipFeeEl.className = 'u-text-navy u-bold u-tabular';
@@ -1080,7 +1141,7 @@
         if (timelineSteps[2]) timelineSteps[2].className = 'drv-timeline__step is-active';
         if (timelineSteps[3]) timelineSteps[3].className = 'drv-timeline__step is-pending';
 
-        toast('Mô phỏng: Nhân viên đã chốt cước 350.000đ — Sẵn sàng quét VietQR (wc-on-hold).');
+        toast('Mô phỏng: Đã chốt đơn & cước vận chuyển 350.000đ — Sẵn sàng quét VietQR.');
       }
     };
 
@@ -1367,7 +1428,7 @@
 <header class="drv-header">
   <!-- Tier 1: Brand, Instant Search, Showroom & Cart -->
   <div class="l-container drv-header__top">
-    <button type="button" class="drv-btn drv-btn--outline drv-btn--sm drv-btn--icon u-only-mobile" data-drv-action="dialog-open" data-drv-target="#drv-mobile-menu-drawer" aria-label="Mở danh mục điều hướng">
+    <button type="button" class="drv-btn drv-btn--ghost drv-btn--sm drv-btn--icon drv-header__menu-btn u-only-mobile" data-drv-action="dialog-open" data-drv-target="#drv-mobile-menu-drawer" aria-label="Mở danh mục điều hướng">
       <i class="ph ph-list drv-icon" aria-hidden="true"></i>
     </button>
 
@@ -1429,9 +1490,15 @@
         <i class="ph ph-file-text drv-icon drv-icon--sm" aria-hidden="true"></i>
         <span>Báo giá công trình</span>
       </button>
-      <button type="button" class="drv-btn drv-btn--outline drv-btn--sm" data-drv-action="dialog-open" data-drv-target="#drv-minicart-drawer" aria-label="Mở giỏ hàng">
-        <i class="ph ph-shopping-bag drv-icon drv-icon--sm" aria-hidden="true"></i>
-        <span>Giỏ (<span data-drv-cart-count class="u-tabular">2</span>)</span>
+      <button type="button" class="drv-btn drv-btn--ghost drv-btn--sm drv-btn--icon drv-header__search-toggle" data-drv-action="search-toggle" aria-label="Mở tìm kiếm" aria-expanded="false" aria-controls="global-search-input">
+        <i class="ph ph-magnifying-glass drv-icon drv-icon--sm" aria-hidden="true"></i>
+      </button>
+      <button type="button" class="drv-btn drv-btn--outline drv-btn--sm drv-header__cart-btn" data-drv-action="dialog-open" data-drv-target="#drv-minicart-drawer" aria-label="Mở giỏ hàng">
+        <span class="drv-header__cart-icon-wrap">
+          <i class="ph ph-shopping-bag drv-icon drv-icon--sm" aria-hidden="true"></i>
+          <span class="drv-header__cart-badge u-tabular" data-drv-cart-count>2</span>
+        </span>
+        <span class="drv-header__cart-text">Giỏ (<span data-drv-cart-count class="u-tabular">2</span>)</span>
       </button>
     </div>
   </div>
