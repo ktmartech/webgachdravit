@@ -7345,6 +7345,560 @@
     }
   }
 
+  /* ------------------------------------------------------------------------
+     Blog Hero & Sub-nav Category Filter Strip (07-blog-archive.html)
+     ------------------------------------------------------------------------ */
+  .drv-blog-hero {
+    background-color: var(--c-white);
+    border-bottom: var(--bw);
+    padding-block: var(--s-2-5) var(--s-3);
+  }
+
+  .drv-blog-hero__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-2);
+    margin-bottom: 6px;
+  }
+
+  .drv-blog-hero__top .drv-breadcrumb {
+    padding-block: 0;
+    border-bottom: none;
+    background-color: transparent;
+  }
+
+  .drv-blog-hero__bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-3);
+  }
+
+  .drv-blog-hero__title {
+    font-family: var(--f-display);
+    font-size: clamp(1.5rem, 2.2vw, 2rem);
+    line-height: 1.2;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--c-navy-900);
+    margin: 0;
+  }
+
+  .drv-blog-subnav {
+    background-color: var(--c-ivory);
+    border-bottom: var(--bw);
+    padding-block: 10px;
+  }
+
+  .drv-blog-subnav__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  @media (min-width: 1024px) {
+    .drv-blog-subnav__inner {
+      flex-direction: row;
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--s-3);
+    }
+  }
+
+  .drv-blog-tabs {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .drv-blog-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .drv-blog-tabs .drv-chip {
+    flex-shrink: 0;
+    min-height: 36px;
+    padding: 4px 12px;
+    font-size: var(--fs-xs);
+    border-radius: var(--r-sm);
+  }
+
+  .drv-blog-search {
+    position: relative;
+    width: 100%;
+    flex-shrink: 0;
+  }
+
+  @media (min-width: 1024px) {
+    .drv-blog-search {
+      width: 260px;
+      max-width: 260px;
+    }
+  }
+
+  @media (max-width: 767.98px) {
+    .drv-blog-hero {
+      padding-block: 8px 10px;
+    }
+
+    .drv-blog-hero__top {
+      margin-bottom: 4px;
+    }
+
+    .drv-blog-hero__title {
+      font-size: 1.3125rem;
+      line-height: 1.22;
+    }
+
+    .drv-blog-subnav {
+      padding-block: 8px;
+    }
+
+    .drv-blog-tabs .drv-chip {
+      min-height: 32px;
+      padding: 4px 10px;
+      font-size: 12px;
+    }
+  }
+
+  .drv-blog-search__input {
+    width: 100%;
+    height: 36px;
+    padding: 4px 32px 4px 34px;
+    font-size: var(--fs-xs);
+    background-color: var(--c-white);
+    border: var(--bw);
+    border-radius: var(--r-sm);
+    color: var(--c-text-main);
+    transition: border-color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+  }
+
+  .drv-blog-search__input:focus {
+    outline: none;
+    border-color: var(--c-navy-900);
+    box-shadow: 0 0 0 3px rgba(8, 58, 79, 0.12);
+  }
+
+  .drv-blog-search__icon {
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--c-navy-600);
+    pointer-events: none;
+  }
+
+  .drv-blog-search__clear {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 4px;
+    color: var(--c-navy-400);
+    cursor: pointer;
+  }
+
+  .drv-blog-search__clear:hover {
+    color: var(--c-navy-900);
+  }
+
+  /* ------------------------------------------------------------------------
+     Bento 12-Col Editorial Grid (5/4/3) Elements
+     ------------------------------------------------------------------------ */
+  .drv-blog-bento > .drv-post-card {
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .drv-blog-bento > .drv-post-card:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .drv-blog-bento__feature {
+    background-color: var(--c-white);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .drv-blog-bento__mid {
+    background-color: var(--c-white);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .drv-blog-bento__right {
+    background-color: var(--c-champagne);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .drv-blog-bento__right-head {
+    padding: var(--s-3-5, 14px) var(--s-4);
+    border-bottom: var(--bw);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-2);
+  }
+
+  .drv-blog-bento__right-title {
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--c-navy-900);
+    margin: 0;
+  }
+
+  /* Compact Horizontal Post Cards (Bento Mid Col) */
+  .drv-post-compact {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+    padding: var(--s-3-5, 14px) var(--s-4);
+    background-color: var(--c-white);
+    position: relative;
+    border-bottom: var(--bw);
+    transition: background-color var(--dur-fast) var(--ease-out);
+    flex: 1;
+  }
+
+  .drv-post-compact:last-child {
+    border-bottom: none;
+  }
+
+  .drv-post-compact:hover {
+    background-color: var(--c-ivory);
+  }
+
+  .drv-post-compact__thumb {
+    width: 92px;
+    height: 92px;
+    min-width: 92px;
+    aspect-ratio: 1;
+    border-radius: var(--r-sm);
+    overflow: hidden;
+    background-color: var(--c-champagne);
+    border: var(--bw);
+  }
+
+  .drv-post-compact__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--dur-slow) var(--ease-out-expo);
+  }
+
+  .drv-post-compact:hover .drv-post-compact__thumb img {
+    transform: scale(1.04);
+  }
+
+  .drv-post-compact__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .drv-post-compact__title {
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--c-navy-900);
+    margin: 0;
+    transition: color var(--dur-fast) var(--ease-out);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .drv-post-compact:hover .drv-post-compact__title {
+    color: var(--c-teal-700);
+  }
+
+  .drv-post-compact__link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  /* Ranked Most Read List (Bento Right Col — Anton 01-05) */
+  .drv-ranked-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .drv-ranked-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--s-3);
+    position: relative;
+    padding: var(--s-3) var(--s-4);
+    border-bottom: var(--bw);
+    transition: background-color var(--dur-fast) var(--ease-out);
+    flex: 1;
+  }
+
+  .drv-ranked-item:last-child {
+    border-bottom: none;
+  }
+
+  .drv-ranked-item:hover {
+    background-color: var(--c-ivory);
+  }
+
+  .drv-ranked-num {
+    font-family: var(--f-display);
+    font-size: 1.5rem;
+    line-height: 1;
+    color: var(--c-moss-700);
+    font-variant-numeric: tabular-nums;
+    min-width: 28px;
+  }
+
+  .drv-ranked-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .drv-ranked-title {
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    line-height: 1.38;
+    color: var(--c-navy-900);
+    margin: 0;
+    transition: color var(--dur-fast) var(--ease-out);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .drv-ranked-item:hover .drv-ranked-title {
+    color: var(--c-teal-700);
+  }
+
+  .drv-ranked-link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  /* ------------------------------------------------------------------------
+     Topic Cluster & Clean Section Headers
+     ------------------------------------------------------------------------ */
+  .drv-topic-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-3);
+    padding-bottom: var(--s-3);
+    border-bottom: var(--bw);
+    margin-bottom: var(--s-4);
+  }
+
+  .drv-topic-head h2 {
+    font-size: var(--fs-h2);
+    color: var(--c-navy-900);
+    margin: 0;
+  }
+
+  .drv-cro-pills {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    padding: var(--s-2-5, 10px) var(--s-4);
+    background-color: var(--c-ivory);
+    border-top: var(--bw);
+    font-size: var(--fs-xs);
+  }
+
+  .drv-cro-pill-tag {
+    position: relative;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    background-color: var(--c-white);
+    border: var(--bw);
+    border-radius: var(--r-sm);
+    color: var(--c-teal-700);
+    font-weight: 600;
+    text-decoration: none;
+    transition: all var(--dur-fast) var(--ease-out);
+  }
+
+  .drv-cro-pill-tag:hover {
+    background-color: var(--c-navy-900);
+    color: var(--c-white);
+    border-color: var(--c-navy-900);
+  }
+
+  /* ------------------------------------------------------------------------
+     Quick Reference Tools Grid (Tile Calc & Anti-Slip R-Table)
+     ------------------------------------------------------------------------ */
+  .drv-blog-tools-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--s-4);
+  }
+
+  @media (min-width: 1024px) {
+    .drv-blog-tools-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .drv-tool-card {
+    background-color: var(--c-white);
+    border: var(--bw);
+    border-radius: var(--r-md);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .drv-tool-card__head {
+    padding: var(--s-3) var(--s-4);
+    background-color: var(--c-champagne);
+    border-bottom: var(--bw);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-3);
+  }
+
+  .drv-tool-card__body {
+    padding: var(--s-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+    flex: 1;
+  }
+
+  .drv-calc-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background-color: var(--c-navy-200);
+    border: var(--bw);
+    border-radius: var(--r-sm);
+    overflow: hidden;
+  }
+
+  @media (min-width: 480px) {
+    .drv-calc-stats {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .drv-calc-stat-item {
+    background-color: var(--c-ivory);
+    padding: var(--s-2-5, 10px) var(--s-3);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .drv-calc-stat-val {
+    font-size: var(--fs-base);
+    font-weight: 700;
+    color: var(--c-navy-900);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .drv-calc-stat-lbl {
+    font-size: 11px;
+    color: var(--c-text-muted);
+  }
+
+  /* R9-R13 Rating Guide Table */
+  .drv-r-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--fs-xs);
+    border: var(--bw);
+  }
+
+  .drv-r-table th,
+  .drv-r-table td {
+    padding: 8px 10px;
+    border-bottom: var(--bw);
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  .drv-r-table th {
+    background-color: var(--c-ivory);
+    font-weight: 700;
+    color: var(--c-navy-900);
+    white-space: nowrap;
+  }
+
+  .drv-r-table td:nth-child(1),
+  .drv-r-table td:nth-child(2) {
+    white-space: nowrap;
+  }
+
+  .drv-r-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .drv-r-table tr:hover td {
+    background-color: var(--c-ivory);
+  }
+
+  .drv-r-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-family: var(--f-mono);
+    padding: 2px 8px;
+    border-radius: var(--r-sm);
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  .drv-r-badge--r9 { background: #FEF3C7; color: #92400E; }
+  .drv-r-badge--r10 { background: #CCFBF1; color: #0F766E; }
+  .drv-r-badge--r11 { background: #DCFCE7; color: #15803D; }
+  .drv-r-badge--r12 { background: #FFEDD5; color: #C2410C; }
+  .drv-r-badge--r13 { background: #FFE4E6; color: #BE123C; }
+
   /* Blog Single Article Prose (max 72ch) */
   .drv-prose {
     max-width: 72ch;

@@ -257,9 +257,18 @@ docs/layout/
   - [ui-ux-designer](file:///c:/Users/Admin/Local%20Sites/gachdravit/app/public/.agents/skills/26_ui-ux-designer/SKILL.md) & [avoid-ai-writing](file:///c:/Users/Admin/Local%20Sites/gachdravit/app/public/.agents/skills/avoid-ai-writing/SKILL.md): Tiêu đề và tóm tắt bài viết cụ thể, hữu ích cho chủ nhà và thợ thầu.
 - **Tài liệu tham chiếu:** [07_UI_UX_Page_Specs.md](file:///c:/Users/Admin/Local%20Sites/gachdravit/app/public/docs/07_UI_UX_Page_Specs.md) (§7.1).
 - **Hạng mục UI/UX hoàn thiện:**
-  1. **Thanh Sub-nav 5 chuyên mục Cẩm nang** + Ô tìm kiếm bài viết.
-  2. **Editorial Hero Bento (5/4/3):** Cột trái (5/12) bài hướng dẫn trụ cột; Cột giữa (4/12) 3 bài mới ngăn bằng đường ron; Cột phải (3/12) hộp *"Chủ đề được tra cứu nhiều"* đánh số `01–05` trên nền `--c-champagne`.
-  3. 3 Khối chuyên mục chuyên sâu (mỗi khối 3 card bài viết tỷ lệ ảnh `3:2`) + Khối công cụ tra cứu nhanh (Tính số viên gạch & Bảng chỉ số chống trượt `R9–R13`).
+  1. **Thanh Sub-nav 5 chuyên mục Cẩm nang** (sticky nền `--c-ivory` viền `1px`) + Ô tìm kiếm tức thì theo từ khóa và tiêu chuẩn kỹ thuật có nút xóa nhanh.
+  2. **Editorial Hero Bento (5/4/3):**
+     - Cột trái (5/12): 1 bài hướng dẫn trụ cột lớn (ảnh 16:9, badge trọng tâm, tiêu đề H2, tóm tắt 3 dòng, thông tin tác giả Kỹ thuật Dravit, link sản phẩm liên quan).
+     - Cột giữa (4/12): 3 bài viết mới (ảnh vuông nhỏ bên trái + tiêu đề bên phải, ngăn nhau bằng đường ron `1px`).
+     - Cột phải (3/12 — Hộp *"Chủ đề được tra cứu nhiều"* nền `--c-champagne`): Danh sách đánh số `01–05` (font `Anton`) các bài viết nhiều người đọc nhất.
+  3. **3 Khối chuyên mục chuyên sâu (Topic Clusters):** Mỗi khối 3 card bài viết tỷ lệ ảnh `3:2` sạch đẹp, không watermark, kèm thanh chip sản phẩm chuyển đổi (CRO) dẫn trực tiếp sang danh mục gạch và vật tư phụ tương ứng.
+  4. **Khối công cụ tra cứu nhanh (Quick Tools & Reference):**
+     - *Công cụ 1:* **Máy tính nhanh số viên gạch theo diện tích sàn** (cho phép chọn kích thước 80x80, 60x60, 30x60, 60x120, 15x90; tùy chọn +5% hao hụt; tự động tính ra số viên, số thùng, diện tích thực nhận và kg vận chuyển kèm nút xem sản phẩm tương ứng).
+     - *Công cụ 2:* **Bảng tra cứu chỉ số chống trượt R9 – R13** (chuẩn DIN 51130, góc dốc, đặc tính bề mặt và khuyến nghị không gian sử dụng).
+  5. **Khối chuyển đổi (CRO Lead Capture & Showroom):**
+     - Form đăng ký nhận trọn bộ **Ebook Cẩm nang chọn gạch & Giám sát thi công 2026** (PDF 48 trang + file Excel dự toán) qua Zalo.
+     - 2 Thẻ bảo chứng dịch vụ: Trải nghiệm xem mẫu gạch dưới ánh đèn chuẩn 3000K-4000K tại Showroom Sala + Dịch vụ mang 2-3 mẫu gạch tận chân công trình miễn phí.
 
 ---
 
