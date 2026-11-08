@@ -6441,7 +6441,8 @@
     }
 
     /* 2. Page Intro & Breadcrumb */
-    .drv-checkout-page .drv-breadcrumb {
+    .drv-checkout-page .drv-breadcrumb,
+    body[data-page="order-received"] .drv-breadcrumb {
       display: none;
     }
 
