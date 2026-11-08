@@ -4950,6 +4950,160 @@
     border-top: var(--bw);
   }
 
+  /* ========================================================================
+     MOBILE CART LEDGER ITEMS POLISH (max-width: 767.98px)
+     Compact Flat Card · Top-Right Trash · Aligned Price · Integrated Stepper & Total
+     ======================================================================== */
+  @media (max-width: 767.98px) {
+    .drv-cart-item {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      grid-template-areas:
+        "product product"
+        "price   price"
+        "qty     total"
+        "drawer  drawer";
+      row-gap: 8px;
+      column-gap: 12px;
+      padding: 12px;
+      align-items: center;
+    }
+
+    .drv-cart-item__product {
+      grid-area: product;
+      grid-template-columns: 64px minmax(0, 1fr);
+      gap: 10px;
+      padding-right: 36px;
+    }
+
+    .drv-cart-item__thumb {
+      width: 64px;
+      height: 64px;
+    }
+
+    .drv-cart-item__info {
+      gap: 3px;
+    }
+
+    .drv-cart-item__meta {
+      font-size: 10.5px;
+      padding: 1px 5px;
+    }
+
+    .drv-cart-item__title {
+      font-size: 13px;
+      line-height: 1.3;
+    }
+
+    .drv-cart-detail-toggle {
+      font-size: 10.5px;
+      padding: 2px 6px;
+      margin-top: 2px;
+    }
+
+    /* Price Row: Aligned under info column */
+    .drv-cart-item__price-col {
+      grid-area: price;
+      display: flex;
+      flex-direction: row;
+      align-items: baseline;
+      gap: 4px;
+      padding-left: 74px;
+      margin-top: -4px;
+    }
+
+    .drv-cart-item__price-col span.u-only-mobile {
+      font-size: 11px;
+      color: var(--c-text-muted);
+    }
+
+    .drv-cart-item__price-main {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--c-navy-700);
+    }
+
+    /* Bottom Action Row: Stepper Left, Total Right */
+    .drv-cart-item__qty-col {
+      grid-area: qty;
+    }
+
+    .drv-stepper--cart {
+      width: 96px;
+      height: 32px;
+    }
+
+    .drv-stepper--cart .drv-stepper__btn {
+      width: 28px;
+      height: 32px;
+      font-size: 14px;
+    }
+
+    .drv-stepper--cart .drv-stepper__input {
+      width: 40px;
+      font-size: 13px;
+    }
+
+    .drv-cart-item__total-col {
+      grid-area: total;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 1px;
+    }
+
+    .drv-cart-item__total-head {
+      margin: 0;
+      width: auto;
+    }
+
+    .drv-cart-item__total-head span.u-only-mobile {
+      display: none !important;
+    }
+
+    /* Trash button fixed at top-right of the card */
+    .drv-cart-item__del-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 32px;
+      height: 32px;
+      font-size: 18px;
+      color: var(--c-navy-400);
+    }
+
+    .drv-cart-item__subtotal {
+      font-size: 1.0625rem;
+      font-weight: 700;
+      color: var(--c-brand-sale, #c0392b);
+      line-height: 1.2;
+    }
+
+    .drv-cart-item__total-col > span.u-text-muted {
+      font-size: 10px;
+      line-height: 1.2;
+    }
+
+    /* Drawer */
+    .drv-cart-drawer {
+      grid-area: drawer;
+      margin-top: 6px;
+      padding: 8px 10px;
+    }
+
+    .drv-cart-drawer__grid {
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+
+    .drv-cart-drawer__cell {
+      padding: 6px 8px;
+      gap: 4px;
+    }
+  }
+
   /* Frequently Bought Together (FBT) Bundle Block */
   .drv-fbt-bundle {
     background-color: var(--c-white);
