@@ -285,13 +285,13 @@ docs/layout/
   - [copywriting](file:///c:/Users/Admin/Local%20Sites/gachdravit/app/public/.agents/skills/28_copywriting/SKILL.md) & [avoid-ai-writing](file:///c:/Users/Admin/Local%20Sites/gachdravit/app/public/.agents/skills/avoid-ai-writing/SKILL.md): Viết nội dung bài mẫu chuẩn chuyên gia kỹ thuật Dravit.
   - [fixing-accessibility](file:///c:/Users/Admin/Local%20Sites/gachdravit/app/public/.agents/skills/16_fixing-accessibility/SKILL.md): Nút mở Mục lục trên mobile (`☰ Mục lục`) mở bottom sheet `<dialog>` hỗ trợ bàn phím.
 - **Tài liệu tham chiếu:** [06_SEO_GEO_Spec.md](file:///c:/Users/Admin/Local%20Sites/gachdravit/app/public/docs/06_SEO_GEO_Spec.md) (§5), [07_UI_UX_Page_Specs.md](file:///c:/Users/Admin/Local%20Sites/gachdravit/app/public/docs/07_UI_UX_Page_Specs.md) (§7.2).
-- **Hạng mục UI/UX hoàn thiện:**
-  1. Layout 8/4: Cột bài viết `8/12` (độ rộng chữ tối ưu `72ch`) + Cột Sticky Sidebar `4/12`.
-  2. **Hộp "Những điểm chính" (Key Takeaways — GEO Box)** nền `--c-champagne` có link dẫn về `/gach-terrazzo` và `/gach-80x80`.
-  3. 2 bức ảnh phối cảnh thực tế có gắn **"Shop the Look Bar"** ngay chân ảnh (Ảnh viên gạch + Mã SKU + Giá `đ/m²` + Nút `[Xem & Tính số viên →]`).
-  4. Bảng so sánh kỹ thuật + **Khối 4 Sản phẩm thực tế nhúng giữa bài** + **Khối FAQ Accordion** + Hộp thông tin kiểm duyệt kỹ thuật.
-  5. **Sticky Sidebar (4/12):** Mục lục bài viết tự động highlight mục đang đọc khi cuộn + **Widget tính nhanh số viên gạch** + Thẻ Showroom.
-  6. Nút tròn/viên thuốc **`[☰ Mục lục]`** cố định ở mobile.
+- **Hạng mục UI/UX hoàn thiện (Phương án 1 — Clean Flat Architectural Sheet Grid 1px):**
+  1. **Layout 8/4 Clean Flat (Zero Shadow):** Cột bài viết `8/12` đóng khung phẳng `1px solid var(--c-navy-200)` thẳng biên 100% (không bị hụt lề phải) + Cột Sidebar `4/12` tách nhóm Tĩnh (Showroom Sala) và nhóm Sticky (TOC tiến độ đọc `%` + Máy tính đa khổ gạch `80x80`/`60x60`/`60x120` & định mức keo C2).
+  2. **Hộp "Những điểm chính" (Key Takeaways — GEO Box)** phẳng sạch nền `--c-champagne`, viền trái `4px` `--c-moss-600`, chứa internal links (`IL-05`) về `/gach-terrazzo` và `/gach-80x80`.
+  3. **2 Bức ảnh phối cảnh thực tế + Lightbox 6 slides + "Shop the Look Bar" kép:** Cho phép bấm phóng to ảnh (`#drv-blog-lightbox` hỗ trợ phím mũi tên), thanh chân ảnh hiển thị SKU + Lô Shade + Giá kép (`đ/m²` & `đ/viên`) + 2 nút `[+ Thêm vào Báo giá]` và `[Xem & Tính viên]`.
+  4. **Trọn bộ WordPress / Gutenberg Core Blocks kiến trúc phẳng:** `wp-block-pullquote` (3 ô chỉ số kỹ thuật), `wp-block-quote` có `<cite>`, Gallery 4 ảnh chi tiết bề mặt/cạnh mài 90°/xương đá 10mm, Bảng đối chiếu Ưu/Nhược điểm (`Pros & Cons` 2 cột), 3 biến thể Callout (`Note`, `Warning`, `Pro-Tip`), Hộp công thức & định mức vật tư, Quy trình `HowTo` 4 bước (font `Anton`), 2 Bảng dữ liệu GEO có thanh nhắc vuốt ngang trên mobile, Khối 4 sản phẩm nhúng `[drv_products]` lưới ron 1px, Form đăng ký nhận mẫu gạch cắt thực tế giữa bài, và FAQ Accordion 5 câu.
+  5. **Hạ tầng E-E-A-T, Đánh giá & Liên kết cuối trang:** Khảo sát hữu ích (`Helpful Poll`), Thẻ chủ đề (`Post Tags`), Hộp **Dual E-E-A-T** (Tác giả biên soạn + Kiến trúc sư thẩm định với avatar vuông `4px`), Điều hướng Bài trước/Bài tiếp theo, và **Section Bài viết liên quan 3 cột full-width** kèm dải chip Silo danh mục.
+  6. **Thanh nổi Mobile (`drv-mobile-toc-fab`):** Tích hợp 2 nút cân đối **`[Mục lục (%)]`** (mở bottom sheet `<dialog>`) và **`[Tính số viên & Keo]`**.
 
 ---
 
