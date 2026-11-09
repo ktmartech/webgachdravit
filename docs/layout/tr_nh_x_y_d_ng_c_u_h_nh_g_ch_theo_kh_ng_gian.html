@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Build Cấu Hình Gạch Theo Không Gian</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f6f8;
+            color: #1e293b;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        /* Tile pattern previews using CSS gradients */
+        .tile-marble {
+            background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 45%, #cbd5e1 46%, #f8fafc 50%, #ffffff 100%);
+            position: relative;
+        }
+        .tile-marble::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, transparent 65%, rgba(148,163,184,0.3) 66%, transparent 68%);
+        }
+        .tile-wood {
+            background: repeating-linear-gradient(90deg, #b08968, #b08968 12px, #9c7454 13px, #a67c58 26px);
+        }
+        .tile-terrazzo {
+            background-color: #f3efe6;
+            background-image: 
+                radial-gradient(#475569 1.5px, transparent 1.5px), 
+                radial-gradient(#d97706 2px, transparent 2px),
+                radial-gradient(#94a3b8 2px, transparent 2px);
+            background-size: 20px 20px;
+            background-position: 0 0, 7px 12px, 14px 5px;
+        }
+        .tile-cement {
+            background: radial-gradient(circle at 30% 30%, #cbd5e1, #94a3b8);
+        }
+        .tile-mosaic {
+            background-color: #0284c7;
+            background-image: 
+                linear-gradient(#e0f2fe 1.5px, transparent 1.5px),
+                linear-gradient(90deg, #e0f2fe 1.5px, transparent 1.5px);
+            background-size: 12px 12px;
+        }
+        .tile-wall-white {
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 48%, #e2e8f0 50%, #ffffff 52%, #f1f5f9 100%);
+        }
+        .tile-herringbone {
+            background: repeating-linear-gradient(45deg, #e2e8f0, #e2e8f0 8px, #cbd5e1 8px, #cbd5e1 16px);
+        }
+        /* Number input arrows hiding */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
+</head>
+<body class="pb-28">
+
+    <!-- Top Action Bar (PC Builder Style Toolbar) -->
+    <div class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-[#0f2937] text-white flex items-center justify-center font-bold text-lg shadow-sm">
+                    <i class="fa-solid fa-layer-group"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-lg font-bold text-slate-800 leading-tight">Build Cấu Hình Gạch Ốp Lát</h1>
+                        <span class="bg-teal-50 text-teal-700 border border-teal-200 text-[11px] font-semibold px-2 py-0.5 rounded-full">PRO BUILDER</span>
+                    </div>
+                    <p class="text-xs text-slate-500" id="header-summary-text">Đang tải cấu hình...</p>
+                </div>
+            </div>
+
+            <!-- Right Controls -->
+            <div class="flex flex-wrap items-center gap-3">
+                <!-- Wastage Selector -->
+                <div class="flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200">
+                    <span class="text-xs font-medium text-slate-600">Hao hụt cắt gạch:</span>
+                    <div class="inline-flex rounded-md border border-slate-300 bg-white overflow-hidden" id="wastage-buttons">
+                        <button onclick="setWastage(0)" data-val="0" class="wastage-btn px-2.5 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-100 transition">0%</button>
+                        <button onclick="setWastage(5)" data-val="5" class="wastage-btn px-2.5 py-1 text-xs font-semibold bg-[#0f2937] text-white border-x border-slate-300 transition">5%</button>
+                        <button onclick="setWastage(10)" data-val="10" class="wastage-btn px-2.5 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-100 transition">10%</button>
+                    </div>
+                </div>
+
+                <!-- Add Space Quick Dropdown / Button -->
+                <button onclick="openAddSpaceModal()" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold bg-teal-600 hover:bg-teal-700 text-white shadow-sm transition cursor-pointer">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Thêm không gian</span>
+                </button>
+
+                <button onclick="resetToDefault()" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 bg-white hover:bg-slate-100 border border-slate-200 transition" title="Làm mới cấu hình mẫu">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    <span class="hidden sm:inline">Làm mới</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 mt-6">
+        
+        <!-- Main Card mimicking the screenshot style -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            
+            <!-- Card Header -->
+            <div class="px-6 py-4 border-b border-slate-200 flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-800">Danh sách gạch theo không gian</h2>
+                    <p class="text-xs text-slate-500 mt-0.5" id="sub-summary-stats">
+                        4 phòng đã chọn gạch · 7 hạng mục ốp lát · Giá niêm yết đã gồm VAT
+                    </p>
+                </div>
+
+                <!-- Quick Filter / Expand Collapse -->
+                <div class="flex items-center gap-2">
+                    <span class="text-xs text-slate-400 hidden md:inline mr-2">Mẹo: 1 không gian có thể phối nhiều mẫu gạch (nền, tường, điểm nhấn...)</span>
+                    <button onclick="openAddSpaceModal()" class="text-xs font-semibold text-teal-700 bg-teal-50 hover:bg-teal-100 border border-teal-200 px-3 py-1.5 rounded-lg transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-folder-plus"></i> + Thêm phòng / Khu vực
+                    </button>
+                </div>
+            </div>
+
+            <!-- Table Responsive Wrapper -->
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse min-w-[980px]">
+                    <thead>
+                        <tr class="border-b border-slate-200 text-[11px] font-bold text-slate-500 uppercase tracking-wider bg-slate-50/70">
+                            <th class="py-3 px-4 w-10 text-center">#</th>
+                            <th class="py-3 px-4 w-48">KHÔNG GIAN / HẠNG MỤC</th>
+                            <th class="py-3 px-4 w-72">MẪU GẠCH ĐÃ CHỌN</th>
+                            <th class="py-3 px-4 w-28">KÍCH THƯỚC</th>
+                            <th class="py-3 px-4 w-36">MÀU CHÍNH</th>
+                            <th class="py-3 px-4 w-52">THÔNG SỐ</th>
+                            <th class="py-3 px-4 w-32">ĐƠN GIÁ</th>
+                            <th class="py-3 px-4 w-40">KHỐI LƯỢNG</th>
+                            <th class="py-3 px-4 w-36 text-right">THÀNH TIỀN</th>
+                            <th class="py-3 px-3 w-12 text-center"></th>
+                        </tr>
+                        <!-- Section Sub-banner like in original screenshot -->
+                        <tr class="bg-[#f1f5f9] border-b border-slate-200">
+                            <td colspan="6" class="py-2 px-4 text-xs font-bold text-[#1e3a5f] tracking-wide">
+                                A. GẠCH ỐP LÁT THEO KHÔNG GIAN (BUILD ĐA LỚP THEO PHÒNG)
+                            </td>
+                            <td colspan="4" class="py-2 px-4 text-xs text-slate-500 text-right">
+                                Mỗi không gian có thể chọn nhiều mẫu gạch cho từng vị trí
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody id="builder-tbody" class="divide-y divide-slate-200 text-sm">
+                        <!-- Rendered dynamically via JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Add New Space Bottom Banner inside Table Card -->
+            <div class="p-4 bg-slate-50/80 border-t border-slate-200 flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center gap-2 flex-wrap">
+                    <span class="text-xs font-semibold text-slate-600 mr-1"><i class="fa-solid fa-bolt text-amber-500 mr-1"></i>Thêm nhanh không gian:</span>
+                    <button onclick="quickAddSpace('Phòng ngủ 2', 'CUSTOM')" class="text-xs bg-white hover:bg-teal-50 text-slate-700 hover:text-teal-700 border border-slate-200 hover:border-teal-300 px-2.5 py-1.5 rounded-md font-medium transition shadow-2xs">+ Phòng ngủ 2</button>
+                    <button onclick="quickAddSpace('Ban công / Lô gia', 'CUSTOM')" class="text-xs bg-white hover:bg-teal-50 text-slate-700 hover:text-teal-700 border border-slate-200 hover:border-teal-300 px-2.5 py-1.5 rounded-md font-medium transition shadow-2xs">+ Ban công / Lô gia</button>
+                    <button onclick="quickAddSpace('Sân thượng', 'CUSTOM')" class="text-xs bg-white hover:bg-teal-50 text-slate-700 hover:text-teal-700 border border-slate-200 hover:border-teal-300 px-2.5 py-1.5 rounded-md font-medium transition shadow-2xs">+ Sân thượng</button>
+                    <button onclick="quickAddSpace('Sảnh / Hành lang', 'CUSTOM')" class="text-xs bg-white hover:bg-teal-50 text-slate-700 hover:text-teal-700 border border-slate-200 hover:border-teal-300 px-2.5 py-1.5 rounded-md font-medium transition shadow-2xs">+ Sảnh / Hành lang</button>
+                    <button onclick="quickAddSpace('WC Phụ', 'CUSTOM')" class="text-xs bg-white hover:bg-teal-50 text-slate-700 hover:text-teal-700 border border-slate-200 hover:border-teal-300 px-2.5 py-1.5 rounded-md font-medium transition shadow-2xs">+ WC Phụ</button>
+                </div>
+
+                <button onclick="openAddSpaceModal()" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold bg-[#0f2937] hover:bg-slate-800 text-white transition shadow-sm">
+                    <i class="fa-solid fa-plus-circle"></i> Tạo không gian tuỳ chỉnh mới
+                </button>
+            </div>
+
+            <!-- Section B: Auxiliary Materials (Vật tư phụ) to match original header "2 vật tư phụ" -->
+            <div class="border-t border-slate-200">
+                <div class="bg-[#f1f5f9] py-2 px-4 border-b border-slate-200 flex items-center justify-between">
+                    <span class="text-xs font-bold text-[#1e3a5f] tracking-wide">B. VẬT TƯ PHỤ KÈM THEO (KEO DÁN GẠCH & KEO CHÀ RON)</span>
+                    <span class="text-xs text-slate-500">Tự động gợi ý theo tổng diện tích ốp lát</span>
+                </div>
+                <div class="divide-y divide-slate-100" id="aux-tbody">
+                    <!-- Rendered via JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sticky Bottom Summary Bar (PC Builder Checkout Bar) -->
+    <div class="fixed bottom-0 inset-x-0 bg-white border-t border-slate-200 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-6 flex-wrap">
+                <div>
+                    <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block">Tổng diện tích (gồm hao hụt)</span>
+                    <span class="text-base font-bold text-slate-800" id="footer-total-area">0 m²</span>
+                    <span class="text-xs text-slate-500 ml-1" id="footer-total-boxes">(0 thùng)</span>
+                </div>
+                <div class="h-8 w-px bg-slate-200 hidden sm:block"></div>
+                <div>
+                    <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block">Số hạng mục đã chọn</span>
+                    <span class="text-sm font-semibold text-slate-700" id="footer-slot-status">0 / 0 vị trí có gạch</span>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4 ml-auto">
+                <div class="text-right">
+                    <span class="text-xs text-slate-500 block">Tổng tạm tính (Đã gồm VAT):</span>
+                    <span class="text-xl font-extrabold text-[#0f2937]" id="footer-grand-total">0đ</span>
+                </div>
+                <button onclick="exportQuoteModal()" class="px-5 py-2.5 rounded-lg bg-[#0f2937] hover:bg-slate-800 text-white font-semibold text-sm shadow-sm transition flex items-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-file-invoice"></i>
+                    <span>Xuất bảng báo giá</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 1: Tile Catalog Picker (Giống chọn linh kiện khi Build PC) -->
+    <div id="tile-picker-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-xl max-w-4xl w-full max-h-[88vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden animate-fadeIn">
+            <!-- Modal Header -->
+            <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-teal-100 text-teal-800" id="modal-target-space">Phòng khách</span>
+                        <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
+                        <span class="text-xs font-semibold text-slate-600" id="modal-target-role">Gạch lát nền</span>
+                    </div>
+                    <h3 class="text-base font-bold text-slate-800 mt-1">Chọn mẫu gạch đưa vào cấu hình</h3>
+                </div>
+                <button onclick="closeTilePicker()" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="px-6 py-3 border-b border-slate-200 flex flex-wrap items-center gap-3 bg-white">
+                <div class="relative flex-1 min-w-[200px]">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                    <input type="text" id="catalog-search" oninput="renderCatalog()" placeholder="Tìm theo mã gạch (VD: DRV-8801M), tên gạch, kích thước..." class="w-full pl-8 pr-3 py-1.5 text-xs border border-slate-300 rounded-lg focus:outline-none focus:border-teal-600">
+                </div>
+                <div class="flex items-center gap-1.5 flex-wrap" id="catalog-category-filters">
+                    <button onclick="setCatalogFilter('ALL')" data-cat="ALL" class="cat-filter-btn px-2.5 py-1 rounded-md text-xs font-semibold bg-[#0f2937] text-white">Tất cả</button>
+                    <button onclick="setCatalogFilter('Vân đá Marble')" data-cat="Vân đá Marble" class="cat-filter-btn px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100 text-slate-600 hover:bg-slate-200">Vân đá</button>
+                    <button onclick="setCatalogFilter('Giả gỗ')" data-cat="Giả gỗ" class="cat-filter-btn px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100 text-slate-600 hover:bg-slate-200">Giả gỗ</button>
+                    <button onclick="setCatalogFilter('Terrazzo & Xi măng')" data-cat="Terrazzo & Xi măng" class="cat-filter-btn px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100 text-slate-600 hover:bg-slate-200">Terrazzo / Xi măng</button>
+                    <button onclick="setCatalogFilter('Ốp tường & Trang trí')" data-cat="Ốp tường & Trang trí" class="cat-filter-btn px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100 text-slate-600 hover:bg-slate-200">Ốp tường / Điểm nhấn</button>
+                </div>
+            </div>
+
+            <!-- Catalog Grid -->
+            <div class="p-6 overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50/50 flex-1" id="catalog-grid">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: Add New Space (Thêm không gian mới) -->
+    <div id="add-space-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-xl max-w-md w-full shadow-2xl border border-slate-200 overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+                <h3 class="text-base font-bold text-slate-800">Thêm Không Gian Ốp Lát Mới</h3>
+                <button onclick="closeAddSpaceModal()" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-700 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Tên không gian / Phòng <span class="text-red-500">*</span></label>
+                    <input type="text" id="new-space-name" placeholder="VD: Phòng ngủ bé trai, Sân vườn, Phòng thờ..." class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:border-teal-600">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Loại không gian</label>
+                    <select id="new-space-type" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:border-teal-600 bg-white">
+                        <option value="TUỲ CHỌN">TUỲ CHỌN (Có thể xoá hoặc sửa tự do)</option>
+                        <option value="CỐ ĐỊNH">CỐ ĐỊNH (Không gian chính trong nhà)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-2">Khởi tạo sẵn các vị trí ốp lát trong phòng này:</label>
+                    <div class="space-y-2 bg-slate-50 p-3 rounded-lg border border-slate-200">
+                        <label class="flex items-center gap-2 text-xs text-slate-700 cursor-pointer">
+                            <input type="checkbox" id="preset-floor" checked class="rounded text-teal-600 focus:ring-teal-500">
+                            <span class="font-medium">Gạch lát nền chính</span> (Mặc định 20 m²)
+                        </label>
+                        <label class="flex items-center gap-2 text-xs text-slate-700 cursor-pointer">
+                            <input type="checkbox" id="preset-wall" class="rounded text-teal-600 focus:ring-teal-500">
+                            <span class="font-medium">Gạch ốp tường</span> (Mặc định 15 m²)
+                        </label>
+                        <label class="flex items-center gap-2 text-xs text-slate-700 cursor-pointer">
+                            <input type="checkbox" id="preset-accent" class="rounded text-teal-600 focus:ring-teal-500">
+                            <span class="font-medium">Gạch điểm nhấn / Trang trí</span> (Mặc định 6 m²)
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="px-6 py-3 bg-slate-50 border-t border-slate-200 flex justify-end gap-2">
+                <button onclick="closeAddSpaceModal()" class="px-4 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-200/60 transition">Huỷ</button>
+                <button onclick="confirmAddSpace()" class="px-4 py-2 rounded-lg text-xs font-semibold bg-[#0f2937] hover:bg-slate-800 text-white transition">Tạo không gian</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 3: Export Quote Preview -->
+    <div id="quote-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-xl max-w-2xl w-full shadow-2xl border border-slate-200 overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-[#0f2937] text-white">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-check-circle text-teal-400"></i>
+                    <h3 class="text-base font-bold">Tổng Hợp Cấu Hình Gạch Đã Build</h3>
+                </div>
+                <button onclick="closeQuoteModal()" class="w-8 h-8 rounded-lg text-slate-300 hover:text-white flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="p-6 max-h-[70vh] overflow-y-auto space-y-4" id="quote-modal-body">
+                <!-- Populated by JS -->
+            </div>
+            <div class="px-6 py-3 bg-slate-50 border-t border-slate-200 flex justify-between items-center">
+                <span class="text-xs text-slate-500" id="copy-status-msg">Bạn có thể sao chép báo giá để gửi qua Zalo/Email</span>
+                <div class="flex gap-2">
+                    <button onclick="copyQuoteText()" class="px-4 py-2 rounded-lg text-xs font-semibold bg-teal-600 hover:bg-teal-700 text-white transition flex items-center gap-1.5">
+                        <i class="fa-regular fa-copy"></i> Sao chép báo giá
+                    </button>
+                    <button onclick="closeQuoteModal()" class="px-4 py-2 rounded-lg text-xs font-semibold bg-slate-200 hover:bg-slate-300 text-slate-700 transition">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // 1. CATALOG DATABASE (DỮ LIỆU MẪU GẠCH)
+        // ==========================================
+        const TILE_CATALOG = [
+            {
+                id: 'DRV-8801M',
+                code: 'DRV-8801M',
+                name: 'Marble Calacatta Trắng Khói',
+                category: 'Vân đá Marble',
+                size: '80×80 cm',
+                thickness: 'Dày 10 mm',
+                colorName: 'Trắng vân xám',
+                colorHex: '#f1f5f9',
+                specs: ['Bóng kiếng', 'Porcelain', 'Chống trượt R9', 'Hút nước ≤ 0,5%'],
+                pricePerM2: 385000,
+                tileAreaM2: 0.64, // 80x80 = 0.64m2/viên
+                tilesPerBox: 3,   // 3 viên/thùng = 1.92m2/thùng
+                cssClass: 'tile-marble'
+            },
+            {
+                id: 'DRV-WD1590',
+                code: 'DRV-WD1590',
+                name: 'Giả Gỗ Sồi Tự Nhiên',
+                category: 'Giả gỗ',
+                size: '15×90 cm',
+                thickness: 'Dày 9 mm',
+                colorName: 'Nâu sồi',
+                colorHex: '#9c7454',
+                specs: ['Mờ vân gỗ', 'Porcelain', 'Chống trượt R10', 'Hút nước ≤ 0,5%'],
+                pricePerM2: 365000,
+                tileAreaM2: 0.135, // 15x90 = 0.135m2/viên
+                tilesPerBox: 10,   // 10 viên/thùng = 1.35m2/thùng
+                cssClass: 'tile-wood'
+            },
+            {
+                id: 'DRV-TRZ60',
+                code: 'DRV-TRZ60',
+                name: 'Terrazzo Kem Hạt Nhỏ',
+                category: 'Terrazzo & Xi măng',
+                size: '60×60 cm',
+                thickness: 'Dày 9,5 mm',
+                colorName: 'Kem hạt xám',
+                colorHex: '#e6dec8',
+                specs: ['Mờ nhám', 'Porcelain', 'Chống trượt R11', 'Hút nước ≤ 0,5%'],
+                pricePerM2: 320000,
+                tileAreaM2: 0.36, // 60x60 = 0.36m2/viên
+                tilesPerBox: 4,   // 4 viên/thùng = 1.44m2/thùng
+                cssClass: 'tile-terrazzo'
+            },
+            {
+                id: 'DRV-CM6060G',
+                code: 'DRV-CM6060G',
+                name: 'Xi Măng Xám Nhạt',
+                category: 'Terrazzo & Xi măng',
+                size: '60×60 cm',
+                thickness: 'Dày 9,5 mm',
+                colorName: 'Xám xi măng',
+                colorHex: '#94a3b8',
+                specs: ['Mờ', 'Porcelain', 'Chống trượt R10', 'Hút nước ≤ 0,5%'],
+                pricePerM2: 295000,
+                tileAreaM2: 0.36,
+                tilesPerBox: 4,
+                cssClass: 'tile-cement'
+            },
+            {
+                id: 'DRV-WL3060W',
+                code: 'DRV-WL3060W',
+                name: 'Gạch Ốp Tường Vân Mây Trắng',
+                category: 'Ốp tường & Trang trí',
+                size: '30×60 cm',
+                thickness: 'Dày 8,5 mm',
+                colorName: 'Trắng sữa',
+                colorHex: '#f8fafc',
+                specs: ['Men bóng', 'Ceramic', 'Dễ lau chùi', 'Ốp nội thất'],
+                pricePerM2: 245000,
+                tileAreaM2: 0.18, // 30x60 = 0.18m2/viên
+                tilesPerBox: 8,   // 1.44m2/thùng
+                cssClass: 'tile-wall-white'
+            },
+            {
+                id: 'DRV-MS3030B',
+                code: 'DRV-MS3030B',
+                name: 'Mosaic Lục Giác Xanh Ngọc',
+                category: 'Ốp tường & Trang trí',
+                size: '30×30 cm',
+                thickness: 'Dày 6 mm',
+                colorName: 'Xanh Ocean',
+                colorHex: '#0284c7',
+                specs: ['Men rạn bóng', 'Vỉ lưới', 'Điểm nhấn bếp/WC', 'Chống bám bẩn'],
+                pricePerM2: 520000,
+                tileAreaM2: 0.09, // 30x30 = 0.09m2/vỉ
+                tilesPerBox: 11,  // ~1m2/thùng
+                cssClass: 'tile-mosaic'
+            },
+            {
+                id: 'DRV-HB60120',
+                code: 'DRV-HB60120',
+                name: 'Khổ Lớn Vân Đá Ý Ghi Xám',
+                category: 'Vân đá Marble',
+                size: '60×120 cm',
+                thickness: 'Dày 10,5 mm',
+                colorName: 'Ghi xám khói',
+                colorHex: '#cbd5e1',
+                specs: ['Vi tinh kim', 'Porcelain', 'Chống trầy xước', 'Hút nước ≤ 0,1%'],
+                pricePerM2: 490000,
+                tileAreaM2: 0.72, // 60x120 = 0.72m2/viên
+                tilesPerBox: 2,   // 1.44m2/thùng
+                cssClass: 'tile-herringbone'
+            }
+        ];
+
+        const ROLE_OPTIONS = [
+            'Gạch lát nền',
+            'Gạch ốp tường',
+            'Gạch điểm nhấn / Trang trí',
+            'Gạch ốp vách Tivi',
+            'Gạch ốp tường bếp',
+            'Gạch khu vực tắm đứng',
+            'Gạch len chân tường'
+        ];
+
+        // ==========================================
+        // 2. STATE QUẢN LÝ CẤU HÌNH (PC BUILDER STATE)
+        // ==========================================
+        let wastagePercent = 5; // Mặc định 5% như hình mẫu
+        let activeModalTarget = { spaceId: null, slotId: null };
+        let activeCatalogCategory = 'ALL';
+
+        let spacesState = [];
+
+        function getInitialState() {
+            return [
+                {
+                    id: 'space-1',
+                    name: 'Phòng khách',
+                    badge: 'CỐ ĐỊNH',
+                    slots: [
+                        {
+                            id: 'slot-101',
+                            role: 'Gạch lát nền',
+                            tileId: 'DRV-8801M',
+                            areaM2: 42
+                        },
+                        {
+                            id: 'slot-102',
+                            role: 'Gạch ốp vách Tivi',
+                            tileId: 'DRV-HB60120',
+                            areaM2: 8
+                        }
+                    ]
+                },
+                {
+                    id: 'space-2',
+                    name: 'Phòng ngủ Master',
+                    badge: 'CỐ ĐỊNH',
+                    slots: [
+                        {
+                            id: 'slot-201',
+                            role: 'Gạch lát nền',
+                            tileId: 'DRV-WD1590',
+                            areaM2: 18
+                        }
+                    ]
+                },
+                {
+                    id: 'space-3',
+                    name: 'Nhà tắm / WC',
+                    badge: 'CỐ ĐỊNH',
+                    slots: [
+                        {
+                            id: 'slot-301',
+                            role: 'Gạch lát nền',
+                            tileId: 'DRV-TRZ60',
+                            areaM2: 10
+                        },
+                        {
+                            id: 'slot-302',
+                            role: 'Gạch ốp tường',
+                            tileId: 'DRV-WL3060W',
+                            areaM2: 22
+                        },
+                        {
+                            id: 'slot-303',
+                            role: 'Gạch khu vực tắm đứng',
+                            tileId: null, // Minh họa trạng thái chờ chọn gạch giống Build PC
+                            areaM2: 6
+                        }
+                    ]
+                },
+                {
+                    id: 'space-4',
+                    name: 'Phòng bếp',
+                    badge: 'CỐ ĐỊNH',
+                    slots: [
+                        {
+                            id: 'slot-401',
+                            role: 'Gạch lát nền',
+                            tileId: 'DRV-CM6060G',
+                            areaM2: 14
+                        },
+                        {
+                            id: 'slot-402',
+                            role: 'Gạch ốp tường bếp',
+                            tileId: 'DRV-MS3030B',
+                            areaM2: 5
+                        }
+                    ]
+                }
+            ];
+        }
+
+        // ==========================================
+        // 3. HÀM TÍNH TOÁN QUY ĐỔI THÙNG / VIÊN / TIỀN
+        // ==========================================
+        function calculateSlotMetrics(tile, rawAreaM2, wastage) {
+            if (!tile || rawAreaM2 <= 0) {
+                return {
+                    pricePerPiece: 0,
+                    boxes: 0,
+                    pieces: 0,
+                    actualAreaM2: 0,
+                    totalCost: 0
+                };
+            }
+            const pricePerPiece = Math.round(tile.pricePerM2 * tile.tileAreaM2);
+            const neededAreaWithWastage = rawAreaM2 * (1 + wastage / 100);
+            const boxArea = tile.tileAreaM2 * tile.tilesPerBox;
+            
+            // Quy đổi số thùng chẵn lên giống thực tế mua gạch
+            const boxes = Math.ceil(neededAreaWithWastage / boxArea);
+            const pieces = boxes * tile.tilesPerBox;
+            const actualAreaM2 = +(pieces * tile.tileAreaM2).toFixed(2);
+            const totalCost = Math.round(actualAreaM2 * tile.pricePerM2);
+
+            return {
+                pricePerPiece,
+                boxes,
+                pieces,
+                actualAreaM2,
+                totalCost
+            };
+        }
+
+        function formatVND(num) {
+            return num.toLocaleString('vi-VN') + 'đ';
+        }
+
+        function formatNumberVN(num) {
+            return num.toLocaleString('vi-VN');
+        }
+
+        // ==========================================
+        // 4. RENDER GIAO DIỆN CHÍNH
+        // ==========================================
+        function renderBuilderTable() {
+            const tbody = document.getElementById('builder-tbody');
+            tbody.innerHTML = '';
+
+            let totalSpacesWithTiles = 0;
+            let totalFilledSlots = 0;
+            let totalSlotsCount = 0;
+            let totalActualArea = 0;
+            let totalBoxesCount = 0;
+            let grandTotalTileCost = 0;
+
+            spacesState.forEach((space, spaceIdx) => {
+                const slotCount = space.slots.length;
+                let spaceHasTile = false;
+
+                // Tính tổng tiền riêng của không gian này
+                let spaceSubTotal = 0;
+                space.slots.forEach(s => {
+                    totalSlotsCount++;
+                    const t = TILE_CATALOG.find(item => item.id === s.tileId);
+                    if (t) {
+                        spaceHasTile = true;
+                        totalFilledSlots++;
+                        const m = calculateSlotMetrics(t, s.areaM2, wastagePercent);
+                        spaceSubTotal += m.totalCost;
+                        totalActualArea += m.actualAreaM2;
+                        totalBoxesCount += m.boxes;
+                        grandTotalTileCost += m.totalCost;
+                    }
+                });
+                if (spaceHasTile) totalSpacesWithTiles++;
+
+                space.slots.forEach((slot, slotIdx) => {
+                    const tile = TILE_CATALOG.find(item => item.id === slot.tileId);
+                    const isFirstSlot = slotIdx === 0;
+                    const tr = document.createElement('tr');
+                    tr.className = 'hover:bg-slate-50/60 transition group align-top';
+
+                    // Cột 1 & 2: Số thứ tự + Thông tin Không gian (Rowspan cho tất cả các loại gạch trong cùng 1 phòng)
+                    let spaceColumnsHTML = '';
+                    if (isFirstSlot) {
+                        spaceColumnsHTML = `
+                            <td rowspan="${slotCount}" class="py-5 px-4 text-center font-bold text-slate-700 border-r border-slate-100 align-top">
+                                ${spaceIdx + 1}
+                            </td>
+                            <td rowspan="${slotCount}" class="py-5 px-4 border-r border-slate-200 align-top bg-slate-50/30">
+                                <div class="flex flex-col justify-between h-full space-y-3">
+                                    <div>
+                                        <div class="flex items-start justify-between gap-1">
+                                            <input type="text" value="${space.name}" 
+                                                onchange="renameSpace('${space.id}', this.value)"
+                                                class="font-bold text-slate-800 text-sm bg-transparent border-b border-transparent hover:border-slate-300 focus:border-teal-600 focus:bg-white focus:outline-none px-0.5 py-0.5 w-full rounded-xs transition"
+                                                title="Nhấn để đổi tên không gian" />
+                                            <button onclick="removeSpace('${space.id}')" class="text-slate-300 hover:text-red-500 transition p-1" title="Xoá không gian này">
+                                                <i class="fa-regular fa-trash-can text-xs"></i>
+                                            </button>
+                                        </div>
+                                        <div class="mt-1.5 flex items-center gap-1.5 flex-wrap">
+                                            <span class="inline-block text-[10px] font-bold uppercase px-2 py-0.5 rounded border ${space.badge === 'CỐ ĐỊNH' ? 'bg-slate-100 text-slate-600 border-slate-200' : 'bg-teal-50 text-teal-700 border-teal-200'}">
+                                                ${space.badge}
+                                            </span>
+                                            <span class="text-[11px] font-medium text-slate-400">${slotCount} hạng mục</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Nút Thêm loại gạch mới vào cùng Không gian này (Build PC style) -->
+                                    <div class="pt-2 border-t border-dashed border-slate-200">
+                                        <button onclick="addSlotToSpace('${space.id}')" class="w-full py-1.5 px-2.5 rounded-lg border border-dashed border-teal-500/70 bg-teal-50/50 hover:bg-teal-50 text-teal-700 font-semibold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer shadow-2xs">
+                                            <i class="fa-solid fa-plus text-[10px]"></i>
+                                            <span>Thêm loại gạch</span>
+                                        </button>
+                                        ${slotCount > 1 ? `
+                                            <div class="mt-2 text-[11px] text-slate-500 flex justify-between">
+                                                <span>Tổng phòng:</span>
+                                                <span class="font-bold text-slate-700">${formatVND(spaceSubTotal)}</span>
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                </div>
+                            </td>
+                        `;
+                    }
+
+                    // Selector chọn hạng mục (Gạch lát nền, Gạch ốp tường, Điểm nhấn...)
+                    const roleSelectHTML = `
+                        <div class="mb-2 flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full ${tile ? 'bg-teal-600' : 'bg-amber-400'}"></span>
+                            <select onchange="updateSlotRole('${space.id}', '${slot.id}', this.value)" 
+                                class="text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200/70 border border-slate-200 rounded-md px-2 py-1 focus:outline-none focus:border-teal-600 cursor-pointer transition">
+                                ${ROLE_OPTIONS.map(r => `<option value="${r}" ${r === slot.role ? 'selected' : ''}>${r}</option>`).join('')}
+                            </select>
+                        </div>
+                    `;
+
+                    if (tile) {
+                        const metrics = calculateSlotMetrics(tile, slot.areaM2, wastagePercent);
+
+                        tr.innerHTML = `
+                            ${spaceColumnsHTML}
+                            <!-- Mẫu gạch đã chọn -->
+                            <td class="py-4 px-4">
+                                ${roleSelectHTML}
+                                <div class="flex items-start gap-3.5">
+                                    <div onclick="openTilePicker('${space.id}', '${slot.id}')" class="w-14 h-14 rounded-lg border border-slate-200 shadow-xs shrink-0 cursor-pointer overflow-hidden ${tile.cssClass} hover:scale-105 transition" title="Nhấn để đổi mẫu gạch"></div>
+                                    <div class="min-w-0 flex-1">
+                                        <div class="text-[11px] font-bold text-teal-700 tracking-wide">${tile.code}</div>
+                                        <div class="font-bold text-slate-800 text-sm leading-snug mb-2">${tile.name}</div>
+                                        <div class="flex items-center gap-3">
+                                            <button onclick="openTilePicker('${space.id}', '${slot.id}')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-slate-700 text-slate-800 hover:bg-slate-800 hover:text-white text-xs font-semibold transition cursor-pointer">
+                                                <i class="fa-solid fa-arrows-rotate text-[11px]"></i>
+                                                <span>Đổi gạch</span>
+                                            </button>
+                                            <button onclick="clearSlotTile('${space.id}', '${slot.id}')" class="text-xs font-semibold text-red-600 hover:text-red-700 hover:underline cursor-pointer">
+                                                Gỡ
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <!-- Kích thước -->
+                            <td class="py-4 px-4 align-middle">
+                                <div class="font-bold text-slate-800 text-sm">${tile.size}</div>
+                                <div class="text-xs text-slate-500 mt-0.5">${tile.thickness}</div>
+                            </td>
+
+                            <!-- Màu chính -->
+                            <td class="py-4 px-4 align-middle">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-3.5 h-3.5 rounded-xs border border-slate-300 shrink-0" style="background-color: ${tile.colorHex}"></span>
+                                    <span class="text-sm font-medium text-slate-700">${tile.colorName}</span>
+                                </div>
+                            </td>
+
+                            <!-- Thông số -->
+                            <td class="py-4 px-4 align-middle">
+                                <div class="flex flex-wrap gap-1.5">
+                                    ${tile.specs.map(sp => `
+                                        <span class="px-2 py-0.5 text-[11px] font-medium bg-slate-100 text-slate-700 rounded border border-slate-200/80">${sp}</span>
+                                    `).join('')}
+                                </div>
+                            </td>
+
+                            <!-- Đơn giá -->
+                            <td class="py-4 px-4 align-middle">
+                                <div class="font-bold text-slate-800 text-sm">${formatNumberVN(tile.pricePerM2)}đ<span class="font-normal text-xs text-slate-500">/m²</span></div>
+                                <div class="text-xs text-slate-500 mt-0.5">${formatNumberVN(metrics.pricePerPiece)}đ/viên</div>
+                            </td>
+
+                            <!-- Khối lượng -->
+                            <td class="py-4 px-4 align-middle">
+                                <div class="inline-flex items-center border border-slate-300 rounded-md overflow-hidden bg-white focus-within:border-teal-600 focus-within:ring-1 focus-within:ring-teal-600">
+                                    <input type="number" min="1" max="9999" value="${slot.areaM2}" 
+                                        oninput="updateSlotArea('${space.id}', '${slot.id}', this.value)"
+                                        class="w-16 py-1.5 px-2 text-center font-bold text-slate-800 text-sm focus:outline-none" />
+                                    <span class="bg-slate-100 text-slate-600 text-xs font-medium px-2.5 py-1.5 border-l border-slate-300">m²</span>
+                                </div>
+                                <div class="text-[11px] text-slate-500 mt-1.5 leading-relaxed">
+                                    ${metrics.boxes} thùng · ${metrics.pieces} viên · <br/>
+                                    <span class="font-medium text-slate-600">${metrics.actualAreaM2.toString().replace('.', ',')} m²</span>
+                                </div>
+                            </td>
+
+                            <!-- Thành tiền -->
+                            <td class="py-4 px-4 align-middle text-right">
+                                <span class="font-bold text-slate-800 text-base">${formatVND(metrics.totalCost)}</span>
+                            </td>
+
+                            <!-- Nút Xoá dòng gạch (Cột ngoài cùng bên phải như khung đỏ trong ảnh) -->
+                            <td class="py-4 px-3 align-middle text-center">
+                                <button onclick="removeSlotOrSpace('${space.id}', '${slot.id}')" 
+                                    class="w-7 h-7 rounded-full text-slate-400 hover:text-red-600 hover:bg-red-50 inline-flex items-center justify-center transition cursor-pointer" 
+                                    title="${slotCount > 1 ? 'Xoá hạng mục gạch này khỏi phòng' : 'Xoá mẫu gạch / không gian'}">
+                                    <i class="fa-regular fa-circle-xmark text-base"></i>
+                                </button>
+                            </td>
+                        `;
+                    } else {
+                        // Trạng thái Slot trống (Giống Build PC khi chưa chọn RAM/SSD)
+                        tr.innerHTML = `
+                            ${spaceColumnsHTML}
+                            <td class="py-4 px-4" colspan="5">
+                                ${roleSelectHTML}
+                                <div class="flex items-center justify-between gap-4 p-3 rounded-lg border border-dashed border-slate-300 bg-slate-50/70">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-12 h-12 rounded-lg border border-dashed border-slate-300 bg-white flex items-center justify-center text-slate-400">
+                                            <i class="fa-solid fa-plus text-base"></i>
+                                        </div>
+                                        <div>
+                                            <div class="text-sm font-bold text-slate-700">Chưa chọn mẫu gạch cho vị trí "${slot.role}"</div>
+                                            <div class="text-xs text-slate-500">Nhấn nút bên cạnh để chọn mẫu gạch phù hợp từ kho gạch</div>
+                                        </div>
+                                    </div>
+                                    <button onclick="openTilePicker('${space.id}', '${slot.id}')" class="px-3.5 py-2 rounded-lg bg-[#0f2937] hover:bg-slate-800 text-white text-xs font-semibold transition shrink-0 flex items-center gap-1.5 cursor-pointer shadow-2xs">
+                                        <i class="fa-solid fa-magnifying-glass-plus"></i>
+                                        <span>+ Chọn mẫu gạch</span>
+                                    </button>
+                                </div>
+                            </td>
+                            <td class="py-4 px-4 align-middle">
+                                <span class="text-xs text-slate-400">—</span>
+                            </td>
+                            <td class="py-4 px-4 align-middle">
+                                <div class="inline-flex items-center border border-slate-200 rounded-md overflow-hidden bg-slate-50">
+                                    <input type="number" min="1" max="9999" value="${slot.areaM2}" 
+                                        oninput="updateSlotArea('${space.id}', '${slot.id}', this.value)"
+                                        class="w-16 py-1.5 px-2 text-center font-semibold text-slate-600 text-sm bg-transparent focus:outline-none" />
+                                    <span class="bg-slate-100 text-slate-500 text-xs font-medium px-2.5 py-1.5 border-l border-slate-200">m²</span>
+                                </div>
+                                <div class="text-[11px] text-slate-400 mt-1">Diện tích dự kiến</div>
+                            </td>
+                            <td class="py-4 px-4 align-middle text-right">
+                                <span class="text-sm font-semibold text-slate-400">0đ</span>
+                            </td>
+                            <td class="py-4 px-3 align-middle text-center">
+                                <button onclick="removeSlotOrSpace('${space.id}', '${slot.id}')" 
+                                    class="w-7 h-7 rounded-full text-slate-400 hover:text-red-600 hover:bg-red-50 inline-flex items-center justify-center transition cursor-pointer"
+                                    title="Xoá vị trí này">
+                                    <i class="fa-regular fa-circle-xmark text-base"></i>
+                                </button>
+                            </td>
+                        `;
+                    }
+
+                    tbody.appendChild(tr);
+                });
+            });
+
+            // Render Vật tư phụ (Keo dán gạch & Keo chà ron)
+            const auxCost = renderAuxiliaryMaterials(totalActualArea);
+            const grandTotal = grandTotalTileCost + auxCost;
+
+            // Update Header & Footer Stats
+            const summaryText = `${totalSpacesWithTiles} phòng đã chọn gạch · ${totalFilledSlots} hạng mục ốp lát · 2 vật tư phụ · Giá niêm yết đã gồm VAT`;
+            document.getElementById('sub-summary-stats').innerText = summaryText;
+            document.getElementById('header-summary-text').innerText = summaryText;
+
+            document.getElementById('footer-total-area').innerText = `${totalActualArea.toFixed(2).replace('.', ',')} m²`;
+            document.getElementById('footer-total-boxes').innerText = `(${totalBoxesCount} thùng gạch)`;
+            document.getElementById('footer-slot-status').innerText = `${totalFilledSlots} / ${totalSlotsCount} vị trí đã chọn gạch`;
+            document.getElementById('footer-grand-total').innerText = formatVND(grandTotal);
+        }
+
+        function renderAuxiliaryMaterials(totalAreaM2) {
+            const auxContainer = document.getElementById('aux-tbody');
+            // Ước tính keo dán gạch: 1 bao 25kg dùng cho ~5m2
+            const adhesiveBags = totalAreaM2 > 0 ? Math.ceil(totalAreaM2 / 5) : 0;
+            const adhesivePrice = 285000;
+            const adhesiveTotal = adhesiveBags * adhesivePrice;
+
+            // Ước tính keo chà ron: 1 túi 1kg dùng cho ~15m2
+            const groutBags = totalAreaM2 > 0 ? Math.ceil(totalAreaM2 / 15) : 0;
+            const groutPrice = 65000;
+            const groutTotal = groutBags * groutPrice;
+
+            auxContainer.innerHTML = `
+                <div class="px-6 py-3 flex flex-wrap items-center justify-between gap-4 text-sm hover:bg-slate-50/60">
+                    <div class="flex items-center gap-3">
+                        <span class="w-6 h-6 rounded-full bg-slate-100 text-slate-600 text-xs font-bold flex items-center justify-center">B1</span>
+                        <div>
+                            <span class="font-semibold text-slate-800">Keo dán gạch cao cấp chống bong tróc (Bao 25kg)</span>
+                            <span class="text-xs text-slate-500 block">Định mức tiêu chuẩn ~5m²/bao · Đã tính theo diện tích thực tế</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-8 ml-auto">
+                        <span class="text-xs text-slate-500">${formatVND(adhesivePrice)}/bao</span>
+                        <span class="text-xs font-semibold bg-slate-100 px-2.5 py-1 rounded border border-slate-200">${adhesiveBags} bao</span>
+                        <span class="font-bold text-slate-800 w-28 text-right">${formatVND(adhesiveTotal)}</span>
+                    </div>
+                </div>
+                <div class="px-6 py-3 flex flex-wrap items-center justify-between gap-4 text-sm hover:bg-slate-50/60">
+                    <div class="flex items-center gap-3">
+                        <span class="w-6 h-6 rounded-full bg-slate-100 text-slate-600 text-xs font-bold flex items-center justify-center">B2</span>
+                        <div>
+                            <span class="font-semibold text-slate-800">Keo chà ron kháng khuẩn chống thấm (Gói 1kg)</span>
+                            <span class="text-xs text-slate-500 block">Phối màu đồng bộ theo màu gạch từng phòng</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-8 ml-auto">
+                        <span class="text-xs text-slate-500">${formatVND(groutPrice)}/gói</span>
+                        <span class="text-xs font-semibold bg-slate-100 px-2.5 py-1 rounded border border-slate-200">${groutBags} gói</span>
+                        <span class="font-bold text-slate-800 w-28 text-right">${formatVND(groutTotal)}</span>
+                    </div>
+                </div>
+            `;
+
+            return adhesiveTotal + groutTotal;
+        }
+
+        // ==========================================
+        // 5. CÁC THAO TÁC TƯƠNG TÁC (ACTIONS)
+        // ==========================================
+        function setWastage(val) {
+            wastagePercent = val;
+            document.querySelectorAll('.wastage-btn').forEach(btn => {
+                if (Number(btn.dataset.val) === val) {
+                    btn.className = 'wastage-btn px-2.5 py-1 text-xs font-semibold bg-[#0f2937] text-white border-x border-slate-300 transition';
+                } else {
+                    btn.className = 'wastage-btn px-2.5 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-100 transition';
+                }
+            });
+            renderBuilderTable();
+        }
+
+        function updateSlotArea(spaceId, slotId, newVal) {
+            const space = spacesState.find(s => s.id === spaceId);
+            if (!space) return;
+            const slot = space.slots.find(sl => sl.id === slotId);
+            if (!slot) return;
+            slot.areaM2 = Math.max(0, parseFloat(newVal) || 0);
+            renderBuilderTable();
+        }
+
+        function updateSlotRole(spaceId, slotId, newRole) {
+            const space = spacesState.find(s => s.id === spaceId);
+            if (!space) return;
+            const slot = space.slots.find(sl => sl.id === slotId);
+            if (!slot) return;
+            slot.role = newRole;
+        }
+
+        function renameSpace(spaceId, newName) {
+            const space = spacesState.find(s => s.id === spaceId);
+            if (space && newName.trim() !== '') {
+                space.name = newName.trim();
+                renderBuilderTable();
+            }
+        }
+
+        // Thêm 1 loại gạch mới vào trong Không gian hiện có
+        function addSlotToSpace(spaceId) {
+            const space = spacesState.find(s => s.id === spaceId);
+            if (!space) return;
+
+            // Tự động gợi ý role chưa có trong phòng
+            const existingRoles = space.slots.map(s => s.role);
+            const suggestedRole = ROLE_OPTIONS.find(r => !existingRoles.includes(r)) || 'Gạch điểm nhấn / Trang trí';
+
+            const newSlotId = 'slot-' + Date.now();
+            space.slots.push({
+                id: newSlotId,
+                role: suggestedRole,
+                tileId: null,
+                areaM2: 12
+            });
+
+            renderBuilderTable();
+            // Mở luôn cửa sổ chọn gạch cho vị trí vừa thêm để mượt trải nghiệm
+            openTilePicker(spaceId, newSlotId);
+        }
+
+        // Gỡ mẫu gạch khỏi vị trí (đưa về trạng thái chờ chọn)
+        function clearSlotTile(spaceId, slotId) {
+            const space = spacesState.find(s => s.id === spaceId);
+            if (!space) return;
+            const slot = space.slots.find(sl => sl.id === slotId);
+            if (slot) {
+                slot.tileId = null;
+                renderBuilderTable();
+            }
+        }
+
+        // Nút (X) ở cột cuối cùng bên phải
+        function removeSlotOrSpace(spaceId, slotId) {
+            const spaceIdx = spacesState.findIndex(s => s.id === spaceId);
+            if (spaceIdx === -1) return;
+            const space = spacesState[spaceIdx];
+
+            if (space.slots.length > 1) {
+                // Nếu phòng có nhiều loại gạch -> Xoá dòng gạch đó
+                space.slots = space.slots.filter(sl => sl.id !== slotId);
+            } else {
+                // Nếu phòng chỉ còn 1 dòng gạch -> Nếu đang có gạch thì gỡ gạch trước, nếu trống rồi thì xoá phòng
+                if (space.slots[0].tileId !== null) {
+                    space.slots[0].tileId = null;
+                } else if (spacesState.length > 1) {
+                    spacesState.splice(spaceIdx, 1);
+                }
+            }
+            renderBuilderTable();
+        }
+
+        function removeSpace(spaceId) {
+            if (spacesState.length <= 1) return;
+            spacesState = spacesState.filter(s => s.id !== spaceId);
+            renderBuilderTable();
+        }
+
+        // Thêm nhanh không gian từ thanh gợi ý
+        function quickAddSpace(spaceName, badgeType) {
+            const newSpaceId = 'space-' + Date.now();
+            const firstSlotId = 'slot-' + (Date.now() + 1);
+            spacesState.push({
+                id: newSpaceId,
+                name: spaceName,
+                badge: badgeType === 'CUSTOM' ? 'TUỲ CHỌN' : 'CỐ ĐỊNH',
+                slots: [
+                    {
+                        id: firstSlotId,
+                        role: 'Gạch lát nền',
+                        tileId: 'DRV-CM6060G',
+                        areaM2: 15
+                    }
+                ]
+            });
+            renderBuilderTable();
+        }
+
+        function resetToDefault() {
+            spacesState = getInitialState();
+            setWastage(5);
+        }
+
+        // ==========================================
+        // 6. MODAL CHỌN MẪU GẠCH (TILE CATALOG PICKER)
+        // ==========================================
+        function openTilePicker(spaceId, slotId) {
+            activeModalTarget = { spaceId, slotId };
+            const space = spacesState.find(s => s.id === spaceId);
+            const slot = space ? space.slots.find(sl => sl.id === slotId) : null;
+
+            if (space && slot) {
+                document.getElementById('modal-target-space').innerText = space.name;
+                document.getElementById('modal-target-role').innerText = slot.role;
+            }
+
+            document.getElementById('catalog-search').value = '';
+            setCatalogFilter('ALL');
+
+            const modal = document.getElementById('tile-picker-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeTilePicker() {
+            const modal = document.getElementById('tile-picker-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function setCatalogFilter(cat) {
+            activeCatalogCategory = cat;
+            document.querySelectorAll('.cat-filter-btn').forEach(btn => {
+                if (btn.dataset.cat === cat) {
+                    btn.className = 'cat-filter-btn px-2.5 py-1 rounded-md text-xs font-semibold bg-[#0f2937] text-white';
+                } else {
+                    btn.className = 'cat-filter-btn px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100 text-slate-600 hover:bg-slate-200';
+                }
+            });
+            renderCatalog();
+        }
+
+        function renderCatalog() {
+            const searchVal = document.getElementById('catalog-search').value.trim().toLowerCase();
+            const grid = document.getElementById('catalog-grid');
+            grid.innerHTML = '';
+
+            // Tìm mẫu gạch đang được chọn ở slot hiện tại để đánh dấu
+            let currentTileId = null;
+            const space = spacesState.find(s => s.id === activeModalTarget.spaceId);
+            if (space) {
+                const slot = space.slots.find(sl => sl.id === activeModalTarget.slotId);
+                if (slot) currentTileId = slot.tileId;
+            }
+
+            const filtered = TILE_CATALOG.filter(tile => {
+                const matchCat = activeCatalogCategory === 'ALL' || tile.category === activeCatalogCategory;
+                const matchSearch = !searchVal || 
+                    tile.name.toLowerCase().includes(searchVal) || 
+                    tile.code.toLowerCase().includes(searchVal) || 
+                    tile.size.toLowerCase().includes(searchVal);
+                return matchCat && matchSearch;
+            });
+
+            filtered.forEach(tile => {
+                const isSelected = tile.id === currentTileId;
+                const card = document.createElement('div');
+                card.className = `p-4 rounded-xl border ${isSelected ? 'border-teal-600 bg-teal-50/30 ring-1 ring-teal-600' : 'border-slate-200 bg-white hover:border-slate-300'} flex items-start gap-4 transition shadow-2xs`;
+
+                card.innerHTML = `
+                    <div class="w-20 h-20 rounded-lg border border-slate-200 shrink-0 ${tile.cssClass} shadow-inner"></div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="text-[11px] font-bold text-teal-700">${tile.code}</span>
+                            <span class="text-[11px] font-medium text-slate-500">${tile.size} · ${tile.thickness}</span>
+                        </div>
+                        <h4 class="font-bold text-slate-800 text-sm mt-0.5 truncate">${tile.name}</h4>
+                        <div class="flex flex-wrap gap-1 mt-2">
+                            ${tile.specs.slice(0, 3).map(sp => `<span class="text-[10px] px-1.5 py-0.5 bg-slate-100 text-slate-600 rounded">${sp}</span>`).join('')}
+                        </div>
+                        <div class="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between">
+                            <div>
+                                <span class="font-bold text-slate-800 text-sm">${formatNumberVN(tile.pricePerM2)}đ</span>
+                                <span class="text-[11px] text-slate-500">/m²</span>
+                            </div>
+                            <button onclick="selectTileForSlot('${tile.id}')" class="px-3 py-1.5 rounded-lg text-xs font-semibold ${isSelected ? 'bg-teal-600 text-white' : 'bg-[#0f2937] hover:bg-slate-800 text-white'} transition cursor-pointer">
+                                ${isSelected ? '<i class="fa-solid fa-check mr-1"></i>Đang chọn' : 'Chọn mẫu này'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function selectTileForSlot(tileId) {
+            const space = spacesState.find(s => s.id === activeModalTarget.spaceId);
+            if (!space) return;
+            const slot = space.slots.find(sl => sl.id === activeModalTarget.slotId);
+            if (!slot) return;
+
+            slot.tileId = tileId;
+            closeTilePicker();
+            renderBuilderTable();
+        }
+
+        // ==========================================
+        // 7. MODAL THÊM KHÔNG GIAN TUỲ CHỈNH MỚI
+        // ==========================================
+        function openAddSpaceModal() {
+            document.getElementById('new-space-name').value = '';
+            document.getElementById('preset-floor').checked = true;
+            document.getElementById('preset-wall').checked = false;
+            document.getElementById('preset-accent').checked = false;
+
+            const modal = document.getElementById('add-space-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => document.getElementById('new-space-name').focus(), 100);
+        }
+
+        function closeAddSpaceModal() {
+            const modal = document.getElementById('add-space-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function confirmAddSpace() {
+            const nameInput = document.getElementById('new-space-name').value.trim();
+            const spaceName = nameInput || `Không gian mới #${spacesState.length + 1}`;
+            const spaceType = document.getElementById('new-space-type').value;
+
+            const hasFloor = document.getElementById('preset-floor').checked;
+            const hasWall = document.getElementById('preset-wall').checked;
+            const hasAccent = document.getElementById('preset-accent').checked;
+
+            const newSlots = [];
+            if (hasFloor) {
+                newSlots.push({
+                    id: 'slot-' + Date.now() + '-1',
+                    role: 'Gạch lát nền',
+                    tileId: 'DRV-8801M',
+                    areaM2: 20
+                });
+            }
+            if (hasWall) {
+                newSlots.push({
+                    id: 'slot-' + Date.now() + '-2',
+                    role: 'Gạch ốp tường',
+                    tileId: 'DRV-WL3060W',
+                    areaM2: 15
+                });
+            }
+            if (hasAccent) {
+                newSlots.push({
+                    id: 'slot-' + Date.now() + '-3',
+                    role: 'Gạch điểm nhấn / Trang trí',
+                    tileId: null,
+                    areaM2: 6
+                });
+            }
+
+            if (newSlots.length === 0) {
+                newSlots.push({
+                    id: 'slot-' + Date.now() + '-0',
+                    role: 'Gạch lát nền',
+                    tileId: null,
+                    areaM2: 15
+                });
+            }
+
+            spacesState.push({
+                id: 'space-' + Date.now(),
+                name: spaceName,
+                badge: spaceType,
+                slots: newSlots
+            });
+
+            closeAddSpaceModal();
+            renderBuilderTable();
+        }
+
+        // ==========================================
+        // 8. MODAL XUẤT BÁO GIÁ TỔNG HỢP
+        // ==========================================
+        function exportQuoteModal() {
+            const body = document.getElementById('quote-modal-body');
+            let grandTotal = 0;
+            let totalArea = 0;
+
+            let html = `
+                <div class="text-xs text-slate-500 flex justify-between border-b border-slate-200 pb-2">
+                    <span>Tỉ lệ hao hụt áp dụng: <strong>${wastagePercent}%</strong></span>
+                    <span>Ngày lập: ${new Date().toLocaleDateString('vi-VN')}</span>
+                </div>
+                <div class="space-y-3">
+            `;
+
+            spacesState.forEach((space, idx) => {
+                html += `
+                    <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+                        <div class="font-bold text-slate-800 text-sm mb-2">${idx + 1}. ${space.name}</div>
+                        <div class="space-y-1.5">
+                `;
+                space.slots.forEach(slot => {
+                    const tile = TILE_CATALOG.find(t => t.id === slot.tileId);
+                    if (tile) {
+                        const m = calculateSlotMetrics(tile, slot.areaM2, wastagePercent);
+                        grandTotal += m.totalCost;
+                        totalArea += m.actualAreaM2;
+                        html += `
+                            <div class="flex justify-between items-center text-xs">
+                                <div>
+                                    <span class="font-semibold text-teal-700">[${slot.role}]</span> 
+                                    <span class="font-medium text-slate-800">${tile.name} (${tile.size})</span>
+                                    <span class="text-slate-500"> · ${m.boxes} thùng (${m.actualAreaM2}m²)</span>
+                                </div>
+                                <span class="font-bold text-slate-800">${formatVND(m.totalCost)}</span>
+                            </div>
+                        `;
+                    } else {
+                        html += `
+                            <div class="flex justify-between items-center text-xs text-slate-400 italic">
+                                <span>[${slot.role}] Chưa chọn mẫu gạch (${slot.areaM2}m² dự kiến)</span>
+                                <span>0đ</span>
+                            </div>
+                        `;
+                    }
+                });
+                html += `</div></div>`;
+            });
+
+            html += `
+                </div>
+                <div class="p-4 rounded-lg bg-[#0f2937] text-white flex items-center justify-between">
+                    <div>
+                        <div class="text-xs text-slate-300">Tổng diện tích gạch thực xuất: <strong>${totalArea.toFixed(2)} m²</strong></div>
+                        <div class="text-sm font-bold mt-0.5">TỔNG CỘNG TIỀN GẠCH:</div>
+                    </div>
+                    <div class="text-xl font-extrabold text-teal-400">${formatVND(grandTotal)}</div>
+                </div>
+            `;
+
+            body.innerHTML = html;
+            const modal = document.getElementById('quote-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeQuoteModal() {
+            const modal = document.getElementById('quote-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function copyQuoteText() {
+            let lines = [`=== BẢNG CẤU HÌNH GẠCH THEO KHÔNG GIAN (Hao hụt ${wastagePercent}%) ===`];
+            let grand = 0;
+            spacesState.forEach((space, i) => {
+                lines.push(`\n${i + 1}. ${space.name.toUpperCase()}:`);
+                space.slots.forEach(slot => {
+                    const tile = TILE_CATALOG.find(t => t.id === slot.tileId);
+                    if (tile) {
+                        const m = calculateSlotMetrics(tile, slot.areaM2, wastagePercent);
+                        grand += m.totalCost;
+                        lines.push(`   - ${slot.role}: ${tile.code} - ${tile.name} (${tile.size}) | ${m.boxes} thùng (${m.actualAreaM2}m²) = ${formatVND(m.totalCost)}`);
+                    }
+                });
+            });
+            lines.push(`\nTỔNG TẠM TÍNH: ${formatVND(grand)}`);
+
+            const tempInput = document.createElement('textarea');
+            tempInput.value = lines.join('\n');
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            const status = document.getElementById('copy-status-msg');
+            status.innerHTML = '<span class="text-teal-600 font-semibold"><i class="fa-solid fa-check mr-1"></i>Đã sao chép nội dung báo giá vào bộ nhớ tạm!</span>';
+            setTimeout(() => {
+                status.innerText = 'Bạn có thể sao chép báo giá để gửi qua Zalo/Email';
+            }, 3000);
+        }
+
+        // Khởi chạy ứng dụng khi tải trang
+        window.onload = function() {
+            spacesState = getInitialState();
+            renderBuilderTable();
+        };
+    </script>
+</body>
+</html>

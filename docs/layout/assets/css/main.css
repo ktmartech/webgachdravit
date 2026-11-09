@@ -580,6 +580,14 @@
     font-size: var(--fs-xs);
     position: relative;
     z-index: var(--z-header);
+    width: 100%;
+    overflow: hidden;
+  }
+
+  @media (max-width: 1023.98px) {
+    .drv-proto-bar {
+      display: none;
+    }
   }
 
   .drv-proto-bar__inner {
@@ -588,7 +596,9 @@
     gap: var(--s-2);
     padding-block: 6px;
     overflow-x: auto;
+    width: 100%;
     scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
   }
 
   .drv-proto-bar__inner::-webkit-scrollbar {

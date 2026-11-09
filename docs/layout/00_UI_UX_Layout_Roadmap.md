@@ -198,11 +198,20 @@ docs/layout/
 ### STEP 5.1 (OPTION 4.1): Trang Danh sách Báo giá Tổng & Dự toán Công trình (BOQ) — `04.1-quote-cart.html`
 
 - **Mục tiêu:** Phục vụ khách hàng mua sỉ, nhà thầu, KTS hoặc chủ nhà xây trọn gói cần lập **Bảng báo giá tổng hợp (BOQ)** giữ nguyên đầy đủ thông số kỹ thuật + đơn giá niêm yết (`đ/m²` & `đ/viên`), hỗ trợ tải danh sách PDF chuẩn A4 / Excel (`.csv`) và kết nối trực tiếp nhân viên tư vấn dự án.
-- **Hạng mục UI/UX hoàn thiện:**
-  1. **Header Phiếu Báo Giá (`#BG-2026-1106`)**: Cho phép nhập tên công trình/chủ đầu tư để in trực tiếp lên tiêu đề file PDF; thanh chuyển nhanh giữa `Option 4.0 (Giỏ đặt lẻ)` và `Option 4.1 (Danh sách báo giá tổng)`.
-  2. **Thanh Thêm nhanh mã SKU (`Quick SKU Add`)** + **Bảng kê BOQ giữ nguyên thông số kỹ thuật** (kích thước mm, độ hút nước `E ≤ 0,5%`, chống trượt `R9/R10`, lô `Shade V1/V2`, chọn *Hạng mục/Vị trí ốp lát* cho từng dòng).
-  3. **Thanh Bậc Chiết Khấu Sản Lượng Tự Động**: Tự động tính mức chiết khấu công trình (`0%` / `-5%` từ `30 m²` / `-8%` trên `100 m²`) khi tăng/giảm số lượng.
-  4. **Cột phải Sticky (Tải báo giá & Liên hệ tư vấn)**: Cụm nút **`[TẢI BẢNG BÁO GIÁ PDF (A4)]`** (kèm bản in `@media print` chuẩn A4), **`[Tải file Excel (.CSV)]`**, **`[Chép gửi Zalo]`** và **Khối Liên hệ Chuyên viên Tư vấn Dự án B2B** (Chat Zalo / Gọi trực tiếp / Form để lại SĐT nhận báo giá chiết khấu chính thức).
+- **Hạng mục UI/UX hoàn thiện (bản 2026-11-09 — Kiến trúc Room Cards & Đa loại gạch mỗi phòng / Multi-Tile per Room):**
+  1. **Header phiếu (`#BG-2026-1109`)**: Mã phiếu, ngày lập, hiệu lực 7 ngày, tên công trình/chủ nhà in lên PDF; tùy chọn hao hụt cắt gạch (0% / 5% / 10%); nút `Tải PDF (A4)` / `Xuất Excel (.CSV)`.
+  2. **Kiến trúc Room Card độc lập (Multi-Tile per Room — Mô hình Build PC Online cho Gạch)**:
+     - 4 Không gian mặc định cố định: *Phòng khách*, *Phòng ngủ Master*, *Nhà tắm / WC*, *Phòng bếp*.
+     - **Một phòng nhiều loại gạch**: Mỗi phòng là 1 Card chứa danh sách các vị trí thi công (*Lát nền chính*, *Ốp tường chính*, *Ốp vách Tivi*, *Lát ban công / sân phơi*, *Viền / Trang trí*...).
+     - Nút `[+ Thêm loại gạch]` ngay trên đầu mỗi phòng để thêm slot mới linh hoạt.
+     - Từng vị trí hỗ trợ: Dropdown chọn vai trò, thumbnail mẫu gạch, mã SKU, tên, kích thước, màu sắc swatch, đơn giá (đ/m² & đ/viên), ô số lượng m² tích hợp suffix m² tự động quy đổi số thùng/viên, nút `[Đổi mẫu khác]`, `[Gỡ gạch]` và `[Xóa vị trí]`.
+     - Vị trí trống: Hiển thị nút `[+ Chọn mẫu gạch]` nổi bật mở Modal Picker.
+  3. **Modal Picker (`#drv-tile-picker-modal`)**: Modal chọn gạch với ô tìm kiếm SKU/tên tức thì, chip lọc nhanh theo kích thước (Tất cả, 80×80, 60×120, 60×60, 15×90, 30×60, 30×90), lưới card sản phẩm kèm nút `[Chọn mẫu này]`, tự động nạp vào vị trí đang mở và focus ô m².
+  4. **Thanh thêm không gian tùy chỉnh (`.drv-add-room-card`)**: Hàng chip preset nhanh (`+ Phòng ngủ 2`, `+ Ban công`, `+ Sân vườn`, `+ Cầu thang`, `+ Sảnh`, `+ Phòng thờ`, `+ Mặt tiền`) + Form tự nhập tên phòng bất kỳ. Phòng tùy chỉnh có nút xóa cả phòng.
+  5. **Card Vật tư phụ thi công đồng bộ (`.drv-room-card--accessories`)**: Keo dán gạch C2, Ke cân bằng ron 1,5mm với đơn giá và ô nhập số lượng tự động tính tổng tiền.
+  6. **Card Tổng hợp phẳng & Bậc chiết khấu sản lượng (`.drv-totals-card`)**: Tự động tính tổng diện tích (m²), tổng số thùng, tổng khối lượng (kg), xe tải kiến nghị, tạm tính niêm yết, chiết khấu theo bậc (0% < 30m² / -5% 30–100m² / -8% > 100m²) với thanh tiến trình 1 dòng phẳng gọn gàng.
+  7. **CTA Báo giá sỉ `[LIÊN HỆ BÁO GIÁ SỈ (ZALO)]`** → Mở `<dialog>` form (`#drv-qs-lead`): tự động tóm tắt danh sách toàn bộ các phòng và gạch đã chọn, trường liên hệ (Họ tên, SĐT Zalo, Tỉnh/thành, Loại đối tác, Ghi chú công trình). Kèm tính năng Chép báo giá gửi Zalo và bản in PDF chuẩn A4 (`@media print`).
+  8. **Clean, Flat & Responsive Perfect**: Chuẩn phẳng tối giản, triệt tiêu mọi dải text demo/thừa, responsive mượt mà từ màn hình Mobile 375px/390px đến Desktop 1440px. Logic: `assets/js/quote-sheet.js`, CSS: `assets/css/pages.css`.
 
 ---
 
