@@ -21,3 +21,6 @@ node_modules/
 # Agent skills old & temp
 .agents/skills-old/
 scratch/
+.claude/
+.playwright-mcp/
+

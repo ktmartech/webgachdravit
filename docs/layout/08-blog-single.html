@@ -34,7 +34,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/bold/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/style.css">
-  <link rel="stylesheet" href="assets/css/main.css?v=20261109a">
+  <link rel="stylesheet" href="assets/css/main.css?v=20261111a">
   <link rel="stylesheet" href="assets/css/pages.css?v=20261109a">
 
   <!-- Schema.org JSON-LD (Rank Math Graph Specification: Organization, BreadcrumbList, Article, HowTo, FAQPage) -->
@@ -264,12 +264,12 @@
                     <i class="ph ph-user drv-icon--xs" aria-hidden="true"></i>
                     <a href="#author-credentials">KS. Trịnh Hoài Nam</a>
                   </span>
-                  <span class="drv-meta-sep" aria-hidden="true">•</span>
+                  <span class="drv-meta-sep" aria-hidden="true"></span>
                   <span class="drv-article-meta-item">
                     <i class="ph ph-clock drv-icon--xs" aria-hidden="true"></i>
                     <span>8 phút đọc</span>
                   </span>
-                  <span class="drv-meta-sep" aria-hidden="true">•</span>
+                  <span class="drv-meta-sep" aria-hidden="true"></span>
                   <span class="drv-article-meta-item">
                     <i class="ph ph-calendar-blank drv-icon--xs" aria-hidden="true"></i>
                     <time datetime="2026-11-09" itemprop="dateModified">09/11/2026</time>
@@ -671,111 +671,101 @@
 
                 <div class="drv-product-embed-box__grid" id="drv-product-carousel-track">
                   <!-- Card 1 -->
-                  <article class="drv-card" data-product-card>
+                  <article class="drv-card drv-card--quote" data-product-card>
                     <div class="drv-card__media">
-                      <div class="drv-card__badges">
-                        <span class="drv-badge drv-badge--showroom">Sẵn 520 m²</span>
-                        <span class="drv-badge drv-badge--neutral">R10</span>
-                      </div>
-                      <img class="drv-card__img drv-card__img--primary" src="assets/img/tile-terrazzo-ivory.svg" width="300" height="300" loading="lazy" decoding="async" alt="Gạch Lát Nền Terrazzo Kem Hạt Nhỏ 80x80 Matt">
-                      <img class="drv-card__img drv-card__img--hover" src="assets/img/room-living-calacatta.svg" width="300" height="300" loading="lazy" decoding="async" alt="Phối cảnh phòng khách gạch Terrazzo Kem 80x80">
-                      <div class="drv-card__floats">
-                        <button type="button" class="drv-card__float-btn" data-drv-action="blog-add-quote" data-sku="DRV-TRZ80" data-name="Terrazzo Kem Hạt Nhỏ 80x80" data-price="385.000đ/m²" aria-label="Thêm vào Báo giá">
-                          <i class="ph ph-shopping-cart-simple" aria-hidden="true"></i>
-                        </button>
-                      </div>
-                    </div>
-                    <div class="drv-card__meta">
-                      <div class="drv-card__tags">
-                        <span class="drv-card__tag">80x80</span>
-                        <span class="drv-card__tag">Matt R10</span>
-                      </div>
-                      <span class="drv-card__sku">DRV-TRZ80</span>
+                      <button type="button" class="drv-card__wish" data-drv-action="wish-toggle" data-drv-sku="DRV-TRZ80" aria-pressed="false" aria-label="Lưu mẫu DRV-TRZ80">
+                        <i class="ph ph-heart" aria-hidden="true"></i>
+                      </button>
+                      <img class="drv-card__img drv-card__img--primary" src="assets/img/tile-terrazzo-ivory.svg" width="400" height="400" loading="lazy" decoding="async" alt="Gạch Lát Nền Terrazzo Kem Hạt Nhỏ 80x80 Matt">
+                      <img class="drv-card__img drv-card__img--hover" src="assets/img/room-living-calacatta.svg" width="400" height="400" loading="lazy" decoding="async" alt="Phối cảnh phòng khách gạch Terrazzo Kem 80x80">
                     </div>
                     <div class="drv-card__body">
+                      <div class="drv-card__head">
+                        <div class="drv-card__tags">
+                          <span class="drv-card__tag">80×80</span>
+                          <span class="drv-card__tag">Matt R10</span>
+                        </div>
+                        <span class="drv-card__sku">DRV-TRZ80</span>
+                      </div>
                       <h4 class="drv-card__title">
                         <a class="drv-card__link" href="03-product-single.html">Gạch Lát Nền Terrazzo Kem Hạt Nhỏ 80x80 Matt Nhám R10</a>
                       </h4>
+                      <p class="drv-card__avail">Sẵn <strong>520 m²</strong> tại kho</p>
                       <div class="drv-card__footer">
                         <div class="drv-card__prices">
                           <div class="drv-card__price-main">
                             <span class="drv-card__price-m2">385.000đ/m²</span>
                           </div>
-                          <div class="drv-card__price-piece">≈ 246.400đ/viên</div>
+                          <div class="drv-card__price-piece">≈ 246.400đ/viên · 271 thùng</div>
                         </div>
-                        <button type="button" class="drv-card__action" data-drv-action="blog-add-quote" data-sku="DRV-TRZ80" data-name="Terrazzo Kem Hạt Nhỏ 80x80" data-price="385.000đ/m²" aria-label="Thêm DRV-TRZ80 vào Báo giá">
-                          <i class="ph ph-shopping-cart-simple drv-icon" aria-hidden="true"></i>
+                        <button type="button" class="drv-btn drv-btn--sm drv-card__buy" data-drv-action="add-to-cart" data-drv-sku="DRV-TRZ80" data-drv-qty="1 thùng" aria-label="Thêm DRV-TRZ80 vào giỏ hàng">
+                          <i class="ph-bold ph-shopping-cart-simple drv-icon--xs" aria-hidden="true"></i>
+                          <span>Thêm giỏ</span>
                         </button>
                       </div>
                     </div>
                   </article>
 
                   <!-- Card 2 -->
-                  <article class="drv-card" data-product-card>
+                  <article class="drv-card drv-card--quote" data-product-card>
                     <div class="drv-card__media">
-                      <div class="drv-card__badges">
-                        <span class="drv-badge drv-badge--showroom">Sẵn 380 m²</span>
-                        <span class="drv-badge drv-badge--neutral">R10</span>
-                      </div>
-                      <img class="drv-card__img drv-card__img--primary" src="assets/img/tile-structured-outdoor.svg" width="300" height="300" loading="lazy" decoding="async" alt="Gạch Lát Nền Terrazzo Xám Khói 80x80 Matt">
-                      <img class="drv-card__img drv-card__img--hover" src="assets/img/room-bathroom-terrazzo.svg" width="300" height="300" loading="lazy" decoding="async" alt="Phối cảnh phòng tắm gạch Terrazzo Xám Khói 80x80">
-                      <div class="drv-card__floats">
-                        <button type="button" class="drv-card__float-btn" data-drv-action="blog-add-quote" data-sku="DRV-TRZ80G" data-name="Terrazzo Xám Khói 80x80" data-price="395.000đ/m²" aria-label="Thêm vào Báo giá">
-                          <i class="ph ph-shopping-cart-simple" aria-hidden="true"></i>
-                        </button>
-                      </div>
-                    </div>
-                    <div class="drv-card__meta">
-                      <div class="drv-card__tags">
-                        <span class="drv-card__tag">80x80</span>
-                        <span class="drv-card__tag">Matt R10</span>
-                      </div>
-                      <span class="drv-card__sku">DRV-TRZ80G</span>
+                      <button type="button" class="drv-card__wish" data-drv-action="wish-toggle" data-drv-sku="DRV-TRZ80G" aria-pressed="false" aria-label="Lưu mẫu DRV-TRZ80G">
+                        <i class="ph ph-heart" aria-hidden="true"></i>
+                      </button>
+                      <img class="drv-card__img drv-card__img--primary" src="assets/img/tile-structured-outdoor.svg" width="400" height="400" loading="lazy" decoding="async" alt="Gạch Lát Nền Terrazzo Xám Khói 80x80 Matt">
+                      <img class="drv-card__img drv-card__img--hover" src="assets/img/room-bathroom-terrazzo.svg" width="400" height="400" loading="lazy" decoding="async" alt="Phối cảnh phòng tắm gạch Terrazzo Xám Khói 80x80">
                     </div>
                     <div class="drv-card__body">
+                      <div class="drv-card__head">
+                        <div class="drv-card__tags">
+                          <span class="drv-card__tag">80×80</span>
+                          <span class="drv-card__tag">Matt R10</span>
+                        </div>
+                        <span class="drv-card__sku">DRV-TRZ80G</span>
+                      </div>
                       <h4 class="drv-card__title">
                         <a class="drv-card__link" href="03-product-single.html">Gạch Lát Nền Terrazzo Xám Khói Xi Măng 80x80 Matt Nhám R10</a>
                       </h4>
+                      <p class="drv-card__avail">Sẵn <strong>380 m²</strong> tại kho</p>
                       <div class="drv-card__footer">
                         <div class="drv-card__prices">
                           <div class="drv-card__price-main">
                             <span class="drv-card__price-m2">395.000đ/m²</span>
                           </div>
-                          <div class="drv-card__price-piece">≈ 252.800đ/viên</div>
+                          <div class="drv-card__price-piece">≈ 252.800đ/viên · 198 thùng</div>
                         </div>
-                        <button type="button" class="drv-card__action" data-drv-action="blog-add-quote" data-sku="DRV-TRZ80G" data-name="Terrazzo Xám Khói 80x80" data-price="395.000đ/m²" aria-label="Thêm DRV-TRZ80G vào Báo giá">
-                          <i class="ph ph-shopping-cart-simple drv-icon" aria-hidden="true"></i>
+                        <button type="button" class="drv-btn drv-btn--sm drv-card__buy" data-drv-action="add-to-cart" data-drv-sku="DRV-TRZ80G" data-drv-qty="1 thùng" aria-label="Thêm DRV-TRZ80G vào giỏ hàng">
+                          <i class="ph-bold ph-shopping-cart-simple drv-icon--xs" aria-hidden="true"></i>
+                          <span>Thêm giỏ</span>
                         </button>
                       </div>
                     </div>
                   </article>
 
                   <!-- Card 3 -->
-                  <article class="drv-card" data-product-card>
+                  <article class="drv-card drv-card--quote" data-product-card>
                     <div class="drv-card__media">
                       <div class="drv-card__badges">
-                        <span class="drv-badge drv-badge--hot">Bán chạy</span>
-                        <span class="drv-badge drv-badge--neutral">R9</span>
+                        <span class="drv-card__chip drv-card__chip--label">Bán chạy</span>
                       </div>
-                      <img class="drv-card__img drv-card__img--primary" src="assets/img/tile-marble-calacatta.svg" width="300" height="300" loading="lazy" decoding="async" alt="Gạch Terrazzo Trắng Vân Hạt Mịn 80x80">
-                      <img class="drv-card__img drv-card__img--hover" src="assets/img/room-living-calacatta.svg" width="300" height="300" loading="lazy" decoding="async" alt="Phối cảnh phòng khách gạch Terrazzo Trắng 80x80">
-                      <div class="drv-card__floats">
-                        <button type="button" class="drv-card__float-btn" data-drv-action="blog-add-quote" data-sku="DRV-TRZ80W" data-name="Terrazzo Trắng Vân Hạt Mịn 80x80" data-price="410.000đ/m²" aria-label="Thêm vào Báo giá">
-                          <i class="ph ph-shopping-cart-simple" aria-hidden="true"></i>
-                        </button>
-                      </div>
-                    </div>
-                    <div class="drv-card__meta">
-                      <div class="drv-card__tags">
-                        <span class="drv-card__tag">80x80</span>
-                        <span class="drv-card__tag">Matt R9</span>
-                      </div>
-                      <span class="drv-card__sku">DRV-TRZ80W</span>
+                      <button type="button" class="drv-card__wish" data-drv-action="wish-toggle" data-drv-sku="DRV-TRZ80W" aria-pressed="false" aria-label="Lưu mẫu DRV-TRZ80W">
+                        <i class="ph ph-heart" aria-hidden="true"></i>
+                      </button>
+                      <img class="drv-card__img drv-card__img--primary" src="assets/img/tile-marble-calacatta.svg" width="400" height="400" loading="lazy" decoding="async" alt="Gạch Terrazzo Trắng Vân Hạt Mịn 80x80">
+                      <img class="drv-card__img drv-card__img--hover" src="assets/img/room-living-calacatta.svg" width="400" height="400" loading="lazy" decoding="async" alt="Phối cảnh phòng khách gạch Terrazzo Trắng 80x80">
                     </div>
                     <div class="drv-card__body">
+                      <div class="drv-card__head">
+                        <div class="drv-card__tags">
+                          <span class="drv-card__tag">80×80</span>
+                          <span class="drv-card__tag">Matt R9</span>
+                        </div>
+                        <span class="drv-card__sku">DRV-TRZ80W</span>
+                      </div>
                       <h4 class="drv-card__title">
                         <a class="drv-card__link" href="03-product-single.html">Gạch Terrazzo Trắng Vân Hạt Mịn 80x80 Chống Trơn R9</a>
                       </h4>
+                      <p class="drv-card__avail">Sẵn mẫu thật tại <strong>Kệ B-04</strong></p>
                       <div class="drv-card__footer">
                         <div class="drv-card__prices">
                           <div class="drv-card__price-main">
@@ -783,39 +773,38 @@
                           </div>
                           <div class="drv-card__price-piece">≈ 262.400đ/viên</div>
                         </div>
-                        <button type="button" class="drv-card__action" data-drv-action="blog-add-quote" data-sku="DRV-TRZ80W" data-name="Terrazzo Trắng Vân Hạt Mịn 80x80" data-price="410.000đ/m²" aria-label="Thêm DRV-TRZ80W vào Báo giá">
-                          <i class="ph ph-shopping-cart-simple drv-icon" aria-hidden="true"></i>
+                        <button type="button" class="drv-btn drv-btn--sm drv-card__buy" data-drv-action="add-to-cart" data-drv-sku="DRV-TRZ80W" data-drv-qty="1 thùng" aria-label="Thêm DRV-TRZ80W vào giỏ hàng">
+                          <i class="ph-bold ph-shopping-cart-simple drv-icon--xs" aria-hidden="true"></i>
+                          <span>Thêm giỏ</span>
                         </button>
                       </div>
                     </div>
                   </article>
 
                   <!-- Card 4 -->
-                  <article class="drv-card" data-product-card>
+                  <article class="drv-card drv-card--quote" data-product-card>
                     <div class="drv-card__media">
                       <div class="drv-card__badges">
-                        <span class="drv-badge drv-badge--showroom">Mới 2026</span>
-                        <span class="drv-badge drv-badge--neutral">R10</span>
+                        <span class="drv-card__chip drv-card__chip--label">Mới 2026</span>
                       </div>
-                      <img class="drv-card__img drv-card__img--primary" src="assets/img/tile-cement-dark.svg" width="300" height="300" loading="lazy" decoding="async" alt="Gạch Terrazzo Đen Thạch Anh Hạt Lớn 80x80">
-                      <img class="drv-card__img drv-card__img--hover" src="assets/img/room-bathroom-terrazzo.svg" width="300" height="300" loading="lazy" decoding="async" alt="Phối cảnh phòng tắm gạch Terrazzo Đen 80x80">
-                      <div class="drv-card__floats">
-                        <button type="button" class="drv-card__float-btn" data-drv-action="blog-add-quote" data-sku="DRV-TRZ80B" data-name="Terrazzo Đen Thạch Anh 80x80" data-price="425.000đ/m²" aria-label="Thêm vào Báo giá">
-                          <i class="ph ph-shopping-cart-simple" aria-hidden="true"></i>
-                        </button>
-                      </div>
-                    </div>
-                    <div class="drv-card__meta">
-                      <div class="drv-card__tags">
-                        <span class="drv-card__tag">80x80</span>
-                        <span class="drv-card__tag">Matt R10</span>
-                      </div>
-                      <span class="drv-card__sku">DRV-TRZ80B</span>
+                      <button type="button" class="drv-card__wish" data-drv-action="wish-toggle" data-drv-sku="DRV-TRZ80B" aria-pressed="false" aria-label="Lưu mẫu DRV-TRZ80B">
+                        <i class="ph ph-heart" aria-hidden="true"></i>
+                      </button>
+                      <img class="drv-card__img drv-card__img--primary" src="assets/img/tile-cement-dark.svg" width="400" height="400" loading="lazy" decoding="async" alt="Gạch Terrazzo Đen Thạch Anh Hạt Lớn 80x80">
+                      <img class="drv-card__img drv-card__img--hover" src="assets/img/room-bathroom-terrazzo.svg" width="400" height="400" loading="lazy" decoding="async" alt="Phối cảnh phòng tắm gạch Terrazzo Đen 80x80">
                     </div>
                     <div class="drv-card__body">
+                      <div class="drv-card__head">
+                        <div class="drv-card__tags">
+                          <span class="drv-card__tag">80×80</span>
+                          <span class="drv-card__tag">Matt R10</span>
+                        </div>
+                        <span class="drv-card__sku">DRV-TRZ80B</span>
+                      </div>
                       <h4 class="drv-card__title">
                         <a class="drv-card__link" href="03-product-single.html">Gạch Terrazzo Đen Thạch Anh Hạt Lớn 80x80 Nhám R10</a>
                       </h4>
+                      <p class="drv-card__avail">Sẵn mẫu thật tại <strong>Kệ B-04</strong></p>
                       <div class="drv-card__footer">
                         <div class="drv-card__prices">
                           <div class="drv-card__price-main">
@@ -823,8 +812,9 @@
                           </div>
                           <div class="drv-card__price-piece">≈ 272.000đ/viên</div>
                         </div>
-                        <button type="button" class="drv-card__action" data-drv-action="blog-add-quote" data-sku="DRV-TRZ80B" data-name="Terrazzo Đen Thạch Anh 80x80" data-price="425.000đ/m²" aria-label="Thêm DRV-TRZ80B vào Báo giá">
-                          <i class="ph ph-shopping-cart-simple drv-icon" aria-hidden="true"></i>
+                        <button type="button" class="drv-btn drv-btn--sm drv-card__buy" data-drv-action="add-to-cart" data-drv-sku="DRV-TRZ80B" data-drv-qty="1 thùng" aria-label="Thêm DRV-TRZ80B vào giỏ hàng">
+                          <i class="ph-bold ph-shopping-cart-simple drv-icon--xs" aria-hidden="true"></i>
+                          <span>Thêm giỏ</span>
                         </button>
                       </div>
                     </div>
@@ -1013,6 +1003,50 @@
                 </div>
               </aside>
 
+              <!-- WP BLOCK: IN-ARTICLE AI CONSULT CARD (MỤC 4 CALCULATION & ADVICE) -->
+              <div class="drv-blog-ai-card" role="region" aria-label="Trợ lý AI tư vấn chọn gạch và tính khối lượng">
+                <div class="drv-blog-ai-card__head">
+                  <div class="drv-blog-ai-card__meta">
+                    <span class="drv-blog-ai-card__icon" aria-hidden="true">
+                      <i class="ph-fill ph-robot"></i>
+                    </span>
+                    <div>
+                      <h3 class="drv-blog-ai-card__title">Bạn cần tính khối lượng chính xác cho sàn nhà mình?</h3>
+                      <p class="drv-blog-ai-card__desc">Trợ lý AI DRAVIT hỗ trợ tính số thùng gạch 80×80 (đã cộng 5% hao hụt), định mức keo C2, keo ron 1,5mm và xuất dự toán chỉ trong 5 giây.</p>
+                    </div>
+                  </div>
+                  <span class="drv-badge drv-badge--outline" style="font-size: 12px; flex-shrink: 0;">
+                    <span class="drv-ai-cta__dot" aria-hidden="true"></span>Trực tuyến 24/7
+                  </span>
+                </div>
+
+                <div class="drv-blog-ai-card__prompts" role="group" aria-label="Câu hỏi gợi ý nhanh">
+                  <button type="button" class="drv-chip drv-chip--square" data-drv-action="ai-finder-open" data-drv-prompt="Tôi có phòng khách 35m2 cần lát gạch Terrazzo 80x80. Hãy tính giúp tôi cần bao nhiêu thùng gạch (cộng 5% hao hụt), bao nhiêu bao keo dán C2 (25kg) và bao nhiêu kg keo chà ron?">
+                    <i class="ph ph-chat-circle-text drv-icon--xs" aria-hidden="true"></i>
+                    <span>35m² phòng khách cần mấy thùng 80x80 &amp; bao keo C2?</span>
+                  </button>
+                  <button type="button" class="drv-chip drv-chip--square" data-drv-action="ai-finder-open" data-drv-prompt="Phòng tắm 8m2 có nên lát gạch Terrazzo 80x80 không? Nên chọn bề mặt Matt R10 hay Nhám sần để không trơn trượt khi ướt nước?">
+                    <i class="ph ph-chat-circle-text drv-icon--xs" aria-hidden="true"></i>
+                    <span>Nhà tắm 8m² lát Terrazzo 80x80 chọn bề mặt nào chống trơn?</span>
+                  </button>
+                  <button type="button" class="drv-chip drv-chip--square" data-drv-action="ai-finder-open" data-drv-prompt="Tính giúp tôi dự toán trọn gói 50m2 gạch Terrazzo 80x80 mã DRV-TRZ80 kèm keo dán gạch C2 và keo ron hoàn thiện.">
+                    <i class="ph ph-chat-circle-text drv-icon--xs" aria-hidden="true"></i>
+                    <span>Dự toán 50m² gạch + keo dán + keo ron hết bao nhiêu?</span>
+                  </button>
+                </div>
+
+                <form class="drv-blog-ai-card__form" data-blog-ai-form>
+                  <div class="drv-blog-ai-card__field">
+                    <i class="ph-bold ph-sparkle drv-blog-ai-card__field-icon" aria-hidden="true"></i>
+                    <input type="text" class="drv-input drv-blog-ai-card__input" placeholder="Nhập diện tích hoặc câu hỏi (VD: Chung cư 60m2 lát gạch gì đẹp và tiết kiệm?)..." aria-label="Nhập câu hỏi cho Trợ lý AI">
+                    <button type="submit" class="drv-btn drv-btn--moss drv-btn--sm">
+                      <i class="ph-fill ph-paper-plane-tilt drv-icon--xs" aria-hidden="true"></i>
+                      <span>Hỏi Trợ lý AI</span>
+                    </button>
+                  </div>
+                </form>
+              </div>
+
               <!-- ============================================================
                    MỤC 5: QUY TRÌNH THI CÔNG 4 BƯỚC CHUẨN & CẢNH BÁO KỸ THUẬT
                    ============================================================ -->
@@ -1037,7 +1071,7 @@
                 <div class="drv-howto-step" role="listitem">
                   <div class="drv-howto-step__top">
                     <span class="drv-howto-step__num">01</span>
-                    <span class="drv-badge drv-badge--outline" style="font-size: 10px;">Thước nhôm 2m · Laser</span>
+                    <span class="drv-badge drv-badge--outline" style="font-size: 12px;">Thước nhôm 2m · Laser</span>
                   </div>
                   <h3 class="drv-howto-step__title">Kiểm tra cốt nền &amp; Trải thử cùng lô Shade</h3>
                   <p class="drv-howto-step__desc">
@@ -1048,7 +1082,7 @@
                 <div class="drv-howto-step" role="listitem">
                   <div class="drv-howto-step__top">
                     <span class="drv-howto-step__num">02</span>
-                    <span class="drv-badge drv-badge--teal" style="font-size: 10px;">Keo C2 · Bay răng cưa 8mm</span>
+                    <span class="drv-badge drv-badge--teal" style="font-size: 12px;">Keo C2 · Bay răng cưa 8mm</span>
                   </div>
                   <h3 class="drv-howto-step__title">Trét keo 2 mặt (Kỹ thuật Back-buttering)</h3>
                   <p class="drv-howto-step__desc">
@@ -1059,7 +1093,7 @@
                 <div class="drv-howto-step" role="listitem">
                   <div class="drv-howto-step__top">
                     <span class="drv-howto-step__num">03</span>
-                    <span class="drv-badge drv-badge--showroom" style="font-size: 10px;">Ke cân bằng 1,5mm · Kìm siết</span>
+                    <span class="drv-badge drv-badge--showroom" style="font-size: 12px;">Ke cân bằng 1,5mm · Kìm siết</span>
                   </div>
                   <h3 class="drv-howto-step__title">Khóa phẳng mép bằng Ke cân bằng 1,5mm</h3>
                   <p class="drv-howto-step__desc">
@@ -1070,7 +1104,7 @@
                 <div class="drv-howto-step" role="listitem">
                   <div class="drv-howto-step__top">
                     <span class="drv-howto-step__num">04</span>
-                    <span class="drv-badge drv-badge--outline" style="font-size: 10px;">Keo ron Epoxy · Sau 24h</span>
+                    <span class="drv-badge drv-badge--outline" style="font-size: 12px;">Keo ron Epoxy · Sau 24h</span>
                   </div>
                   <h3 class="drv-howto-step__title">Tháo ke &amp; Bơm keo chà ron chống thấm</h3>
                   <p class="drv-howto-step__desc">
@@ -1346,80 +1380,28 @@
                 </div>
               </nav>
 
-              <!-- STICKY WIDGET B: MULTI-SIZE TILE & ADHESIVE CALCULATOR -->
-              <div class="drv-sidebar-widget" id="quick-calc" role="region" aria-label="Công cụ tính nhanh số lượng gạch và keo dán">
+              <!-- STICKY WIDGET B: CTA CHAT VỚI TRỢ LÝ AI -->
+              <div class="drv-sidebar-widget drv-ai-cta" id="quick-ai" role="region" aria-label="Chat với Trợ lý AI Dravit">
                 <div class="drv-sidebar-widget__head">
                   <span style="display: inline-flex; align-items: center; gap: 6px;">
-                    <i class="ph-fill ph-calculator drv-icon--xs u-text-moss" aria-hidden="true"></i>
-                    <span>Tính nhanh Gạch &amp; Keo C2</span>
+                    <i class="ph-fill ph-robot drv-icon--xs u-text-moss" aria-hidden="true"></i>
+                    <span>Hỏi Trợ lý AI Dravit</span>
                   </span>
-                  <span class="drv-badge drv-badge--teal" style="font-size: 10px;">Chẵn thùng nguyên</span>
+                  <span class="drv-badge drv-badge--outline" style="font-size: 12px;"><span class="drv-ai-cta__dot" aria-hidden="true"></span>Trực tuyến</span>
                 </div>
                 <div class="drv-sidebar-widget__body">
-                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-2);">
-                    <div>
-                      <label for="sb-calc-size" class="u-text-xs u-bold u-text-navy" style="display: block; margin-bottom: 4px;">
-                        Khổ gạch (cm):
-                      </label>
-                      <select id="sb-calc-size" class="drv-select drv-input--sm" style="width: 100%; font-weight: 700;">
-                        <option value="80x80" data-m2="0.64" data-box="3" data-kg="14" data-price="385000" selected>80×80 (3v/thùng)</option>
-                        <option value="60x60" data-m2="0.36" data-box="4" data-kg="8" data-price="320000">60×60 (4v/thùng)</option>
-                        <option value="60x120" data-m2="0.72" data-box="2" data-kg="17" data-price="450000">60×120 (2v/thùng)</option>
-                      </select>
-                    </div>
+                  <p class="drv-ai-cta__lead">Cho biết diện tích và không gian cần lát. Trợ lý gợi ý khổ gạch, bề mặt chống trượt và tính sẵn số thùng, keo dán.</p>
 
-                    <div>
-                      <label for="sb-calc-area" class="u-text-xs u-bold u-text-navy" style="display: block; margin-bottom: 4px;">
-                        Diện tích sàn (m²):
-                      </label>
-                      <input
-                        id="sb-calc-area"
-                        type="number"
-                        class="drv-input drv-input--sm"
-                        value="30"
-                        min="1"
-                        max="5000"
-                        step="0.5"
-                        style="width: 100%; font-weight: 700; font-variant-numeric: tabular-nums;">
-                    </div>
-                  </div>
-
-                  <div class="l-cluster l-cluster--xs" style="justify-content: space-between;">
-                    <label for="sb-calc-scrap" class="u-text-xs" style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
-                      <input id="sb-calc-scrap" type="checkbox" class="drv-checkbox" checked>
-                      <span>Cộng <strong>5% hao hụt</strong> cắt góc</span>
-                    </label>
-                    <span class="u-text-xs u-bold u-text-moss" id="sb-res-discount-badge">Đạt chiết khấu -5%</span>
-                  </div>
-
-                  <!-- Live 4-Cell Grout-Line Results -->
-                  <div class="drv-calc-mini-res" aria-live="polite">
-                    <div class="drv-calc-mini-res__item">
-                      <span class="drv-calc-mini-res__val" id="sb-res-boxes">17 thùng</span>
-                      <span class="drv-calc-mini-res__lbl" id="sb-res-pieces-lbl">51 viên (Thực giao 32,64 m²)</span>
-                    </div>
-                    <div class="drv-calc-mini-res__item">
-                      <span class="drv-calc-mini-res__val" id="sb-res-adhesive">6 bao keo C2</span>
-                      <span class="drv-calc-mini-res__lbl">Bao 25kg + 7kg keo ron</span>
-                    </div>
-                    <div class="drv-calc-mini-res__item">
-                      <span class="drv-calc-mini-res__val" id="sb-res-kg">~714 kg</span>
-                      <span class="drv-calc-mini-res__lbl">Tải trọng vận chuyển</span>
-                    </div>
-                    <div class="drv-calc-mini-res__item">
-                      <span class="drv-calc-mini-res__val u-text-moss" id="sb-res-cost">12.566.400đ</span>
-                      <span class="drv-calc-mini-res__lbl">Tạm tính gạch (385k/m²)</span>
-                    </div>
-                  </div>
+                  <ul class="drv-ai-cta__prompts" role="list">
+                    <li><button type="button" class="drv-chip drv-chip--square" data-drv-action="ai-finder-open" data-drv-prompt="Phòng khách 30m2 lát Terrazzo 80x80 cần bao nhiêu thùng và bao nhiêu keo C2?"><i class="ph ph-chat-circle-text drv-icon--xs" aria-hidden="true"></i><span>30m² lát 80x80 cần bao nhiêu thùng?</span></button></li>
+                    <li><button type="button" class="drv-chip drv-chip--square" data-drv-action="ai-finder-open" data-drv-prompt="Terrazzo 80x80 có phù hợp lát nhà tắm không, chọn bề mặt nào?"><i class="ph ph-chat-circle-text drv-icon--xs" aria-hidden="true"></i><span>Terrazzo lát nhà tắm được không?</span></button></li>
+                    <li><button type="button" class="drv-chip drv-chip--square" data-drv-action="ai-finder-open" data-drv-prompt="Cần bao nhiêu keo dán C2 và keo ron cho 30m2 gạch 80x80?"><i class="ph ph-chat-circle-text drv-icon--xs" aria-hidden="true"></i><span>Cần bao nhiêu keo dán và keo ron?</span></button></li>
+                  </ul>
 
                   <div style="display: grid; grid-template-columns: 1fr; gap: 6px;">
-                    <button
-                      type="button"
-                      class="drv-btn drv-btn--moss drv-btn--sm"
-                      id="sb-push-boq-btn"
-                      style="width: 100%; justify-content: center;">
-                      <i class="ph-bold ph-file-plus drv-icon--xs" aria-hidden="true"></i>
-                      <span>Đưa khối lượng này vào Báo giá BOQ</span>
+                    <button type="button" class="drv-btn drv-btn--moss drv-btn--sm" data-drv-action="ai-finder-open" data-drv-prompt="Tôi vừa đọc bài về gạch Terrazzo 80x80, cần tư vấn chọn gạch và tính khối lượng cho công trình." style="width: 100%; justify-content: center;">
+                      <i class="ph-fill ph-robot drv-icon--xs" aria-hidden="true"></i>
+                      <span>Chat với AI tư vấn</span>
                     </button>
                     <a href="02-catalog-collection.html?kich-thuoc=80x80" class="drv-btn drv-btn--outline drv-btn--sm" style="width: 100%; justify-content: center;">
                       <i class="ph ph-squares-four drv-icon--xs" aria-hidden="true"></i>
@@ -1447,9 +1429,9 @@
             <span class="drv-sec-head__eyebrow">Cẩm nang kỹ thuật cùng chuyên đề</span>
             <h2 id="related-articles-heading" style="font-size: 1.5rem; margin: 0; text-wrap: normal;">Bài viết liên quan cho công trình của bạn</h2>
           </div>
-          <a href="07-blog-archive.html" class="drv-btn drv-btn--outline drv-btn--sm" style="flex-shrink: 0; background-color: var(--c-white);">
+          <a href="07-blog-archive.html" class="drv-more-btn">
             <span>Xem toàn bộ Cẩm nang</span>
-            <i class="ph-bold ph-arrow-right drv-icon--xs" aria-hidden="true"></i>
+            <i class="ph-bold ph-caret-right drv-icon--xs" aria-hidden="true"></i>
           </a>
         </div>
 
@@ -1461,7 +1443,7 @@
             </a>
             <div class="drv-related-card__body">
               <div class="l-cluster l-cluster--xs">
-                <span class="drv-badge drv-badge--teal" style="font-size: 10px;">Chọn gạch theo phòng</span>
+                <span class="drv-badge drv-badge--teal" style="font-size: 12px;">Chọn gạch theo phòng</span>
                 <span class="u-text-xs u-text-muted"><i class="ph ph-clock drv-icon--xs" aria-hidden="true"></i> 6 phút đọc</span>
               </div>
               <h3 class="drv-related-card__title">
@@ -1488,7 +1470,7 @@
             </a>
             <div class="drv-related-card__body">
               <div class="l-cluster l-cluster--xs">
-                <span class="drv-badge drv-badge--showroom" style="font-size: 10px;">Định mức &amp; Báo giá</span>
+                <span class="drv-badge drv-badge--showroom" style="font-size: 12px;">Định mức &amp; Báo giá</span>
                 <span class="u-text-xs u-text-muted"><i class="ph ph-clock drv-icon--xs" aria-hidden="true"></i> 5 phút đọc</span>
               </div>
               <h3 class="drv-related-card__title">
@@ -1515,7 +1497,7 @@
             </a>
             <div class="drv-related-card__body">
               <div class="l-cluster l-cluster--xs">
-                <span class="drv-badge drv-badge--outline" style="font-size: 10px;">Kỹ thuật ốp lát</span>
+                <span class="drv-badge drv-badge--outline" style="font-size: 12px;">Kỹ thuật ốp lát</span>
                 <span class="u-text-xs u-text-muted"><i class="ph ph-clock drv-icon--xs" aria-hidden="true"></i> 7 phút đọc</span>
               </div>
               <h3 class="drv-related-card__title">
@@ -1594,10 +1576,10 @@
       <i class="ph-bold ph-list-bullets drv-icon--xs" aria-hidden="true"></i>
       <span>Mục lục (<span data-reading-progress-mob>0%</span>)</span>
     </button>
-    <a href="#quick-calc" class="drv-btn drv-btn--moss drv-btn--sm" style="flex: 1; justify-content: center;">
-      <i class="ph-bold ph-calculator drv-icon--xs" aria-hidden="true"></i>
-      <span>Tính số viên &amp; Keo</span>
-    </a>
+    <button type="button" class="drv-btn drv-btn--moss drv-btn--sm" data-drv-action="ai-finder-open" data-drv-prompt="Tôi vừa đọc bài về gạch Terrazzo 80x80, cần tư vấn chọn gạch và tính khối lượng cho công trình." style="flex: 1; justify-content: center;">
+      <i class="ph-fill ph-robot drv-icon--xs" aria-hidden="true"></i>
+      <span>Hỏi AI tư vấn</span>
+    </button>
   </div>
 
   <dialog id="drv-mobile-toc" class="drv-dialog-bottom" aria-labelledby="mobile-toc-title">
@@ -1628,85 +1610,13 @@
   <!-- SCRIPTS & INTERACTION LOGIC -->
   <script defer src="https://cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.min.js"></script>
   <script defer src="assets/js/core.js"></script>
-  <script defer src="assets/js/unit-calc.js"></script>
   <script defer src="assets/js/catalog-mock.js"></script>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const nf = new Intl.NumberFormat('vi-VN');
 
-      // 1. Live Multi-Size Tile & C2 Adhesive Calculator in Sticky Sidebar
-      const sizeSelect = document.getElementById('sb-calc-size');
-      const areaInput = document.getElementById('sb-calc-area');
-      const scrapCheck = document.getElementById('sb-calc-scrap');
-      const resBoxes = document.getElementById('sb-res-boxes');
-      const resPiecesLbl = document.getElementById('sb-res-pieces-lbl');
-      const resAdhesive = document.getElementById('sb-res-adhesive');
-      const resKg = document.getElementById('sb-res-kg');
-      const resCost = document.getElementById('sb-res-cost');
-      const discountBadge = document.getElementById('sb-res-discount-badge');
-      const pushBoqBtn = document.getElementById('sb-push-boq-btn');
-
-      function updateSidebarCalculator() {
-        if (!areaInput || !sizeSelect) return;
-        const opt = sizeSelect.options[sizeSelect.selectedIndex];
-        const m2PerPiece = parseFloat(opt.dataset.m2) || 0.64;
-        const piecesPerBox = parseInt(opt.dataset.box, 10) || 3;
-        const kgPerPiece = parseFloat(opt.dataset.kg) || 14;
-        const pricePerM2 = parseFloat(opt.dataset.price) || 385000;
-
-        const rawArea = Math.max(1, parseFloat(areaInput.value) || 0);
-        const scrapFactor = scrapCheck && scrapCheck.checked ? 1.05 : 1.0;
-        const neededArea = rawArea * scrapFactor;
-
-        const rawPieces = Math.ceil(neededArea / m2PerPiece);
-        const boxes = Math.ceil(rawPieces / piecesPerBox);
-        const finalPieces = boxes * piecesPerBox;
-
-        const deliveredM2 = (finalPieces * m2PerPiece).toFixed(2).replace('.', ',');
-        const deliveredKg = Math.round(finalPieces * kgPerPiece);
-        const piecePrice = Math.round(pricePerM2 * m2PerPiece);
-        const totalTileCost = finalPieces * piecePrice;
-
-        // Adhesive C2 norm: ~5kg/m2 -> 1 bag (25kg) per 5m2; Grout norm: ~0.2kg/m2
-        const adhesiveBags = Math.ceil(rawArea / 5);
-        const groutKg = Math.max(1, Math.ceil(rawArea * 0.2));
-
-        if (resBoxes) resBoxes.textContent = `${boxes} thùng`;
-        if (resPiecesLbl) resPiecesLbl.textContent = `${finalPieces} viên (Thực giao ${deliveredM2} m²)`;
-        if (resAdhesive) resAdhesive.textContent = `${adhesiveBags} bao keo C2`;
-        const adhesiveLbl = resAdhesive?.nextElementSibling;
-        if (adhesiveLbl) adhesiveLbl.textContent = `Bao 25kg + ${groutKg}kg keo ron`;
-        if (resKg) resKg.textContent = `~${nf.format(deliveredKg)} kg`;
-        if (resCost) resCost.textContent = `${nf.format(totalTileCost)}đ`;
-
-        if (discountBadge) {
-          if (rawArea >= 100) {
-            discountBadge.textContent = 'Đạt chiết khấu -8%';
-            discountBadge.className = 'u-text-xs u-bold u-text-moss';
-          } else if (rawArea >= 30) {
-            discountBadge.textContent = 'Đạt chiết khấu -5%';
-            discountBadge.className = 'u-text-xs u-bold u-text-moss';
-          } else {
-            discountBadge.textContent = 'Giá lẻ niêm yết';
-            discountBadge.className = 'u-text-xs u-text-muted';
-          }
-        }
-      }
-
-      sizeSelect?.addEventListener('change', updateSidebarCalculator);
-      areaInput?.addEventListener('input', updateSidebarCalculator);
-      scrapCheck?.addEventListener('change', updateSidebarCalculator);
-      updateSidebarCalculator();
-
-      pushBoqBtn?.addEventListener('click', () => {
-        const boxesText = resBoxes?.textContent || '17 thùng';
-        const adhesiveText = resAdhesive?.textContent || '6 bao keo C2';
-        incrementQuoteCounter();
-        window.Dravit?.toast?.(`Đã thêm ${boxesText} gạch Terrazzo + ${adhesiveText} vào Danh sách Báo giá BOQ.`);
-      });
-
-      // 2. Quick Add to Quote BOQ from Shop the Look, Product Embed & Price Table
+      // Quick Add to Quote BOQ from Shop the Look, Product Embed & Price Table
       function incrementQuoteCounter() {
         document.querySelectorAll('[data-drv-quote-count], [data-drv-cart-count]').forEach((el) => {
           const cur = parseInt(el.textContent, 10) || 0;
@@ -1741,6 +1651,19 @@
         const modeText = typeSelect?.value === 'boq' ? 'Bảng dự toán BOQ chiết khấu' : '02 mẫu gạch Terrazzo thực tế (10×10cm)';
         window.Dravit?.toast?.(`Đã tiếp nhận SĐT ${phone}! Kỹ sư DRAVIT sẽ gửi ${modeText} qua Zalo trong 15 phút.`);
         sampleForm.reset();
+      });
+
+      // 3.1 In-Article AI Chat Form
+      const blogAiForm = document.querySelector('[data-blog-ai-form]');
+      blogAiForm?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const input = blogAiForm.querySelector('input');
+        const q = input?.value.trim();
+        if (q) {
+          window.Dravit?.aiFinder?.ask ? window.Dravit.aiFinder.ask(q) : window.Dravit?.aiFinder?.openWidget?.();
+        } else {
+          window.Dravit?.aiFinder?.openWidget?.();
+        }
       });
 
       // 4. TOC Scrollspy & Reading Progress Bar (Desktop + Mobile)

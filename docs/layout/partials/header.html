@@ -4,6 +4,7 @@
     <span class="drv-proto-bar__label">DRAVIT UI Prototype</span>
     <a href="00-ui-kit.html" class="drv-proto-bar__link">00. UI Kit</a>
     <a href="01-home.html" class="drv-proto-bar__link">01. Trang chủ</a>
+    <a href="01.1-ai-finder.html" class="drv-proto-bar__link">01.1. Trợ lý AI</a>
     <a href="02-catalog-collection.html" class="drv-proto-bar__link">02. Danh mục Silo</a>
     <a href="03-product-single.html" class="drv-proto-bar__link">03. Chi tiết SP</a>
     <a href="04-cart.html" class="drv-proto-bar__link">04. Giỏ hàng</a>
@@ -71,28 +72,24 @@
 
     <!-- Right Actions -->
     <div class="drv-header__actions">
-      <a href="09-contact.html" class="drv-header__info-item">
-        <i class="ph ph-map-pin drv-icon u-text-moss" aria-hidden="true"></i>
-        <span>Showroom (8:00 - 21:00)</span>
-      </a>
       <a href="tel:0909888777" class="drv-header__info-item u-tabular">
         <i class="ph ph-phone-call drv-icon u-text-moss" aria-hidden="true"></i>
         <span>0909.888.777</span>
       </a>
-      <button type="button" class="drv-btn drv-btn--moss drv-btn--sm u-hide-mobile" data-drv-action="dialog-open" data-drv-target="#drv-quote-modal">
-        <i class="ph ph-file-text drv-icon drv-icon--sm" aria-hidden="true"></i>
-        <span>Báo giá công trình</span>
-      </button>
+      <a href="01.1-ai-finder.html" class="drv-btn drv-btn--moss drv-btn--sm u-hide-mobile" aria-label="Trợ lý AI tư vấn chọn gạch">
+        <i class="ph-fill ph-robot drv-icon drv-icon--sm" aria-hidden="true"></i>
+        <span>Trợ lý AI</span>
+      </a>
       <button type="button" class="drv-btn drv-btn--ghost drv-btn--sm drv-btn--icon drv-header__search-toggle" data-drv-action="search-toggle" aria-label="Mở tìm kiếm" aria-expanded="false" aria-controls="global-search-input">
         <i class="ph ph-magnifying-glass drv-icon drv-icon--sm" aria-hidden="true"></i>
       </button>
-      <button type="button" class="drv-btn drv-btn--outline drv-btn--sm drv-header__cart-btn" data-drv-action="dialog-open" data-drv-target="#drv-minicart-drawer" aria-label="Mở giỏ hàng">
+      <a href="04.1-quote-cart.html" class="drv-btn drv-btn--outline drv-btn--sm drv-header__cart-btn" aria-label="Mở danh sách báo giá">
         <span class="drv-header__cart-icon-wrap">
-          <i class="ph ph-shopping-bag drv-icon drv-icon--sm" aria-hidden="true"></i>
-          <span class="drv-header__cart-badge u-tabular" data-drv-cart-count>2</span>
+          <i class="ph ph-clipboard-text drv-icon drv-icon--sm" aria-hidden="true"></i>
+          <span class="drv-header__cart-badge u-tabular" data-quote-badge-count>0</span>
         </span>
-        <span class="drv-header__cart-text">Giỏ (<span data-drv-cart-count class="u-tabular">2</span>)</span>
-      </button>
+        <span class="drv-header__cart-text">DS Báo giá (<span data-quote-badge-count class="u-tabular">0</span>)</span>
+      </a>
     </div>
   </div>
 
@@ -250,6 +247,12 @@
       </ul>
 
       <ul class="drv-nav__list">
+        <li class="drv-nav__item">
+          <a href="01.1-ai-finder.html" class="drv-nav__link" style="color: var(--c-teal-700); font-weight: 700;">
+            <i class="ph-fill ph-robot drv-icon--xs" aria-hidden="true"></i>
+            <span>Trợ lý AI Tìm gạch</span>
+          </a>
+        </li>
         <li class="drv-nav__item"><a href="07-blog-archive.html" class="drv-nav__link">Cẩm nang kỹ thuật</a></li>
         <li class="drv-nav__item"><a href="09-contact.html" class="drv-nav__link">Liên hệ &amp; Showroom</a></li>
       </ul>

@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/bold/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/style.css">
-  <link rel="stylesheet" href="assets/css/main.css?v=20261109c">
+  <link rel="stylesheet" href="assets/css/main.css?v=20261111a">
   <link rel="stylesheet" href="assets/css/pages.css?v=20261109c">
 </head>
 <body>
@@ -111,8 +111,8 @@
           </div>
 
           <div class="drv-add-room-card__body">
-            <div class="l-cluster l-cluster--xs">
-              <span class="u-text-xs u-bold u-text-muted">Gợi ý:</span>
+            <div class="drv-add-room-card__presets" role="group" aria-label="Phòng gợi ý">
+              <span class="drv-add-room-card__label">Gợi ý</span>
               <button type="button" class="drv-chip drv-chip--square" data-qs-add-preset="Phòng ngủ 2"><i class="ph ph-plus drv-icon--xs" aria-hidden="true"></i><span>Phòng ngủ 2</span></button>
               <button type="button" class="drv-chip drv-chip--square" data-qs-add-preset="Ban công / sân phơi"><i class="ph ph-plus drv-icon--xs" aria-hidden="true"></i><span>Ban công</span></button>
               <button type="button" class="drv-chip drv-chip--square" data-qs-add-preset="Sân vườn"><i class="ph ph-plus drv-icon--xs" aria-hidden="true"></i><span>Sân vườn</span></button>
@@ -123,9 +123,9 @@
             </div>
 
             <form class="drv-add-room-card__form" data-qs-custom-room-form>
-              <div class="l-cluster l-cluster--xs" style="flex: 1">
+              <div class="drv-add-room-card__field">
                 <label for="qs-custom-room-name" class="u-sr-only">Tên phòng tùy chỉnh</label>
-                <input id="qs-custom-room-name" type="text" class="drv-input drv-input--sm" placeholder="Nhập tên phòng khác (VD: Tầng lửng, Sân thượng, Phòng con gái)..." data-qs-custom-room-input required style="min-width: 260px">
+                <input id="qs-custom-room-name" type="text" class="drv-input drv-input--sm" placeholder="Tên phòng khác, VD: Tầng lửng" data-qs-custom-room-input required>
                 <button type="submit" class="drv-btn drv-btn--navy drv-btn--sm">
                   <i class="ph-bold ph-plus drv-icon--xs" aria-hidden="true"></i>
                   <span>Thêm phòng</span>
@@ -212,6 +212,11 @@
               <strong class="drv-totals-card__val" data-qs-grand>0đ</strong>
             </div>
           </div>
+
+          <p class="drv-qs-quote-note" data-qs-quote-note hidden>
+            <i class="ph-fill ph-tag" aria-hidden="true"></i>
+            <span><strong data-qs-quote-count>0 mẫu</strong> chưa có giá niêm yết, chưa tính vào tổng tạm tính. Dravit sẽ báo giá riêng sau khi nhận yêu cầu.</span>
+          </p>
 
           <!-- Thanh tiến trình chiết khấu phẳng thanh lịch -->
           <div class="drv-totals-card__tier-progress" data-qs-tier-progress>
@@ -468,7 +473,9 @@
     "DRV-CM6060G": { "kind": "tile", "name": "Xi Măng Xám Nhạt", "img": "assets/img/tile-cement-grey.svg", "size": "60×60 cm", "sizeFilter": "60x60", "thick": "10 mm", "color": "Xám xi măng", "hex": "#A9ACAA", "specs": ["Mờ", "Porcelain", "R10", "E ≤ 0,5%"], "priceM2": 295000, "areaPiece": 0.36, "perBox": 4, "kgPiece": 8.5 },
     "DRV-OD3060":  { "kind": "tile", "name": "Sân Vườn Vân Đá Chống Trơn", "img": "assets/img/tile-structured-outdoor.svg", "size": "30×60 cm", "sizeFilter": "30x60", "thick": "18 mm", "color": "Xám đá tự nhiên", "hex": "#8D8F8A", "specs": ["Nhám sần", "Porcelain", "R12", "E ≤ 0,5%"], "priceM2": 345000, "areaPiece": 0.18, "perBox": 6, "kgPiece": 7.5 },
     "DRV-FL3090":  { "kind": "tile", "name": "Ốp Tường Sọc 3D Fluted", "img": "assets/img/tile-decor-fluted.svg", "size": "30×90 cm", "sizeFilter": "30x90", "thick": "10 mm", "color": "Trắng ngà", "hex": "#F3EEE4", "specs": ["Mờ 3D", "Ceramic", "Ốp tường"], "priceM2": 410000, "areaPiece": 0.27, "perBox": 5, "kgPiece": 5.8 },
-    "DRV-CM8080":  { "kind": "tile", "name": "Xi Măng Bê Tông Xám Đậm", "img": "assets/img/tile-cement-dark.svg", "size": "80×80 cm", "sizeFilter": "80x80", "thick": "10,5 mm", "color": "Xám chì đậm", "hex": "#5A5D5E", "specs": ["Mờ mịn", "Porcelain", "R10", "E ≤ 0,5%"], "priceM2": 355000, "areaPiece": 0.64, "perBox": 3, "kgPiece": 14.5 }
+    "DRV-CM8080":  { "kind": "tile", "name": "Xi Măng Bê Tông Xám Đậm", "img": "assets/img/tile-cement-dark.svg", "size": "80×80 cm", "sizeFilter": "80x80", "thick": "10,5 mm", "color": "Xám chì đậm", "hex": "#5A5D5E", "specs": ["Mờ mịn", "Porcelain", "R10", "E ≤ 0,5%"], "priceM2": 355000, "areaPiece": 0.64, "perBox": 3, "kgPiece": 14.5 },
+    "DRV-6122B":   { "kind": "tile", "name": "Đá Nung Kết Onyx Xanh Ngọc", "img": "assets/img/tile-sintered-emperador.svg", "size": "60×120 cm", "sizeFilter": "60x120", "thick": "6 mm", "color": "Xanh ngọc vân vàng", "hex": "#2F6F6A", "specs": ["Bóng kiếng", "Đá nung kết", "Hàng đặt riêng"], "priceM2": 0, "areaPiece": 0.72, "perBox": 2, "kgPiece": 12 },
+    "DRV-6064W":   { "kind": "tile", "name": "Gạch Mosaic Gỗ Walnut Nhập Khẩu", "img": "assets/img/tile-wood-oak.svg", "size": "60×60 cm", "sizeFilter": "60x60", "thick": "9 mm", "color": "Nâu óc chó", "hex": "#6A4A35", "specs": ["Mờ vân gỗ", "Porcelain", "Hàng nhập"], "priceM2": 0, "areaPiece": 0.36, "perBox": 4, "kgPiece": 8 }
   }
   </script>
 
@@ -479,7 +486,7 @@
   <script defer src="assets/js/core.js"></script>
   <script defer src="assets/js/unit-calc.js"></script>
   <script defer src="assets/js/catalog-mock.js"></script>
-  <script defer src="assets/js/quote-sheet.js"></script>
+  <script defer src="assets/js/quote-sheet.js?v=20261110c"></script>
 </body>
 </html>
 

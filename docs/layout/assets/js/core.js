@@ -490,6 +490,24 @@
         break;
       }
 
+      case 'quote-add': {
+        event.preventDefault();
+        const sku = actionEl.dataset.drvSku || 'DRV-8801M';
+        toast(`Đã thêm mã ${sku} vào Danh sách báo giá.`);
+        break;
+      }
+
+      case 'wish-toggle': {
+        event.preventDefault();
+        const sku = actionEl.dataset.drvSku || '';
+        const on = actionEl.getAttribute('aria-pressed') !== 'true';
+        actionEl.setAttribute('aria-pressed', String(on));
+        const icon = actionEl.querySelector('i');
+        if (icon) icon.className = on ? 'ph-fill ph-heart' : 'ph ph-heart';
+        toast(on ? `Đã lưu mẫu ${sku} vào danh sách quan tâm.` : `Đã bỏ lưu mẫu ${sku}.`);
+        break;
+      }
+
       case 'motion-replay-stagger': {
         event.preventDefault();
         const targetSel = actionEl.dataset.drvTarget || '#drv-stagger-demo-grid';
@@ -1412,9 +1430,11 @@
     <span class="drv-proto-bar__label">DRAVIT UI Prototype</span>
     <a href="00-ui-kit.html" class="drv-proto-bar__link">00. UI Kit</a>
     <a href="01-home.html" class="drv-proto-bar__link">01. Trang chủ</a>
+    <a href="01.1-ai-finder.html" class="drv-proto-bar__link">01.1. Trợ lý AI</a>
     <a href="02-catalog-collection.html" class="drv-proto-bar__link">02. Danh mục Silo</a>
     <a href="03-product-single.html" class="drv-proto-bar__link">03. Chi tiết SP</a>
     <a href="04-cart.html" class="drv-proto-bar__link">04. Giỏ hàng</a>
+    <a href="04.1-quote-cart.html" class="drv-proto-bar__link">04.1. DS Báo giá (BOQ)</a>
     <a href="05-checkout.html" class="drv-proto-bar__link">05. Thanh toán</a>
     <a href="06-order-received.html" class="drv-proto-bar__link">06. Hoàn tất đơn</a>
     <a href="07-blog-archive.html" class="drv-proto-bar__link">07. Cẩm nang</a>
@@ -1478,28 +1498,24 @@
 
     <!-- Right Actions -->
     <div class="drv-header__actions">
-      <a href="09-showroom-about-quote.html#showroom" class="drv-header__info-item">
-        <i class="ph ph-map-pin drv-icon u-text-moss" aria-hidden="true"></i>
-        <span>Showroom (8:00 - 21:00)</span>
-      </a>
       <a href="tel:0909888777" class="drv-header__info-item u-tabular">
         <i class="ph ph-phone-call drv-icon u-text-moss" aria-hidden="true"></i>
         <span>0909.888.777</span>
       </a>
-      <button type="button" class="drv-btn drv-btn--moss drv-btn--sm u-hide-mobile" data-drv-action="dialog-open" data-drv-target="#drv-quote-modal">
-        <i class="ph ph-file-text drv-icon drv-icon--sm" aria-hidden="true"></i>
-        <span>Báo giá công trình</span>
-      </button>
+      <a href="01.1-ai-finder.html" class="drv-btn drv-btn--moss drv-btn--sm u-hide-mobile" aria-label="Trợ lý AI tư vấn chọn gạch">
+        <i class="ph-fill ph-robot drv-icon drv-icon--sm" aria-hidden="true"></i>
+        <span>AI tư vấn</span>
+      </a>
       <button type="button" class="drv-btn drv-btn--ghost drv-btn--sm drv-btn--icon drv-header__search-toggle" data-drv-action="search-toggle" aria-label="Mở tìm kiếm" aria-expanded="false" aria-controls="global-search-input">
         <i class="ph ph-magnifying-glass drv-icon drv-icon--sm" aria-hidden="true"></i>
       </button>
-      <button type="button" class="drv-btn drv-btn--outline drv-btn--sm drv-header__cart-btn" data-drv-action="dialog-open" data-drv-target="#drv-minicart-drawer" aria-label="Mở giỏ hàng">
+      <a href="04.1-quote-cart.html" class="drv-btn drv-btn--outline drv-btn--sm drv-header__cart-btn" aria-label="Mở danh sách báo giá">
         <span class="drv-header__cart-icon-wrap">
-          <i class="ph ph-shopping-bag drv-icon drv-icon--sm" aria-hidden="true"></i>
-          <span class="drv-header__cart-badge u-tabular" data-drv-cart-count>2</span>
+          <i class="ph ph-clipboard-text drv-icon drv-icon--sm" aria-hidden="true"></i>
+          <span class="drv-header__cart-badge u-tabular" data-quote-badge-count>0</span>
         </span>
-        <span class="drv-header__cart-text">Giỏ (<span data-drv-cart-count class="u-tabular">2</span>)</span>
-      </button>
+        <span class="drv-header__cart-text">DS Báo giá (<span data-quote-badge-count class="u-tabular">0</span>)</span>
+      </a>
     </div>
   </div>
 
@@ -1657,6 +1673,12 @@
       </ul>
 
       <ul class="drv-nav__list">
+        <li class="drv-nav__item">
+          <a href="01.1-ai-finder.html" class="drv-nav__link" style="color: var(--c-teal-700); font-weight: 700;">
+            <i class="ph-fill ph-robot drv-icon--xs" aria-hidden="true"></i>
+            <span>Trợ lý AI Tìm gạch</span>
+          </a>
+        </li>
         <li class="drv-nav__item"><a href="07-blog-archive.html" class="drv-nav__link">Cẩm nang kỹ thuật</a></li>
         <li class="drv-nav__item"><a href="09-showroom-about-quote.html" class="drv-nav__link">Về Dravit &amp; Showroom</a></li>
       </ul>
@@ -2037,9 +2059,9 @@
               </ul>
             </div>
 
-            <a href="02-catalog-collection.html" class="drv-link u-text-xs" style="margin-top:auto">
+            <a href="02-catalog-collection.html" class="drv-more-btn drv-more-btn--start">
               <span>Xem tất cả 28 danh mục</span>
-              <i class="ph ph-arrow-right drv-icon--xs" aria-hidden="true"></i>
+              <i class="ph-bold ph-caret-right drv-icon--xs" aria-hidden="true"></i>
             </a>
           </div>
 
@@ -3013,6 +3035,14 @@
     initMegaPreview();
     initScrollStagger();
 
+    // Auto-load AI Tile Finder & Quote Panel controller across all pages
+    if (!document.querySelector('script[src*="ai-finder.js"]')) {
+      const aiScript = document.createElement('script');
+      aiScript.src = 'assets/js/ai-finder.js?v=20261110c';
+      aiScript.defer = true;
+      document.body.appendChild(aiScript);
+    }
+
     // PDP Spec Details toggle text ("Xem tất cả" / "Thu gọn")
     document.querySelectorAll('.drv-pdp-spec-more').forEach((details) => {
       const textSpan = details.querySelector('.drv-pdp-spec-more__text');
@@ -3035,6 +3065,91 @@
       if (btn) btn.click();
     });
   });
+
+  /* Glass shine sweep on hover for every content image (no per-template markup needed) */
+  (() => {
+    if (!window.matchMedia('(hover: hover)').matches) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const SKIP = '.drv-logo, .drv-footer__logo-img, .drv-qr-img, .drv-author-box__avatar, .drv-checkout-topbar__brand, [data-no-shine]';
+    const MIN = 56;
+    const eligible = (img) => !img.closest(SKIP) && img.offsetWidth >= MIN && img.offsetHeight >= MIN;
+
+    const attach = (img) => {
+      const parent = img.parentElement;
+      if (!parent || getComputedStyle(parent).display === 'inline') return;
+      if (getComputedStyle(parent).position === 'static') parent.style.position = 'relative';
+      let beam = parent.querySelector(':scope > .drv-shine');
+      if (!beam) {
+        beam = document.createElement('span');
+        beam.className = 'drv-shine';
+        beam.setAttribute('aria-hidden', 'true');
+        parent.appendChild(beam);
+      }
+      beam.style.cssText = `left:${img.offsetLeft}px;top:${img.offsetTop}px;width:${img.offsetWidth}px;height:${img.offsetHeight}px;border-radius:${getComputedStyle(img).borderRadius}`;
+      parent.classList.add('is-shining');
+      if (!parent._shineBound) {
+        parent._shineBound = true;
+        parent.addEventListener('mouseleave', () => parent.classList.remove('is-shining'));
+      }
+    };
+
+    document.addEventListener('mouseover', (e) => {
+      let node = e.target instanceof Element ? e.target : null;
+      for (let depth = 0; node && depth < 6 && !/^(MAIN|SECTION|BODY)$/.test(node.tagName); depth += 1, node = node.parentElement) {
+        const imgs = node.tagName === 'IMG' ? [node] : [...node.querySelectorAll('img')];
+        if (!imgs.length) continue;
+        if (imgs.length > 4) return;
+        const seen = new Set();
+        imgs.filter(eligible).forEach((img) => {
+          if (seen.has(img.parentElement)) return;
+          seen.add(img.parentElement);
+          attach(img);
+        });
+        return;
+      }
+    });
+  })();
+
+  /* Horizontal strips (.drv-cat-silos-bar): prev/next arrows + edge fades when content overflows */
+  (() => {
+    const init = (bar) => {
+      const host = bar.querySelector('.l-container');
+      const row = bar.querySelector('.drv-pill-row');
+      if (!host || !row || host.dataset.stripReady) return;
+      host.dataset.stripReady = 'true';
+      host.classList.add('drv-strip');
+      const mk = (dir, icon, label) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = `drv-strip__btn drv-strip__btn--${dir}`;
+        b.setAttribute('aria-label', label);
+        b.innerHTML = `<i class="ph-bold ${icon}" aria-hidden="true"></i>`;
+        b.addEventListener('click', () => {
+          row.scrollBy({ left: (dir === 'next' ? 1 : -1) * Math.max(240, row.clientWidth * 0.7), behavior: 'smooth' });
+        });
+        host.appendChild(b);
+        return b;
+      };
+      const prev = mk('prev', 'ph-caret-left', 'Xem các nhóm trước');
+      const next = mk('next', 'ph-caret-right', 'Xem các nhóm tiếp theo');
+      const update = () => {
+        const max = row.scrollWidth - row.clientWidth;
+        host.classList.toggle('has-prev', row.scrollLeft > 4);
+        host.classList.toggle('has-next', row.scrollLeft < max - 4);
+        prev.tabIndex = row.scrollLeft > 4 ? 0 : -1;
+        next.tabIndex = row.scrollLeft < max - 4 ? 0 : -1;
+      };
+      row.addEventListener('scroll', update, { passive: true });
+      window.addEventListener('resize', update);
+      row.querySelectorAll('img').forEach((i) => i.addEventListener('load', update));
+      const active = row.querySelector('.is-active');
+      if (active) row.scrollLeft = Math.max(0, active.offsetLeft - 16);
+      update();
+    };
+    const run = () => document.querySelectorAll('.drv-cat-silos-bar').forEach(init);
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+    else run();
+  })();
 
   window.Dravit = {
     formatVnd,

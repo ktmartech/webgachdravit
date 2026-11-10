@@ -97,7 +97,7 @@
     --s-9: 6rem;      /* 96px */
 
     /* 7. Container & Grid Dimensions */
-    --container-max: 1320px;
+    --container-max: 1380px;
     --container-pad: var(--s-4);
     --grid-gap: var(--s-4);
     --sec-pad-y: var(--s-7);

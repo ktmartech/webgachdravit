@@ -369,6 +369,64 @@
       img1: 'assets/img/tile-sintered-emperador.svg',
       img2: 'assets/img/room-living-calacatta.svg',
     },
+    {
+      sku: 'DRV-6122B',
+      title: 'Gạch Khổ Lớn Dravit Statuario Pearl 60x120 Bóng Kiếng Ít Đường Ron',
+      url: '03-product-single.html',
+      usage: 'lat-nen',
+      space: 'phong-khach',
+      size: '60x120',
+      surface: 'bong-kieng',
+      surfaceLabel: 'Bóng kiếng',
+      color: 'trang',
+      pattern: 'van-da-marble',
+      origin: 'nhap-khau-y',
+      style: 'luxury',
+      shape: 'chu-nhat',
+      dcof: 'r9',
+      water: 'duoi-05',
+      thickness: '10mm',
+      priceBand: '',
+      priceM2: 0,
+      regularPriceM2: 0,
+      pricePiece: 0,
+      discount: '',
+      label: 'Ít đường ron',
+      showroom: true,
+      popularity: 80,
+      created: 202611,
+      img1: 'assets/img/tile-marble-calacatta.svg',
+      img2: 'assets/img/room-living-calacatta.svg',
+    },
+    {
+      sku: 'DRV-6064W',
+      title: 'Gạch Kyoto Microcement Kem Âm 60x60 Nhám Mịn Phong Cách Wabi-Sabi',
+      url: '03-product-single.html',
+      usage: 'lat-nen',
+      space: 'phong-khach,phong-ngu',
+      size: '60x60',
+      surface: 'mo-matt',
+      surfaceLabel: 'Nhám mịn',
+      color: 'kem',
+      pattern: 'van-xi-mang',
+      origin: 'dravit-signature',
+      style: 'wabi-sabi',
+      shape: 'vuong',
+      dcof: 'r10',
+      water: 'duoi-05',
+      thickness: '10mm',
+      priceBand: '',
+      priceM2: 0,
+      regularPriceM2: 0,
+      pricePiece: 0,
+      discount: '',
+      label: 'Wabi-Sabi',
+      showroom: false,
+      popularity: 78,
+      created: 202611,
+      img1: 'assets/img/tile-terrazzo-ivory.svg',
+      img2: 'assets/img/room-bathroom-terrazzo.svg',
+    },
   ];
 
   const FACET_LABELS = {
@@ -433,21 +491,54 @@
   /* ==========================================================================
      3. Render Product Card HTML Helper
      ========================================================================== */
-  function renderProductCardHtml(item) {
-    const badgesHtml = [
-      item.discount ? `<span class="drv-badge drv-badge--sale">${item.discount}</span>` : '',
-      item.showroom ? `<span class="drv-badge drv-badge--showroom">Mẫu tại kệ</span>` : '',
-    ]
-      .filter(Boolean)
-      .join('');
+  function hashSku(sku) {
+    return [...sku].reduce((acc, ch) => (acc * 31 + ch.charCodeAt(0)) >>> 0, 7);
+  }
 
-    const priceHtml = item.regularPriceM2
-      ? `<span class="drv-card__price-m2 drv-card__price-m2--sale">${formatVnd(item.priceM2)}/m²</span>
-         <span class="drv-card__price-old">${formatVnd(item.regularPriceM2)}</span>`
-      : `<span class="drv-card__price-m2">${formatVnd(item.priceM2)}/m²</span>`;
+  function stockOf(item) {
+    const m = /(\d+)x(\d+)/.exec(item.size);
+    const area = m ? (m[1] * m[2]) / 10000 : 0.64;
+    const perBox = item.size === '80x80' ? 3 : Math.max(1, Math.round(1.44 / area));
+    const seed = [...item.sku].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7);
+    const boxes = 12 + (seed % 37);
+    const pieces = boxes * perBox;
+    return { boxes, pieces, m2: (pieces * area).toFixed(2).replace('.', ',') };
+  }
+
+  function renderProductCardHtml(item) {
+    const rateRaw = (/R\d{1,2}/.exec(`${item.surfaceLabel} ${item.dcof}`.toUpperCase()) || [])[0];
+    const rate = rateRaw && !item.surfaceLabel.toUpperCase().includes(rateRaw) ? rateRaw : '';
+    const stock = stockOf(item);
+    const hasPrice = Number(item.priceM2) > 0;
+    const label = item.label || (item.popularity >= 95 ? 'Bán chạy' : '');
+
+    const shelf = `${String.fromCharCode(65 + (hashSku(item.sku) % 4))}-${String((Math.floor(hashSku(item.sku) / 7) % 12) + 1).padStart(2, '0')}`;
+    const availHtml = item.showroom ? `Sẵn mẫu thật tại <strong>Kệ ${shelf}</strong>` : 'Có sẵn tại kho';
+
+    const priceHtml = !hasPrice
+      ? `<div class="drv-card__price-main"><span class="drv-card__price-contact"><i class="ph-fill ph-tag" aria-hidden="true"></i><span>Liên hệ báo giá</span></span></div>
+         <div class="drv-card__price-piece">${stock.m2}m² ≈ ${stock.boxes} thùng (${stock.pieces} viên)</div>`
+      : item.regularPriceM2
+        ? `<div class="drv-card__price-main">
+             <span class="drv-card__price-m2 drv-card__price-m2--sale">${formatVnd(item.priceM2)}/m²</span>
+             <span class="drv-card__price-old">${formatVnd(item.regularPriceM2)}</span>
+           </div>
+           <div class="drv-card__price-piece">≈ ${formatVnd(item.pricePiece)}/viên · ${stock.boxes} thùng</div>`
+        : `<div class="drv-card__price-main"><span class="drv-card__price-m2">${formatVnd(item.priceM2)}/m²</span></div>
+           <div class="drv-card__price-piece">≈ ${formatVnd(item.pricePiece)}/viên · ${stock.boxes} thùng</div>`;
+
+    const buyBtn = hasPrice
+      ? `<button type="button" class="drv-btn drv-btn--sm drv-card__buy" data-drv-action="add-to-cart" data-drv-sku="${item.sku}" data-drv-qty="1 thùng" aria-label="Thêm ${item.sku} vào giỏ hàng">
+           <i class="ph-bold ph-shopping-cart-simple drv-icon--xs" aria-hidden="true"></i>
+           <span>Thêm giỏ</span>
+         </button>`
+      : `<button type="button" class="drv-btn drv-btn--sm drv-card__buy" data-drv-action="quote-add" data-drv-sku="${item.sku}" data-drv-qty="1 thùng" aria-label="Thêm ${item.sku} vào danh sách báo giá">
+           <i class="ph-bold ph-plus drv-icon--xs" aria-hidden="true"></i>
+           <span>Báo giá</span>
+         </button>`;
 
     return `
-      <article class="drv-card"
+      <article class="drv-card drv-card--quote"
         data-product-card
         data-usage="${item.usage || 'lat-nen'}"
         data-space="${item.space || 'phong-khach'}"
@@ -467,29 +558,34 @@
         data-popularity="${item.popularity}"
         data-created="${item.created || 202610}">
         <div class="drv-card__media">
-          <div class="drv-card__badges">${badgesHtml}</div>
+          <div class="drv-card__badges">
+            ${item.discount ? `<span class="drv-card__chip drv-card__chip--sale">${item.discount}</span>` : ''}
+            ${label ? `<span class="drv-card__chip drv-card__chip--label">${label}</span>` : ''}
+          </div>
+          <button type="button" class="drv-card__wish" data-drv-action="wish-toggle" data-drv-sku="${item.sku}" aria-pressed="false" aria-label="Lưu mẫu ${item.sku}">
+            <i class="ph ph-heart" aria-hidden="true"></i>
+          </button>
           <img class="drv-card__img drv-card__img--primary" src="${item.img1}" width="400" height="400" loading="lazy" decoding="async" alt="${item.title}">
           <img class="drv-card__img drv-card__img--hover" src="${item.img2}" width="400" height="400" loading="lazy" decoding="async" alt="Phối cảnh ${item.title}">
         </div>
-        <div class="drv-card__meta">
-          <div class="drv-card__tags">
-            <span class="drv-card__tag">${item.size}</span>
-            <span class="drv-card__tag">${item.surfaceLabel}</span>
-          </div>
-          <span class="drv-card__sku">${item.sku}</span>
-        </div>
         <div class="drv-card__body">
+          <div class="drv-card__head">
+            <div class="drv-card__tags">
+              <span class="drv-card__tag">${item.size.replace('x', '×')}</span>
+              <span class="drv-card__tag">${item.surfaceLabel}</span>
+              ${rate ? `<span class="drv-card__tag">${rate}</span>` : ''}
+            </div>
+            <span class="drv-card__sku">${item.sku}</span>
+          </div>
           <h3 class="drv-card__title">
             <a class="drv-card__link" href="${item.url}">${item.title}</a>
           </h3>
+          <p class="drv-card__avail">${availHtml}</p>
           <div class="drv-card__footer">
             <div class="drv-card__prices">
-              <div class="drv-card__price-main">${priceHtml}</div>
-              <div class="drv-card__price-piece">≈ ${formatVnd(item.pricePiece)}/viên</div>
+              ${priceHtml}
             </div>
-            <button type="button" class="drv-card__action" data-drv-action="add-to-cart" data-drv-sku="${item.sku}" data-drv-qty="1 thùng" aria-label="Thêm ${item.sku} vào giỏ">
-              <i class="ph ph-shopping-cart-simple drv-icon" aria-hidden="true"></i>
-            </button>
+            ${buyBtn}
           </div>
         </div>
       </article>
@@ -661,7 +757,7 @@
         const loadMoreBtn = event.target.closest('[data-drv-load-more]');
         if (loadMoreBtn && this.grid) {
           event.preventDefault();
-          const appendedHtml = DRV_MOCK_PRODUCTS.slice(0, 6).map(renderProductCardHtml).join('');
+          const appendedHtml = [...DRV_MOCK_PRODUCTS.slice(0, 4), ...DRV_MOCK_PRODUCTS.slice(-2)].map(renderProductCardHtml).join('');
           this.grid.insertAdjacentHTML('beforeend', appendedHtml);
           loadMoreBtn.hidden = true;
           this.applyFilters();
@@ -718,6 +814,30 @@
           const lbl = collapseMobileBtn.querySelector('[data-collapse-facets-mobile-label]');
           if (lbl) {
             lbl.textContent = anyOpen ? 'Mở tất cả' : 'Thu gọn';
+          }
+          return;
+        }
+
+        const seoJump = event.target.closest('[data-seo-jump]');
+        if (seoJump) {
+          event.preventDefault();
+          const box = document.getElementById('drv-seo-guide-content');
+          const target = document.getElementById(seoJump.dataset.seoJump);
+          if (box && target) {
+            if (box.classList.contains('is-collapsed')) {
+              box.classList.remove('is-collapsed');
+              const tgl = document.querySelector('[data-drv-seo-toggle]');
+              if (tgl) {
+                tgl.setAttribute('aria-expanded', 'true');
+                const l = tgl.querySelector('[data-seo-toggle-label]');
+                const ic = tgl.querySelector('i.ph');
+                if (l) l.textContent = 'Thu gọn hướng dẫn';
+                if (ic) ic.className = 'ph ph-caret-up drv-icon';
+              }
+            }
+            document.querySelectorAll('[data-seo-jump]').forEach((b) => b.classList.toggle('is-active', b === seoJump));
+            const y = target.getBoundingClientRect().top + window.scrollY - 96;
+            window.scrollTo({ top: y, behavior: 'smooth' });
           }
           return;
         }
@@ -949,14 +1069,16 @@
       // Apply Sorting
       const sortMode = this.sortSelect?.value || 'ban-chay';
       const sortedCards = cards.slice().sort((a, b) => {
-        const priceA = Number(a.dataset.priceM2 || 0);
-        const priceB = Number(b.dataset.priceM2 || 0);
+        const noPriceLast = (v) => (Number(v) > 0 ? Number(v) : null);
+        const priceA = noPriceLast(a.dataset.priceM2);
+        const priceB = noPriceLast(b.dataset.priceM2);
+        const byPrice = (dir) => (priceA === null) - (priceB === null) || (priceA === null ? 0 : dir * (priceA - priceB));
         const popA = Number(a.dataset.popularity || 0);
         const popB = Number(b.dataset.popularity || 0);
         const createdA = Number(a.dataset.created || 0);
         const createdB = Number(b.dataset.created || 0);
-        if (sortMode === 'gia-tang') return priceA - priceB;
-        if (sortMode === 'gia-giam') return priceB - priceA;
+        if (sortMode === 'gia-tang') return byPrice(1);
+        if (sortMode === 'gia-giam') return byPrice(-1);
         if (sortMode === 'moi-nhat') return createdB - createdA;
         return popB - popA;
       });
@@ -1315,8 +1437,10 @@
                       </div>
                     </div>
                     <div class="drv-search-item__price">
-                      <span class="u-text-sm u-bold u-text-navy u-tabular">${formatVnd(p.priceM2)}/m²</span>
-                      <span class="u-text-xs u-text-muted u-tabular">≈ ${formatVnd(p.pricePiece)}/viên</span>
+                      ${p.priceM2 > 0
+                        ? `<span class="u-text-sm u-bold u-text-navy u-tabular">${formatVnd(p.priceM2)}/m²</span>
+                      <span class="u-text-xs u-text-muted u-tabular">≈ ${formatVnd(p.pricePiece)}/viên</span>`
+                        : `<span class="u-text-sm u-bold u-text-navy">Liên hệ báo giá</span>`}
                     </div>
                   </a>
                 </li>`

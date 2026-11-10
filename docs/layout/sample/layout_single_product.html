@@ -1,0 +1,2568 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gạch Lát Nền Dravit Vân Đá Marble Calacatta Trắng Khói 80x80 DRV-8801M — DRAVIT</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Be Vietnam Pro (UI & Heading chuẩn tiếng Việt) + JetBrains Mono (SKU, DCOF, Quy đổi thùng) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <!-- Anime.js v3.2.2 (Chuẩn ADR D-19: Number Odometer trong <drv-unit-calc>, Staggered Grid & Spring Bounce) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Be Vietnam Pro"', 'system-ui', '-apple-system', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            dravit: {
+              primary: '#083A4F',     // ADR D-11 & D-18: Header text & H1-H6
+              primaryDark: '#052838',
+              ink: '#0B192C',         // ADR D-11 & D-18: Deep Ink body text
+              teal: '#0D9488',        // ADR D-11: Brand Teal
+              tealDark: '#0F766E',    // ADR D-11: Brand Teal Hover
+              amber: '#F59E0B',       // ADR D-11: Warm Amber accent
+              slate: '#F8FAFC',       // ADR D-11: Clean Slate background
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* ==========================================================================
+       DRAVIT DESIGN TOKENS & LIGHT DOM CUSTOM ELEMENTS (ADR D-11, D-17, D-18, D-19)
+       ========================================================================== */
+    :root {
+      --drv-primary: #083A4F;
+      --drv-ink: #0B192C;
+      --drv-teal: #0D9488;
+      --drv-teal-hover: #0F766E;
+      --drv-amber: #F59E0B;
+      --drv-slate: #F8FAFC;
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background-color: var(--drv-slate);
+      color: var(--drv-ink);
+      overflow-x: hidden;
+    }
+
+    /* Light DOM Custom Elements khai báo chuẩn khối (ADR D-17) */
+    drv-product-gallery,
+    drv-unit-calc,
+    drv-wishlist-panel,
+    drv-quote-panel,
+    drv-qty-input {
+      display: block;
+    }
+
+    /* Thanh cuộn tinh gọn */
+    .drv-scroll::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    .drv-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .drv-scroll::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 999px;
+    }
+
+    /* GPU Transitions cho Card & Khung Gallery (ADR D-19 Option A) */
+    .drv-card-transition {
+      transition: transform 0.35s var(--ease-out-expo), box-shadow 0.35s var(--ease-out-expo), border-color 0.25s ease;
+    }
+    .drv-card-transition:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 32px -12px rgba(8, 58, 79, 0.16);
+    }
+
+    /* Hiệu ứng bóng kính bề mặt Polished / Lappato */
+    .tile-gloss-sheen::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(125deg, rgba(255,255,255,0) 24%, rgba(255,255,255,0.38) 49%, rgba(255,255,255,0) 70%);
+      pointer-events: none;
+    }
+
+    /* Nút Yêu thích (Wishlist Heart) đồng bộ toàn hệ thống */
+    .drv-wishlist-btn {
+      transition: transform 0.28s var(--ease-out-expo), background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+    .drv-wishlist-btn:hover {
+      transform: scale(1.06);
+    }
+    .drv-wishlist-btn.is-favorited {
+      background-color: #fff1f2;
+      color: #e11d48;
+      border-color: #fecdd3;
+      box-shadow: 0 4px 12px -2px rgba(225, 29, 72, 0.22);
+    }
+
+    /* Kính lúp soi mạch ron & cạnh mài phẳng (Panel 4 Bento Gallery) */
+    .joint-loupe-ring {
+      position: absolute;
+      width: 108px;
+      height: 108px;
+      border-radius: 9999px;
+      border: 2px dashed #0D9488;
+      background: rgba(255, 255, 255, 0.18);
+      box-shadow: 0 10px 28px -6px rgba(8, 58, 79, 0.28), inset 0 0 0 2px rgba(255,255,255,0.65);
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s ease, height 0.2s ease;
+    }
+
+    /* Offcanvas Drawers */
+    .drv-backdrop {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s var(--ease-out-expo);
+    }
+    .drv-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .drv-drawer-right {
+      transform: translateX(100%);
+      transition: transform 0.38s var(--ease-out-expo);
+    }
+    .drv-drawer-right.open {
+      transform: translateX(0);
+    }
+    @media (max-width: 640px) {
+      .drv-drawer-bottom-mobile {
+        transform: translateY(100%);
+      }
+      .drv-drawer-bottom-mobile.open {
+        transform: translateY(0);
+      }
+    }
+
+    /* Ẩn mũi tên mặc định của input number */
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+
+    /* Honeypot ẩn chống bot (Spec 2.4) */
+    .drv-hp-field {
+      position: absolute;
+      left: -9999px;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body class="font-sans antialiased min-h-screen flex flex-col selection:bg-teal-500/20 selection:text-dravit-primary">
+
+  <!-- ========================================================================
+       1. TOP UTILITY BAR (CAM KẾT KỸ THUẬT & CHIẾT KHẤU CÔNG TRÌNH)
+       ======================================================================== -->
+  <div class="bg-dravit-primary text-teal-100/90 text-[11.5px] border-b border-white/10">
+    <div class="max-w-[1440px] mx-auto px-3 sm:px-6 lg:px-8 h-9 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-4 overflow-x-auto drv-scroll whitespace-nowrap">
+        <span class="inline-flex items-center gap-1.5 font-medium text-white">
+          <i class="ph-fill ph-seal-check text-teal-300"></i>
+          <span>DRAVIT — Thẩm mỹ từ những đường nét nhỏ nhất</span>
+        </span>
+        <span class="hidden md:inline text-white/25">|</span>
+        <span class="hidden md:inline-flex items-center gap-1">
+          <i class="ph ph-package text-teal-300"></i>
+          Giao nguyên thùng cùng lô màu (Shade/Caliber)
+        </span>
+        <span class="hidden lg:inline text-white/25">|</span>
+        <span class="hidden lg:inline-flex items-center gap-1">
+          <i class="ph ph-buildings text-amber-300"></i>
+          Báo giá chiết khấu Chủ nhà · Thợ/Thầu · KTS trong 30 phút
+        </span>
+      </div>
+
+      <div class="flex items-center gap-3 shrink-0">
+        <a href="#thong-so-ky-thuat" class="hidden sm:inline-flex items-center gap-1 hover:text-white transition">
+          <i class="ph ph-file-text"></i>
+          <span>Bảng thông số TCVN</span>
+        </a>
+        <span class="hidden sm:inline text-white/25">•</span>
+        <button id="topShowroomBtn" type="button" class="inline-flex items-center gap-1 text-amber-300 hover:text-amber-200 font-medium cursor-pointer">
+          <i class="ph-fill ph-map-pin"></i>
+          <span>Kệ B-04 Showroom TP.HCM</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       2. HEADER CHÍNH ĐỒNG BỘ HỆ THỐNG CATALOG & CHAT AI DRAVIT
+       ======================================================================== -->
+  <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200/90 shadow-2xs">
+    <div class="max-w-[1440px] mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
+
+      <!-- Logo Thương hiệu & Đường dẫn chuẩn /san-pham/{slug} (ADR D-14) -->
+      <div class="flex items-center gap-3">
+        <a href="#top" class="flex items-center gap-2.5 group">
+          <div class="w-9 h-9 rounded-xl bg-dravit-primary flex items-center justify-center text-white font-bold text-base tracking-tight shadow-xs group-hover:bg-dravit-teal transition-colors">
+            D
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="font-bold text-base sm:text-[17px] tracking-tight text-dravit-primary leading-none">DRAVIT</span>
+              <span id="headerUrlSlugBadge" class="hidden xl:inline-block px-1.5 py-0.5 rounded bg-slate-100 text-dravit-primary font-mono text-[10px] font-semibold">
+                /san-pham/drv-8801m
+              </span>
+            </div>
+            <p class="hidden sm:block text-[10.5px] text-slate-500 mt-0.5 leading-none">
+              Gạch ốp lát kiến trúc &amp; công trình
+            </p>
+          </div>
+        </a>
+
+        <!-- Menu Điều hướng nhanh -->
+        <nav class="hidden lg:flex items-center gap-1 ml-3 pl-3 border-l border-slate-200" aria-label="Điều hướng">
+          <a href="#san-pham-dong-bo" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-dravit-primary hover:bg-dravit-primary hover:text-white transition">
+            Danh mục /gach
+          </a>
+          <a href="#thong-so-ky-thuat" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-dravit-primary hover:bg-dravit-primary hover:text-white transition">
+            Thông số &amp; Random Faces
+          </a>
+          <a href="#huong-dan-thi-cong" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-dravit-primary hover:bg-dravit-primary hover:text-white transition">
+            Khuyến nghị thi công
+          </a>
+          <button id="headerOpenAiBtn" type="button" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-dravit-tealDark bg-teal-50 hover:bg-dravit-teal hover:text-white transition inline-flex items-center gap-1 cursor-pointer">
+            <i class="ph-fill ph-sparkle"></i>
+            <span>Trợ lý AI tư vấn</span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- Hành động nhanh: Yêu thích (Wishlist) & Danh sách nhận báo giá (<drv-quote-panel>) -->
+      <div class="flex items-center gap-2">
+        <button
+          id="openWishlistDrawerBtn"
+          type="button"
+          aria-label="Danh sách sản phẩm yêu thích"
+          class="relative inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white hover:bg-rose-50 text-dravit-primary hover:text-rose-600 border border-slate-200 hover:border-rose-200 text-xs font-semibold transition cursor-pointer"
+        >
+          <i id="headerWishlistIcon" class="ph-fill ph-heart text-base text-rose-500"></i>
+          <span class="hidden sm:inline">Yêu thích</span>
+          <span
+            id="headerWishlistBadge"
+            class="inline-flex items-center justify-center min-w-[19px] h-[19px] px-1 rounded-full bg-rose-100 text-rose-600 font-mono text-[10.5px] font-bold"
+          >
+            1
+          </span>
+        </button>
+
+        <button
+          id="openQuoteDrawerBtn"
+          type="button"
+          class="relative inline-flex items-center gap-2 px-3 sm:px-3.5 py-2 rounded-xl bg-dravit-primary hover:bg-dravit-primaryDark text-white text-xs font-semibold shadow-xs transition cursor-pointer"
+        >
+          <i class="ph ph-clipboard-text text-base text-teal-300"></i>
+          <span class="hidden sm:inline">Danh sách báo giá</span>
+          <span class="sm:hidden">Báo giá</span>
+          <span
+            id="headerQuoteBadge"
+            class="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-dravit-amber text-dravit-ink font-mono text-[11px] font-bold"
+          >
+            0
+          </span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       3. BREADCRUMB CHUẨN PRIMARY CATEGORY SILO (ADR MỤC 8)
+       ======================================================================== -->
+  <div id="top" class="bg-white border-b border-slate-200/80">
+    <div class="max-w-[1440px] mx-auto px-3 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
+      <nav aria-label="Breadcrumb" class="flex items-center gap-1.5 text-xs text-slate-500 overflow-x-auto drv-scroll whitespace-nowrap">
+        <a href="#top" class="hover:text-dravit-primary transition">Trang chủ</a>
+        <span class="text-slate-300">/</span>
+        <a href="#san-pham-dong-bo" class="hover:text-dravit-primary transition">Gạch ốp lát</a>
+        <span class="text-slate-300">/</span>
+        <a href="#san-pham-dong-bo" class="hover:text-dravit-primary transition">Gạch lát nền</a>
+        <span class="text-slate-300">/</span>
+        <span id="breadcrumbProductTitle" class="font-semibold text-dravit-primary">
+          Gạch Lát Nền Dravit Vân Đá Marble Calacatta Trắng Khói 80x80 Bán Bóng
+        </span>
+      </nav>
+
+      <span class="hidden lg:inline-flex items-center gap-1.5 font-mono text-[10.5px] text-slate-500 shrink-0">
+        <i class="ph-fill ph-check-circle text-emerald-600"></i>
+        <span>Schema: Product · BreadcrumbList · FAQPage</span>
+      </span>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       4. PRODUCT HERO SECTION: BENTO GALLERY 2×2 (TRÁI) + THÔNG TIN & DỰ TOÁN THÙNG (PHẢI)
+       ======================================================================== -->
+  <main class="flex-1 max-w-[1440px] w-full mx-auto px-3 sm:px-6 lg:px-8 py-5 sm:py-8 space-y-12">
+
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-6 xl:gap-9 items-start">
+
+      <!-- ====================================================================
+           CỘT TRÁI (7/12): BENTO GALLERY 2×2 KIẾN TRÚC TƯƠNG TÁC (<drv-product-gallery>)
+           Giữ trọn vẹn 4 góc nhìn từ thiết kế gốc & nâng cấp tương tác thực tế
+           ==================================================================== -->
+      <drv-product-gallery class="lg:col-span-7 space-y-3">
+
+        <!-- Thanh lọc tab nhanh trên Mobile để chuyển 4 góc nhìn dễ dàng -->
+        <div class="flex sm:hidden gap-1.5 overflow-x-auto drv-scroll pb-1">
+          <button type="button" data-scroll-panel="panelPerspective" class="px-3 py-1.5 rounded-lg bg-dravit-primary text-white text-[11.5px] font-semibold shrink-0">1. Phối cảnh phòng</button>
+          <button type="button" data-scroll-panel="panelCloseUp" class="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-dravit-ink text-[11.5px] font-medium shrink-0">2. Map vân gạch</button>
+          <button type="button" data-scroll-panel="panelMoodboard" class="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-dravit-ink text-[11.5px] font-medium shrink-0">3. Phối vật liệu &amp; Ron</button>
+          <button type="button" data-scroll-panel="panelJointZoom" class="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-dravit-ink text-[11.5px] font-medium shrink-0">4. Soi cạnh &amp; mạch ron</button>
+        </div>
+
+        <!-- Lưới Bento 2×2 trên Tablet/Desktop -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
+
+          <!-- Ô 1 (TRÊN - TRÁI): PHỐI CẢNH PHÒNG KHÁCH THỰC TẾ + CHẾ ĐỘ ÁNH SÁNG -->
+          <div
+            id="panelPerspective"
+            class="group relative aspect-square rounded-2xl bg-[#EAE6DF] border border-slate-200/90 overflow-hidden shadow-2xs"
+          >
+            <div id="roomSceneSvgContainer" class="w-full h-full transition-transform duration-500 group-hover:scale-[1.02]">
+              <!-- Render động phối cảnh phòng khách theo Màu gạch, Khổ gạch, Bề mặt & Ánh sáng -->
+            </div>
+
+            <!-- Nút chuyển ánh sáng Ngày / Đèn ấm 3000K góc trên phải -->
+            <div class="absolute top-3 right-3 flex items-center gap-1.5">
+              <button
+                id="toggleRoomLightingBtn"
+                type="button"
+                class="px-2.5 py-1.5 rounded-lg bg-white/90 hover:bg-white text-dravit-primary border border-slate-200/80 backdrop-blur-xs text-[11px] font-semibold shadow-xs flex items-center gap-1 transition cursor-pointer"
+                title="Kiểm tra độ phản xạ bề mặt dưới ánh sáng tự nhiên và đèn vàng ấm"
+              >
+                <i id="lightingModeIcon" class="ph-fill ph-sun text-amber-500 text-sm"></i>
+                <span id="lightingModeLabel">Ánh sáng ngày</span>
+              </button>
+              <button
+                type="button"
+                data-lightbox-view="room"
+                aria-label="Phóng to phối cảnh"
+                class="w-8 h-8 rounded-lg bg-white/90 hover:bg-dravit-primary text-dravit-primary hover:text-white border border-slate-200/80 backdrop-blur-xs flex items-center justify-center shadow-xs transition cursor-pointer"
+              >
+                <i class="ph-bold ph-arrows-out-simple text-xs"></i>
+              </button>
+            </div>
+
+            <!-- Nhãn góc dưới trái đúng mẫu thiết kế -->
+            <div class="absolute bottom-3 left-3">
+              <span id="roomPerspectiveBadge" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/95 text-dravit-primary text-xs font-semibold shadow-sm border border-slate-200/70">
+                <i class="ph-fill ph-couch text-dravit-teal"></i>
+                <span>Phối cảnh phòng khách 80×80</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Ô 2 (TRÊN - PHẢI): CẬN CẢNH MAP VÂN GẠCH + ĐỔI FACE NGẪU NHIÊN + TẢI MAP 4K CHO KTS -->
+          <div
+            id="panelCloseUp"
+            class="group relative aspect-square rounded-2xl bg-[#EBE5D8] border border-slate-200/90 p-4 sm:p-5 flex items-center justify-center overflow-hidden shadow-2xs"
+          >
+            <!-- Viên gạch đơn sắc nét nằm trong khung nền kem cát -->
+            <div
+              id="singleTileFaceBox"
+              class="relative w-full h-full rounded-lg overflow-hidden shadow-md border border-black/5 bg-white transition-transform duration-500 group-hover:scale-[1.02]"
+            >
+              <!-- Render SVG cận cảnh mặt vân viên gạch -->
+            </div>
+
+            <!-- Bộ chuyển nhanh Random Face góc trên phải -->
+            <div class="absolute top-3 right-3 flex items-center gap-1.5 z-10">
+              <button
+                id="cycleRandomFaceBtn"
+                type="button"
+                class="px-2.5 py-1.5 rounded-lg bg-white/92 hover:bg-dravit-primary text-dravit-primary hover:text-white border border-slate-200/80 backdrop-blur-xs font-mono text-[11px] font-semibold shadow-xs flex items-center gap-1 transition cursor-pointer"
+                title="Đổi xem các mặt vân ngẫu nhiên (Random Faces) trong cùng 1 thùng"
+              >
+                <i class="ph-bold ph-shuffle text-xs text-dravit-teal"></i>
+                <span id="currentFaceIndicator">Face 1/6</span>
+              </button>
+              <button
+                type="button"
+                data-lightbox-view="face"
+                aria-label="Phóng to mặt vân gạch"
+                class="w-8 h-8 rounded-lg bg-white/92 hover:bg-dravit-primary text-dravit-primary hover:text-white border border-slate-200/80 backdrop-blur-xs flex items-center justify-center shadow-xs transition cursor-pointer"
+              >
+                <i class="ph-bold ph-magnifying-glass-plus text-xs"></i>
+              </button>
+            </div>
+
+            <!-- Nút "Tải map gạch ↓" chuẩn mẫu thiết kế (Phục vụ Persona KTS / Thiết kế 3D) -->
+            <div class="absolute bottom-3 left-3 z-10">
+              <button
+                id="openDownloadMapModalBtn"
+                type="button"
+                class="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-dravit-primary hover:bg-dravit-teal text-white text-xs font-semibold shadow-md transition cursor-pointer"
+              >
+                <span>Tải map gạch</span>
+                <i class="ph-bold ph-download-simple text-sm"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Ô 3 (DƯỚI - TRÁI): BẢNG PHỐI MÀU NỘI THẤT & CHỌN MÀU KEO CHÀ RON TƯƠNG TÁC -->
+          <div
+            id="panelMoodboard"
+            class="relative aspect-square rounded-2xl bg-[#F4F3EF] border border-slate-200/90 p-4 sm:p-5 flex flex-col justify-between overflow-hidden shadow-2xs"
+          >
+            <!-- Nửa trên: Moodboard 4 chất liệu nội thất ăn ý với mẫu gạch -->
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-dravit-primary">
+                  Bảng phối vật liệu đề xuất
+                </span>
+                <span class="font-mono text-[10px] text-slate-500">Interior Palette</span>
+              </div>
+
+              <div class="grid grid-cols-4 gap-2 h-24 sm:h-28">
+                <div class="rounded-lg border border-slate-300/80 bg-[#FAFBF9] p-1.5 flex flex-col justify-end relative overflow-hidden shadow-2xs" title="Vân gạch chủ đạo">
+                  <div id="miniMoodTileSwatch" class="absolute inset-0"></div>
+                  <span class="relative z-10 text-[9px] font-semibold bg-white/90 text-dravit-ink px-1 py-0.5 rounded truncate">Nền gạch</span>
+                </div>
+                <div class="rounded-lg border border-slate-300/80 bg-[#DDE4EA] p-1.5 flex flex-col justify-end shadow-2xs" title="Sơn tường trung tính">
+                  <span class="text-[9px] font-semibold bg-white/85 text-dravit-ink px-1 py-0.5 rounded truncate">Sơn tường</span>
+                </div>
+                <div class="rounded-lg border border-slate-300/80 bg-[#9BA4B0] p-1.5 flex flex-col justify-end relative overflow-hidden shadow-2xs" title="Đá nhấn / Terrazzo">
+                  <span class="w-1 h-1 rounded-full bg-slate-600 absolute top-3 left-3"></span>
+                  <span class="w-1.5 h-1.5 rounded-full bg-slate-500 absolute top-7 right-4"></span>
+                  <span class="w-1 h-1 rounded-full bg-slate-700 absolute bottom-8 left-6"></span>
+                  <span class="relative z-10 text-[9px] font-semibold bg-white/85 text-dravit-ink px-1 py-0.5 rounded truncate">Đá nhấn</span>
+                </div>
+                <div class="rounded-lg border border-dravit-primary bg-dravit-primary p-1.5 flex flex-col justify-end shadow-2xs" title="Hệ tủ / Sofa xanh Deep Ink">
+                  <span class="text-[9px] font-semibold bg-white/15 text-white px-1 py-0.5 rounded truncate">Hệ tủ nhấn</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Nửa dưới: 3 Ô thử trực tiếp màu Keo Chà Ron (Grout Pairing) -->
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-bold text-dravit-primary">
+                  Thử màu đường ron (1.5mm):
+                </span>
+                <span id="selectedGroutNameLabel" class="text-[11px] font-semibold text-dravit-tealDark">
+                  Trắng Sứ Đồng Màu
+                </span>
+              </div>
+
+              <div class="grid grid-cols-3 gap-2 h-20 sm:h-22">
+                <button
+                  type="button"
+                  data-grout-color="#E2E8F0"
+                  data-grout-name="Trắng Sứ Đồng Màu"
+                  class="grout-swatch-btn rounded-lg border-2 border-dravit-teal bg-[#EAE4D7] overflow-hidden relative flex items-center justify-center shadow-2xs cursor-pointer group"
+                >
+                  <div class="w-full h-full flex">
+                    <div class="flex-1 bg-[#F4F1EA]"></div>
+                    <div class="w-[3px] bg-[#CBD5E1] h-full"></div>
+                    <div class="flex-1 bg-[#F4F1EA]"></div>
+                  </div>
+                  <span class="absolute bottom-1 inset-x-1 py-0.5 rounded bg-white/92 text-[9.5px] font-semibold text-dravit-primary text-center truncate">
+                    Ron Trắng Sứ
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  data-grout-color="#0D9488"
+                  data-grout-name="Xanh Ngọc Điểm Nhấn"
+                  class="grout-swatch-btn rounded-lg border border-slate-300 hover:border-dravit-teal bg-[#EAE4D7] overflow-hidden relative flex items-center justify-center shadow-2xs cursor-pointer"
+                >
+                  <div class="w-full h-full flex">
+                    <div class="flex-1 bg-[#EFEAD8]"></div>
+                    <div class="w-[3.5px] bg-[#0D9488] h-full"></div>
+                    <div class="flex-1 bg-[#EFEAD8]"></div>
+                  </div>
+                  <span class="absolute bottom-1 inset-x-1 py-0.5 rounded bg-white/92 text-[9.5px] font-medium text-slate-700 text-center truncate">
+                    Ron Teal Nhấn
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  data-grout-color="#475569"
+                  data-grout-name="Xám Chì Chống Bẩn"
+                  class="grout-swatch-btn rounded-lg border border-slate-300 hover:border-dravit-teal bg-[#EAE4D7] overflow-hidden relative flex items-center justify-center shadow-2xs cursor-pointer"
+                >
+                  <div class="w-full h-full flex">
+                    <div class="flex-1 bg-[#ECE7DA]"></div>
+                    <div class="w-[4px] bg-[#334155] h-full"></div>
+                    <div class="flex-1 bg-[#ECE7DA]"></div>
+                  </div>
+                  <span class="absolute bottom-1 inset-x-1 py-0.5 rounded bg-white/92 text-[9.5px] font-medium text-slate-700 text-center truncate">
+                    Ron Xám Chì
+                  </span>
+                </button>
+              </div>
+
+              <!-- Thanh chân đế xanh Petrol giống nguyên bản -->
+              <div class="h-3 rounded-md bg-dravit-primary w-full flex items-center justify-between px-2">
+                <span class="text-[8.5px] font-mono text-teal-200">GROUT JOINT 1.5–2.0MM</span>
+                <span class="text-[8.5px] font-mono text-white/75">RECTIFIED EDGE</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ô 4 (DƯỚI - PHẢI): GHÉP MẠCH 4 VIÊN & KÍNH LÚP SOI CẠNH MÀI PHẲNG RECTIFIED -->
+          <div
+            id="panelJointZoom"
+            class="relative aspect-square rounded-2xl bg-[#CBD5DF] border border-slate-200/90 p-4 sm:p-5 overflow-hidden shadow-2xs cursor-crosshair select-none"
+          >
+            <!-- Lưới ghép 4 viên gạch với đường mạch ron đổi màu theo ô số 3 -->
+            <div
+              id="fourTileGridContainer"
+              class="w-full h-full rounded-lg p-1.5 grid grid-cols-2 grid-rows-2 transition-colors duration-300"
+              style="gap: 4px; background-color: #CBD5E1;"
+            >
+              <!-- 4 viên gạch ghép vân liên hoàn -->
+            </div>
+
+            <!-- Vòng tròn nét đứt Kính Lúp Soi Mạch Ron (Di chuyển mượt theo chuột/ngón tay) -->
+            <div id="jointLoupeCircle" class="joint-loupe-ring" style="left: 50%; top: 50%;">
+              <span class="absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap px-2 py-0.5 rounded bg-dravit-primary text-white font-mono text-[9.5px] font-semibold shadow-sm">
+                Ron 1.5mm · Cạnh mài
+              </span>
+            </div>
+
+            <!-- Gợi ý rê chuột góc trên trái -->
+            <div class="absolute top-3 left-3 pointer-events-none">
+              <span class="px-2.5 py-1 rounded-md bg-white/90 text-dravit-primary text-[10.5px] font-semibold shadow-2xs border border-slate-200/80">
+                🔍 Rê chuột kiểm tra mạch ghép 4 viên
+              </span>
+            </div>
+          </div>
+
+        </div>
+      </drv-product-gallery>
+
+      <!-- ====================================================================
+           CỘT PHẢI (5/12): THÔNG TIN SẢN PHẨM, BIẾN THỂ SKU, MÁY TÍNH THÙNG & BÁO GIÁ
+           Thiết kế đồng bộ 100% mô hình "Liên hệ báo giá" (Không hiển thị giá lẻ)
+           ==================================================================== -->
+      <div class="lg:col-span-5 lg:sticky lg:top-20 bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-xs space-y-5">
+
+        <!-- 1. Tiêu đề H1 + Nút Copy tên & thông số nhanh -->
+        <div>
+          <div class="flex items-start justify-between gap-3">
+            <h1 id="productMainH1" class="text-lg sm:text-[21px] font-bold text-dravit-primary leading-snug tracking-tight">
+              Gạch lát nền Dravit Vân Đá Marble Calacatta Trắng Khói 80x80 DRV-8801M
+            </h1>
+            <button
+              id="copyProductTitleBtn"
+              type="button"
+              aria-label="Sao chép tên và mã sản phẩm"
+              title="Sao chép tên & mã gạch"
+              class="w-8 h-8 rounded-lg border border-slate-200 hover:border-dravit-teal text-slate-500 hover:text-dravit-teal flex items-center justify-center shrink-0 transition cursor-pointer mt-0.5"
+            >
+              <i class="ph ph-copy text-base"></i>
+            </button>
+          </div>
+
+          <!-- Dòng Meta: Mã SKU · Tình trạng lô kho · Vị trí Kệ Showroom -->
+          <div class="mt-2.5 flex flex-wrap items-center gap-y-1.5 gap-x-3 text-xs text-slate-600">
+            <span class="inline-flex items-center gap-1">
+              <span class="text-slate-400">SKU:</span>
+              <strong id="productSkuText" class="font-mono font-bold text-dravit-ink">DRV-8801M</strong>
+              <button id="copySkuOnlyBtn" type="button" class="text-slate-400 hover:text-dravit-teal cursor-pointer" title="Sao chép mã SKU">
+                <i class="ph ph-copy-simple text-xs"></i>
+              </button>
+            </span>
+
+            <span class="inline-flex items-center gap-1.5 font-semibold text-emerald-700">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span id="productStockLabel">Sẵn kho lớn (Lô A1)</span>
+            </span>
+
+            <button
+              id="openShowroomShelfModalBtn"
+              type="button"
+              class="inline-flex items-center gap-1 text-slate-600 hover:text-dravit-primary underline decoration-dotted underline-offset-4 cursor-pointer"
+            >
+              <i class="ph-bold ph-map-pin text-dravit-teal"></i>
+              <span id="productShelfLabel">Kệ B-04 Showroom</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. KHỐI CHÍNH SÁCH "LIÊN HỆ BÁO GIÁ" + NÚT YÊU THÍCH (♥ 18) & CHIA SẺ -->
+        <div class="pt-3.5 border-t border-slate-100 flex items-start justify-between gap-3">
+          <div class="space-y-1">
+            <div class="inline-flex items-center gap-2">
+              <span class="inline-flex items-center justify-center w-6 h-6 rounded-lg bg-amber-100 text-amber-700">
+                <i class="ph-fill ph-tag text-sm"></i>
+              </span>
+              <span class="text-xl sm:text-2xl font-bold tracking-tight text-dravit-primary">
+                Liên hệ báo giá
+              </span>
+              <span class="px-2 py-0.5 rounded-md bg-teal-50 border border-teal-200 text-dravit-tealDark text-[11px] font-semibold">
+                Giá xuất kho
+              </span>
+            </div>
+            <p class="text-xs text-slate-500 leading-relaxed">
+              Chiết khấu trực tiếp theo <strong>số thùng nguyên đai</strong> &amp; đối tượng (Chủ nhà · Thợ/Thầu · KTS). Đã gồm VAT.
+            </p>
+          </div>
+
+          <!-- Cụm nút Yêu thích có bộ đếm (18) & Nút Share giống bố cục gốc -->
+          <div class="flex items-center gap-2 shrink-0">
+            <button
+              id="productHeroWishlistBtn"
+              type="button"
+              aria-label="Lưu vào danh sách yêu thích"
+              class="drv-wishlist-btn is-favorited w-12 h-12 rounded-xl border flex flex-col items-center justify-center gap-0.5 cursor-pointer"
+              title="Lưu mẫu gạch này vào danh sách Yêu thích"
+            >
+              <i id="heroWishlistHeartIcon" class="ph-fill ph-heart text-base text-rose-500 leading-none"></i>
+              <span id="heroWishlistLikesCount" class="font-mono text-[10.5px] font-bold leading-none">19</span>
+            </button>
+
+            <button
+              id="shareProductBtn"
+              type="button"
+              aria-label="Chia sẻ sản phẩm"
+              class="w-12 h-12 rounded-xl border border-slate-200 hover:border-dravit-primary bg-white text-slate-600 hover:text-dravit-primary flex flex-col items-center justify-center gap-0.5 transition cursor-pointer"
+              title="Sao chép đường dẫn sản phẩm"
+            >
+              <i class="ph ph-share-network text-base leading-none"></i>
+              <span class="text-[10px] font-medium leading-none">Share</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 3. BỘ CHỌN CHUYỂN ĐỔI SKU ANH EM: MÀU SẮC · KÍCH THƯỚC · BỀ MẶT (ADR MỤC 6) -->
+        <div class="pt-3.5 border-t border-slate-100 space-y-3.5">
+
+          <!-- Chọn Màu sắc / Hệ vân -->
+          <div>
+            <div class="text-xs text-slate-500 mb-2">
+              Màu sắc: <strong id="selectedColorNameText" class="text-dravit-ink font-semibold">Trắng khói Calacatta</strong>
+            </div>
+            <div class="flex flex-wrap gap-2" id="colorVariantButtons">
+              <button
+                type="button"
+                data-color-variant="calacatta"
+                class="color-var-btn px-2.5 py-1.5 rounded-xl border-2 border-dravit-primary bg-teal-50/40 text-dravit-primary text-xs font-semibold inline-flex items-center gap-2 transition cursor-pointer"
+              >
+                <span class="w-5 h-5 rounded-md border border-slate-300 bg-gradient-to-br from-white via-slate-100 to-slate-200 shrink-0"></span>
+                <span>Trắng khói</span>
+              </button>
+
+              <button
+                type="button"
+                data-color-variant="crema"
+                class="color-var-btn px-2.5 py-1.5 rounded-xl border border-slate-200 hover:border-dravit-primary bg-white text-slate-700 text-xs font-medium inline-flex items-center gap-2 transition cursor-pointer"
+              >
+                <span class="w-5 h-5 rounded-md border border-slate-300 bg-[#EAE2D3] shrink-0"></span>
+                <span>Kem vàng</span>
+              </button>
+
+              <button
+                type="button"
+                data-color-variant="pietra"
+                class="color-var-btn px-2.5 py-1.5 rounded-xl border border-slate-200 hover:border-dravit-primary bg-white text-slate-700 text-xs font-medium inline-flex items-center gap-2 transition cursor-pointer"
+              >
+                <span class="w-5 h-5 rounded-md border border-slate-300 bg-gradient-to-br from-slate-300 to-slate-500 shrink-0"></span>
+                <span>Xám Pietra</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Chọn Kích thước danh nghĩa -->
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="text-xs text-slate-500 w-20 shrink-0">Kích thước:</span>
+            <div class="flex flex-wrap gap-2">
+              <button
+                type="button"
+                data-size-variant="60x60"
+                class="size-var-btn px-3.5 py-1.5 rounded-lg border border-slate-200 hover:border-dravit-primary bg-white text-dravit-ink font-mono text-xs font-medium transition cursor-pointer"
+              >
+                60×60 cm
+              </button>
+              <button
+                type="button"
+                data-size-variant="80x80"
+                class="size-var-btn px-3.5 py-1.5 rounded-lg border border-dravit-primary bg-dravit-primary text-white font-mono text-xs font-semibold shadow-2xs transition cursor-pointer"
+              >
+                80×80 cm
+              </button>
+              <button
+                type="button"
+                data-size-variant="60x120"
+                class="size-var-btn px-3.5 py-1.5 rounded-lg border border-slate-200 hover:border-dravit-primary bg-white text-dravit-ink font-mono text-xs font-medium transition cursor-pointer"
+              >
+                60×120 cm
+              </button>
+            </div>
+          </div>
+
+          <!-- Chọn Bề mặt & Chỉ số chống trượt DCOF -->
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="text-xs text-slate-500 w-20 shrink-0">Bề mặt:</span>
+            <div class="flex flex-wrap gap-2">
+              <button
+                type="button"
+                data-surface-variant="bong-kieng"
+                class="surf-var-btn px-3.5 py-1.5 rounded-lg border border-dravit-primary bg-dravit-primary text-white text-xs font-semibold shadow-2xs transition cursor-pointer"
+              >
+                Bóng kiếng (R9)
+              </button>
+              <button
+                type="button"
+                data-surface-variant="ban-bong"
+                class="surf-var-btn px-3.5 py-1.5 rounded-lg border border-slate-200 hover:border-dravit-primary bg-white text-dravit-ink text-xs font-medium transition cursor-pointer"
+              >
+                Bán bóng (R9)
+              </button>
+              <button
+                type="button"
+                data-surface-variant="nham"
+                class="surf-var-btn px-3.5 py-1.5 rounded-lg border border-slate-200 hover:border-dravit-primary bg-white text-dravit-ink text-xs font-medium transition cursor-pointer"
+              >
+                Mờ Matt (R10)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. MÁY TÍNH QUY ĐỔI DIỆN TÍCH ↔ SỐ VIÊN ↔ NGUYÊN THÙNG (<drv-unit-calc> - ADR D-05) -->
+        <drv-unit-calc class="pt-4 border-t border-slate-100 space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="text-xs font-semibold text-dravit-primary flex items-center gap-1.5">
+              <i class="ph-fill ph-calculator text-dravit-teal text-sm"></i>
+              <span>Nhập diện tích cần lát để tính số thùng:</span>
+            </span>
+
+            <label class="inline-flex items-center gap-1.5 text-[11.5px] text-slate-600 cursor-pointer select-none">
+              <input id="singleWasteCheckbox" type="checkbox" class="rounded border-slate-300 text-dravit-teal focus:ring-dravit-teal" />
+              <span>Cộng +5% hao hụt cắt gạch</span>
+            </label>
+          </div>
+
+          <!-- Bộ nhập m² [ - 10 + ] m² ≈ 18 viên đúng bố cục gốc -->
+          <div class="flex flex-wrap items-center gap-3">
+            <div class="inline-flex items-center rounded-xl border border-slate-300 bg-white focus-within:border-dravit-teal focus-within:ring-2 focus-within:ring-teal-500/15">
+              <button
+                id="decreaseAreaBtn"
+                type="button"
+                aria-label="Giảm diện tích"
+                class="w-10 h-10 flex items-center justify-center text-dravit-primary hover:bg-slate-100 rounded-l-xl font-bold text-base transition cursor-pointer"
+              >−</button>
+              <input
+                id="singleAreaInput"
+                type="number"
+                min="1"
+                max="5000"
+                step="1"
+                value="10"
+                aria-label="Diện tích m²"
+                class="w-16 text-center font-mono text-sm font-bold text-dravit-ink bg-transparent focus:outline-none"
+              />
+              <button
+                id="increaseAreaBtn"
+                type="button"
+                aria-label="Tăng diện tích"
+                class="w-10 h-10 flex items-center justify-center text-dravit-primary hover:bg-slate-100 rounded-r-xl font-bold text-base transition cursor-pointer"
+              >+</button>
+            </div>
+
+            <div class="text-xs sm:text-[13.5px] text-slate-600">
+              <span>m²</span>
+              <span class="mx-1.5 text-slate-400">≈</span>
+              <strong id="calcPiecesOutput" class="font-mono text-base font-bold text-dravit-primary">18</strong>
+              <span class="font-medium text-dravit-ink">viên</span>
+            </div>
+
+            <!-- Diện tích mẫu bấm nhanh -->
+            <div class="ml-auto hidden sm:flex items-center gap-1">
+              <button type="button" data-area-chip="10" class="single-area-chip px-2 py-1 rounded-md bg-teal-50 text-dravit-tealDark border border-teal-200 font-mono text-[10.5px] font-semibold cursor-pointer">10m²</button>
+              <button type="button" data-area-chip="35" class="single-area-chip px-2 py-1 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-600 font-mono text-[10.5px] cursor-pointer">35m²</button>
+              <button type="button" data-area-chip="60" class="single-area-chip px-2 py-1 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-600 font-mono text-[10.5px] cursor-pointer">60m²</button>
+            </div>
+          </div>
+
+          <!-- Ghi chú quy cách đóng nguyên thùng trung thực, rõ ràng -->
+          <p id="packagingNoticeText" class="text-[11.5px] italic text-slate-500 leading-relaxed">
+            Thực nhận là <strong class="text-dravit-ink not-italic">11,52 m²</strong> (do gạch xuất nguyên đai không bán lẻ, đóng thùng <strong class="text-dravit-ink not-italic">3 viên = 1,92 m²/thùng</strong> — đã dư 1,52 m² dự phòng cắt bo góc).
+          </p>
+
+          <!-- Khối Tổng hợp Khối Lượng Đề Xuất Báo Giá (Thay thế dòng Tổng tiền VNĐ) -->
+          <div class="rounded-xl bg-gradient-to-r from-slate-50 via-teal-50/45 to-slate-50 border border-teal-200/80 px-4 py-3 flex items-center justify-between gap-3">
+            <div>
+              <div class="text-xs font-semibold text-dravit-primary">Khối lượng đề xuất báo giá</div>
+              <div id="weightAndPalletHint" class="text-[11px] text-slate-500 font-mono mt-0.5">
+                Trọng lượng ước tính: ~174 kg · Xuất cùng 1 lô màu
+              </div>
+            </div>
+            <div class="text-right shrink-0">
+              <div id="calcBoxesBigOutput" class="font-mono text-xl sm:text-2xl font-bold text-dravit-primary leading-none">
+                6 thùng
+              </div>
+              <div class="text-[10.5px] font-semibold text-dravit-tealDark mt-1">
+                Nhận chiết khấu theo thùng
+              </div>
+            </div>
+          </div>
+        </drv-unit-calc>
+
+        <!-- 5. CỤM NÚT HÀNH ĐỘNG CHÍNH (CHUYỂN ĐỔI CAO CHO MÔ HÌNH LIÊN HỆ BÁO GIÁ) -->
+        <div class="space-y-2.5 pt-1">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <!-- CTA Chính: Nhận báo giá ngay (Mở thẳng Drawer điền SĐT/Zalo 1 bước) -->
+            <button
+              id="primaryRequestQuoteNowBtn"
+              type="button"
+              class="py-3.5 px-4 rounded-xl bg-dravit-primary hover:bg-dravit-primaryDark text-white font-semibold text-[13.5px] shadow-sm transition flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <i class="ph-fill ph-lightning text-amber-300 text-base"></i>
+              <span id="primaryCtaBoxesText">Nhận báo giá ngay (6 thùng)</span>
+            </button>
+
+            <!-- CTA Phụ: Gom vào Danh sách báo giá nhiều phòng -->
+            <button
+              id="secondaryAddToQuoteListBtn"
+              type="button"
+              class="py-3.5 px-4 rounded-xl bg-teal-50/90 hover:bg-dravit-teal text-dravit-primary hover:text-white border border-teal-200/90 font-semibold text-[13.5px] transition flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <i class="ph-bold ph-clipboard-text text-base"></i>
+              <span>+ Thêm vào DS Báo giá</span>
+            </button>
+          </div>
+
+          <!-- Dòng tiện ích phụ: Hỏi Trợ lý AI mẫu này · Đặt lịch xem mẫu thực tế tại Kệ B-04 -->
+          <div class="pt-1 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500">
+            <span>Đang xây nhà hoặc cần báo giá công trình lớn?</span>
+            <div class="flex items-center gap-2.5 font-semibold">
+              <button
+                id="askAiAboutProductBtn"
+                type="button"
+                class="text-dravit-tealDark hover:text-dravit-primary underline underline-offset-4 inline-flex items-center gap-1 cursor-pointer"
+              >
+                <i class="ph-fill ph-sparkle text-dravit-teal"></i>
+                <span>Hỏi Trợ lý AI mẫu này</span>
+              </button>
+              <span class="text-slate-300">·</span>
+              <button
+                id="bookShowroomSampleBtn"
+                type="button"
+                class="text-dravit-primary hover:text-dravit-teal underline underline-offset-4 cursor-pointer"
+              >
+                Xem mẫu thật tại Showroom
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         5. BẢNG THÔNG SỐ KỸ THUẬT CHI TIẾT & 6 RANDOM FACES (SSR / GEO READY)
+         ====================================================================== -->
+    <section id="thong-so-ky-thuat" class="pt-6 border-t border-slate-200/90 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+      <!-- Bảng thông số kỹ thuật dạng bảng text chuẩn GEO (7/12) -->
+      <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-2xs space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <h2 class="text-base sm:text-lg font-bold text-dravit-primary">
+              Bảng thông số kỹ thuật chi tiết
+            </h2>
+            <p class="text-xs text-slate-500 mt-0.5">
+              Dữ liệu kiểm định tiêu chuẩn ISO 13006 / TCVN 7745 cho mã <strong id="specTableSkuLabel" class="font-mono text-dravit-ink">DRV-8801M</strong>
+            </p>
+          </div>
+          <span class="px-2.5 py-1 rounded-lg bg-teal-50 border border-teal-200 font-mono text-[11px] font-semibold text-dravit-tealDark">
+            Xương đá Porcelain BIa
+          </span>
+        </div>
+
+        <div class="rounded-xl border border-slate-200 overflow-hidden">
+          <table class="w-full text-xs">
+            <tbody id="fullTechnicalSpecTable" class="divide-y divide-slate-100">
+              <!-- Render tự động đầy đủ 11 tiêu chí kỹ thuật khi đổi biến thể -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Bộ 6 Mặt Vân Ngẫu Nhiên (Random Faces Preview) & Phù hợp không gian (5/12) -->
+      <div id="huong-dan-thi-cong" class="lg:col-span-5 space-y-5">
+
+        <!-- Khối xem 6 Random Faces trong 1 thùng gạch -->
+        <div class="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-2xs space-y-3.5">
+          <div class="flex items-center justify-between gap-2">
+            <div>
+              <h2 class="text-base font-bold text-dravit-primary">
+                Hệ 6 mặt vân ngẫu nhiên (Random Faces)
+              </h2>
+              <p class="text-xs text-slate-500 mt-0.5">
+                Bấm vào từng mặt gạch để xem cận cảnh trên khung Gallery chính
+              </p>
+            </div>
+            <button
+              id="downloadAllFacesZipBtn"
+              type="button"
+              class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-dravit-primary text-dravit-primary hover:text-white font-mono text-[11px] font-semibold transition flex items-center gap-1 cursor-pointer shrink-0"
+            >
+              <i class="ph-bold ph-download-simple"></i>
+              <span>Map 4K (.ZIP)</span>
+            </button>
+          </div>
+
+          <div id="sixRandomFacesGrid" class="grid grid-cols-3 gap-2.5">
+            <!-- Render 6 mặt vân không trùng lặp -->
+          </div>
+        </div>
+
+        <!-- Ma trận khuyến nghị không gian & Thi công chuẩn Dravit -->
+        <div class="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-2xs space-y-3">
+          <h3 class="text-sm font-bold text-dravit-primary flex items-center gap-1.5">
+            <i class="ph-fill ph-shield-check text-dravit-teal text-base"></i>
+            <span>Đánh giá tương thích công năng thực tế</span>
+          </h3>
+
+          <div id="spaceSuitabilityList" class="space-y-2 text-xs">
+            <!-- Render tự động theo bề mặt R9 / R10 đang chọn -->
+          </div>
+
+          <div class="pt-2 border-t border-slate-100 text-[11.5px] text-slate-600 space-y-1">
+            <p><strong class="text-dravit-primary">Khuyến nghị thi công:</strong> Sử dụng keo dán gạch gốc C2 kết hợp ke cân bằng <strong>1.5 – 2.0 mm</strong>; xoay chiều ngẫu nhiên các mặt vân khi lát để mặt sàn tự nhiên như đá nguyên tấm.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         6. SẢN PHẨM ĐỒNG BỘ / GỢI Ý PHỐI CÙNG CÔNG TRÌNH — CHUẨN GRID 4 - 3 - 2
+            Đồng bộ 100% thiết kế Card sản phẩm có nút Yêu thích & Liên hệ báo giá
+         ====================================================================== -->
+    <section id="san-pham-dong-bo" class="pt-6 border-t border-slate-200/90 space-y-4">
+      <div class="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <span class="text-[11px] font-bold uppercase tracking-wider text-dravit-teal">
+            GỢI Ý ĐỒNG BỘ CHO CÔNG TRÌNH
+          </span>
+          <h2 class="text-lg sm:text-xl font-bold text-dravit-primary mt-0.5">
+            Mẫu gạch phối hợp ăn ý cho Nhà tắm, Phòng ngủ &amp; Ốp tường
+          </h2>
+        </div>
+        <p class="text-xs text-slate-500">
+          Gom chung nhiều hạng mục vào <strong>1 bảng báo giá</strong> để nhận mức chiết khấu tổng khối lượng tốt nhất.
+        </p>
+      </div>
+
+      <!-- Lưới Grid 4 - 3 - 2 chuẩn toàn hệ thống (Desktop 4 · Tablet 3 · Mobile 2) -->
+      <div
+        id="relatedProductsGrid"
+        class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-4"
+      >
+        <!-- Render 4 thẻ sản phẩm liên quan có nút Trái tim Yêu thích & Nhận báo giá -->
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         7. FAQ SẢN PHẨM (CHUẨN SCHEMA RICH RESULTS)
+         ====================================================================== -->
+    <section class="pt-6 border-t border-slate-200/90 grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div class="lg:col-span-4 space-y-2">
+        <h2 class="text-base sm:text-lg font-bold text-dravit-primary">
+          Câu hỏi thường gặp về mẫu gạch này
+        </h2>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          Giải đáp minh bạch về quy cách xuất kho nguyên thùng, kiểm soát độ lệch màu giữa các lô nung và chính sách vận chuyển công trình của Dravit.
+        </p>
+      </div>
+
+      <div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+        <details class="group rounded-xl bg-white border border-slate-200 p-4 open:border-teal-300 transition" open>
+          <summary class="font-semibold text-dravit-primary cursor-pointer flex items-center justify-between gap-2 list-none">
+            <span>Tôi mua thiếu 1–2 thùng sau này đặt thêm có cùng màu không?</span>
+            <i class="ph-bold ph-caret-down text-dravit-teal transition-transform group-open:rotate-180 shrink-0"></i>
+          </summary>
+          <p class="mt-2 text-slate-600 leading-relaxed">
+            Mỗi đợt nung gạch Porcelain ở 1.220°C sẽ có mã màu (Shade) riêng. Dravit luôn lưu mã lô trong hồ sơ báo giá của bạn để tra cứu đúng lô cũ hoặc khuyến nghị cộng dư sẵn 5% ngay từ đầu.
+          </p>
+        </details>
+
+        <details class="group rounded-xl bg-white border border-slate-200 p-4 open:border-teal-300 transition" open>
+          <summary class="font-semibold text-dravit-primary cursor-pointer flex items-center justify-between gap-2 list-none">
+            <span>Nhận báo giá sau bao lâu thì có phản hồi &amp; phí vận chuyển?</span>
+            <i class="ph-bold ph-caret-down text-dravit-teal transition-transform group-open:rotate-180 shrink-0"></i>
+          </summary>
+          <p class="mt-2 text-slate-600 leading-relaxed">
+            Trong vòng tối đa 30 phút (giờ hành chính), bộ phận Dự toán sẽ gửi báo giá chiết khấu theo số thùng kèm phí vận chuyển xe tải/cẩu tới tận chân công trình qua Zalo hoặc Email.
+          </p>
+        </details>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================
+       8. FOOTER THƯƠNG HIỆU DRAVIT
+       ======================================================================== -->
+  <footer class="bg-dravit-primaryDark text-slate-300 border-t border-white/10 mt-12 pb-24 sm:pb-8">
+    <div class="max-w-[1440px] mx-auto px-3 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 text-xs">
+      <div class="space-y-1.5">
+        <div class="flex items-center gap-2 text-white font-bold text-sm">
+          <span class="w-6 h-6 rounded-md bg-dravit-teal flex items-center justify-center text-xs">D</span>
+          <span>CÔNG TY TNHH DRAVIT (gachdravit.vn)</span>
+        </div>
+        <p class="text-slate-400">
+          "Thẩm mỹ từ những đường nét nhỏ nhất." — Gạch ốp lát chuẩn thông số kỹ thuật cho nhà phố, biệt thự &amp; dự án.
+        </p>
+      </div>
+      <div class="flex flex-wrap gap-4 text-slate-300">
+        <span>Thanh toán COD / Chuyển khoản VietQR</span>
+        <span>•</span>
+        <span>Báo phí vận chuyển sau xác nhận đơn</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================================================
+       9. THANH STICKY BOTTOM CTA TRÊN MOBILE (LUÔN HIỆN GỌI / ZALO / BÁO GIÁ)
+       ======================================================================== -->
+  <div class="sm:hidden fixed bottom-0 inset-x-0 z-30 bg-white/95 backdrop-blur-md border-t border-slate-200 px-3 py-2 flex items-center gap-2 shadow-lg">
+    <button
+      id="mobileStickyAiBtn"
+      type="button"
+      class="px-3 py-2.5 rounded-xl bg-slate-100 text-dravit-primary font-semibold text-xs flex items-center justify-center gap-1 cursor-pointer"
+    >
+      <i class="ph-fill ph-sparkle text-dravit-teal"></i>
+      <span>Hỏi AI</span>
+    </button>
+    <button
+      id="mobileStickyZaloBtn"
+      type="button"
+      class="px-3 py-2.5 rounded-xl bg-teal-50 text-dravit-tealDark border border-teal-200 font-semibold text-xs flex items-center justify-center gap-1 cursor-pointer"
+    >
+      <i class="ph-fill ph-chat-circle-dots"></i>
+      <span>Zalo</span>
+    </button>
+    <button
+      id="mobileStickyQuoteNowBtn"
+      type="button"
+      class="flex-1 py-2.5 rounded-xl bg-dravit-primary text-white font-semibold text-xs flex items-center justify-center gap-1.5 cursor-pointer"
+    >
+      <i class="ph-fill ph-lightning text-amber-300"></i>
+      <span id="mobileStickyBoxesText">Nhận báo giá (6 thùng)</span>
+    </button>
+  </div>
+
+  <!-- ========================================================================
+       10. DRAWER 1: TRỢ LÝ AI NGỮ CẢNH SẢN PHẨM (HỎI RIÊNG VỀ MẪU ĐANG XEM)
+       ======================================================================== -->
+  <div id="aiDrawerBackdrop" class="drv-backdrop fixed inset-0 bg-dravit-ink/50 backdrop-blur-[2px] z-40"></div>
+  <aside
+    id="contextualAiDrawer"
+    aria-label="Trợ lý AI tư vấn sản phẩm đang xem"
+    class="drv-drawer-right drv-drawer-bottom-mobile fixed right-0 bottom-0 sm:top-0 z-50 w-full sm:w-[430px] h-[86vh] sm:h-full bg-white shadow-2xl border-l border-slate-200 flex flex-col rounded-t-2xl sm:rounded-none overflow-hidden"
+  >
+    <header class="px-5 py-4 bg-gradient-to-r from-dravit-primary to-[#0c4d66] text-white flex items-center justify-between shrink-0">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-xl bg-white/15 flex items-center justify-center">
+          <i class="ph-fill ph-robot text-teal-300 text-lg"></i>
+        </div>
+        <div>
+          <h3 class="text-sm font-bold">Hỏi Trợ lý AI về mẫu gạch này</h3>
+          <p id="aiDrawerSubSku" class="font-mono text-[10.5px] text-teal-200">Đang ghim: DRV-8801M · 80×80 cm</p>
+        </div>
+      </div>
+      <button id="closeAiDrawerBtn" type="button" class="w-8 h-8 rounded-lg hover:bg-white/15 flex items-center justify-center cursor-pointer">
+        <i class="ph-bold ph-x"></i>
+      </button>
+    </header>
+
+    <div id="contextualAiMessages" class="flex-1 overflow-y-auto drv-scroll p-4 space-y-3 bg-slate-50/70 text-xs">
+      <!-- Khởi tạo hội thoại theo mẫu gạch hiện tại -->
+    </div>
+
+    <div class="px-4 py-2 bg-white border-t border-slate-100 flex gap-1.5 overflow-x-auto drv-scroll shrink-0">
+      <button type="button" data-ai-quick="Mẫu này lát sàn nhà tắm có bị trơn không?" class="shrink-0 px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-teal-50 text-dravit-ink text-[11px] font-medium cursor-pointer">
+        Lát nhà tắm có trơn không?
+      </button>
+      <button type="button" data-ai-quick="Nên phối keo chà ron màu gì đẹp nhất?" class="shrink-0 px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-teal-50 text-dravit-ink text-[11px] font-medium cursor-pointer">
+        Phối màu ron nào đẹp?
+      </button>
+      <button type="button" data-ai-quick="Gợi ý gạch ốp tường phối cùng mẫu này" class="shrink-0 px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-teal-50 text-dravit-ink text-[11px] font-medium cursor-pointer">
+        Gạch ốp phối cùng?
+      </button>
+    </div>
+
+    <form id="contextualAiForm" class="p-3 bg-white border-t border-slate-200 flex items-center gap-2 shrink-0">
+      <input
+        id="contextualAiInput"
+        type="text"
+        placeholder="Nhập câu hỏi kỹ thuật về mẫu này..."
+        class="flex-1 px-3.5 py-2.5 rounded-xl bg-slate-100 focus:bg-white border border-slate-200 focus:border-dravit-teal text-xs text-dravit-ink focus:outline-none"
+      />
+      <button type="submit" class="px-3.5 py-2.5 rounded-xl bg-dravit-teal hover:bg-dravit-tealDark text-white text-xs font-semibold cursor-pointer">
+        Gửi
+      </button>
+    </form>
+  </aside>
+
+  <!-- ========================================================================
+       11. DRAWER 2: DANH SÁCH MẪU GẠCH YÊU THÍCH (<drv-wishlist-panel>)
+       ======================================================================== -->
+  <div id="wishlistBackdrop" class="drv-backdrop fixed inset-0 bg-dravit-ink/50 backdrop-blur-[2px] z-40"></div>
+  <drv-wishlist-panel
+    id="drvWishlistPanel"
+    aria-label="Danh sách gạch yêu thích"
+    class="drv-drawer-right drv-drawer-bottom-mobile fixed right-0 bottom-0 sm:top-0 z-50 w-full sm:w-[420px] h-[86vh] sm:h-full bg-white shadow-2xl border-l border-slate-200 flex flex-col rounded-t-2xl sm:rounded-none overflow-hidden"
+  >
+    <header class="px-5 py-4 bg-gradient-to-r from-rose-600 to-rose-500 text-white flex items-center justify-between shrink-0">
+      <div class="flex items-center gap-2">
+        <i class="ph-fill ph-heart text-lg text-rose-100"></i>
+        <h2 class="text-base font-bold">Mẫu gạch Yêu thích</h2>
+      </div>
+      <button id="closeWishlistDrawerBtn" type="button" class="w-8 h-8 rounded-lg hover:bg-white/15 flex items-center justify-center cursor-pointer">
+        <i class="ph-bold ph-x"></i>
+      </button>
+    </header>
+    <div id="wishlistItemsContainer" class="flex-1 overflow-y-auto drv-scroll p-4 space-y-3"></div>
+    <div id="wishlistFooterBox" class="p-4 border-t border-slate-200 bg-slate-50 shrink-0">
+      <button id="moveAllWishToQuoteBtn" type="button" class="w-full py-3 rounded-xl bg-dravit-primary hover:bg-dravit-primaryDark text-white text-xs font-semibold cursor-pointer">
+        Chuyển toàn bộ sang Danh sách nhận báo giá
+      </button>
+    </div>
+  </drv-wishlist-panel>
+
+  <!-- ========================================================================
+       12. DRAWER 3: BẢNG YÊU CẦU BÁO GIÁ (<drv-quote-panel> - SPEC MỤC 2.2)
+       ======================================================================== -->
+  <div id="quoteBackdrop" class="drv-backdrop fixed inset-0 bg-dravit-ink/50 backdrop-blur-[2px] z-40"></div>
+  <drv-quote-panel
+    id="drvQuotePanel"
+    data-drv-lazy="quote-panel"
+    aria-label="Danh sách yêu cầu báo giá"
+    class="drv-drawer-right drv-drawer-bottom-mobile fixed right-0 bottom-0 sm:top-0 z-50 w-full sm:w-[475px] h-[92vh] sm:h-full bg-white shadow-2xl border-l border-slate-200 flex flex-col rounded-t-2xl sm:rounded-none overflow-hidden"
+  >
+    <header class="px-5 py-4 bg-dravit-primary text-white flex items-center justify-between shrink-0">
+      <div>
+        <div class="flex items-center gap-2">
+          <i class="ph-fill ph-clipboard-text text-lg text-teal-300"></i>
+          <h2 class="text-base font-bold tracking-tight">Danh sách yêu cầu báo giá</h2>
+        </div>
+        <p class="text-[11px] text-teal-100/80 mt-0.5">
+          Báo giá xuất kho &amp; chiết khấu theo số thùng nguyên đai trong 30 phút
+        </p>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <button id="shareQuoteListBtn" type="button" class="px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-[11px] font-medium text-teal-200 flex items-center gap-1 cursor-pointer">
+          <i class="ph ph-share-network text-sm"></i>
+          <span>Chia sẻ</span>
+        </button>
+        <button id="closeQuoteDrawerBtn" type="button" class="w-8 h-8 rounded-lg hover:bg-white/15 flex items-center justify-center cursor-pointer">
+          <i class="ph-bold ph-x text-base"></i>
+        </button>
+      </div>
+    </header>
+
+    <div class="flex-1 overflow-y-auto drv-scroll p-5 space-y-5">
+      <div id="emptyQuoteState" class="py-10 text-center space-y-3">
+        <div class="w-14 h-14 rounded-2xl bg-slate-100 text-slate-400 mx-auto flex items-center justify-center">
+          <i class="ph ph-package text-3xl"></i>
+        </div>
+        <p class="text-sm font-semibold text-dravit-primary">Danh sách báo giá đang trống</p>
+        <p class="text-xs text-slate-500 max-w-[280px] mx-auto">Bấm "Nhận báo giá ngay" để thêm khối lượng thùng vừa tính vào danh sách.</p>
+      </div>
+
+      <div id="quoteItemsContainer" class="space-y-3 hidden"></div>
+
+      <div id="quoteSummarySection" class="rounded-xl bg-gradient-to-br from-slate-50 to-teal-50/40 border border-teal-200/70 p-4 hidden">
+        <div class="flex items-center justify-between mb-2 pb-2 border-b border-slate-200/80">
+          <span class="text-xs font-bold uppercase tracking-wider text-dravit-primary">Tổng khối lượng báo giá</span>
+          <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 text-[10.5px] font-semibold">Liên hệ báo giá</span>
+        </div>
+        <dl class="space-y-1.5 text-xs">
+          <div class="flex justify-between">
+            <dt class="text-slate-600">Số mã gạch:</dt>
+            <dd id="summarySkuCount" class="font-semibold text-dravit-ink">0 mẫu</dd>
+          </div>
+          <div class="flex justify-between">
+            <dt class="text-slate-600">Tổng diện tích thực nhận:</dt>
+            <dd id="summaryTotalArea" class="font-mono font-semibold text-dravit-primary">0 m²</dd>
+          </div>
+          <div class="pt-2 border-t border-slate-200/80 flex justify-between items-baseline">
+            <dt class="font-bold text-dravit-primary">Tổng đóng gói:</dt>
+            <dd id="summaryTotalBoxes" class="font-mono text-base font-bold text-dravit-tealDark">0 thùng (0 viên)</dd>
+          </div>
+        </dl>
+      </div>
+
+      <form id="quoteContactForm" class="space-y-3 pt-1 hidden">
+        <input type="text" name="drv_website" tabindex="-1" autocomplete="off" class="drv-hp-field" />
+        <input type="hidden" name="customer_role" id="customerRoleInput" value="chu-nha" />
+
+        <div class="grid grid-cols-3 gap-1.5">
+          <button type="button" data-persona="chu-nha" class="persona-btn py-2 px-2 rounded-lg border border-dravit-teal bg-teal-50/80 text-dravit-primary font-semibold text-[11.5px] cursor-pointer">Chủ nhà</button>
+          <button type="button" data-persona="nha-thau" class="persona-btn py-2 px-2 rounded-lg border border-slate-200 bg-white text-slate-600 font-medium text-[11.5px] cursor-pointer">Thợ / Thầu</button>
+          <button type="button" data-persona="kts" class="persona-btn py-2 px-2 rounded-lg border border-slate-200 bg-white text-slate-600 font-medium text-[11.5px] cursor-pointer">KTS</button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <input name="customer_name" type="text" required placeholder="Họ tên của bạn *" class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-xs focus:outline-none focus:border-dravit-teal" />
+          <input name="customer_phone" type="tel" required placeholder="Số điện thoại / Zalo *" class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-xs focus:outline-none focus:border-dravit-teal" />
+        </div>
+
+        <!-- Địa chỉ VN 2 cấp chuẩn ADR D-16 -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <select name="customer_province" class="w-full px-3 py-2.5 rounded-lg border border-slate-300 text-xs bg-white focus:outline-none focus:border-dravit-teal">
+            <option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh</option>
+            <option value="Hà Nội">TP. Hà Nội</option>
+            <option value="Đà Nẵng">TP. Đà Nẵng</option>
+            <option value="Đồng Nai">Tỉnh Đồng Nai</option>
+            <option value="Khác">Tỉnh / Thành phố khác</option>
+          </select>
+          <input name="customer_ward" type="text" placeholder="Phường / Xã giao công trình" class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-xs focus:outline-none focus:border-dravit-teal" />
+        </div>
+
+        <textarea id="quoteNoteTextarea" name="customer_note" rows="2" placeholder="Ghi chú (hẹn xem mẫu Kệ B-04 Showroom, tiến độ giao gạch...)" class="w-full px-3.5 py-2 rounded-lg border border-slate-300 text-xs focus:outline-none focus:border-dravit-teal resize-none"></textarea>
+
+        <label class="flex items-start gap-2 text-xs text-slate-600 cursor-pointer">
+          <input type="checkbox" required checked class="mt-0.5 rounded border-slate-300 text-dravit-teal" />
+          <span>Đồng ý để chuyên viên <strong>Dravit</strong> liên hệ gửi báo giá chiết khấu &amp; kiểm tra lô màu.</span>
+        </label>
+
+        <button type="submit" class="w-full py-3 rounded-xl bg-dravit-teal hover:bg-dravit-tealDark text-white font-semibold text-xs shadow-sm transition cursor-pointer">
+          Gửi yêu cầu nhận báo giá ngay
+        </button>
+      </form>
+
+      <div id="quoteSuccessBanner" class="hidden rounded-2xl bg-emerald-50 border border-emerald-200 p-5 text-center space-y-3">
+        <div class="w-12 h-12 rounded-full bg-emerald-500 text-white mx-auto flex items-center justify-center">
+          <i class="ph-bold ph-check text-2xl"></i>
+        </div>
+        <h3 class="text-sm font-bold text-emerald-950">Đã tiếp nhận yêu cầu báo giá!</h3>
+        <p id="quoteSuccessCode" class="font-mono text-xs text-emerald-800 bg-white px-3 py-1 rounded border border-emerald-200 inline-block">Hồ sơ #DRV-8812</p>
+        <p class="text-xs text-emerald-900/80">Chuyên viên Dự toán Dravit sẽ gửi báo giá chiết khấu theo số thùng qua Zalo / SĐT trong 30 phút.</p>
+      </div>
+    </div>
+  </drv-quote-panel>
+
+  <!-- ========================================================================
+       13. MODAL TẢI MAP GẠCH 4K CHO KTS / 3DSMAX / SKETCHUP & LIGHTBOX PHÓNG TO
+       ======================================================================== -->
+  <div id="cadMapModal" class="hidden fixed inset-0 z-50 bg-dravit-ink/55 backdrop-blur-xs items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full overflow-hidden shadow-2xl border border-slate-200">
+      <div class="px-5 py-4 bg-dravit-primary text-white flex items-center justify-between">
+        <div>
+          <span class="font-mono text-[10.5px] text-teal-300">ARCHITECT &amp; BIM RESOURCES</span>
+          <h3 class="text-base font-bold">Tải bộ Map PBR 4K cho thiết kế 3D</h3>
+        </div>
+        <button id="closeCadMapModalBtn" type="button" class="w-8 h-8 rounded-lg hover:bg-white/10 flex items-center justify-center cursor-pointer">
+          <i class="ph-bold ph-x"></i>
+        </button>
+      </div>
+      <div class="p-5 space-y-3.5 text-xs">
+        <p class="text-slate-600 leading-relaxed">
+          Bộ thư viện dành cho Kiến trúc sư (SketchUp, 3dsMax Corona/V-Ray, Revit) của mã <strong id="cadModalSkuText" class="font-mono text-dravit-primary">DRV-8801M</strong> gồm đầy đủ 6 Random Faces không lặp vân:
+        </p>
+        <div class="space-y-2">
+          <button type="button" data-download-pack="Full PBR 4K (Diffuse + Roughness + Normal)" class="w-full p-3 rounded-xl border border-slate-200 hover:border-dravit-teal bg-slate-50 hover:bg-teal-50/40 flex items-center justify-between transition cursor-pointer">
+            <div class="text-left">
+              <div class="font-bold text-dravit-primary">Trọn bộ 6 Faces PBR 4K (.ZIP)</div>
+              <div class="text-[11px] text-slate-500">Diffuse · Reflection/Glossiness · Bump (38.4 MB)</div>
+            </div>
+            <i class="ph-bold ph-download-simple text-dravit-teal text-base"></i>
+          </button>
+          <button type="button" data-download-pack="Catalogue Thông số Kỹ thuật PDF" class="w-full p-3 rounded-xl border border-slate-200 hover:border-dravit-teal bg-slate-50 hover:bg-teal-50/40 flex items-center justify-between transition cursor-pointer">
+            <div class="text-left">
+              <div class="font-bold text-dravit-primary">Hồ sơ trình mẫu vật liệu dự án (.PDF)</div>
+              <div class="text-[11px] text-slate-500">Chứng nhận ISO 13006 · DCOF · Độ hút nước (2.1 MB)</div>
+            </div>
+            <i class="ph-bold ph-file-pdf text-rose-500 text-base"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIGHTBOX XEM ẢNH LỚN -->
+  <div id="galleryLightboxModal" class="hidden fixed inset-0 z-50 bg-dravit-ink/80 backdrop-blur-sm items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full overflow-hidden shadow-2xl">
+      <div class="px-5 py-3.5 bg-dravit-primary text-white flex items-center justify-between">
+        <span id="lightboxCaption" class="text-xs font-semibold">Xem chi tiết bề mặt gạch</span>
+        <button id="closeLightboxBtn" type="button" class="w-8 h-8 rounded-lg hover:bg-white/15 flex items-center justify-center cursor-pointer">
+          <i class="ph-bold ph-x"></i>
+        </button>
+      </div>
+      <div id="lightboxCanvasArea" class="aspect-[4/3] w-full bg-slate-100 overflow-hidden"></div>
+    </div>
+  </div>
+
+  <!-- TOAST THÔNG BÁO NHẸ -->
+  <div
+    id="drvToast"
+    class="fixed bottom-16 sm:bottom-5 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-xl bg-dravit-ink text-white text-xs font-medium shadow-xl border border-teal-400/30 flex items-center gap-2 opacity-0 pointer-events-none transition-all duration-300 translate-y-3"
+  >
+    <i class="ph-fill ph-check-circle text-teal-400 text-base"></i>
+    <span id="drvToastMessage">Đã cập nhật</span>
+  </div>
+
+  <!-- ========================================================================
+       14. JAVASCRIPT ENGINE: BIẾN THỂ CROSS-SKU, GALLERY 2×2, TÍNH THÙNG & WISHLIST/QUOTE
+       ======================================================================== -->
+  <script>
+    (function () {
+      'use strict';
+
+      /* ======================================================================
+         1. CẤU HÌNH CÁC BIẾN THỂ MÀU SẮC, KHỔ GẠCH, BỀ MẶT & SẢN PHẨM LIÊN QUAN
+         ====================================================================== */
+      const COLOR_THEMES = {
+        calacatta: {
+          code: '8801',
+          name: 'Trắng khói Calacatta',
+          shortName: 'Calacatta Trắng Khói',
+          shelf: 'Kệ B-04 Showroom',
+          stock: 'Sẵn kho lớn (Lô A1)',
+          baseBg: ['#FAFBF9', '#F2F4F3', '#E7ECEB'],
+          veinPrimary: '#CBD5E1',
+          veinSecondary: '#94A3B8',
+          veinGold: '#D4AF37',
+          wallTone: '#E8E3D9'
+        },
+        crema: {
+          code: '8802',
+          name: 'Kem vàng Crema Marfil',
+          shortName: 'Crema Kem Vàng',
+          shelf: 'Kệ B-05 Showroom',
+          stock: 'Sẵn kho lớn (Lô B3)',
+          baseBg: ['#F7F2E7', '#EFE7D6', '#E5DAC3'],
+          veinPrimary: '#CBBBA0',
+          veinSecondary: '#B5A184',
+          veinGold: '#C58B43',
+          wallTone: '#EDE5D5'
+        },
+        pietra: {
+          code: '8805',
+          name: 'Xám Pietra Mist',
+          shortName: 'Pietra Xám Khói',
+          shelf: 'Kệ B-08 Showroom',
+          stock: 'Sẵn kho (Lô C2)',
+          baseBg: ['#DCE2E8', '#C6D0DA', '#B0BCC9'],
+          veinPrimary: '#F8FAFC',
+          veinSecondary: '#64748B',
+          veinGold: '#94A3B8',
+          wallTone: '#E2E6EA'
+        }
+      };
+
+      const SIZE_SPECS = {
+        '60x60': {
+          label: '60×60 cm',
+          shortCode: '6060',
+          m2PerPiece: 0.36,
+          piecesPerBox: 4,      // 4 viên = 1.44 m²/thùng
+          weightPerBoxKg: 27,
+          gridColsRoom: 5
+        },
+        '80x80': {
+          label: '80×80 cm',
+          shortCode: '8080',
+          m2PerPiece: 0.64,
+          piecesPerBox: 3,      // 3 viên = 1.92 m²/thùng (Khớp 100% ảnh gốc: 10m² -> 6 thùng = 18 viên = 11,52 m²)
+          weightPerBoxKg: 29,
+          gridColsRoom: 4
+        },
+        '60x120': {
+          label: '60×120 cm',
+          shortCode: '6120',
+          m2PerPiece: 0.72,
+          piecesPerBox: 2,      // 2 viên = 1.44 m²/thùng
+          weightPerBoxKg: 31,
+          gridColsRoom: 3
+        }
+      };
+
+      const SURFACE_SPECS = {
+        'bong-kieng': {
+          suffix: 'P',
+          label: 'Bóng kiếng',
+          fullLabel: 'Bóng kiếng (Polished Nano)',
+          dcof: 'R9',
+          glossy: true
+        },
+        'ban-bong': {
+          suffix: 'L',
+          label: 'Bán bóng',
+          fullLabel: 'Bán bóng (Lappato Silk)',
+          dcof: 'R9',
+          glossy: true
+        },
+        'nham': {
+          suffix: 'M',
+          label: 'Mờ Matt',
+          fullLabel: 'Mờ mịn Matt chống trượt',
+          dcof: 'R10',
+          glossy: false
+        }
+      };
+
+      // 4 Sản phẩm gợi ý phối đồng bộ (Hiển thị trên Grid 4 - 3 - 2)
+      const RELATED_PRODUCTS = [
+        {
+          id: 201,
+          sku: 'DRV-3611R',
+          name: 'Gạch Đá Nhám AquaGrip Chống Trơn Nhà Tắm',
+          collection: 'SafeBath Anti-Slip',
+          badge_tag: 'Phối nhà tắm',
+          stock_status: 'Sẵn kho lớn',
+          kich_thuoc: '30×60 cm',
+          surface_label: 'Nhám thoát nước',
+          dcof: 'R11',
+          m2_per_piece: 0.18,
+          pieces_per_box: 8,
+          pattern: 'slate'
+        },
+        {
+          id: 202,
+          sku: 'DRV-2120W',
+          name: 'Gạch Thanh Gỗ Sồi Bắc Âu Lát Phòng Ngủ',
+          collection: 'Timber Porcelain',
+          badge_tag: 'Phối phòng ngủ',
+          stock_status: 'Sẵn kho',
+          kich_thuoc: '20×120 cm',
+          surface_label: 'Thớ gỗ nổi',
+          dcof: 'R10',
+          m2_per_piece: 0.24,
+          pieces_per_box: 6,
+          pattern: 'wood'
+        },
+        {
+          id: 203,
+          sku: 'DRV-3604K',
+          name: 'Gạch Ốp Tường Bếp Men Tuyết Kháng Dầu Mỡ',
+          collection: 'Kitchen CleanGlaze',
+          badge_tag: 'Phối tường bếp',
+          stock_status: 'Sẵn kho lớn',
+          kich_thuoc: '30×60 cm',
+          surface_label: 'Men bóng Nano',
+          dcof: 'R9',
+          m2_per_piece: 0.18,
+          pieces_per_box: 8,
+          pattern: 'marble'
+        },
+        {
+          id: 204,
+          sku: 'DRV-6069G',
+          name: 'Gạch Đá Basalt Sân Vườn Chịu Tải Dày 20mm',
+          collection: 'Outdoor Paver 20mm',
+          badge_tag: 'Phối sân hiên',
+          stock_status: 'Sẵn kho lớn',
+          kich_thuoc: '60×60 cm',
+          surface_label: 'Nhám sần R12',
+          dcof: 'R12',
+          m2_per_piece: 0.36,
+          pieces_per_box: 2,
+          pattern: 'slate'
+        }
+      ];
+
+      // Trạng thái trung tâm của trang Product Single
+      const state = {
+        colorKey: 'calacatta',
+        sizeKey: '80x80',
+        surfaceKey: 'bong-kieng',
+        activeFaceIndex: 1,          // 1..6 Random Faces
+        warmLighting: false,         // false = Ánh sáng ngày, true = Đèn vàng ấm 3000K
+        groutColor: '#CBD5E1',
+        groutName: 'Trắng Sứ Đồng Màu',
+        areaM2: 10,                  // Mặc định 10m² khớp ví dụ thực tế (6 thùng = 18 viên = 11,52m²)
+        includeWaste5Pct: false,
+        heroLikesBase: 18,
+        wishlistMap: {
+          'HERO_CURRENT': true       // Mặc định đang thả tim mẫu chính (hiển thị 19)
+        },
+        quoteItems: []               // [{ id, sku, name, sizeLabel, pieces, piecesPerBox, m2PerPiece }]
+      };
+
+      let prevDisplayedBoxes = 6;
+
+      /* ======================================================================
+         2. SINH MÃ SKU ĐỘNG & TÍNH KHỐI LƯỢNG NGUYÊN THÙNG CHUẨN ADR D-05
+         ====================================================================== */
+      function getCurrentVariantMeta() {
+        const c = COLOR_THEMES[state.colorKey];
+        const sz = SIZE_SPECS[state.sizeKey];
+        const sf = SURFACE_SPECS[state.surfaceKey];
+
+        // Giữ mã chuẩn DRV-8801M cho cấu hình gốc để đồng nhất với tài liệu & catalog
+        let sku = `DRV-${c.code}${sf.suffix}`;
+        if (state.colorKey === 'calacatta' && state.sizeKey === '80x80') {
+          sku = state.surfaceKey === 'nham' ? 'DRV-8801R' : 'DRV-8801M';
+        } else if (state.sizeKey !== '80x80') {
+          sku = `DRV-${c.code}-${sz.Key || state.sizeKey.replace('x', '')}${sf.suffix}`;
+        }
+
+        const fullName = `Gạch lát nền Dravit Vân Đá Marble ${c.shortName} ${state.sizeKey} ${sku}`;
+        const slug = `/san-pham/${sku.toLowerCase()}`;
+
+        return { color: c, size: sz, surface: sf, sku, fullName, slug };
+      }
+
+      function computeSingleUnits() {
+        const { size } = getCurrentVariantMeta();
+        const rawArea = Math.max(1, state.areaM2 || 10);
+        const effectiveArea = state.includeWaste5Pct ? rawArea * 1.05 : rawArea;
+        const m2PerBox = +(size.m2PerPiece * size.piecesPerBox).toFixed(2);
+        const boxes = Math.max(1, Math.ceil(effectiveArea / m2PerBox));
+        const pieces = boxes * size.piecesPerBox;
+        const actualM2 = +(pieces * size.m2PerPiece).toFixed(2);
+        const spareM2 = Math.max(0, +(actualM2 - rawArea).toFixed(2));
+        const totalWeightKg = boxes * size.weightPerBoxKg;
+
+        return { rawArea, m2PerBox, boxes, pieces, actualM2, spareM2, totalWeightKg };
+      }
+
+      function formatVN(num) {
+        return num.toLocaleString('vi-VN', { maximumFractionDigits: 2 });
+      }
+
+      /* ======================================================================
+         3. VẼ SVG CHO 4 Ô GALLERY KIẾN TRÚC & 6 MẶT VÂN RANDOM FACES
+         ====================================================================== */
+      function renderMarbleFaceSVG(colorObj, faceIdx, isGlossy) {
+        const offsetA = (faceIdx * 23) % 70;
+        const offsetB = (faceIdx * 37) % 90;
+        const flip = faceIdx % 2 === 0 ? 'scale(-1, 1) translate(-300, 0)' : '';
+        const uid = `f-${colorObj.code}-${faceIdx}-${Math.random().toString(36).slice(2, 6)}`;
+
+        return `
+          <svg viewBox="0 0 300 300" class="w-full h-full object-cover" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="${uid}" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="${colorObj.baseBg[0]}"/>
+                <stop offset="55%" stop-color="${colorObj.baseBg[1]}"/>
+                <stop offset="100%" stop-color="${colorObj.baseBg[2]}"/>
+              </linearGradient>
+            </defs>
+            <rect width="300" height="300" fill="url(#${uid})"/>
+            <g transform="${flip}">
+              <path d="M-20 ${40 + offsetA} Q 95 ${95 - offsetA * 0.4}, 185 ${68 + offsetB * 0.3} T 320 ${135 + offsetA * 0.5}" fill="none" stroke="${colorObj.veinPrimary}" stroke-width="4.2" opacity="0.78"/>
+              <path d="M-10 ${44 + offsetA} Q 100 ${99 - offsetA * 0.4}, 190 ${72 + offsetB * 0.3} T 320 ${139 + offsetA * 0.5}" fill="none" stroke="${colorObj.veinSecondary}" stroke-width="1.3" opacity="0.52"/>
+              <path d="M25 ${255 - offsetB * 0.6} Q 130 ${170 + offsetA * 0.4}, 215 ${195 - offsetB * 0.2} T 315 ${150 + offsetA * 0.3}" fill="none" stroke="${colorObj.veinSecondary}" stroke-width="1.8" opacity="0.45"/>
+              <path d="M${75 + offsetA * 0.5} -10 Q 135 110, ${175 - offsetB * 0.3} 165 T ${250 - offsetA * 0.4} 310" fill="none" stroke="${colorObj.veinGold}" stroke-width="1.15" opacity="0.42"/>
+            </g>
+            ${isGlossy ? `<polygon points="0,0 165,0 45,300 0,300" fill="#ffffff" opacity="0.18"/>` : ''}
+          </svg>
+        `;
+      }
+
+      /**
+       * Ô 1: Phối cảnh phòng khách kiến trúc chuẩn mẫu thiết kế (Sofa xanh Petrol, Cửa sổ sáng, Sàn phối cảnh theo kích thước)
+       */
+      function renderLivingRoomPerspectiveSVG() {
+        const { color, size, surface } = getCurrentVariantMeta();
+        const warmOverlay = state.warmLighting ? 'rgba(245, 158, 11, 0.14)' : 'rgba(255, 255, 255, 0)';
+        const cols = size.gridColsRoom;
+
+        // Vẽ các đường ron phối cảnh tụ về đường chân trời
+        let perspectiveColsSVG = '';
+        for (let i = -2; i <= cols + 2; i++) {
+          const topX = 40 + (i / cols) * 320;
+          const botX = -90 + (i / cols) * 580;
+          perspectiveColsSVG += `<line x1="${topX}" y1="188" x2="${botX}" y2="400" stroke="${state.groutColor}" stroke-width="1.35" opacity="0.85"/>`;
+        }
+
+        return `
+          <svg viewBox="0 0 400 400" class="w-full h-full object-cover" preserveAspectRatio="xMidYMid slice">
+            <!-- Tường phòng khách -->
+            <rect x="0" y="0" width="400" height="188" fill="${color.wallTone}"/>
+            <line x1="88" y1="0" x2="88" y2="188" stroke="#D5CEC2" stroke-width="1.2"/>
+
+            <!-- Khung cửa sổ lớn bên phải -->
+            <rect x="274" y="18" width="108" height="136" rx="2" fill="#FFFFFF" stroke="#083A4F" stroke-width="2.5"/>
+            <line x1="328" y1="18" x2="328" y2="154" stroke="#083A4F" stroke-width="2"/>
+
+            <!-- Len chân tường -->
+            <rect x="0" y="183" width="400" height="5" fill="#DDD6C8"/>
+
+            <!-- Mặt sàn lát gạch phối cảnh -->
+            <rect x="0" y="188" width="400" height="212" fill="${color.baseBg[0]}"/>
+            ${surface.glossy ? `<polygon points="240,188 385,188 330,400 150,400" fill="#FFFFFF" opacity="0.32"/>` : ''}
+
+            <!-- Đường mạch ngang phối cảnh -->
+            <line x1="0" y1="214" x2="400" y2="214" stroke="${state.groutColor}" stroke-width="1.1"/>
+            <line x1="0" y1="248" x2="400" y2="248" stroke="${state.groutColor}" stroke-width="1.25"/>
+            <line x1="0" y1="292" x2="400" y2="292" stroke="${state.groutColor}" stroke-width="1.4"/>
+            <line x1="0" y1="348" x2="400" y2="348" stroke="${state.groutColor}" stroke-width="1.6"/>
+            ${perspectiveColsSVG}
+
+            <!-- Vân đá tự nhiên chạy nhẹ trên mặt sàn -->
+            <path d="M18 268 Q 92 254, 154 272 T 285 264" fill="none" stroke="${color.veinSecondary}" stroke-width="1.4" opacity="0.42"/>
+            <path d="M145 322 Q 235 306, 338 326" fill="none" stroke="${color.veinPrimary}" stroke-width="2" opacity="0.65"/>
+            <path d="M35 372 Q 125 358, 215 376" fill="none" stroke="${color.veinSecondary}" stroke-width="1.3" opacity="0.38"/>
+
+            <!-- Sofa kiến trúc tông xanh Dravit Primary & Đệm Teal -->
+            <rect x="26" y="128" width="188" height="44" rx="4" fill="#1E4E63"/>
+            <rect x="34" y="106" width="78" height="26" rx="4" fill="#2A7B76"/>
+            <rect x="120" y="106" width="78" height="26" rx="4" fill="#2A7B76"/>
+            <rect x="16" y="142" width="210" height="38" rx="4" fill="#083A4F"/>
+            <!-- Bóng đổ nhẹ dưới gầm sofa -->
+            <ellipse cx="121" cy="184" rx="105" ry="4" fill="#0B192C" opacity="0.18"/>
+
+            <!-- Lớp phủ nhiệt độ màu đèn 3000K nếu bật -->
+            <rect width="400" height="400" fill="${warmOverlay}" pointer-events="none"/>
+          </svg>
+        `;
+      }
+
+      /* ======================================================================
+         4. CẬP NHẬT TOÀN BỘ GIAO DIỆN KHI CHUYỂN BIẾN THỂ HOẶC SỐ LƯỢNG
+         ====================================================================== */
+      function renderAllProductViews() {
+        const meta = getCurrentVariantMeta();
+        const units = computeSingleUnits();
+
+        // 1. Cập nhật Header, Breadcrumb & Tiêu đề H1
+        document.getElementById('headerUrlSlugBadge').textContent = meta.slug;
+        document.getElementById('breadcrumbProductTitle').textContent =
+          `Gạch Lát Nền Dravit Vân Đá Marble ${meta.color.shortName} ${state.sizeKey} ${meta.surface.label}`;
+        document.getElementById('productMainH1').textContent = meta.fullName;
+        document.getElementById('productSkuText').textContent = meta.sku;
+        document.getElementById('productStockLabel').textContent = meta.color.stock;
+        document.getElementById('productShelfLabel').textContent = meta.color.shelf;
+        document.getElementById('selectedColorNameText').textContent = meta.color.name;
+        document.getElementById('specTableSkuLabel').textContent = meta.sku;
+        document.getElementById('cadModalSkuText').textContent = meta.sku;
+        document.getElementById('aiDrawerSubSku').textContent = `Đang ghim: ${meta.sku} · ${meta.size.label} · ${meta.surface.dcof}`;
+
+        // 2. Cập nhật trạng thái Active các nút Màu sắc · Kích thước · Bề mặt
+        document.querySelectorAll('.color-var-btn').forEach(btn => {
+          const act = btn.getAttribute('data-color-variant') === state.colorKey;
+          btn.className = act
+            ? 'color-var-btn px-2.5 py-1.5 rounded-xl border-2 border-dravit-primary bg-teal-50/40 text-dravit-primary text-xs font-semibold inline-flex items-center gap-2 transition cursor-pointer'
+            : 'color-var-btn px-2.5 py-1.5 rounded-xl border border-slate-200 hover:border-dravit-primary bg-white text-slate-700 text-xs font-medium inline-flex items-center gap-2 transition cursor-pointer';
+        });
+
+        document.querySelectorAll('.size-var-btn').forEach(btn => {
+          const act = btn.getAttribute('data-size-variant') === state.sizeKey;
+          btn.className = act
+            ? 'size-var-btn px-3.5 py-1.5 rounded-lg border border-dravit-primary bg-dravit-primary text-white font-mono text-xs font-semibold shadow-2xs transition cursor-pointer'
+            : 'size-var-btn px-3.5 py-1.5 rounded-lg border border-slate-200 hover:border-dravit-primary bg-white text-dravit-ink font-mono text-xs font-medium transition cursor-pointer';
+        });
+
+        document.querySelectorAll('.surf-var-btn').forEach(btn => {
+          const act = btn.getAttribute('data-surface-variant') === state.surfaceKey;
+          btn.className = act
+            ? 'surf-var-btn px-3.5 py-1.5 rounded-lg border border-dravit-primary bg-dravit-primary text-white text-xs font-semibold shadow-2xs transition cursor-pointer'
+            : 'surf-var-btn px-3.5 py-1.5 rounded-lg border border-slate-200 hover:border-dravit-primary bg-white text-dravit-ink text-xs font-medium transition cursor-pointer';
+        });
+
+        // 3. Render 4 ô Bento Gallery bên trái
+        document.getElementById('roomSceneSvgContainer').innerHTML = renderLivingRoomPerspectiveSVG();
+        document.getElementById('roomPerspectiveBadge').innerHTML = `
+          <i class="ph-fill ph-couch text-dravit-teal"></i>
+          <span>Phối cảnh phòng khách ${meta.size.label.replace(' cm', '')}</span>
+        `;
+
+        const faceBox = document.getElementById('singleTileFaceBox');
+        faceBox.className = `relative w-full h-full rounded-lg overflow-hidden shadow-md border border-black/5 bg-white transition-transform duration-500 group-hover:scale-[1.02] ${meta.surface.glossy ? 'tile-gloss-sheen' : ''}`;
+        faceBox.innerHTML = renderMarbleFaceSVG(meta.color, state.activeFaceIndex, meta.surface.glossy);
+        document.getElementById('currentFaceIndicator').textContent = `Face ${state.activeFaceIndex}/6`;
+
+        // Mini swatch trong Moodboard ô 3
+        document.getElementById('miniMoodTileSwatch').innerHTML = renderMarbleFaceSVG(meta.color, 1, false);
+
+        // Ô 4: Ghép 4 viên gạch với màu mạch ron đang chọn
+        const fourGrid = document.getElementById('fourTileGridContainer');
+        fourGrid.style.backgroundColor = state.groutColor;
+        fourGrid.innerHTML = [1, 2, 3, 4].map(idx => `
+          <div class="w-full h-full overflow-hidden rounded-[2px]">
+            ${renderMarbleFaceSVG(meta.color, ((state.activeFaceIndex + idx - 2) % 6) + 1, meta.surface.glossy)}
+          </div>
+        `).join('');
+
+        // 4. Cập nhật Bộ tính số thùng <drv-unit-calc> (Kèm hiệu ứng nhảy số Odometer Anime.js)
+        document.getElementById('calcPiecesOutput').textContent = String(units.pieces);
+        document.getElementById('packagingNoticeText').innerHTML =
+          `Thực nhận là <strong class="text-dravit-ink not-italic">${formatVN(units.actualM2)} m²</strong> (do gạch xuất nguyên đai không bán lẻ, đóng thùng <strong class="text-dravit-ink not-italic">${meta.size.piecesPerBox} viên = ${formatVN(units.m2PerBox)} m²/thùng</strong> — dư ${formatVN(units.spareM2)} m² dự phòng cắt gạch).`;
+        document.getElementById('weightAndPalletHint').textContent =
+          `Trọng lượng ước tính: ~${units.totalWeightKg.toLocaleString('vi-VN')} kg · Xuất cùng 1 lô màu`;
+
+        const boxesBigEl = document.getElementById('calcBoxesBigOutput');
+        if (window.anime && prevDisplayedBoxes !== units.boxes) {
+          const counter = { val: prevDisplayedBoxes };
+          window.anime({
+            targets: counter,
+            val: units.boxes,
+            round: 1,
+            duration: 380,
+            easing: 'easeOutExpo',
+            update: () => {
+              boxesBigEl.textContent = `${counter.val} thùng`;
+            }
+          });
+        } else {
+          boxesBigEl.textContent = `${units.boxes} thùng`;
+        }
+        prevDisplayedBoxes = units.boxes;
+
+        document.getElementById('primaryCtaBoxesText').textContent = `Nhận báo giá ngay (${units.boxes} thùng)`;
+        document.getElementById('mobileStickyBoxesText').textContent = `Nhận báo giá (${units.boxes} thùng)`;
+
+        // 5. Render Bảng thông số kỹ thuật chi tiết & 6 Random Faces bên dưới
+        renderTechnicalSpecTable(meta, units);
+        renderSixRandomFacesStrip(meta);
+        renderSuitabilityChecklist(meta);
+      }
+
+      function renderTechnicalSpecTable(meta, units) {
+        const rows = [
+          ['Mã định danh SKU', meta.sku],
+          ['Bộ sưu tập (Smart Collection)', 'Marble Contemporary — Gạch Vân Đá Cao Cấp'],
+          ['Kích thước danh nghĩa & Độ dày', `${meta.size.label} · Dày 9.5 mm (±0.2 mm)`],
+          ['Cấu trúc xương gạch & Độ hút nước', 'Xương đá Porcelain nhóm BIa · Độ hút nước E ≤ 0.2%'],
+          ['Bề mặt & Chỉ số chống trượt (DCOF)', `${meta.surface.fullLabel} · Chuẩn ma sát ${meta.surface.dcof}`],
+          ['Công nghệ gia công cạnh', 'Mài cạnh phẳng (Rectified) — Cho phép đi mạch ron siêu mảnh 1.5 mm'],
+          ['Số mặt vân ngẫu nhiên', '6 Random Faces (In kỹ thuật số HD 1200 DPI không lặp vân)'],
+          ['Độ cứng bề mặt & Độ bền uốn', `Mohs ≥ ${meta.surface.glossy ? '5.5' : '6.5'} · Cường độ chịu uốn ≥ 38 N/mm²`],
+          ['Quy cách đóng thùng nguyên đai', `${meta.size.piecesPerBox} viên/thùng = ${formatVN(units.m2PerBox)} m²/thùng (~${meta.size.weightPerBoxKg} kg/thùng)`],
+          ['Vị trí trưng bày mẫu thực tế', `${meta.color.shelf} — Showroom Dravit TP.HCM`],
+          ['Chính sách đơn giá', 'Liên hệ báo giá — Chiết khấu trực tiếp theo số thùng & đối tượng công trình']
+        ];
+
+        document.getElementById('fullTechnicalSpecTable').innerHTML = rows.map(([k, v], i) => `
+          <tr class="${i % 2 === 0 ? 'bg-slate-50/60' : 'bg-white'}">
+            <th class="px-4 py-2.5 text-left font-medium text-slate-500 w-44 sm:w-60">${k}</th>
+            <td class="px-4 py-2.5 font-semibold text-dravit-ink">${v}</td>
+          </tr>
+        `).join('');
+      }
+
+      function renderSixRandomFacesStrip(meta) {
+        const container = document.getElementById('sixRandomFacesGrid');
+        container.innerHTML = [1, 2, 3, 4, 5, 6].map(idx => {
+          const isCurrent = idx === state.activeFaceIndex;
+          return `
+            <button
+              type="button"
+              data-select-face="${idx}"
+              class="group relative aspect-square rounded-xl overflow-hidden border-2 ${isCurrent ? 'border-dravit-teal ring-2 ring-dravit-teal/25' : 'border-slate-200 hover:border-dravit-primary'} transition cursor-pointer"
+            >
+              ${renderMarbleFaceSVG(meta.color, idx, meta.surface.glossy)}
+              <span class="absolute bottom-1.5 right-1.5 px-1.5 py-0.5 rounded ${isCurrent ? 'bg-dravit-teal text-white' : 'bg-white/90 text-dravit-primary'} font-mono text-[9.5px] font-bold shadow-2xs">
+                F0${idx}
+              </span>
+            </button>
+          `;
+        }).join('');
+      }
+
+      function renderSuitabilityChecklist(meta) {
+        const isMatt = state.surfaceKey === 'nham';
+        const items = [
+          {
+            space: 'Phòng khách, Sảnh lớn & Phòng ngủ',
+            status: 'Tối ưu nhất',
+            badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+            icon: 'ph-check-circle text-emerald-600'
+          },
+          {
+            space: 'Phòng bếp & Ốp tường phòng tắm',
+            status: 'Rất phù hợp (Dễ lau chùi)',
+            badgeClass: 'bg-teal-50 text-dravit-tealDark border-teal-200',
+            icon: 'ph-check-circle text-dravit-teal'
+          },
+          {
+            space: 'Sàn nhà tắm khu vực ướt trực tiếp',
+            status: isMatt ? 'An toàn chuẩn R10' : 'Nên chọn bản Mờ Matt (R10)',
+            badgeClass: isMatt ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-amber-50 text-amber-800 border-amber-200',
+            icon: isMatt ? 'ph-shield-check text-emerald-600' : 'ph-warning-circle text-amber-500'
+          }
+        ];
+
+        document.getElementById('spaceSuitabilityList').innerHTML = items.map(item => `
+          <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70 flex items-center justify-between gap-2">
+            <span class="font-medium text-dravit-ink flex items-center gap-1.5">
+              <i class="ph-fill ${item.icon} text-sm"></i>
+              <span>${item.space}</span>
+            </span>
+            <span class="px-2 py-0.5 rounded-md border text-[10.5px] font-semibold shrink-0 ${item.badgeClass}">
+              ${item.status}
+            </span>
+          </div>
+        `).join('');
+      }
+
+      /* ======================================================================
+         5. RENDER GRID 4 - 3 - 2 SẢN PHẨM ĐỒNG BỘ (CÓ NÚT YÊU THÍCH & BÁO GIÁ)
+         ====================================================================== */
+      function renderRelatedTileThumb(pattern, sku) {
+        if (pattern === 'wood') {
+          return `<svg viewBox="0 0 240 180" class="w-full h-full object-cover" preserveAspectRatio="none">
+            <rect width="240" height="180" fill="#C69C72"/>
+            <line x1="0" y1="60" x2="240" y2="60" stroke="#8C6239" stroke-width="1" opacity="0.4"/>
+            <line x1="0" y1="120" x2="240" y2="120" stroke="#8C6239" stroke-width="1" opacity="0.4"/>
+          </svg>`;
+        }
+        if (pattern === 'slate') {
+          return `<svg viewBox="0 0 240 180" class="w-full h-full object-cover" preserveAspectRatio="none">
+            <rect width="240" height="180" fill="#526071"/>
+            <path d="M0 55 Q 90 40, 240 72" fill="none" stroke="#94A3B8" stroke-width="1.2" opacity="0.35"/>
+          </svg>`;
+        }
+        return renderMarbleFaceSVG(COLOR_THEMES.calacatta, (sku.charCodeAt(4) % 6) + 1, true);
+      }
+
+      function renderRelatedGrid() {
+        const grid = document.getElementById('relatedProductsGrid');
+        grid.innerHTML = RELATED_PRODUCTS.map(p => {
+          const m2PerBox = +(p.m2_per_piece * p.pieces_per_box).toFixed(2);
+          const boxes = Math.max(1, Math.ceil(12 / m2PerBox)); // Mặc định gợi ý 12m² cho phòng phụ
+          const pieces = boxes * p.pieces_per_box;
+          const actualM2 = +(pieces * p.m2_per_piece).toFixed(2);
+          const isFav = !!state.wishlistMap[p.sku];
+          const inQuote = state.quoteItems.some(q => q.sku === p.sku);
+
+          return `
+            <article class="drv-card-transition group bg-white rounded-xl border ${inQuote ? 'border-dravit-teal ring-1 ring-dravit-teal/25' : 'border-slate-200/90'} overflow-hidden flex flex-col justify-between">
+              <div>
+                <div class="relative aspect-[4/3] w-full overflow-hidden bg-slate-100">
+                  <div class="w-full h-full transition-transform duration-500 group-hover:scale-105">
+                    ${renderRelatedTileThumb(p.pattern, p.sku)}
+                  </div>
+                  <div class="absolute top-2 left-2 flex flex-col items-start gap-1 pointer-events-none">
+                    <span class="px-1.5 py-0.5 rounded bg-dravit-primary/90 text-white font-mono text-[10px] font-medium leading-none">${p.sku}</span>
+                    <span class="px-1.5 py-0.5 rounded bg-teal-700/90 text-white text-[9.5px] font-medium leading-none">${p.badge_tag}</span>
+                  </div>
+
+                  <!-- Nút Trái tim Yêu thích góc trên phải chuẩn thiết kế Card -->
+                  <button
+                    type="button"
+                    data-toggle-rel-wish="${p.sku}"
+                    aria-label="Yêu thích ${p.name}"
+                    class="drv-wishlist-btn ${isFav ? 'is-favorited' : 'bg-white/90 hover:bg-white text-slate-600 hover:text-rose-500 border-slate-200/80'} absolute top-2 right-2 w-7 h-7 sm:w-8 sm:h-8 rounded-full border backdrop-blur-xs flex items-center justify-center shadow-xs cursor-pointer"
+                  >
+                    <i class="${isFav ? 'ph-fill text-rose-500' : 'ph'} ph-heart text-sm"></i>
+                  </button>
+
+                  <div class="absolute bottom-1.5 inset-x-2 flex items-center justify-between gap-1 pointer-events-none">
+                    <span class="px-1.5 py-0.5 rounded bg-dravit-ink/75 text-teal-200 text-[9.5px] font-medium truncate">${p.stock_status}</span>
+                    <span class="px-1.5 py-0.5 rounded bg-white/95 text-dravit-primary font-mono text-[9.5px] font-semibold">${p.dcof}</span>
+                  </div>
+                </div>
+
+                <div class="p-2.5 sm:p-3 pb-2">
+                  <div class="text-[9.5px] uppercase tracking-wider font-semibold text-dravit-teal truncate">${p.collection}</div>
+                  <h3 class="mt-0.5 text-xs sm:text-[13.5px] font-bold text-dravit-primary leading-snug line-clamp-2 min-h-[2.6em]">${p.name}</h3>
+                  <div class="mt-1.5 flex flex-wrap gap-1 text-[10px] text-slate-600">
+                    <span class="px-1.5 py-0.5 rounded bg-slate-100 font-mono font-medium">${p.kich_thuoc}</span>
+                    <span class="px-1.5 py-0.5 rounded bg-slate-100 truncate">${p.surface_label}</span>
+                  </div>
+                  <div class="mt-2.5 pt-2 border-t border-slate-100 space-y-0.5">
+                    <div class="flex items-center gap-1 text-[11.5px] sm:text-xs font-bold text-dravit-primary">
+                      <i class="ph-fill ph-tag text-dravit-amber text-xs"></i>
+                      <span>Liên hệ báo giá</span>
+                    </div>
+                    <div class="font-mono text-[10px] sm:text-[10.5px] font-semibold text-dravit-tealDark truncate">
+                      Gợi ý 12m²: ${boxes} thùng · ${pieces}v (~${formatVN(actualM2)}m²)
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="px-2.5 sm:px-3 pb-2.5 sm:pb-3 pt-0.5 flex items-center gap-1.5">
+                <button
+                  type="button"
+                  data-add-rel-quote="${p.sku}"
+                  data-pieces="${pieces}"
+                  class="flex-1 py-1.5 sm:py-2 px-2 rounded-lg ${inQuote ? 'bg-emerald-600' : 'bg-dravit-primary hover:bg-dravit-teal'} text-white text-[11px] sm:text-xs font-semibold transition flex items-center justify-center gap-1 cursor-pointer"
+                >
+                  <i class="ph-bold ${inQuote ? 'ph-check' : 'ph-plus'} text-[11px]"></i>
+                  <span>${inQuote ? 'Đã chọn' : 'Nhận báo giá'}</span>
+                </button>
+              </div>
+            </article>
+          `;
+        }).join('');
+      }
+
+      /* ======================================================================
+         6. QUẢN LÝ WISHLIST & QUOTE PANEL OFFCANVAS
+         ====================================================================== */
+      function getWishlistItemsList() {
+        const list = [];
+        if (state.wishlistMap['HERO_CURRENT']) {
+          const meta = getCurrentVariantMeta();
+          const units = computeSingleUnits();
+          list.push({
+            key: 'HERO_CURRENT',
+            sku: meta.sku,
+            name: meta.fullName,
+            sizeLabel: meta.size.label,
+            pieces: units.pieces,
+            piecesPerBox: meta.size.piecesPerBox,
+            m2PerPiece: meta.size.m2PerPiece
+          });
+        }
+        RELATED_PRODUCTS.forEach(p => {
+          if (state.wishlistMap[p.sku]) {
+            list.push({
+              key: p.sku,
+              sku: p.sku,
+              name: p.name,
+              sizeLabel: p.kich_thuoc,
+              pieces: p.pieces_per_box * 5,
+              piecesPerBox: p.pieces_per_box,
+              m2PerPiece: p.m2_per_piece
+            });
+          }
+        });
+        return list;
+      }
+
+      function refreshWishlistUI() {
+        const list = getWishlistItemsList();
+        document.getElementById('headerWishlistBadge').textContent = String(list.length);
+        document.getElementById('headerWishlistIcon').className = list.length > 0
+          ? 'ph-fill ph-heart text-base text-rose-500'
+          : 'ph ph-heart text-base text-rose-500';
+
+        const heroLiked = !!state.wishlistMap['HERO_CURRENT'];
+        const heroBtn = document.getElementById('productHeroWishlistBtn');
+        heroBtn.className = heroLiked
+          ? 'drv-wishlist-btn is-favorited w-12 h-12 rounded-xl border flex flex-col items-center justify-center gap-0.5 cursor-pointer'
+          : 'drv-wishlist-btn w-12 h-12 rounded-xl border border-slate-200 bg-white text-slate-600 hover:text-rose-500 flex flex-col items-center justify-center gap-0.5 cursor-pointer';
+        document.getElementById('heroWishlistHeartIcon').className = heroLiked
+          ? 'ph-fill ph-heart text-base text-rose-500 leading-none'
+          : 'ph ph-heart text-base leading-none';
+        document.getElementById('heroWishlistLikesCount').textContent = String(state.heroLikesBase + (heroLiked ? 1 : 0));
+
+        const container = document.getElementById('wishlistItemsContainer');
+        const footer = document.getElementById('wishlistFooterBox');
+        if (list.length === 0) {
+          footer.classList.add('hidden');
+          container.innerHTML = `<p class="py-10 text-center text-xs text-slate-500">Chưa có mẫu gạch nào trong danh sách Yêu thích.</p>`;
+          return;
+        }
+        footer.classList.remove('hidden');
+        container.innerHTML = list.map(item => `
+          <div class="rounded-xl border border-slate-200 p-3 flex items-center justify-between gap-3">
+            <div class="min-w-0">
+              <div class="font-mono text-[10.5px] font-semibold text-dravit-teal">${item.sku} · ${item.sizeLabel}</div>
+              <div class="text-xs font-bold text-dravit-primary truncate">${item.name}</div>
+            </div>
+            <button type="button" data-remove-wish-key="${item.key}" class="text-xs text-slate-400 hover:text-rose-600 shrink-0 cursor-pointer">Bỏ lưu</button>
+          </div>
+        `).join('');
+      }
+
+      function upsertQuoteItem(itemObj, openDrawerAfter) {
+        const existing = state.quoteItems.find(q => q.sku === itemObj.sku);
+        if (existing) {
+          existing.pieces = itemObj.pieces;
+        } else {
+          state.quoteItems.push(itemObj);
+        }
+        document.getElementById('quoteSuccessBanner').classList.add('hidden');
+        renderQuoteDrawer();
+        renderRelatedGrid();
+
+        const boxes = Math.round(itemObj.pieces / itemObj.piecesPerBox);
+        showToast(`Đã cập nhật ${itemObj.sku} (${boxes} thùng) vào Danh sách báo giá`);
+
+        if (window.anime) {
+          window.anime({
+            targets: '#headerQuoteBadge',
+            scale: [1, 1.38, 1],
+            duration: 450,
+            easing: 'easeOutElastic(1, .5)'
+          });
+        }
+        if (openDrawerAfter) openDrawer('quote');
+      }
+
+      function renderQuoteDrawer() {
+        const count = state.quoteItems.length;
+        document.getElementById('headerQuoteBadge').textContent = String(count);
+
+        const emptyEl = document.getElementById('emptyQuoteState');
+        const itemsEl = document.getElementById('quoteItemsContainer');
+        const summaryEl = document.getElementById('quoteSummarySection');
+        const formEl = document.getElementById('quoteContactForm');
+
+        if (count === 0) {
+          emptyEl.classList.remove('hidden');
+          itemsEl.classList.add('hidden');
+          summaryEl.classList.add('hidden');
+          formEl.classList.add('hidden');
+          return;
+        }
+
+        emptyEl.classList.add('hidden');
+        itemsEl.classList.remove('hidden');
+        summaryEl.classList.remove('hidden');
+        formEl.classList.remove('hidden');
+
+        let totalArea = 0;
+        let totalBoxes = 0;
+        let totalPieces = 0;
+
+        itemsEl.innerHTML = state.quoteItems.map(item => {
+          const boxes = Math.round(item.pieces / item.piecesPerBox);
+          const area = +(item.pieces * item.m2PerPiece).toFixed(2);
+          totalArea += area;
+          totalBoxes += boxes;
+          totalPieces += item.pieces;
+
+          return `
+            <div class="rounded-xl border border-slate-200 p-3 space-y-2 bg-white">
+              <div class="flex items-start justify-between gap-2">
+                <div class="min-w-0">
+                  <span class="font-mono text-[10.5px] font-semibold text-dravit-teal">${item.sku} · ${item.sizeLabel}</span>
+                  <h4 class="text-xs font-bold text-dravit-primary truncate">${item.name}</h4>
+                </div>
+                <button type="button" data-remove-quote-sku="${item.sku}" class="text-slate-400 hover:text-rose-600 cursor-pointer">
+                  <i class="ph ph-trash text-sm"></i>
+                </button>
+              </div>
+              <div class="flex items-center justify-between">
+                <drv-qty-input class="inline-flex items-center rounded-lg border border-slate-200 bg-slate-50">
+                  <button type="button" data-q-delta="-1" data-q-sku="${item.sku}" class="w-7 h-7 font-bold text-xs text-dravit-primary cursor-pointer">−</button>
+                  <span class="px-2.5 font-mono text-xs font-semibold">${boxes} thùng (${item.pieces}v)</span>
+                  <button type="button" data-q-delta="1" data-q-sku="${item.sku}" class="w-7 h-7 font-bold text-xs text-dravit-primary cursor-pointer">+</button>
+                </drv-qty-input>
+                <span class="font-mono text-xs font-bold text-dravit-tealDark">${formatVN(area)} m²</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        document.getElementById('summarySkuCount').textContent = `${count} mẫu`;
+        document.getElementById('summaryTotalArea').textContent = `${formatVN(totalArea)} m²`;
+        document.getElementById('summaryTotalBoxes').textContent = `${totalBoxes} thùng (${totalPieces} viên)`;
+      }
+
+      /* ======================================================================
+         7. TRỢ LÝ AI NGỮ CẢNH RIÊNG CHO MẪU GẠCH ĐANG XEM
+         ====================================================================== */
+      function initContextualAiMessages() {
+        const meta = getCurrentVariantMeta();
+        const box = document.getElementById('contextualAiMessages');
+        box.innerHTML = `
+          <div class="bg-white border border-slate-200 rounded-2xl rounded-tl-sm p-3.5 shadow-2xs leading-relaxed text-dravit-ink">
+            👋 Bạn đang xem mẫu <strong>${meta.sku} (${meta.size.label} · ${meta.surface.label})</strong>. Bạn cần kiểm tra độ chống trượt cho từng phòng, cách phối màu keo chà ron hay tính khối lượng cho nhiều tầng?
+          </div>
+        `;
+      }
+
+      function answerProductQuestion(question) {
+        const box = document.getElementById('contextualAiMessages');
+        const meta = getCurrentVariantMeta();
+        const units = computeSingleUnits();
+        const lower = question.toLowerCase();
+
+        box.insertAdjacentHTML('beforeend', `
+          <div class="flex justify-end">
+            <div class="bg-dravit-primary text-white rounded-2xl rounded-tr-sm px-3.5 py-2 max-w-[85%]">${question.replace(/</g, '&lt;')}</div>
+          </div>
+        `);
+
+        let reply = `Với mẫu <strong>${meta.sku}</strong> (${meta.size.label}), xương đá Porcelain độ hút nước ≤ 0.2% cực kỳ bền chắc. Với diện tích ${state.areaM2} m², hệ thống đã quy đổi chuẩn <strong>${units.boxes} thùng (${units.pieces} viên)</strong> để bạn gửi nhận báo giá chiết khấu.`;
+
+        if (lower.includes('nhà tắm') || lower.includes('trơn')) {
+          reply = state.surfaceKey === 'nham'
+            ? `Bản <strong>Mờ Matt (R10)</strong> bạn đang chọn hoàn toàn lát được cho sàn nhà tắm khô hoặc khu vực lavabo. Nếu là sàn buồng tắm đứng dội nước liên tục, bạn có thể phối thêm mẫu <strong>DRV-3611R (R11)</strong> ở mục gợi ý bên dưới.`
+            : `Bản <strong>${meta.surface.label} (R9)</strong> phù hợp để <strong>ốp tường nhà tắm</strong> sang trọng, dễ lau cặn canxi; còn phần <strong>sàn ướt</strong> bạn hãy bấm chuyển sang nút <strong>"Mờ Matt (R10)"</strong> ngay trên trang để an toàn chống trượt nhé!`;
+        } else if (lower.includes('ron')) {
+          reply = `Với tông màu <strong>${meta.color.name}</strong> cạnh mài phẳng Rectified, đẹp nhất là đi đường ron <strong>1.5 mm màu Trắng Sứ hoặc Kem Ngà đồng màu</strong> để tạo hiệu ứng sàn đá liền khối. Bạn có thể bấm thử trực tiếp 3 màu ron ở ô Gallery thứ 3!`;
+        } else if (lower.includes('ốp') || lower.includes('phối')) {
+          reply = `Mẫu nền <strong>${meta.sku}</strong> phối rất ăn ý với gạch thanh giả gỗ <strong>DRV-2120W</strong> cho phòng ngủ và gạch nhám đá <strong>DRV-3611R</strong> cho phòng tắm. Bạn có thể bấm "+ Thêm vào DS Báo giá" cả 2–3 mã để nhận chiết khấu trọn gói công trình.`;
+        }
+
+        setTimeout(() => {
+          box.insertAdjacentHTML('beforeend', `
+            <div class="bg-white border border-teal-200 rounded-2xl rounded-tl-sm p-3.5 shadow-2xs leading-relaxed text-dravit-ink">
+              ✨ ${reply}
+            </div>
+          `);
+          box.scrollTop = box.scrollHeight;
+        }, 280);
+        box.scrollTop = box.scrollHeight;
+      }
+
+      /* ======================================================================
+         8. ĐIỀU KHIỂN DRAWERS, MODALS, CLIPBOARD & SỰ KIỆN TƯƠNG TÁC
+         ====================================================================== */
+      function openDrawer(type) {
+        if (type === 'quote') {
+          document.getElementById('quoteBackdrop').classList.add('open');
+          document.getElementById('drvQuotePanel').classList.add('open');
+        } else if (type === 'wishlist') {
+          refreshWishlistUI();
+          document.getElementById('wishlistBackdrop').classList.add('open');
+          document.getElementById('drvWishlistPanel').classList.add('open');
+        } else if (type === 'ai') {
+          document.getElementById('aiDrawerBackdrop').classList.add('open');
+          document.getElementById('contextualAiDrawer').classList.add('open');
+        }
+      }
+
+      function closeAllDrawers() {
+        ['quoteBackdrop', 'wishlistBackdrop', 'aiDrawerBackdrop'].forEach(id => {
+          document.getElementById(id).classList.remove('open');
+        });
+        ['drvQuotePanel', 'drvWishlistPanel', 'contextualAiDrawer'].forEach(id => {
+          document.getElementById(id).classList.remove('open');
+        });
+      }
+
+      function copyToClipboardSafe(text, successMsg) {
+        const temp = document.createElement('textarea');
+        temp.value = text;
+        document.body.appendChild(temp);
+        temp.select();
+        try {
+          document.execCommand('copy');
+          showToast(successMsg);
+        } catch (_) {
+          showToast(successMsg);
+        }
+        document.body.removeChild(temp);
+      }
+
+      let toastTimer = null;
+      function showToast(msg) {
+        const toast = document.getElementById('drvToast');
+        document.getElementById('drvToastMessage').textContent = msg;
+        toast.classList.remove('opacity-0', 'translate-y-3', 'pointer-events-none');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          toast.classList.add('opacity-0', 'translate-y-3', 'pointer-events-none');
+        }, 2600);
+      }
+
+      // Kính lúp soi mạch ron tương tác trên Ô số 4 Gallery
+      const panelJointZoom = document.getElementById('panelJointZoom');
+      const jointLoupeCircle = document.getElementById('jointLoupeCircle');
+
+      function moveLoupe(clientX, clientY) {
+        const rect = panelJointZoom.getBoundingClientRect();
+        const x = Math.max(58, Math.min(rect.width - 58, clientX - rect.left));
+        const y = Math.max(58, Math.min(rect.height - 58, clientY - rect.top));
+        jointLoupeCircle.style.left = `${x}px`;
+        jointLoupeCircle.style.top = `${y}px`;
+      }
+      panelJointZoom.addEventListener('mousemove', e => moveLoupe(e.clientX, e.clientY));
+      panelJointZoom.addEventListener('touchmove', e => {
+        if (e.touches && e.touches[0]) moveLoupe(e.touches[0].clientX, e.touches[0].clientY);
+      }, { passive: true });
+
+      // Xử lý bộ nhập diện tích m²
+      const singleAreaInput = document.getElementById('singleAreaInput');
+      function updateAreaValue(nextVal) {
+        state.areaM2 = Math.max(1, Math.min(5000, Math.round(nextVal)));
+        singleAreaInput.value = String(state.areaM2);
+        renderAllProductViews();
+      }
+      document.getElementById('decreaseAreaBtn').addEventListener('click', () => updateAreaValue(state.areaM2 - 1));
+      document.getElementById('increaseAreaBtn').addEventListener('click', () => updateAreaValue(state.areaM2 + 1));
+      singleAreaInput.addEventListener('input', () => {
+        const parsed = parseFloat(singleAreaInput.value);
+        if (!isNaN(parsed) && parsed >= 1) {
+          state.areaM2 = Math.min(5000, parsed);
+          renderAllProductViews();
+        }
+      });
+
+      document.getElementById('singleWasteCheckbox').addEventListener('change', e => {
+        state.includeWaste5Pct = e.target.checked;
+        renderAllProductViews();
+      });
+
+      // Chuyển chế độ ánh sáng phòng ở Ô số 1
+      document.getElementById('toggleRoomLightingBtn').addEventListener('click', function () {
+        state.warmLighting = !state.warmLighting;
+        document.getElementById('lightingModeLabel').textContent = state.warmLighting ? 'Đèn ấm 3000K' : 'Ánh sáng ngày';
+        document.getElementById('lightingModeIcon').className = state.warmLighting
+          ? 'ph-fill ph-moon-stars text-amber-500 text-sm'
+          : 'ph-fill ph-sun text-amber-500 text-sm';
+        renderAllProductViews();
+      });
+
+      // Đổi ngẫu nhiên 6 mặt vân ở Ô số 2
+      document.getElementById('cycleRandomFaceBtn').addEventListener('click', function () {
+        state.activeFaceIndex = (state.activeFaceIndex % 6) + 1;
+        renderAllProductViews();
+      });
+
+      // Hai nút CTA Báo giá chính trên sản phẩm đơn
+      function addCurrentHeroProductToQuote(openImmediately) {
+        const meta = getCurrentVariantMeta();
+        const units = computeSingleUnits();
+        upsertQuoteItem({
+          sku: meta.sku,
+          name: meta.fullName,
+          sizeLabel: meta.size.label,
+          pieces: units.pieces,
+          piecesPerBox: meta.size.piecesPerBox,
+          m2PerPiece: meta.size.m2PerPiece
+        }, openImmediately);
+      }
+
+      document.getElementById('primaryRequestQuoteNowBtn').addEventListener('click', () => addCurrentHeroProductToQuote(true));
+      document.getElementById('mobileStickyQuoteNowBtn').addEventListener('click', () => addCurrentHeroProductToQuote(true));
+      document.getElementById('secondaryAddToQuoteListBtn').addEventListener('click', () => addCurrentHeroProductToQuote(false));
+
+      // Đặt lịch xem mẫu thực tế tại Kệ B-04 Showroom
+      function openQuoteWithShowroomVisit() {
+        const meta = getCurrentVariantMeta();
+        addCurrentHeroProductToQuote(true);
+        const noteEl = document.getElementById('quoteNoteTextarea');
+        noteEl.value = `Đăng ký xem mẫu gạch thực tế mã ${meta.sku} tại ${meta.color.shelf} Showroom TP.HCM.`;
+        noteEl.focus();
+      }
+      document.getElementById('bookShowroomSampleBtn').addEventListener('click', openQuoteWithShowroomVisit);
+      document.getElementById('openShowroomShelfModalBtn').addEventListener('click', openQuoteWithShowroomVisit);
+      document.getElementById('topShowroomBtn').addEventListener('click', openQuoteWithShowroomVisit);
+
+      // Nút Yêu thích sản phẩm chính
+      document.getElementById('productHeroWishlistBtn').addEventListener('click', function () {
+        state.wishlistMap['HERO_CURRENT'] = !state.wishlistMap['HERO_CURRENT'];
+        refreshWishlistUI();
+        if (window.anime) {
+          window.anime({
+            targets: [this, '#headerWishlistBadge'],
+            scale: [1, 1.25, 1],
+            duration: 420,
+            easing: 'easeOutElastic(1, .5)'
+          });
+        }
+        showToast(state.wishlistMap['HERO_CURRENT']
+          ? '❤️ Đã lưu mẫu gạch này vào danh sách Yêu thích'
+          : 'Đã bỏ mẫu gạch khỏi danh sách Yêu thích'
+        );
+      });
+
+      // Copy & Share
+      document.getElementById('copyProductTitleBtn').addEventListener('click', () => {
+        const meta = getCurrentVariantMeta();
+        copyToClipboardSafe(`${meta.fullName} (https://gachdravit.vn${meta.slug})`, 'Đã sao chép tên & đường dẫn sản phẩm');
+      });
+      document.getElementById('copySkuOnlyBtn').addEventListener('click', () => {
+        const meta = getCurrentVariantMeta();
+        copyToClipboardSafe(meta.sku, `Đã sao chép mã SKU: ${meta.sku}`);
+      });
+      document.getElementById('shareProductBtn').addEventListener('click', () => {
+        const meta = getCurrentVariantMeta();
+        copyToClipboardSafe(`https://gachdravit.vn${meta.slug}`, `Đã sao chép link chia sẻ: gachdravit.vn${meta.slug}`);
+      });
+
+      // Event Delegation cho toàn bộ nút chọn biến thể, màu ron, Random Faces, Related Grid & Drawers
+      document.addEventListener('click', function (e) {
+        const colorBtn = e.target.closest('[data-color-variant]');
+        if (colorBtn) {
+          state.colorKey = colorBtn.getAttribute('data-color-variant');
+          renderAllProductViews();
+          initContextualAiMessages();
+          return;
+        }
+
+        const sizeBtn = e.target.closest('[data-size-variant]');
+        if (sizeBtn) {
+          state.sizeKey = sizeBtn.getAttribute('data-size-variant');
+          renderAllProductViews();
+          initContextualAiMessages();
+          return;
+        }
+
+        const surfBtn = e.target.closest('[data-surface-variant]');
+        if (surfBtn) {
+          state.surfaceKey = surfBtn.getAttribute('data-surface-variant');
+          renderAllProductViews();
+          initContextualAiMessages();
+          return;
+        }
+
+        const groutBtn = e.target.closest('[data-grout-color]');
+        if (groutBtn) {
+          state.groutColor = groutBtn.getAttribute('data-grout-color');
+          state.groutName = groutBtn.getAttribute('data-grout-name');
+          document.getElementById('selectedGroutNameLabel').textContent = state.groutName;
+          document.querySelectorAll('.grout-swatch-btn').forEach(b => {
+            const act = b === groutBtn;
+            b.className = act
+              ? 'grout-swatch-btn rounded-lg border-2 border-dravit-teal bg-[#EAE4D7] overflow-hidden relative flex items-center justify-center shadow-2xs cursor-pointer'
+              : 'grout-swatch-btn rounded-lg border border-slate-300 hover:border-dravit-teal bg-[#EAE4D7] overflow-hidden relative flex items-center justify-center shadow-2xs cursor-pointer';
+          });
+          renderAllProductViews();
+          showToast(`Đã đổi màu mạch ron sang: ${state.groutName}`);
+          return;
+        }
+
+        const faceSelectBtn = e.target.closest('[data-select-face]');
+        if (faceSelectBtn) {
+          state.activeFaceIndex = parseInt(faceSelectBtn.getAttribute('data-select-face'), 10);
+          renderAllProductViews();
+          return;
+        }
+
+        const areaChip = e.target.closest('[data-area-chip]');
+        if (areaChip) {
+          const val = parseInt(areaChip.getAttribute('data-area-chip'), 10);
+          document.querySelectorAll('.single-area-chip').forEach(c => {
+            const act = parseInt(c.getAttribute('data-area-chip'), 10) === val;
+            c.className = act
+              ? 'single-area-chip px-2 py-1 rounded-md bg-teal-50 text-dravit-tealDark border border-teal-200 font-mono text-[10.5px] font-semibold cursor-pointer'
+              : 'single-area-chip px-2 py-1 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-600 font-mono text-[10.5px] cursor-pointer';
+          });
+          updateAreaValue(val);
+          return;
+        }
+
+        const scrollPanelBtn = e.target.closest('[data-scroll-panel]');
+        if (scrollPanelBtn) {
+          const targetEl = document.getElementById(scrollPanelBtn.getAttribute('data-scroll-panel'));
+          if (targetEl) targetEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          return;
+        }
+
+        // Lightbox phóng to
+        const lbBtn = e.target.closest('[data-lightbox-view]');
+        if (lbBtn) {
+          const view = lbBtn.getAttribute('data-lightbox-view');
+          const meta = getCurrentVariantMeta();
+          const lbModal = document.getElementById('galleryLightboxModal');
+          document.getElementById('lightboxCaption').textContent = view === 'room'
+            ? `Phối cảnh không gian — ${meta.fullName}`
+            : `Cận cảnh mặt vân Face 0${state.activeFaceIndex} — ${meta.sku}`;
+          document.getElementById('lightboxCanvasArea').innerHTML = view === 'room'
+            ? renderLivingRoomPerspectiveSVG()
+            : renderMarbleFaceSVG(meta.color, state.activeFaceIndex, meta.surface.glossy);
+          lbModal.classList.remove('hidden');
+          lbModal.classList.add('flex');
+          return;
+        }
+
+        // Tải gói Map 4K
+        const dlPack = e.target.closest('[data-download-pack]');
+        if (dlPack) {
+          const packName = dlPack.getAttribute('data-download-pack');
+          document.getElementById('cadMapModal').classList.add('hidden');
+          document.getElementById('cadMapModal').classList.remove('flex');
+          showToast(`Đang chuẩn bị tải xuống: ${packName}`);
+          return;
+        }
+
+        // Yêu thích & Báo giá trên Grid 4-3-2 sản phẩm liên quan
+        const relWish = e.target.closest('[data-toggle-rel-wish]');
+        if (relWish) {
+          const sku = relWish.getAttribute('data-toggle-rel-wish');
+          state.wishlistMap[sku] = !state.wishlistMap[sku];
+          refreshWishlistUI();
+          renderRelatedGrid();
+          showToast(state.wishlistMap[sku] ? `❤️ Đã lưu ${sku} vào Yêu thích` : `Đã bỏ ${sku} khỏi Yêu thích`);
+          return;
+        }
+
+        const relQuote = e.target.closest('[data-add-rel-quote]');
+        if (relQuote) {
+          const sku = relQuote.getAttribute('data-add-rel-quote');
+          const p = RELATED_PRODUCTS.find(x => x.sku === sku);
+          const pieces = parseInt(relQuote.getAttribute('data-pieces'), 10);
+          if (p) {
+            upsertQuoteItem({
+              sku: p.sku,
+              name: p.name,
+              sizeLabel: p.kich_thuoc,
+              pieces,
+              piecesPerBox: p.pieces_per_box,
+              m2PerPiece: p.m2_per_piece
+            }, false);
+          }
+          return;
+        }
+
+        // Xóa item khỏi Wishlist Drawer
+        const rmWish = e.target.closest('[data-remove-wish-key]');
+        if (rmWish) {
+          state.wishlistMap[rmWish.getAttribute('data-remove-wish-key')] = false;
+          refreshWishlistUI();
+          renderRelatedGrid();
+          return;
+        }
+
+        // Tăng/giảm/xóa thùng trong Quote Drawer
+        const qDelta = e.target.closest('[data-q-delta]');
+        if (qDelta) {
+          const sku = qDelta.getAttribute('data-q-sku');
+          const delta = parseInt(qDelta.getAttribute('data-q-delta'), 10);
+          const item = state.quoteItems.find(q => q.sku === sku);
+          if (item) {
+            const nextPieces = item.pieces + delta * item.piecesPerBox;
+            if (nextPieces < item.piecesPerBox) {
+              state.quoteItems = state.quoteItems.filter(q => q.sku !== sku);
+            } else {
+              item.pieces = nextPieces;
+            }
+            renderQuoteDrawer();
+            renderRelatedGrid();
+          }
+          return;
+        }
+
+        const rmQuote = e.target.closest('[data-remove-quote-sku]');
+        if (rmQuote) {
+          const sku = rmQuote.getAttribute('data-remove-quote-sku');
+          state.quoteItems = state.quoteItems.filter(q => q.sku !== sku);
+          renderQuoteDrawer();
+          renderRelatedGrid();
+          return;
+        }
+
+        // Câu hỏi nhanh trong Contextual AI Drawer
+        const aiQuick = e.target.closest('[data-ai-quick]');
+        if (aiQuick) {
+          answerProductQuestion(aiQuick.getAttribute('data-ai-quick'));
+          return;
+        }
+
+        // Chọn Persona trong Quote Form
+        const personaBtn = e.target.closest('[data-persona]');
+        if (personaBtn) {
+          const role = personaBtn.getAttribute('data-persona');
+          document.getElementById('customerRoleInput').value = role;
+          document.querySelectorAll('.persona-btn').forEach(b => {
+            const act = b.getAttribute('data-persona') === role;
+            b.className = act
+              ? 'persona-btn py-2 px-2 rounded-lg border border-dravit-teal bg-teal-50/80 text-dravit-primary font-semibold text-[11.5px] cursor-pointer'
+              : 'persona-btn py-2 px-2 rounded-lg border border-slate-200 bg-white text-slate-600 font-medium text-[11.5px] cursor-pointer';
+          });
+        }
+      });
+
+      // Mở / đóng các Drawer & Modal
+      document.getElementById('openQuoteDrawerBtn').addEventListener('click', () => openDrawer('quote'));
+      document.getElementById('openWishlistDrawerBtn').addEventListener('click', () => openDrawer('wishlist'));
+      document.getElementById('askAiAboutProductBtn').addEventListener('click', () => openDrawer('ai'));
+      document.getElementById('headerOpenAiBtn').addEventListener('click', () => openDrawer('ai'));
+      document.getElementById('mobileStickyAiBtn').addEventListener('click', () => openDrawer('ai'));
+
+      ['closeQuoteDrawerBtn', 'closeWishlistDrawerBtn', 'closeAiDrawerBtn', 'quoteBackdrop', 'wishlistBackdrop', 'aiDrawerBackdrop'].forEach(id => {
+        document.getElementById(id).addEventListener('click', closeAllDrawers);
+      });
+
+      document.getElementById('moveAllWishToQuoteBtn').addEventListener('click', () => {
+        getWishlistItemsList().forEach(item => upsertQuoteItem(item, false));
+        closeAllDrawers();
+        openDrawer('quote');
+      });
+
+      // Modal Tải Map 4K
+      document.getElementById('openDownloadMapModalBtn').addEventListener('click', () => {
+        const m = document.getElementById('cadMapModal');
+        m.classList.remove('hidden');
+        m.classList.add('flex');
+      });
+      document.getElementById('downloadAllFacesZipBtn').addEventListener('click', () => {
+        const m = document.getElementById('cadMapModal');
+        m.classList.remove('hidden');
+        m.classList.add('flex');
+      });
+      document.getElementById('closeCadMapModalBtn').addEventListener('click', () => {
+        const m = document.getElementById('cadMapModal');
+        m.classList.add('hidden');
+        m.classList.remove('flex');
+      });
+
+      document.getElementById('closeLightboxBtn').addEventListener('click', () => {
+        const lb = document.getElementById('galleryLightboxModal');
+        lb.classList.add('hidden');
+        lb.classList.remove('flex');
+      });
+
+      // Form Chat AI ngữ cảnh sản phẩm
+      document.getElementById('contextualAiForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const input = document.getElementById('contextualAiInput');
+        if (!input.value.trim()) return;
+        answerProductQuestion(input.value.trim());
+        input.value = '';
+      });
+
+      // Chia sẻ danh sách báo giá
+      document.getElementById('shareQuoteListBtn').addEventListener('click', () => {
+        if (state.quoteItems.length === 0) {
+          showToast('Hãy thêm sản phẩm vào danh sách báo giá trước khi chia sẻ');
+          return;
+        }
+        copyToClipboardSafe('https://gachdravit.vn/san-pham/drv-8801m?quote=drv8801m-6box', 'Đã sao chép đường dẫn danh sách báo giá (7 ngày)');
+      });
+
+      // Submit Form Báo Giá
+      document.getElementById('quoteContactForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const fd = new FormData(this);
+        if (fd.get('drv_website')) return;
+
+        document.getElementById('quoteItemsContainer').classList.add('hidden');
+        document.getElementById('quoteSummarySection').classList.add('hidden');
+        this.classList.add('hidden');
+        document.getElementById('quoteSuccessCode').textContent =
+          `Hồ sơ #DRV-${Math.floor(1000 + Math.random() * 9000)} • drv-quote-draft`;
+        document.getElementById('quoteSuccessBanner').classList.remove('hidden');
+
+        state.quoteItems = [];
+        document.getElementById('headerQuoteBadge').textContent = '0';
+        renderRelatedGrid();
+        this.reset();
+      });
+
+      document.getElementById('mobileStickyZaloBtn').addEventListener('click', () => {
+        showToast('Đang kết nối Zalo OA Dravit để gửi video quay thực tế mẫu gạch tại Kệ B-04...');
+      });
+
+      /* ======================================================================
+         9. KHỞI ĐỘNG TRANG PRODUCT SINGLE KHI TẢI XONG
+         ====================================================================== */
+      window.onload = function () {
+        renderAllProductViews();
+        renderRelatedGrid();
+        refreshWishlistUI();
+        initContextualAiMessages();
+      };
+    })();
+  </script>
+</body>
+</html>

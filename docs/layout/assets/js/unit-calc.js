@@ -165,6 +165,8 @@
       if (outActualM2) {
         outActualM2.textContent = `${formatDec(actualM2, 2)} m²`;
       }
+      const outBoxesQuote = this.querySelector('[data-calc-boxes-quote]');
+      if (outBoxesQuote) outBoxesQuote.textContent = boxText;
       const outBoxMeta = this.querySelector('[data-calc-box-meta]');
       if (outBoxMeta) {
         outBoxMeta.textContent = `${boxText} = ${pieces} viên · ${formatDec(totalKg, 0)} kg`;
@@ -910,10 +912,10 @@
     const discountRate = document.querySelector('[data-boq-discount-rate]')?.textContent || '0%';
     const finalPrice = document.querySelector('[data-boq-final-price]')?.textContent || totalPrice;
 
-    zaloLines.push(`• Tổng diện tích gạch: ${totalM2}`);
-    zaloLines.push(`• Tổng trọng lượng: ${totalKg}`);
-    zaloLines.push(`• Tổng niêm yết: ${totalPrice} (Chiết khấu công trình: ${discountRate})`);
-    zaloLines.push(`• TỔNG DỰ TOÁN TẠM TÍNH: ${finalPrice}`);
+    zaloLines.push(`- Tổng diện tích gạch: ${totalM2}`);
+    zaloLines.push(`- Tổng trọng lượng: ${totalKg}`);
+    zaloLines.push(`- Tổng niêm yết: ${totalPrice} (Chiết khấu công trình: ${discountRate})`);
+    zaloLines.push(`- TỔNG DỰ TOÁN TẠM TÍNH: ${finalPrice}`);
 
     if (copyBtn) {
       copyBtn.dataset.drvValue = zaloLines.join('\n');

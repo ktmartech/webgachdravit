@@ -125,7 +125,7 @@ Thứ tự 8 section được thiết kế để phục vụ cả **người m�
   - **Tầng Chip điều hướng nhanh (Link tĩnh `<a>`):** `[Tất cả]` `[60x60]` `[80x80]` `[30x60]` `[60x120]` `[Vân đá Marble]` `[Giả gỗ]` `[Terrazzo]` `[Vân xi măng]`.
   - **Thân khối (12 cột):**
     - **Cột trái (3/12 — Lookbook Card nền `--c-navy-900` chữ `--c-ivory`):** Ảnh phối cảnh dọc của nhóm đang chọn + tiêu chuẩn kỹ thuật khuyến nghị + nút `"Xem toàn bộ {n}+ mẫu gạch lát nền →"`.
-    - **Cột phải (9/12):** Lưới 2 hàng × 3 card sản phẩm (tổng 6 mẫu tiêu biểu của tab đó).
+    - **Cột phải (9/12):** Lưới 1 hàng × 3 card sản phẩm (tổng 3 mẫu tiêu biểu của tab đó).
 
 ### Section 5: Tương quan Kích thước & Bề mặt Thực tế (Signature Section của DRAVIT)
 - Điểm nhấn thị giác giúp khách hàng nhớ ngay thương hiệu:

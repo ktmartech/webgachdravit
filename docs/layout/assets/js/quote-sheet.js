@@ -77,6 +77,10 @@
     }
   ];
 
+  const QUOTE_LABEL = 'Liên hệ báo giá';
+  const QUOTE_TOTAL = 'Báo giá sau';
+  const totalText = (it) => (it.quote ? QUOTE_TOTAL : vnd(it.total));
+
   const getWaste = () => Number(document.querySelector('[data-qs-waste-select]')?.value || 5) / 100;
 
   function computeTileSlot(slot, waste) {
@@ -95,6 +99,7 @@
     const boxes = need > 0 ? Math.ceil(need / areaPiece / perBox - 1e-9) : 0;
     const pieces = boxes * perBox;
     const pricePiece = Math.round(priceM2 * areaPiece);
+    const quote = !(priceM2 > 0);
 
     return {
       isEmpty: false,
@@ -105,6 +110,7 @@
       kg: pieces * kgPiece,
       pricePiece,
       total: pieces * pricePiece,
+      quote,
       item,
     };
   }
@@ -264,8 +270,11 @@
         <!-- Cột 2: Đơn giá -->
         <div class="drv-slot-row__price">
           <span class="u-text-xs u-text-muted u-only-mobile">Đơn giá:</span>
-          <strong class="u-text-navy">${vnd(item.priceM2)}<small class="u-text-xs u-text-muted">/m²</small></strong>
-          <span class="u-text-xs u-text-muted u-hide-mobile">${vnd(res.pricePiece)}/viên</span>
+          ${res.quote
+            ? `<strong class="drv-qs-quote-tag"><i class="ph-fill ph-tag" aria-hidden="true"></i>${QUOTE_LABEL}</strong>
+          <span class="u-text-xs u-text-muted u-hide-mobile">Báo giá riêng</span>`
+            : `<strong class="u-text-navy">${vnd(item.priceM2)}<small class="u-text-xs u-text-muted">/m²</small></strong>
+          <span class="u-text-xs u-text-muted u-hide-mobile">${vnd(res.pricePiece)}/viên</span>`}
         </div>
 
         <!-- Cột 3: Khối lượng m² -->
@@ -285,7 +294,7 @@
         <!-- Cột 4: Thành tiền -->
         <div class="drv-slot-row__total">
           <span class="u-text-xs u-text-muted u-only-mobile">Thành tiền:</span>
-          <strong class="drv-slot-row__total-val u-tabular">${vnd(res.total)}</strong>
+          <strong class="drv-slot-row__total-val u-tabular${res.quote ? ' is-quote' : ''}">${res.quote ? QUOTE_TOTAL : vnd(res.total)}</strong>
         </div>
 
         <!-- Cột 5: Xóa vị trí -->
@@ -308,6 +317,7 @@
     let totalPieces = 0;
     let totalKg = 0;
     let subtotal = 0;
+    let quoteCount = 0;
     let configuredSlots = 0;
     const exportItems = [];
 
@@ -322,6 +332,7 @@
           totalPieces += res.pieces;
           totalKg += res.kg;
           subtotal += res.total;
+          if (res.quote) quoteCount += 1;
 
           exportItems.push({
             spaceName: space.name,
@@ -331,10 +342,11 @@
             size: res.item.size,
             color: res.item.color,
             thumb: res.item.img || res.item.thumb || 'assets/img/tile-marble-calacatta.svg',
-            price: `${vnd(res.item.priceM2)}/m²`,
+            price: res.quote ? QUOTE_LABEL : `${vnd(res.item.priceM2)}/m²`,
             qtyText: `${res.boxes} thùng · ${res.pieces} viên · ${dec(res.m2)} m²`,
             shortQty: `${dec(res.m2)} m² (${res.boxes} thùng)`,
             total: res.total,
+            quote: res.quote,
           });
         }
       });
@@ -384,6 +396,11 @@
     setText('[data-qs-rate]', `${tier.rate}%`);
     setText('[data-qs-discount]', discount > 0 ? `-${vnd(discount)}` : '0đ');
     setText('[data-qs-grand]', vnd(grand));
+    const quoteNote = document.querySelector('[data-qs-quote-note]');
+    if (quoteNote) {
+      quoteNote.hidden = quoteCount === 0;
+      setText('[data-qs-quote-count]', `${quoteCount} mẫu`);
+    }
 
     // Cập nhật thanh tiến trình chiết khấu
     const tierStatusEl = document.querySelector('[data-qs-tier-status]');
@@ -396,11 +413,11 @@
       }
     }
 
-    renderLeadSummary(exportItems, grand);
-    return { exportItems, totalM2, totalBoxes, totalPieces, totalKg, subtotal, discount, grand, tier, waste };
+    renderLeadSummary(exportItems, grand, quoteCount);
+    return { quoteCount, exportItems, totalM2, totalBoxes, totalPieces, totalKg, subtotal, discount, grand, tier, waste };
   }
 
-  function renderLeadSummary(items, grand) {
+  function renderLeadSummary(items, grand, quoteCount = 0) {
     const list = document.querySelector('[data-qs-lead-list]');
     if (!list) return;
 
@@ -422,7 +439,7 @@
           </div>
           <div class="drv-qs-lead-item__qty u-tabular">
             <span class="drv-qs-lead-item__qty-val">${esc(it.shortQty || it.qtyText)}</span>
-            <strong class="drv-qs-lead-item__price">${vnd(it.total)}</strong>
+            <strong class="drv-qs-lead-item__price${it.quote ? ' is-quote' : ''}">${totalText(it)}</strong>
           </div>
         </div>`
         )
@@ -432,7 +449,7 @@
         remaining > 0
           ? `<button type="button" class="drv-qs-lead__more-btn" data-qs-action="view-all-quote">
               <i class="ph-bold ph-arrow-up-right drv-icon--xs" aria-hidden="true"></i>
-              <span>Xem tất cả ${items.length} vị trí trên bảng báo giá &rarr;</span>
+              <span>Xem tất cả ${items.length} vị trí trên bảng báo giá</span>
             </button>`
           : '';
 
@@ -440,7 +457,7 @@
     }
 
     setText('[data-qs-lead-meta]', `${items.length} vị trí đã chọn`);
-    setText('[data-qs-lead-total]', vnd(grand));
+    setText('[data-qs-lead-total]', quoteCount ? `${vnd(grand)} + ${quoteCount} mẫu báo giá sau` : vnd(grand));
 
     const payload = document.querySelector('[data-qs-lead-payload]');
     if (payload) {
@@ -528,7 +545,7 @@
             <strong class="drv-picker-card__title">${esc(item.name)}</strong>
             <div class="drv-picker-card__foot">
               <div class="drv-picker-card__price">
-                <strong>${vnd(item.priceM2)}</strong><small>/m²</small>
+                ${Number(item.priceM2) > 0 ? `<strong>${vnd(item.priceM2)}</strong><small>/m²</small>` : `<strong class="drv-qs-quote-tag"><i class="ph-fill ph-tag" aria-hidden="true"></i>${QUOTE_LABEL}</strong>`}
               </div>
               <button type="button" class="drv-btn ${isCurrent ? 'drv-btn--outline' : 'drv-btn--moss'} drv-btn--xs" data-picker-select-sku="${sku}">
                 ${isCurrent ? 'Đang chọn' : 'Chọn mẫu này'}
@@ -658,7 +675,7 @@
         <td>${esc(it.color)}</td>
         <td>${esc(it.price)}</td>
         <td>${esc(it.qtyText)}</td>
-        <td style="text-align: right;"><strong>${vnd(it.total)}</strong></td>
+        <td style="text-align: right;"><strong>${totalText(it)}</strong></td>
       </tr>
     `
       )
@@ -693,12 +710,13 @@
       it.color,
       it.price,
       it.qtyText,
-      vnd(it.total),
+      totalText(it),
     ]);
     const foot = [
       [],
       ['', 'Tổng diện tích gạch', `${dec(res.totalM2)} m²`],
       ['', 'Tạm tính giá niêm yết', vnd(res.subtotal)],
+      ...(res.quoteCount ? [['', 'Mẫu chờ báo giá', `${res.quoteCount} mẫu`]] : []),
       ['', `Chiết khấu (${res.tier.rate}%)`, res.discount > 0 ? `-${vnd(res.discount)}` : '0đ'],
       ['', 'Tổng tạm tính', vnd(res.grand)],
     ];
@@ -721,8 +739,9 @@
     const project = document.querySelector('[data-qs-project]')?.value.trim() || '';
     const text = [
       `DỰ TOÁN GẠCH THEO PHÒNG DRAVIT ${document.querySelector('[data-qs-code]')?.textContent || ''}${project ? ` – ${project}` : ''}`,
-      ...res.exportItems.map((it, i) => `${i + 1}. [${it.spaceName} - ${it.role}] ${it.sku} ${it.name} (${it.size}) – ${it.qtyText} – ${vnd(it.total)}`),
+      ...res.exportItems.map((it, i) => `${i + 1}. [${it.spaceName} - ${it.role}] ${it.sku} ${it.name} (${it.size}) – ${it.qtyText} – ${totalText(it)}`),
       `Tổng dự toán: ${vnd(res.grand)} (Chiết khấu -${res.tier.rate}%, chưa gồm cước xe)`,
+      ...(res.quoteCount ? [`Lưu ý: ${res.quoteCount} mẫu chưa có giá niêm yết, Dravit sẽ báo giá riêng.`] : []),
     ].join('\n');
 
     try {
@@ -749,7 +768,7 @@
           const convEl = row.querySelector('.drv-slot-row__conv');
           const totalEl = row.querySelector('.drv-slot-row__total-val');
           if (convEl) convEl.textContent = res.boxes > 0 ? `${res.boxes} thùng · ${res.pieces} viên · ${dec(res.m2)} m²` : 'Nhập diện tích';
-          if (totalEl) totalEl.textContent = vnd(res.total);
+          if (totalEl) totalEl.textContent = res.quote ? QUOTE_TOTAL : vnd(res.total);
         }
         recalculateTotals();
       }

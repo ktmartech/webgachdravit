@@ -201,7 +201,7 @@
    ========================================================================== */
 @layer layout {
 
-  /* 3.1 Container (max 1320px, equal edges) */
+  /* 3.1 Container (max 1380px, equal edges) */
   .l-container {
     width: 100%;
     max-width: var(--container-max);
@@ -1093,15 +1093,23 @@
     --_bd: var(--c-navy-400);
     --_bg: var(--c-white);
     width: 100%;
-    min-height: 48px;
-    padding: 10px 14px;
+    min-height: 44px;
+    padding: 9px 14px;
     background-color: var(--_bg);
     color: var(--c-text-main);
     border: 1px solid var(--_bd);
     border-radius: var(--r-sm);
-    font-size: var(--fs-base);
+    font-size: var(--fs-sm);
     font-weight: 500;
     transition: border-color var(--dur-fast) var(--ease-out);
+  }
+
+  .drv-input--sm,
+  .drv-select.drv-input--sm {
+    min-height: 36px;
+    height: 36px;
+    padding: 6px 12px;
+    font-size: var(--fs-xs);
   }
 
   .drv-textarea {
@@ -1355,7 +1363,7 @@
       border-radius: var(--r-pill);
       background-color: var(--c-brand-primary);
       color: var(--c-white);
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 700;
       line-height: 1;
       align-items: center;
@@ -1755,7 +1763,7 @@
 
     .drv-search-item__meta {
       gap: 4px;
-      font-size: 11px;
+      font-size: 12px;
     }
   }
 
@@ -1835,7 +1843,7 @@
     border-left: var(--bw);
   }
 
-  /* Fit 9 nav items inside the 1320px container (no horizontal overflow) */
+  /* Fit 9 nav items inside the 1380px container (no horizontal overflow) */
   @media (min-width: 1024px) {
     .drv-nav__link {
       gap: 4px;
@@ -1941,7 +1949,7 @@
   }
 
   .drv-dropdown__arrow {
-    font-size: 11px;
+    font-size: 12px;
     color: var(--c-navy-400);
     transition: transform var(--dur-fast) var(--ease-out);
   }
@@ -1983,7 +1991,7 @@
 
   .drv-dropdown__heading {
     padding: 4px var(--s-4) 8px;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -2037,7 +2045,7 @@
   }
 
   .drv-mega__badge {
-    font-size: 10px;
+    font-size: 12px;
     padding: 1px 6px;
     border-radius: var(--r-sm);
     background-color: var(--c-champagne);
@@ -2152,7 +2160,7 @@
   }
 
   .drv-mega__count {
-    font-size: 11px;
+    font-size: 12px;
     color: var(--c-navy-800);
     font-variant-numeric: tabular-nums;
     font-weight: 600;
@@ -2342,6 +2350,13 @@
     color: var(--c-text-main);
   }
 
+  .drv-card__tag--stock {
+    background-color: var(--c-amber-100);
+    border-color: var(--c-amber-500);
+    color: var(--c-amber-800);
+    font-variant-numeric: tabular-nums;
+  }
+
   .drv-card__sku {
     color: var(--c-navy-800);
     font-weight: 600;
@@ -2487,7 +2502,7 @@
     }
 
     .drv-card__badges .drv-badge {
-      font-size: 10px;
+      font-size: 12px;
       padding: 2px 6px;
       line-height: 1.2;
     }
@@ -2506,7 +2521,7 @@
       padding: 5px 6px;
       gap: 3px;
       flex-wrap: nowrap;
-      font-size: 10px;
+      font-size: 12px;
     }
 
     .drv-card__tags {
@@ -2518,7 +2533,7 @@
 
     .drv-card__tag {
       padding: 1px 4px;
-      font-size: 9.5px;
+      font-size: 12px;
       white-space: nowrap;
     }
 
@@ -2526,7 +2541,7 @@
       display: inline-flex;
       align-items: center;
       gap: 3px;
-      font-size: 9.5px;
+      font-size: 12px;
       flex-shrink: 0;
     }
 
@@ -2572,11 +2587,11 @@
     }
 
     .drv-card__price-old {
-      font-size: 0.6875rem;
+      font-size: 0.75rem;
     }
 
     .drv-card__price-piece {
-      font-size: 0.6875rem;
+      font-size: 0.75rem;
     }
 
     .drv-card__action {
@@ -2585,6 +2600,388 @@
       background-color: var(--c-navy-900);
       color: var(--c-white);
       border-color: var(--c-navy-900);
+    }
+  }
+
+  /* 4.9c Glass shine sweep on image hover (injected by core.js as .drv-shine) */
+  .drv-shine {
+    position: absolute;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .drv-shine::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.42), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.7s ease;
+  }
+
+  .is-shining > .drv-shine::before {
+    left: 160%;
+  }
+
+  /* 4.9b Product Card "Quote" (.drv-card--quote) — SKU chip, eyebrow, contact-price, quote CTA */
+  .drv-card--quote {
+    --_pad: var(--s-4);
+  }
+
+  .drv-card--quote:hover {
+    box-shadow: var(--shadow-hover);
+  }
+
+  .drv-card--quote .drv-card__media {
+    border-bottom: 0;
+  }
+
+  .drv-card--quote .drv-card__badges {
+    top: var(--s-2);
+    left: var(--s-2);
+    right: var(--s-2);
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .drv-card__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--s-2);
+  }
+
+  .drv-card--quote .drv-card__sku {
+    flex-shrink: 0;
+    font-family: var(--f-mono);
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    color: var(--c-navy-800);
+    letter-spacing: 0.02em;
+  }
+
+  .drv-card__chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: var(--r-sm);
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.4;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .drv-card__chip--sku {
+    background-color: var(--c-navy-900);
+    color: var(--c-white);
+    font-family: var(--f-mono);
+    letter-spacing: 0.02em;
+  }
+
+  .drv-card__chip--label {
+    background-color: var(--c-teal-500);
+    color: var(--c-white);
+  }
+
+  .drv-card__chip--sale {
+    background-color: var(--c-sale);
+    color: var(--c-white);
+  }
+
+  .drv-card__chip--stock,
+  .drv-card__chip--spec {
+    position: absolute;
+    bottom: var(--s-2);
+    z-index: 2;
+  }
+
+  .drv-card__chip--stock {
+    left: var(--s-2);
+    background-color: rgb(8 58 79 / 0.72);
+    color: var(--c-teal-100);
+    backdrop-filter: blur(4px);
+  }
+
+  .drv-card__chip--spec {
+    right: var(--s-2);
+    background-color: var(--c-white);
+    color: var(--c-navy-900);
+    border: var(--bw);
+    font-family: var(--f-mono);
+  }
+
+  .drv-card__wish {
+    position: absolute;
+    bottom: var(--s-2);
+    right: var(--s-2);
+    z-index: 3;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(255 255 255 / 0.94);
+    border: var(--bw);
+    color: var(--c-navy-900);
+    font-size: 1.125rem;
+    box-shadow: var(--shadow-hover);
+    transition:
+      transform var(--dur-base) var(--ease-spring),
+      color var(--dur-fast) var(--ease-out),
+      background-color var(--dur-fast) var(--ease-out);
+  }
+
+  .drv-card__wish:hover {
+    transform: scale(1.1);
+    color: var(--c-sale);
+  }
+
+  .drv-card__wish[aria-pressed="true"] {
+    color: var(--c-sale);
+    background-color: var(--c-white);
+  }
+
+  .drv-card__remove {
+    position: absolute;
+    top: var(--s-2);
+    right: var(--s-2);
+    z-index: 3;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(255 255 255 / 0.94);
+    border: var(--bw);
+    color: var(--c-navy-600);
+    font-size: 0.75rem;
+    transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+  }
+
+  .drv-card__remove:hover {
+    background-color: var(--c-sale-bg);
+    color: var(--c-sale);
+  }
+
+  .drv-card--quote {
+    container-type: inline-size;
+    container-name: pcard;
+  }
+
+  .drv-card--quote .drv-card__body {
+    padding: var(--s-4);
+    gap: var(--s-3);
+    justify-content: flex-start;
+  }
+
+  /* Hàng đầu: tag kích thước + bề mặt (trái) · mã SKU (phải) */
+  .drv-card--quote .drv-card__head {
+    align-items: center;
+    flex-wrap: wrap;
+    row-gap: 4px;
+  }
+
+  .drv-card--quote .drv-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .drv-card--quote .drv-card__tag {
+    padding: 2px 8px;
+    background-color: var(--c-champagne);
+    border: var(--bw);
+    border-radius: var(--r-sm);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    color: var(--c-text-main);
+  }
+
+  .drv-card--quote .drv-card__sku {
+    flex-shrink: 0;
+    margin-left: auto;
+    font-family: var(--f-mono);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    color: var(--c-navy-600);
+    letter-spacing: 0.02em;
+  }
+
+  .drv-card--quote .drv-card__title {
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.4;
+    min-height: 2.8em;
+  }
+
+  /* Tình trạng mẫu / kho */
+  .drv-card__avail {
+    display: block;
+    max-width: none;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--c-text-main);
+  }
+
+  .drv-card__avail::before {
+    content: "";
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    margin-right: 6px;
+    vertical-align: 1px;
+    border-radius: 50%;
+    background-color: var(--c-success);
+  }
+
+  .drv-card__avail strong {
+    color: var(--c-teal-700);
+  }
+
+  /* Chân card: giá (trái) · nút (phải) */
+  .drv-card--quote .drv-card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-3);
+    margin-top: auto;
+    padding-top: var(--s-3);
+    border-top: var(--bw);
+  }
+
+  .drv-card--quote .drv-card__prices {
+    flex: 1 1 auto;
+    min-width: 0;
+    gap: 2px;
+  }
+
+  .drv-card--quote .drv-card__price-m2 {
+    font-size: 1rem;
+  }
+
+  .drv-card--quote .drv-card__price-main {
+    gap: 2px 6px;
+  }
+
+  .drv-card--quote .drv-card__price-piece {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--c-text-muted);
+    line-height: 1.4;
+  }
+
+  .drv-card__price-contact {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--c-text-main);
+    line-height: 1.2;
+  }
+
+  .drv-card__price-contact i {
+    color: var(--c-amber-500);
+    font-size: 1rem;
+  }
+
+  .drv-card__buy {
+    position: relative;
+    z-index: 2;
+    flex-shrink: 0;
+    --_h: 40px;
+    --_fs: 0.8125rem;
+    --_px: var(--s-3);
+    gap: 6px;
+    box-shadow: none;
+  }
+
+  /* Card hẹp (lưới 2 cột trên mobile, cột sidebar…): xếp giá trên, nút full-width dưới */
+  @container pcard (max-width: 280px) {
+    .drv-card--quote .drv-card__body {
+      padding: 10px;
+      gap: 8px;
+    }
+
+    .drv-card--quote .drv-card__footer {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+    }
+
+    .drv-card__buy {
+      width: 100%;
+      --_h: 38px;
+      --_px: 8px;
+    }
+
+    .drv-card--quote .drv-card__tag {
+      padding: 1px 6px;
+      font-size: 12px;
+    }
+
+    .drv-card--quote .drv-card__sku {
+      font-size: 12px;
+    }
+
+    .drv-card--quote .drv-card__title {
+      font-size: 0.875rem;
+      min-height: 2.7em;
+    }
+
+    .drv-card__avail {
+      font-size: 0.75rem;
+    }
+
+    .drv-card__price-contact,
+    .drv-card--quote .drv-card__price-m2 {
+      font-size: 0.9375rem;
+    }
+
+    .drv-card--quote .drv-card__price-piece {
+      font-size: 12px;
+      white-space: normal;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .drv-card--quote .drv-card__badges {
+      top: 6px;
+      left: 6px;
+      right: 6px;
+      gap: 3px;
+    }
+
+    .drv-card--quote .drv-card__badges .drv-card__chip:nth-child(n+3) {
+      display: none;
+    }
+
+    .drv-card__chip {
+      font-size: 12px;
+      padding: 1px 6px;
+    }
+
+    .drv-card__wish {
+      bottom: 6px;
+      right: 6px;
+      width: 32px;
+      height: 32px;
+      font-size: 1rem;
     }
   }
 
@@ -3241,7 +3638,7 @@
   }
 
   .drv-mob-group__title {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -3406,7 +3803,7 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-size: var(--fs-xs);
+    font-size: 0.8125rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -3417,7 +3814,7 @@
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    font-size: 11px;
+    font-size: 0.8125rem;
     font-weight: 600;
     padding: 2px 8px;
     border-radius: var(--r-pill);
@@ -3465,14 +3862,14 @@
   }
 
   .drv-footer-dock__title {
-    font-size: 0.9375rem;
+    font-size: 1.0625rem;
     font-weight: 700;
     color: var(--c-navy-900);
     line-height: 1.35;
   }
 
   .drv-footer-dock__desc {
-    font-size: var(--fs-xs);
+    font-size: 0.875rem;
     color: var(--c-text-muted);
     line-height: 1.5;
   }
@@ -3488,7 +3885,7 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-size: var(--fs-xs);
+    font-size: 0.875rem;
     font-weight: 700;
     padding: 7px 12px;
     border-radius: var(--r-sm);
@@ -3682,7 +4079,7 @@
 
   .drv-footer__social-label {
     display: block;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -3724,7 +4121,7 @@
   }
 
   .drv-footer__social-btn--zalo {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
     letter-spacing: -0.02em;
   }
@@ -3739,7 +4136,7 @@
     background-color: rgb(13 148 136 / 0.2);
     border: 1px solid rgb(45 212 191 / 0.4);
     color: var(--c-teal-100);
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 600;
     text-decoration: none;
     transition: background-color var(--dur-fast), border-color var(--dur-fast);
@@ -3789,7 +4186,7 @@
     background-color: rgb(255 255 255 / 0.06);
     border: 1px solid rgb(255 255 255 / 0.16);
     color: var(--c-ivory);
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 600;
     white-space: nowrap;
   }
@@ -3831,7 +4228,7 @@
     align-items: center;
     justify-content: center;
     gap: 3px;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
     padding: 4px;
   }
@@ -4116,7 +4513,7 @@
 
   .drv-stagger-tile span {
     display: block;
-    font-size: 10px;
+    font-size: 12px;
     color: var(--c-teal-700);
     font-weight: 600;
     margin-top: 2px;
@@ -4136,7 +4533,7 @@
   }
 
   .drv-odometer-box__label {
-    font-size: 11px;
+    font-size: 12px;
     color: var(--c-navy-700);
     font-weight: 600;
     text-transform: uppercase;

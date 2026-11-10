@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Không Gian Showroom Thực Tế — DRAVIT Flagship Sala</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Be Vietnam Pro (Chuẩn UI & Heading tiếng Việt) + JetBrains Mono (Thông số Kelvin, DCOF, Ron) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <!-- Anime.js v3.2.2 (Chuẩn ADR D-19: Chuyển cảnh mượt và hiệu ứng phản hồi UI) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Be Vietnam Pro"', 'system-ui', '-apple-system', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            dravit: {
+              primary: '#083A4F',     // ADR D-11 & D-18: Header & H1-H6
+              primaryDark: '#052838',
+              ink: '#0B192C',         // ADR D-11 & D-18: Body text
+              teal: '#0D9488',        // ADR D-11: Brand Teal
+              tealDark: '#0F766E',    // ADR D-11: Brand Teal Hover
+              amber: '#F59E0B',       // ADR D-11: Warm Amber (3000K accent)
+              slate: '#F8FAFC',       // ADR D-11: Clean Slate background
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* ==========================================================================
+       DRAVIT DESIGN TOKENS & SHOWROOM REAL-PHOTO INTERACTION STYLES
+       ========================================================================== */
+    :root {
+      --drv-primary: #083A4F;
+      --drv-ink: #0B192C;
+      --drv-teal: #0D9488;
+      --drv-teal-hover: #0F766E;
+      --drv-amber: #F59E0B;
+      --drv-slate: #F8FAFC;
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background-color: var(--drv-slate);
+      color: var(--drv-ink);
+      overflow-x: hidden;
+    }
+
+    /* Light DOM Custom Element khai báo chuẩn ADR D-17 */
+    drv-showroom-showcase {
+      display: block;
+    }
+
+    /* Thanh cuộn ngang tinh gọn cho các tab trên mobile */
+    .drv-scroll::-webkit-scrollbar {
+      height: 4px;
+      width: 5px;
+    }
+    .drv-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .drv-scroll::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 999px;
+    }
+
+    /* Hiệu ứng mô phỏng chuẩn quang học Ánh sáng Vàng 3000K vs Trắng 6500K trên ảnh thật */
+    .kelvin-6500k-filter {
+      filter: contrast(1.04) saturate(0.98) brightness(1.03);
+      transition: filter 0.45s var(--ease-out-expo), transform 0.65s var(--ease-out-expo);
+    }
+
+    .kelvin-3000k-filter {
+      filter: sepia(0.24) saturate(1.22) hue-rotate(-8deg) brightness(0.97) contrast(1.05);
+      transition: filter 0.45s var(--ease-out-expo), transform 0.65s var(--ease-out-expo);
+    }
+
+    /* Vầng đèn rọi ray Spotlight 3000K phủ mềm từ trần showroom */
+    .warm-spotlight-cone {
+      background:
+        radial-gradient(ellipse 38% 58% at 24% 8%, rgba(251, 191, 36, 0.28) 0%, transparent 72%),
+        radial-gradient(ellipse 38% 58% at 52% 8%, rgba(245, 158, 11, 0.24) 0%, transparent 72%),
+        radial-gradient(ellipse 38% 58% at 80% 8%, rgba(251, 191, 36, 0.26) 0%, transparent 72%),
+        linear-gradient(180deg, rgba(245, 158, 11, 0.10) 0%, rgba(11, 25, 44, 0.22) 100%);
+      mix-blend-mode: soft-light;
+      pointer-events: none;
+    }
+
+    .cool-daylight-cone {
+      background:
+        radial-gradient(ellipse 45% 55% at 50% 0%, rgba(224, 242, 254, 0.25) 0%, transparent 70%),
+        linear-gradient(180deg, rgba(240, 249, 255, 0.08) 0%, rgba(8, 58, 79, 0.16) 100%);
+      pointer-events: none;
+    }
+
+    /* Điểm chạm thông số (Interactive Hotspot Pin) trên ảnh thật */
+    .drv-hotspot-pin {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      z-index: 20;
+    }
+
+    .drv-hotspot-pulse::before {
+      content: '';
+      position: absolute;
+      inset: -5px;
+      border-radius: 9999px;
+      background: rgba(13, 148, 136, 0.45);
+      animation: hotspotPing 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
+    }
+
+    @keyframes hotspotPing {
+      0% { transform: scale(0.85); opacity: 0.85; }
+      75%, 100% { transform: scale(1.75); opacity: 0; }
+    }
+
+    /* Thanh kéo đối chiếu 3000K | 6500K (Split Kelvin Slider) */
+    .kelvin-split-divider {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 0 16px rgba(11, 25, 44, 0.55);
+      z-index: 18;
+      cursor: ew-resize;
+      user-select: none;
+      touch-action: none;
+    }
+
+    /* Thẻ lợi ích bên phải phản hồi khi di chuột */
+    .showroom-feature-item {
+      transition: background-color 0.25s ease, border-color 0.25s ease, transform 0.25s var(--ease-out-expo);
+    }
+    .showroom-feature-item:hover {
+      transform: translateX(3px);
+    }
+
+    /* Honeypot ẩn chống bot (Spec 2.4) */
+    .drv-hp-field {
+      position: absolute;
+      left: -9999px;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body class="font-sans antialiased min-h-screen flex flex-col justify-center py-8 sm:py-12 px-3 sm:px-6 lg:px-8">
+
+  <!-- ========================================================================
+       SECTION: SHOWROOM DRAVIT — KHÔNG GIAN SHOWROOM THỰC TẾ (REAL PHOTOGRAPHY)
+       Thiết kế chuẩn Component Light DOM <drv-showroom-showcase> (ADR D-17)
+       ======================================================================== -->
+  <drv-showroom-showcase class="max-w-[1340px] w-full mx-auto">
+    <section
+      id="showroom-dravit"
+      aria-labelledby="showroom-heading"
+      class="bg-white rounded-3xl border border-slate-200/90 shadow-xs p-5 sm:p-8 lg:p-10"
+    >
+
+      <!-- ====================================================================
+           1. SECTION HEADER: EYEBROW + H2 + SUBTITLE + HUY HIỆU CAM KẾT
+           ==================================================================== -->
+      <div class="pb-6 border-b border-slate-200/80 flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+        <div class="max-w-2xl space-y-2">
+          <div class="inline-flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-dravit-teal"></span>
+            <span class="text-xs font-bold uppercase tracking-[0.08em] text-dravit-teal">
+              SHOWROOM DRAVIT
+            </span>
+          </div>
+
+          <h2 id="showroom-heading" class="text-2xl sm:text-3xl lg:text-[32px] font-bold text-dravit-primary tracking-tight leading-tight">
+            Không gian showroom thực tế
+          </h2>
+
+          <p class="text-xs sm:text-[14.5px] text-slate-600 leading-relaxed">
+            Xem bề mặt, độ nhám và sắc độ gạch dưới ánh đèn vàng <strong class="font-semibold text-dravit-ink">3000K</strong> và trắng <strong class="font-semibold text-dravit-ink">6500K</strong> trước khi chốt mẫu cho công trình.
+          </p>
+        </div>
+
+        <!-- Cụm chỉ số thực tế tại Showroom giúp tăng độ tin cậy (Trust Signals) -->
+        <div class="flex flex-wrap items-center gap-2 sm:gap-3 shrink-0">
+          <div class="px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-lg bg-teal-50 text-dravit-teal flex items-center justify-center">
+              <i class="ph-fill ph-squares-four text-base"></i>
+            </div>
+            <div>
+              <div class="font-mono text-xs font-bold text-dravit-primary leading-none">420+ SKU</div>
+              <div class="text-[11px] text-slate-500 mt-0.5">Trưng bày tấm nguyên khổ</div>
+            </div>
+          </div>
+
+          <div class="px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-lg bg-amber-50 text-dravit-amber flex items-center justify-center">
+              <i class="ph-fill ph-lightbulb-filament text-base"></i>
+            </div>
+            <div>
+              <div class="font-mono text-xs font-bold text-dravit-primary leading-none">CRI &gt; 95</div>
+              <div class="text-[11px] text-slate-500 mt-0.5">Hệ đèn ray đổi màu chuẩn</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====================================================================
+           2. BỐ CỤC CHÍNH 2 CỘT: GALLERY ẢNH THẬT TƯƠNG TÁC (7/12) + CARD SALA (5/12)
+           ==================================================================== -->
+      <div class="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-6 xl:gap-8 items-start">
+
+        <!-- ==================================================================
+             CỘT TRÁI (7/12): 3 TAB PHÂN KHU + KHUNG ẢNH THẬT + SO SÁNH ĐÈN 3000K/6500K
+             ================================================================== -->
+        <div class="lg:col-span-7 space-y-4">
+
+          <!-- 3 Tabs Phân khu Showroom đúng cấu trúc nguyên bản -->
+          <div
+            role="tablist"
+            aria-label="Các phân khu trưng bày tại Showroom Dravit"
+            class="flex items-center gap-2 overflow-x-auto drv-scroll pb-1"
+          >
+            <button
+              type="button"
+              role="tab"
+              aria-selected="true"
+              data-zone-tab="slabs"
+              class="zone-tab-btn shrink-0 px-4 py-2.5 rounded-xl bg-dravit-primary text-white border border-dravit-primary text-xs sm:text-[13px] font-semibold inline-flex items-center gap-2 shadow-xs transition cursor-pointer"
+            >
+              <i class="ph-bold ph-squares-four text-teal-300 text-base"></i>
+              <span>Khu Gạch Khổ Lớn</span>
+            </button>
+
+            <button
+              type="button"
+              role="tab"
+              aria-selected="false"
+              data-zone-tab="bath-outdoor"
+              class="zone-tab-btn shrink-0 px-4 py-2.5 rounded-xl bg-white hover:bg-slate-50 text-dravit-ink border border-slate-200 hover:border-dravit-primary/40 text-xs sm:text-[13px] font-medium inline-flex items-center gap-2 transition cursor-pointer"
+            >
+              <i class="ph-bold ph-drop text-dravit-teal text-base"></i>
+              <span>Khu Phòng Tắm &amp; Sân Vườn</span>
+            </button>
+
+            <button
+              type="button"
+              role="tab"
+              aria-selected="false"
+              data-zone-tab="material-lab"
+              class="zone-tab-btn shrink-0 px-4 py-2.5 rounded-xl bg-white hover:bg-slate-50 text-dravit-ink border border-slate-200 hover:border-dravit-primary/40 text-xs sm:text-[13px] font-medium inline-flex items-center gap-2 transition cursor-pointer"
+            >
+              <i class="ph-bold ph-swatches text-dravit-teal text-base"></i>
+              <span>Bảng Mẫu Bề Mặt &amp; Đường Ron</span>
+            </button>
+          </div>
+
+          <!-- KHUNG HÌNH ẢNH THỰC TẾ CHÍNH (Tích hợp bộ đổi nhiệt độ màu 3000K / 6500K / Split) -->
+          <div
+            id="mainPhotoStage"
+            class="group relative aspect-[16/10.5] w-full rounded-2xl overflow-hidden bg-dravit-primaryDark border border-slate-200/90 shadow-md select-none"
+          >
+            <!-- LỚP ĐÁY: ẢNH THẬT DƯỚI ÁNH SÁNG TRẮNG 6500K (MẶC ĐỊNH HOẶC BÊN PHẢI KHI CHIA ĐÔI) -->
+            <img
+              id="stageImg6500K"
+              src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=85"
+              alt="Không gian trưng bày gạch khổ lớn tại Showroom Dravit dưới ánh sáng trắng 6500K"
+              width="1400"
+              height="920"
+              fetchpriority="high"
+              onerror="this.onerror=null;this.src='https://placehold.co/1400x920/083A4F/F8FAFC?text=Showroom+Dravit+6500K';"
+              class="w-full h-full object-cover kelvin-6500k-filter"
+            />
+            <div class="cool-daylight-cone absolute inset-0"></div>
+
+            <!-- LỚP TRÊN: CÙNG ẢNH THẬT ĐƯỢC MÔ PHỎNG ĐÈN VÀNG ẤM 3000K (HIỆN KHI BẬT 3000K HOẶC KÉO THANH CHIA ĐÔI) -->
+            <div
+              id="stageLayer3000KWrap"
+              class="absolute inset-0 overflow-hidden transition-opacity duration-300"
+              style="clip-path: inset(0 50% 0 0);"
+            >
+              <img
+                id="stageImg3000K"
+                src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=85"
+                alt="Không gian trưng bày gạch khổ lớn tại Showroom Dravit dưới ánh đèn vàng ấm 3000K"
+                width="1400"
+                height="920"
+                onerror="this.onerror=null;this.src='https://placehold.co/1400x920/083A4F/FCD34D?text=Showroom+Dravit+3000K';"
+                class="w-full h-full object-cover kelvin-3000k-filter"
+              />
+              <div class="warm-spotlight-cone absolute inset-0"></div>
+            </div>
+
+            <!-- THANH KÉO ĐỐI CHIẾU TRỰC QUAN 3000K | 6500K (Hiện khi ở chế độ So sánh đôi) -->
+            <div id="kelvinSplitBar" class="kelvin-split-divider" style="left: 50%;">
+              <div
+                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white text-dravit-primary shadow-xl border-2 border-dravit-teal flex items-center justify-center transition-transform hover:scale-110"
+                title="Kéo sang trái/phải để đối chiếu sắc độ gạch dưới đèn 3000K và 6500K"
+              >
+                <i class="ph-bold ph-arrows-left-right text-sm"></i>
+              </div>
+
+              <!-- Nhãn nổi hai bên vạch chia -->
+              <span class="absolute top-14 right-3 whitespace-nowrap px-2 py-0.5 rounded-md bg-amber-500/90 text-dravit-ink font-mono text-[10px] font-bold shadow-sm">
+                3000K Đèn vàng
+              </span>
+              <span class="absolute top-14 left-3 whitespace-nowrap px-2 py-0.5 rounded-md bg-sky-500/90 text-white font-mono text-[10px] font-bold shadow-sm">
+                6500K Trắng ngày
+              </span>
+            </div>
+
+            <!-- CÁC ĐIỂM CHẠM THÔNG SỐ (INTERACTIVE HOTSPOTS) TRÊN ẢNH THỰC TẾ -->
+            <div id="photoHotspotsLayer" class="absolute inset-0 pointer-events-none">
+              <!-- Render động từ JS theo từng khu vực trưng bày -->
+            </div>
+
+            <!-- THANH ĐIỀU KHIỂN NHIỆT ĐỘ MÀU ĐÈN TRÊN ĐỈNH ẢNH -->
+            <div class="absolute top-3 inset-x-3 z-25 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
+              <!-- Badge vị trí khu vực trong Showroom -->
+              <span
+                id="zoneFloorBadge"
+                class="pointer-events-auto inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-dravit-ink/75 text-white backdrop-blur-md border border-white/15 text-[11.5px] font-semibold shadow-sm"
+              >
+                <i class="ph-fill ph-compass text-teal-300 text-sm"></i>
+                <span>Tầng 1 · Hệ kệ ray trượt 120 tấm Slab</span>
+              </span>
+
+              <!-- Công tắc thử ánh sáng 3000K / Đôi / 6500K + Phóng to Lightbox -->
+              <div class="pointer-events-auto flex items-center gap-1.5">
+                <div
+                  class="inline-flex items-center p-1 rounded-xl bg-dravit-ink/80 backdrop-blur-md border border-white/15 text-[11px] shadow-sm"
+                  role="group"
+                  aria-label="Chế độ ánh sáng thực tế"
+                >
+                  <button
+                    type="button"
+                    data-kelvin-mode="split"
+                    class="kelvin-mode-btn px-2.5 py-1 rounded-lg bg-white text-dravit-primary font-semibold transition cursor-pointer flex items-center gap-1"
+                    title="Kéo thanh trượt để so sánh 2 nguồn sáng cùng lúc"
+                  >
+                    <i class="ph-bold ph-columns text-dravit-teal"></i>
+                    <span>So sánh</span>
+                  </button>
+                  <button
+                    type="button"
+                    data-kelvin-mode="3000k"
+                    class="kelvin-mode-btn px-2.5 py-1 rounded-lg text-amber-200 hover:text-white font-mono font-medium transition cursor-pointer flex items-center gap-1"
+                  >
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+                    <span>3000K</span>
+                  </button>
+                  <button
+                    type="button"
+                    data-kelvin-mode="6500k"
+                    class="kelvin-mode-btn px-2.5 py-1 rounded-lg text-sky-200 hover:text-white font-mono font-medium transition cursor-pointer flex items-center gap-1"
+                  >
+                    <span class="w-1.5 h-1.5 rounded-full bg-sky-300"></span>
+                    <span>6500K</span>
+                  </button>
+                </div>
+
+                <button
+                  id="openShowroomLightboxBtn"
+                  type="button"
+                  aria-label="Phóng to ảnh không gian showroom"
+                  title="Xem ảnh kích thước lớn"
+                  class="w-8 h-8 rounded-xl bg-dravit-ink/80 hover:bg-dravit-primary text-white backdrop-blur-md border border-white/15 flex items-center justify-center shadow-sm transition cursor-pointer"
+                >
+                  <i class="ph-bold ph-arrows-out-simple text-xs"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- DẢI CHÚ THÍCH GÓC CHỤP & THÔNG TIN HẠNG MỤC DƯỚI ĐÁY ẢNH -->
+            <div class="absolute bottom-0 inset-x-0 z-20 bg-gradient-to-t from-dravit-ink/90 via-dravit-ink/55 to-transparent pt-10 pb-3.5 px-4 flex flex-col sm:flex-row sm:items-end justify-between gap-2 pointer-events-none">
+              <div class="space-y-0.5 max-w-xl">
+                <div id="activePhotoCaptionTitle" class="text-xs sm:text-sm font-bold text-white">
+                  Kệ trưng bày gạch khổ lớn 80×80, 60×120 &amp; Đá nung kết 80×160 cm
+                </div>
+                <p id="activePhotoCaptionSub" class="text-[11px] sm:text-xs text-slate-200/90 leading-snug">
+                  Các tấm gạch được dựng đứng dưới hệ đèn rọi ray trượt để kiểm tra độ phẳng mặt men (glaze wave) và hệ vân nối tiếp.
+                </p>
+              </div>
+
+              <!-- Hộp hiển thị chi tiết khi người dùng bấm vào 1 Hotspot -->
+              <div
+                id="hotspotDetailToast"
+                class="pointer-events-auto hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/95 text-dravit-primary text-[11px] font-semibold shadow-lg border border-teal-200 shrink-0"
+              >
+                <i class="ph-fill ph-sparkle text-dravit-teal"></i>
+                <span id="hotspotDetailText">Bấm vào các điểm (+) trên ảnh để xem chi tiết</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- DẢI 3 ẢNH THẬT GÓC NHÌN PHỤ TRONG CÙNG PHÂN KHU (Sub-Gallery Thumbnails) -->
+          <div id="subAngleThumbnailsGrid" class="grid grid-cols-3 gap-2.5 sm:gap-3.5">
+            <!-- Render động 3 góc chụp thực tế cho mỗi Tab phân khu -->
+          </div>
+
+        </div>
+
+        <!-- ==================================================================
+             CỘT PHẢI (5/12): THẺ THÔNG TIN SHOWROOM FLAGSHIP SALA & ĐẶT LỊCH 1:1
+             Giữ đầy đủ thông tin cốt lõi từ thiết kế gốc & nâng cấp trải nghiệm thực
+             ================================================================== -->
+        <aside class="lg:col-span-5 rounded-2xl bg-white border border-slate-200/95 shadow-sm overflow-hidden">
+
+          <!-- Dải ảnh mặt tiền / khu tiếp đón khách thực tế tạo cảm giác chân thực ngay từ cái nhìn đầu -->
+          <div class="relative h-32 sm:h-36 w-full overflow-hidden bg-dravit-primary">
+            <img
+              src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1000&q=80"
+              alt="Khu vực đón tiếp khách hàng và Kiến trúc sư tại Showroom Flagship Sala"
+              width="1000"
+              height="360"
+              loading="lazy"
+              onerror="this.onerror=null;this.src='https://placehold.co/1000x360/083A4F/99F6E4?text=Showroom+Flagship+Sala';"
+              class="w-full h-full object-cover opacity-85"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-dravit-ink/90 via-dravit-ink/35 to-transparent"></div>
+
+            <div class="absolute bottom-3 inset-x-5 flex flex-wrap items-end justify-between gap-2">
+              <div>
+                <span class="font-mono text-[10px] uppercase tracking-wider text-teal-300 block">
+                  TRUNG TÂM TRƯNG BÀY &amp; DỰ TOÁN
+                </span>
+                <h3 class="text-lg sm:text-[20px] font-bold text-white tracking-tight leading-tight">
+                  Showroom Flagship Sala
+                </h3>
+              </div>
+
+              <!-- Badge trạng thái mở cửa chuẩn thiết kế gốc (Cập nhật động theo giờ thực tế) -->
+              <span
+                id="liveOpenStatusBadge"
+                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50/95 border border-emerald-400 text-emerald-800 text-[10.5px] font-bold tracking-wide shadow-xs"
+              >
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span id="liveOpenStatusText">MỞ CỬA THỨ 2 - CHỦ NHẬT</span>
+              </span>
+            </div>
+          </div>
+
+          <div class="p-5 sm:p-6 space-y-5">
+
+            <!-- Bảng thông tin Địa chỉ · Giờ mở cửa · Đậu xe · Hotline -->
+            <dl class="divide-y divide-slate-100 text-xs sm:text-[13px]">
+              <!-- Địa chỉ -->
+              <div class="py-2.5 first:pt-0 flex items-start gap-3">
+                <dt class="w-28 shrink-0 flex items-center gap-1.5 text-slate-500 font-medium pt-0.5">
+                  <i class="ph-bold ph-map-pin text-dravit-teal text-base"></i>
+                  <span>Địa chỉ</span>
+                </dt>
+                <dd class="flex-1 font-semibold text-dravit-ink leading-snug flex items-start justify-between gap-2">
+                  <span>68 Nguyễn Cơ Thạch, KĐT Sala, TP. Thủ Đức, TP.HCM</span>
+                  <button
+                    id="copyAddressBtn"
+                    type="button"
+                    title="Sao chép địa chỉ Showroom"
+                    class="text-slate-400 hover:text-dravit-teal p-1 rounded hover:bg-slate-100 transition shrink-0 cursor-pointer"
+                  >
+                    <i class="ph ph-copy text-sm"></i>
+                  </button>
+                </dd>
+              </div>
+
+              <!-- Giờ mở cửa -->
+              <div class="py-2.5 flex items-start gap-3">
+                <dt class="w-28 shrink-0 flex items-center gap-1.5 text-slate-500 font-medium">
+                  <i class="ph-bold ph-clock text-dravit-teal text-base"></i>
+                  <span>Giờ mở cửa</span>
+                </dt>
+                <dd class="flex-1 font-semibold text-dravit-ink">
+                  8:00 – 21:00 mỗi ngày <span class="font-normal text-slate-500 text-[11.5px]">(Kể cả Chủ nhật)</span>
+                </dd>
+              </div>
+
+              <!-- Đậu xe -->
+              <div class="py-2.5 flex items-start gap-3">
+                <dt class="w-28 shrink-0 flex items-center gap-1.5 text-slate-500 font-medium">
+                  <i class="ph-bold ph-car text-dravit-teal text-base"></i>
+                  <span>Đậu xe</span>
+                </dt>
+                <dd class="flex-1 font-semibold text-dravit-ink leading-snug">
+                  Có chỗ đậu ô tô và xe tải nhỏ miễn phí trước cửa
+                </dd>
+              </div>
+
+              <!-- Hotline -->
+              <div class="py-2.5 pb-0 flex items-center gap-3">
+                <dt class="w-28 shrink-0 flex items-center gap-1.5 text-slate-500 font-medium">
+                  <i class="ph-bold ph-phone-call text-dravit-teal text-base"></i>
+                  <span>Hotline</span>
+                </dt>
+                <dd class="flex-1 flex items-center justify-between gap-2">
+                  <a
+                    href="tel:0909888777"
+                    class="font-mono font-bold text-sm text-dravit-primary hover:text-dravit-teal transition"
+                  >
+                    0909.888.777
+                  </a>
+                  <button
+                    id="copyHotlineBtn"
+                    type="button"
+                    class="px-2 py-0.5 rounded-md bg-teal-50 hover:bg-teal-100 text-dravit-tealDark text-[11px] font-semibold transition cursor-pointer"
+                  >
+                    Sao chép SĐT
+                  </button>
+                </dd>
+              </div>
+            </dl>
+
+            <!-- 3 Điểm trải nghiệm thực tế (Bấm vào từng dòng sẽ kích hoạt đúng tính năng tương ứng trên ảnh thật bên trái!) -->
+            <div class="pt-4 border-t border-slate-100 space-y-2">
+              <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                Trải nghiệm thực tế tại chỗ (bấm để xem thử):
+              </div>
+
+              <button
+                type="button"
+                data-experience-trigger="lighting"
+                class="showroom-feature-item w-full text-left p-2.5 rounded-xl bg-slate-50/80 hover:bg-amber-50/60 border border-slate-200/70 hover:border-amber-300 flex items-start gap-2.5 cursor-pointer"
+              >
+                <span class="w-7 h-7 rounded-lg bg-white border border-slate-200/90 text-dravit-teal flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+                  <i class="ph-bold ph-lightbulb text-sm"></i>
+                </span>
+                <span class="text-xs text-slate-700 leading-relaxed">
+                  So màu gạch dưới đèn vàng <strong class="text-dravit-ink">3000K</strong> và trắng <strong class="text-dravit-ink">6500K</strong>, tránh lệch màu khi lên sàn thật.
+                </span>
+              </button>
+
+              <button
+                type="button"
+                data-experience-trigger="slip-test"
+                class="showroom-feature-item w-full text-left p-2.5 rounded-xl bg-slate-50/80 hover:bg-teal-50/60 border border-slate-200/70 hover:border-teal-300 flex items-start gap-2.5 cursor-pointer"
+              >
+                <span class="w-7 h-7 rounded-lg bg-white border border-slate-200/90 text-dravit-teal flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+                  <i class="ph-bold ph-hand-pointing text-sm"></i>
+                </span>
+                <span class="text-xs text-slate-700 leading-relaxed">
+                  Chạm thử độ nhám <strong class="text-dravit-ink">R10–R11</strong> trước khi chọn gạch nhà tắm, sân vườn.
+                </span>
+              </button>
+
+              <button
+                type="button"
+                data-experience-trigger="grout-match"
+                class="showroom-feature-item w-full text-left p-2.5 rounded-xl bg-slate-50/80 hover:bg-teal-50/60 border border-slate-200/70 hover:border-teal-300 flex items-start gap-2.5 cursor-pointer"
+              >
+                <span class="w-7 h-7 rounded-lg bg-white border border-slate-200/90 text-dravit-teal flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+                  <i class="ph-bold ph-ruler text-sm"></i>
+                </span>
+                <span class="text-xs text-slate-700 leading-relaxed">
+                  Ướm màu keo chà ron và độ rộng ron <strong class="text-dravit-ink">1,5–3 mm</strong> trên bảng mẫu.
+                </span>
+              </button>
+            </div>
+
+            <!-- 2 Nút Hành động chính chuẩn thiết kế gốc: Chỉ đường Google Maps + Đặt lịch tư vấn -->
+            <div class="pt-1 grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <button
+                id="openDirectionsModalBtn"
+                type="button"
+                class="py-3 px-4 rounded-xl bg-dravit-primary hover:bg-dravit-primaryDark text-white text-xs sm:text-[13px] font-semibold shadow-xs transition inline-flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <i class="ph-bold ph-navigation-arrow text-teal-300 text-sm"></i>
+                <span>Chỉ đường Google Maps</span>
+              </button>
+
+              <button
+                id="openBookingModalBtn"
+                type="button"
+                class="py-3 px-4 rounded-xl bg-white hover:bg-dravit-primary text-dravit-primary hover:text-white border border-dravit-primary text-xs sm:text-[13px] font-semibold transition inline-flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <i class="ph-bold ph-calendar-check text-sm"></i>
+                <span>Đặt lịch tư vấn</span>
+              </button>
+            </div>
+
+          </div>
+        </aside>
+
+      </div>
+    </section>
+  </drv-showroom-showcase>
+
+  <!-- ========================================================================
+       MODAL 1: HƯỚNG DẪN ĐƯỜNG ĐI & LỐI ĐẬU Ô TÔ TẠI SHOWROOM SALA
+       ======================================================================== -->
+  <div id="directionsModal" class="hidden fixed inset-0 z-50 bg-dravit-ink/60 backdrop-blur-xs items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl border border-slate-200">
+      <div class="px-5 py-4 bg-dravit-primary text-white flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i class="ph-fill ph-map-pin-line text-teal-300 text-lg"></i>
+          <div>
+            <h3 class="text-sm sm:text-base font-bold">Chỉ đường đến Showroom Flagship Sala</h3>
+            <p class="text-[11px] text-teal-100/80">68 Nguyễn Cơ Thạch, KĐT Sala, TP. Thủ Đức, TP.HCM</p>
+          </div>
+        </div>
+        <button id="closeDirectionsModalBtn" type="button" class="w-8 h-8 rounded-lg hover:bg-white/15 flex items-center justify-center cursor-pointer">
+          <i class="ph-bold ph-x"></i>
+        </button>
+      </div>
+
+      <div class="p-5 space-y-4 text-xs">
+        <!-- Bản đồ trực quan tuyến đường chính qua hầm Thủ Thiêm / cầu Ba Son -->
+        <div class="rounded-xl bg-slate-100 border border-slate-200 p-4 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-dravit-primary flex items-center gap-1.5">
+              <i class="ph-fill ph-car-profile text-dravit-teal"></i>
+              <span>Lộ trình di chuyển thuận tiện nhất</span>
+            </span>
+            <span class="px-2 py-0.5 rounded bg-teal-50 text-dravit-tealDark font-mono text-[10.5px] font-semibold">
+              ~8 phút từ Quận 1
+            </span>
+          </div>
+          <ul class="space-y-2 text-slate-600 leading-relaxed">
+            <li class="flex items-start gap-2">
+              <span class="w-5 h-5 rounded-full bg-dravit-primary text-white font-mono text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">1</span>
+              <span>Từ trung tâm Quận 1 đi qua <strong>Cầu Ba Son</strong> hoặc <strong>Hầm Thủ Thiêm</strong> vào đại lộ Mai Chí Thọ.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="w-5 h-5 rounded-full bg-dravit-primary text-white font-mono text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">2</span>
+              <span>Rẽ vào trục đường chính <strong>Nguyễn Cơ Thạch</strong> (rộng 60m), Showroom nằm ngay mặt tiền shophouse số 68 có làn đậu ô tô &amp; xe bán tải miễn phí ngay trước sảnh.</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-center gap-2.5">
+          <a
+            href="https://www.google.com/maps/search/?api=1&query=68+Nguyen+Co+Thach+KDT+Sala+Thu+Duc+TPHCM"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="w-full sm:flex-1 py-3 px-4 rounded-xl bg-dravit-teal hover:bg-dravit-tealDark text-white font-semibold text-center inline-flex items-center justify-center gap-2 transition"
+          >
+            <i class="ph-bold ph-arrow-square-out text-sm"></i>
+            <span>Mở ứng dụng Google Maps</span>
+          </a>
+          <button
+            id="copyAddressInModalBtn"
+            type="button"
+            class="w-full sm:w-auto py-3 px-4 rounded-xl border border-slate-300 hover:border-dravit-primary text-dravit-primary font-semibold transition cursor-pointer"
+          >
+            Sao chép địa chỉ
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 2: ĐẶT LỊCH TƯ VẤN 1:1 & CHUẨN BỊ SẴN MẪU GẠCH TRÊN BÀN ÁNH SÁNG
+       ======================================================================== -->
+  <div id="bookingModal" class="hidden fixed inset-0 z-50 bg-dravit-ink/60 backdrop-blur-xs items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl border border-slate-200">
+      <div class="px-5 py-4 bg-dravit-primary text-white flex items-center justify-between">
+        <div>
+          <span class="font-mono text-[10.5px] text-teal-300 uppercase">VIP SHOWROOM APPOINTMENT</span>
+          <h3 class="text-base font-bold">Đặt lịch hẹn xem mẫu gạch thực tế 1:1</h3>
+        </div>
+        <button id="closeBookingModalBtn" type="button" class="w-8 h-8 rounded-lg hover:bg-white/15 flex items-center justify-center cursor-pointer">
+          <i class="ph-bold ph-x"></i>
+        </button>
+      </div>
+
+      <form id="showroomBookingForm" class="p-5 space-y-3.5 text-xs">
+        <input type="text" name="drv_website" tabindex="-1" autocomplete="off" class="drv-hp-field" />
+
+        <p class="text-slate-600 leading-relaxed">
+          Chuyên viên Kỹ thuật Dravit sẽ soạn sẵn các tấm mẫu khổ lớn, bảng ron và thiết lập bàn thử đèn <strong>3000K / 6500K</strong> trước khi bạn tới Showroom Sala.
+        </p>
+
+        <!-- Chọn nhóm khách hàng -->
+        <div class="grid grid-cols-3 gap-1.5">
+          <label class="cursor-pointer">
+            <input type="radio" name="visitor_role" value="Chủ nhà" checked class="peer sr-only" />
+            <span class="block py-2 px-2 rounded-lg border border-slate-200 peer-checked:border-dravit-teal peer-checked:bg-teal-50/80 peer-checked:text-dravit-primary peer-checked:font-semibold text-center text-slate-600 transition">
+              Chủ nhà
+            </span>
+          </label>
+          <label class="cursor-pointer">
+            <input type="radio" name="visitor_role" value="Kiến trúc sư" class="peer sr-only" />
+            <span class="block py-2 px-2 rounded-lg border border-slate-200 peer-checked:border-dravit-teal peer-checked:bg-teal-50/80 peer-checked:text-dravit-primary peer-checked:font-semibold text-center text-slate-600 transition">
+              KTS / Thiết kế
+            </span>
+          </label>
+          <label class="cursor-pointer">
+            <input type="radio" name="visitor_role" value="Nhà thầu" class="peer sr-only" />
+            <span class="block py-2 px-2 rounded-lg border border-slate-200 peer-checked:border-dravit-teal peer-checked:bg-teal-50/80 peer-checked:text-dravit-primary peer-checked:font-semibold text-center text-slate-600 transition">
+              Thợ / Nhà thầu
+            </span>
+          </label>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-[11px] font-semibold text-dravit-primary mb-1">Họ tên của bạn *</label>
+            <input name="customer_name" type="text" required placeholder="Nguyễn Văn Minh" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-dravit-teal" />
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-dravit-primary mb-1">Số điện thoại / Zalo *</label>
+            <input name="customer_phone" type="tel" required placeholder="0909 xxx xxx" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-dravit-teal" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-[11px] font-semibold text-dravit-primary mb-1">Ngày dự kiến ghé *</label>
+            <input id="bookingDateInput" name="visit_date" type="date" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-dravit-teal" />
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-dravit-primary mb-1">Khung giờ thuận tiện</label>
+            <select name="visit_slot" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 bg-white focus:outline-none focus:border-dravit-teal">
+              <option value="Sáng (08:30 - 11:30)">Sáng (08:30 – 11:30)</option>
+              <option value="Chiều (13:30 - 17:30)" selected>Chiều (13:30 – 17:30)</option>
+              <option value="Tối (18:00 - 20:30)">Tối (18:00 – 20:30)</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-semibold text-dravit-primary mb-1">Hạng mục hoặc mã gạch muốn soạn sẵn</label>
+          <input
+            id="bookingZonesNote"
+            name="interest_note"
+            type="text"
+            placeholder="Ví dụ: Gạch lát phòng khách 80x80 vân đá sáng, gạch nhà tắm R11..."
+            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-dravit-teal"
+          />
+        </div>
+
+        <button type="submit" class="w-full py-3 rounded-xl bg-dravit-teal hover:bg-dravit-tealDark text-white font-semibold text-[13px] shadow-sm transition cursor-pointer">
+          Xác nhận đặt lịch hẹn tại Showroom Sala
+        </button>
+      </form>
+
+      <!-- Trạng thái đặt lịch thành công -->
+      <div id="bookingSuccessBox" class="hidden p-6 text-center space-y-3">
+        <div class="w-12 h-12 rounded-full bg-emerald-500 text-white mx-auto flex items-center justify-center">
+          <i class="ph-bold ph-check text-2xl"></i>
+        </div>
+        <h4 class="text-base font-bold text-dravit-primary">Đã giữ lịch đón tiếp tại Showroom Sala!</h4>
+        <p id="bookingSummaryConfirmText" class="text-xs text-slate-600 leading-relaxed max-w-sm mx-auto"></p>
+        <button id="doneBookingBtn" type="button" class="px-5 py-2.5 rounded-xl bg-dravit-primary text-white text-xs font-semibold cursor-pointer">
+          Hoàn tất
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 3: LIGHTBOX PHÓNG TO HÌNH ẢNH THỰC TẾ SHOWROOM
+       ======================================================================== -->
+  <div id="photoLightboxModal" class="hidden fixed inset-0 z-50 bg-dravit-ink/85 backdrop-blur-sm items-center justify-center p-3 sm:p-6">
+    <div class="bg-white rounded-2xl max-w-4xl w-full overflow-hidden shadow-2xl">
+      <div class="px-5 py-3.5 bg-dravit-primary text-white flex items-center justify-between gap-3">
+        <span id="lightboxTitleText" class="text-xs sm:text-sm font-semibold truncate">
+          Không gian thực tế Showroom Flagship Sala
+        </span>
+        <button id="closeLightboxModalBtn" type="button" class="w-8 h-8 rounded-lg hover:bg-white/15 flex items-center justify-center shrink-0 cursor-pointer">
+          <i class="ph-bold ph-x"></i>
+        </button>
+      </div>
+      <div class="relative aspect-[16/10] w-full bg-slate-900 overflow-hidden">
+        <img
+          id="lightboxFullImg"
+          src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=90"
+          alt="Ảnh phóng to không gian thực tế Showroom Dravit"
+          class="w-full h-full object-cover"
+        />
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST THÔNG BÁO (Thay thế tuyệt đối alert/confirm) -->
+  <div
+    id="drvToast"
+    class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-xl bg-dravit-ink text-white text-xs font-medium shadow-xl border border-teal-400/30 flex items-center gap-2 opacity-0 pointer-events-none transition-all duration-300 translate-y-3"
+  >
+    <i class="ph-fill ph-check-circle text-teal-400 text-base"></i>
+    <span id="drvToastMessage">Đã sao chép</span>
+  </div>
+
+  <!-- ========================================================================
+       JAVASCRIPT: QUẢN LÝ 3 PHÂN KHU ẢNH THẬT, KELVIN SLIDER 3000K/6500K & ĐẶT LỊCH
+       ======================================================================== -->
+  <script>
+    (function () {
+      'use strict';
+
+      /* ======================================================================
+         1. DỮ LIỆU HÌNH ẢNH THẬT CHO 3 PHÂN KHU TẠI SHOWROOM FLAGSHIP SALA
+            Mỗi phân khu gồm 3 góc chụp thực tế + các điểm chạm thông số (Hotspots)
+         ====================================================================== */
+      const SHOWROOM_ZONES = {
+        'slabs': {
+          tabName: 'Khu Gạch Khổ Lớn',
+          floorBadge: 'Tầng 1 · Hệ kệ ray trượt 120 tấm Slab nguyên khổ',
+          photos: [
+            {
+              url: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=85',
+              thumbLabel: 'Sảnh trưng bày khổ lớn',
+              title: 'Không gian lát thực tế gạch khổ lớn 80×80, 60×120 & Đá nung kết 80×160 cm',
+              subtitle: 'Trải nghiệm trực tiếp độ mở không gian, mạch ghép siêu mảnh 1.5mm và phản xạ ánh sáng trên mặt sàn lớn.',
+              hotspots: [
+                { x: 32, y: 34, label: 'Hệ đèn ray CRI > 95', detail: 'Đổi tức thì nhiệt độ màu 3000K (vàng ấm) & 6500K (trắng ngày)' },
+                { x: 64, y: 74, label: 'Mặt sàn lát mẫu 60×120', detail: 'Đi ron Epoxy 1.5mm đồng màu, kiểm tra độ phẳng cạnh mài Rectified' }
+              ]
+            },
+            {
+              url: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=1400&q=85',
+              thumbLabel: 'Phối vân đá & hệ tủ',
+              title: 'Góc đối chiếu gạch vân đá Travertine / Marble cùng hệ gỗ nội thất',
+              subtitle: 'Giúp Chủ nhà và Kiến trúc sư hình dung chính xác sắc độ gạch khi đặt cạnh tủ bếp và đảo đá.',
+              hotspots: [
+                { x: 48, y: 58, label: 'Đảo đá & Ốp tường khổ lớn', detail: 'Đá nung kết chịu nhiệt, chống thấm ố gia vị & cà phê tuyệt đối' },
+                { x: 75, y: 80, label: 'Sàn Porcelain Bán bóng', detail: 'Bề mặt Lappato dịu mắt, không gây chói lóa đèn trần buổi tối' }
+              ]
+            },
+            {
+              url: 'https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=1400&q=85',
+              thumbLabel: 'Vân Calacatta sáng',
+              title: 'Trưng bày bộ sưu tập Marble trắng khói Calacatta & Statuario',
+              subtitle: 'Xem trọn vẹn 6–8 mặt vân ngẫu nhiên (Random Faces) xếp liền kề trước khi xuất nguyên lô từ kho.',
+              hotspots: [
+                { x: 42, y: 48, label: '6 Random Faces thực tế', detail: 'Kiểm tra độ chuyển vân tự nhiên giữa các viên trong cùng 1 thùng' }
+              ]
+            }
+          ]
+        },
+
+        'bath-outdoor': {
+          tabName: 'Khu Phòng Tắm & Sân Vườn',
+          floorBadge: 'Tầng 2 · Cabin mẫu phòng tắm & Sân thử ma sát ướt R10–R12',
+          photos: [
+            {
+              url: 'https://images.unsplash.com/photo-1631889993959-41b4e9c6e3c5?auto=format&fit=crop&w=1400&q=85',
+              thumbLabel: 'Cabin mẫu phòng tắm',
+              title: 'Mockup phòng tắm thực tế phối gạch chống trơn R10–R11 khu vực ướt',
+              subtitle: 'Khách hàng có thể chạm tay trực tiếp để phân biệt nhám mịn Sugar (dễ cọ rửa) và nhám sần thoát nước.',
+              hotspots: [
+                { x: 58, y: 72, label: 'Sàn tắm đứng DCOF R11', detail: 'Chống trượt an toàn cho người lớn tuổi & trẻ nhỏ ngay cả khi có xà phòng' },
+                { x: 35, y: 44, label: 'Tường ốp 30×60 kháng cặn', detail: 'Men mờ kháng bám cặn canxi vách kính nhà tắm' }
+              ]
+            },
+            {
+              url: 'https://images.pexels.com/photos/8222955/pexels-photo-8222955.jpeg?auto=compress&cs=tinysrgb&w=1400',
+              thumbLabel: 'Tường & sàn đá đồng bộ',
+              title: 'Tổ hợp ốp tường và lát sàn đồng bộ tông xám đá tự nhiên',
+              subtitle: 'Giải pháp phối 2 bề mặt (Tường bán bóng + Sàn nhám R10) giữ trọn thẩm mỹ liền mạch như khách sạn 5 sao.',
+              hotspots: [
+                { x: 52, y: 52, label: 'Phối đồng tông 2 bề mặt', detail: 'Cùng 1 hệ vân đá nhưng khác cấp độ ma sát cho tường khô & sàn ướt' }
+              ]
+            },
+            {
+              url: 'https://images.unsplash.com/photo-1674672670977-bcf517fc2376?auto=format&fit=crop&w=1400&q=85',
+              thumbLabel: 'Khu gạch sân vườn 20mm',
+              title: 'Khu trưng bày gạch đá sân vườn & Hiên ngoài trời chịu tải dày 20mm',
+              subtitle: 'Xương Granite đồng chất hút nước ≤ 0.1%, chống rêu mốc và chịu tải trọng xe ô tô đỗ trực tiếp.',
+              hotspots: [
+                { x: 50, y: 76, label: 'Paver dày 20mm (R12)', detail: 'Cường độ chịu uốn cao, không nứt vỡ dưới nắng mưa nhiệt đới' }
+              ]
+            }
+          ]
+        },
+
+        'material-lab': {
+          tabName: 'Bảng Mẫu Bề Mặt & Đường Ron',
+          floorBadge: 'Tầng 1 · Bàn Material Lab dành cho Chủ nhà & Kiến trúc sư',
+          photos: [
+            {
+              url: 'https://images.pexels.com/photos/5974236/pexels-photo-5974236.jpeg?auto=compress&cs=tinysrgb&w=1400',
+              thumbLabel: 'Bàn phối vật liệu & Ron',
+              title: 'Bàn Material Lab ướm thử thanh màu keo chà ron, gỗ sàn và sơn tường',
+              subtitle: 'Đặt trực tiếp thanh mẫu ron 1.5mm – 3.0mm vào khe gạch thật để chốt màu ron đồng điệu nhất.',
+              hotspots: [
+                { x: 46, y: 56, label: '24 Thanh màu keo chà ron', detail: 'Ướm thử ron Trắng sứ, Kem ngà, Xám khói, Nâu gỗ ngay giữa 2 viên gạch' },
+                { x: 72, y: 44, label: 'Thước ke mạch 1.5 – 3mm', detail: 'Đối chiếu thực tế độ rộng đường ron cho gạch mài cạnh Rectified' }
+              ]
+            },
+            {
+              url: 'https://images.pexels.com/photos/7203785/pexels-photo-7203785.jpeg?auto=compress&cs=tinysrgb&w=1400',
+              thumbLabel: 'Thư viện Chip mẫu KTS',
+              title: 'Thư viện bảng mẫu bề mặt cắt sẵn (Sample Chips) cho Kiến trúc sư mượn về',
+              subtitle: 'Hỗ trợ đóng hộp mẫu miễn phí để KTS và Nhà thầu mang tới trình duyệt trực tiếp tại công trình.',
+              hotspots: [
+                { x: 54, y: 60, label: 'Mượn mẫu miễn phí', detail: 'Có sẵn tem thông số SKU, độ hút nước & DCOF mặt sau từng mẫu' }
+              ]
+            },
+            {
+              url: 'https://images.pexels.com/photos/8134758/pexels-photo-8134758.jpeg?auto=compress&cs=tinysrgb&w=1400',
+              thumbLabel: 'Soi cận cảnh cạnh mài',
+              title: 'Kiểm tra thực tế xương gạch Porcelain trắng & Cạnh mài phẳng chuẩn xác',
+              subtitle: 'Quan sát trực tiếp độ dày xương gạch 9.5mm – 12mm và lớp men phủ bảo vệ bề mặt chống mài mòn Mohs.',
+              hotspots: [
+                { x: 48, y: 64, label: 'Xương đá Porcelain BIa', detail: 'Kết cấu đặc chắc độ hút nước E ≤ 0.2%, gõ vang thanh' }
+              ]
+            }
+          ]
+        }
+      };
+
+      // Trạng thái điều khiển hiện tại
+      const state = {
+        activeZoneKey: 'slabs',
+        activePhotoIndex: 0,
+        kelvinMode: 'split',   // 'split' | '3000k' | '6500k'
+        splitPercent: 50,      // Tỷ lệ vạch chia 0..100
+        isDraggingSplit: false
+      };
+
+      /* ======================================================================
+         2. CẬP NHẬT HÌNH ẢNH THỰC TẾ, HOTSPOTS & CHẾ ĐỘ NHIỆT ĐỘ MÀU KELVIN
+         ====================================================================== */
+      const mainPhotoStage = document.getElementById('mainPhotoStage');
+      const stageImg6500K = document.getElementById('stageImg6500K');
+      const stageImg3000K = document.getElementById('stageImg3000K');
+      const stageLayer3000KWrap = document.getElementById('stageLayer3000KWrap');
+      const kelvinSplitBar = document.getElementById('kelvinSplitBar');
+      const photoHotspotsLayer = document.getElementById('photoHotspotsLayer');
+      const subAngleThumbnailsGrid = document.getElementById('subAngleThumbnailsGrid');
+      const hotspotDetailToast = document.getElementById('hotspotDetailToast');
+      const hotspotDetailText = document.getElementById('hotspotDetailText');
+
+      function applyKelvinVisualMode() {
+        document.querySelectorAll('.kelvin-mode-btn').forEach(btn => {
+          const mode = btn.getAttribute('data-kelvin-mode');
+          const isActive = mode === state.kelvinMode;
+          if (isActive) {
+            btn.className = 'kelvin-mode-btn px-2.5 py-1 rounded-lg bg-white text-dravit-primary font-semibold transition cursor-pointer flex items-center gap-1 shadow-2xs';
+          } else if (mode === '3000k') {
+            btn.className = 'kelvin-mode-btn px-2.5 py-1 rounded-lg text-amber-200 hover:text-white font-mono font-medium transition cursor-pointer flex items-center gap-1';
+          } else if (mode === '6500k') {
+            btn.className = 'kelvin-mode-btn px-2.5 py-1 rounded-lg text-sky-200 hover:text-white font-mono font-medium transition cursor-pointer flex items-center gap-1';
+          } else {
+            btn.className = 'kelvin-mode-btn px-2.5 py-1 rounded-lg text-slate-200 hover:text-white font-medium transition cursor-pointer flex items-center gap-1';
+          }
+        });
+
+        if (state.kelvinMode === 'split') {
+          stageLayer3000KWrap.style.opacity = '1';
+          stageLayer3000KWrap.style.clipPath = `inset(0 ${100 - state.splitPercent}% 0 0)`;
+          kelvinSplitBar.classList.remove('hidden');
+          kelvinSplitBar.style.left = `${state.splitPercent}%`;
+        } else if (state.kelvinMode === '3000k') {
+          stageLayer3000KWrap.style.opacity = '1';
+          stageLayer3000KWrap.style.clipPath = 'inset(0 0% 0 0)';
+          kelvinSplitBar.classList.add('hidden');
+        } else {
+          stageLayer3000KWrap.style.opacity = '0';
+          kelvinSplitBar.classList.add('hidden');
+        }
+      }
+
+      function renderShowroomStage(animatePhoto = true) {
+        const zone = SHOWROOM_ZONES[state.activeZoneKey];
+        const photoObj = zone.photos[state.activePhotoIndex] || zone.photos[0];
+
+        // 1. Đồng bộ trạng thái 3 Tab phân khu
+        document.querySelectorAll('.zone-tab-btn').forEach(btn => {
+          const isAct = btn.getAttribute('data-zone-tab') === state.activeZoneKey;
+          btn.setAttribute('aria-selected', isAct ? 'true' : 'false');
+          btn.className = isAct
+            ? 'zone-tab-btn shrink-0 px-4 py-2.5 rounded-xl bg-dravit-primary text-white border border-dravit-primary text-xs sm:text-[13px] font-semibold inline-flex items-center gap-2 shadow-xs transition cursor-pointer'
+            : 'zone-tab-btn shrink-0 px-4 py-2.5 rounded-xl bg-white hover:bg-slate-50 text-dravit-ink border border-slate-200 hover:border-dravit-primary/40 text-xs sm:text-[13px] font-medium inline-flex items-center gap-2 transition cursor-pointer';
+
+          const icon = btn.querySelector('i');
+          if (icon) {
+            icon.className = icon.className.replace(/text-(teal-300|dravit-teal)/g, isAct ? 'text-teal-300' : 'text-dravit-teal');
+          }
+        });
+
+        // 2. Cập nhật ảnh chính & tiêu đề mô tả
+        stageImg6500K.src = photoObj.url;
+        stageImg3000K.src = photoObj.url;
+        stageImg6500K.alt = `${photoObj.title} (Ánh sáng trắng 6500K)`;
+        stageImg3000K.alt = `${photoObj.title} (Ánh đèn vàng 3000K)`;
+
+        document.getElementById('zoneFloorBadge').innerHTML = `
+          <i class="ph-fill ph-compass text-teal-300 text-sm"></i>
+          <span>${zone.floorBadge}</span>
+        `;
+        document.getElementById('activePhotoCaptionTitle').textContent = photoObj.title;
+        document.getElementById('activePhotoCaptionSub').textContent = photoObj.subtitle;
+
+        if (animatePhoto && window.anime) {
+          window.anime({
+            targets: [stageImg6500K, stageImg3000K],
+            scale: [1.035, 1],
+            opacity: [0.78, 1],
+            duration: 520,
+            easing: 'easeOutExpo'
+          });
+        }
+
+        // 3. Render các điểm chạm thông số (Hotspots) trên bức ảnh thật
+        if (photoObj.hotspots && photoObj.hotspots.length > 0) {
+          const firstSpot = photoObj.hotspots[0];
+          hotspotDetailText.innerHTML = `<strong>${firstSpot.label}:</strong> ${firstSpot.detail}`;
+          photoHotspotsLayer.innerHTML = photoObj.hotspots.map((spot, idx) => `
+            <button
+              type="button"
+              data-hotspot-idx="${idx}"
+              style="left: ${spot.x}%; top: ${spot.y}%;"
+              class="drv-hotspot-pin drv-hotspot-pulse pointer-events-auto group/pin flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-dravit-primary/92 hover:bg-dravit-teal text-white border border-white/75 text-[11px] font-semibold shadow-lg transition cursor-pointer"
+            >
+              <i class="ph-bold ph-plus text-[10px] text-teal-200"></i>
+              <span class="hidden sm:inline">${spot.label}</span>
+            </button>
+          `).join('');
+        } else {
+          photoHotspotsLayer.innerHTML = '';
+        }
+
+        // 4. Render dải 3 ảnh thật góc nhìn phụ (Sub-angle thumbnails)
+        subAngleThumbnailsGrid.innerHTML = zone.photos.map((item, idx) => {
+          const isCurrent = idx === state.activePhotoIndex;
+          return `
+            <button
+              type="button"
+              data-select-subphoto="${idx}"
+              class="group relative aspect-[16/9] rounded-xl overflow-hidden border-2 ${isCurrent ? 'border-dravit-teal ring-2 ring-dravit-teal/20 shadow-xs' : 'border-slate-200/90 hover:border-dravit-primary/60 opacity-85 hover:opacity-100'} transition-all cursor-pointer text-left"
+            >
+              <img
+                src="${item.url}"
+                alt="${item.thumbLabel}"
+                width="420"
+                height="236"
+                loading="lazy"
+                onerror="this.onerror=null;this.src='https://placehold.co/420x236/083A4F/F8FAFC?text=Goc+Chup+Showroom';"
+                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-dravit-ink/85 via-dravit-ink/20 to-transparent"></div>
+              <div class="absolute bottom-2 inset-x-2.5 flex items-center justify-between gap-1">
+                <span class="text-[11px] sm:text-xs font-semibold text-white truncate">${item.thumbLabel}</span>
+                ${isCurrent ? `<span class="w-2 h-2 rounded-full bg-teal-400 shrink-0"></span>` : ''}
+              </div>
+            </button>
+          `;
+        }).join('');
+
+        applyKelvinVisualMode();
+      }
+
+      /* ======================================================================
+         3. XỬ LÝ KÉO THANH TRƯỢT SO SÁNH ĐÈN 3000K ↔ 6500K (CHUỘT & CẢM ỨNG)
+         ====================================================================== */
+      function updateSplitFromClientX(clientX) {
+        const rect = mainPhotoStage.getBoundingClientRect();
+        const rawPct = ((clientX - rect.left) / Math.max(rect.width, 1)) * 100;
+        state.splitPercent = Math.max(8, Math.min(92, rawPct));
+        applyKelvinVisualMode();
+      }
+
+      kelvinSplitBar.addEventListener('mousedown', function (e) {
+        e.preventDefault();
+        state.isDraggingSplit = true;
+      });
+
+      window.addEventListener('mousemove', function (e) {
+        if (!state.isDraggingSplit || state.kelvinMode !== 'split') return;
+        updateSplitFromClientX(e.clientX);
+      });
+
+      window.addEventListener('mouseup', function () {
+        state.isDraggingSplit = false;
+      });
+
+      kelvinSplitBar.addEventListener('touchstart', function () {
+        state.isDraggingSplit = true;
+      }, { passive: true });
+
+      window.addEventListener('touchmove', function (e) {
+        if (!state.isDraggingSplit || state.kelvinMode !== 'split') return;
+        if (e.touches && e.touches[0]) {
+          updateSplitFromClientX(e.touches[0].clientX);
+        }
+      }, { passive: true });
+
+      window.addEventListener('touchend', function () {
+        state.isDraggingSplit = false;
+      });
+
+      /* ======================================================================
+         4. KIỂM TRA GIỜ MỞ CỬA THỰC TẾ THEO MÚI GIỜ VIỆT NAM (8:00 - 21:00)
+         ====================================================================== */
+      function updateLiveShowroomOpenBadge() {
+        const badgeEl = document.getElementById('liveOpenStatusBadge');
+        const textEl = document.getElementById('liveOpenStatusText');
+        const now = new Date();
+        const hour = now.getHours();
+        const isOpenNow = hour >= 8 && hour < 21;
+
+        if (isOpenNow) {
+          badgeEl.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50/95 border border-emerald-400 text-emerald-800 text-[10.5px] font-bold tracking-wide shadow-xs';
+          textEl.textContent = 'ĐANG MỞ CỬA · ĐẾN 21:00';
+        } else {
+          badgeEl.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/95 border border-teal-300 text-dravit-primary text-[10.5px] font-bold tracking-wide shadow-xs';
+          textEl.textContent = 'MỞ CỬA 8:00 – 21:00 (T2 - CN)';
+        }
+      }
+
+      /* ======================================================================
+         5. TIỆN ÍCH CLIPBOARD, TOAST & GẮN SỰ KIỆN TƯƠNG TÁC TOÀN SECTION
+         ====================================================================== */
+      let toastTimer = null;
+      function showToast(msg) {
+        const toast = document.getElementById('drvToast');
+        document.getElementById('drvToastMessage').textContent = msg;
+        toast.classList.remove('opacity-0', 'translate-y-3', 'pointer-events-none');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          toast.classList.add('opacity-0', 'translate-y-3', 'pointer-events-none');
+        }, 2600);
+      }
+
+      function copySafe(text, message) {
+        const temp = document.createElement('textarea');
+        temp.value = text;
+        document.body.appendChild(temp);
+        temp.select();
+        try {
+          document.execCommand('copy');
+          showToast(message);
+        } catch (_) {
+          showToast(message);
+        }
+        document.body.removeChild(temp);
+      }
+
+      document.addEventListener('click', function (e) {
+        // 1. Chuyển đổi 3 Tab phân khu Showroom
+        const tabBtn = e.target.closest('[data-zone-tab]');
+        if (tabBtn) {
+          state.activeZoneKey = tabBtn.getAttribute('data-zone-tab');
+          state.activePhotoIndex = 0;
+          renderShowroomStage(true);
+          return;
+        }
+
+        // 2. Chọn góc chụp phụ trong Sub-gallery
+        const subThumb = e.target.closest('[data-select-subphoto]');
+        if (subThumb) {
+          state.activePhotoIndex = parseInt(subThumb.getAttribute('data-select-subphoto'), 10);
+          renderShowroomStage(true);
+          return;
+        }
+
+        // 3. Đổi chế độ nhiệt độ màu ánh sáng (So sánh | 3000K | 6500K)
+        const kelvinBtn = e.target.closest('[data-kelvin-mode]');
+        if (kelvinBtn) {
+          state.kelvinMode = kelvinBtn.getAttribute('data-kelvin-mode');
+          applyKelvinVisualMode();
+          return;
+        }
+
+        // 4. Bấm vào các điểm chạm Hotspot (+) trên ảnh thực tế
+        const hotspotBtn = e.target.closest('[data-hotspot-idx]');
+        if (hotspotBtn) {
+          const idx = parseInt(hotspotBtn.getAttribute('data-hotspot-idx'), 10);
+          const zone = SHOWROOM_ZONES[state.activeZoneKey];
+          const spot = zone.photos[state.activePhotoIndex]?.hotspots?.[idx];
+          if (spot) {
+            hotspotDetailToast.classList.remove('hidden');
+            hotspotDetailToast.classList.add('inline-flex');
+            hotspotDetailText.innerHTML = `<strong>${spot.label}:</strong> ${spot.detail}`;
+            showToast(`${spot.label} — ${spot.detail}`);
+          }
+          return;
+        }
+
+        // 5. Bấm vào 3 dòng trải nghiệm thực tế ở Card bên phải -> đồng bộ trực tiếp sang ảnh thật bên trái
+        const expBtn = e.target.closest('[data-experience-trigger]');
+        if (expBtn) {
+          const action = expBtn.getAttribute('data-experience-trigger');
+          if (action === 'lighting') {
+            state.kelvinMode = 'split';
+            state.splitPercent = 50;
+            applyKelvinVisualMode();
+            if (window.anime) {
+              const animObj = { pct: 22 };
+              window.anime({
+                targets: animObj,
+                pct: [22, 78, 50],
+                duration: 1200,
+                easing: 'easeInOutQuad',
+                update: () => {
+                  state.splitPercent = animObj.pct;
+                  applyKelvinVisualMode();
+                }
+              });
+            }
+            showToast('Đang mô phỏng thanh kéo đối chiếu đèn vàng 3000K và trắng 6500K');
+          } else if (action === 'slip-test') {
+            state.activeZoneKey = 'bath-outdoor';
+            state.activePhotoIndex = 0;
+            renderShowroomStage(true);
+            showToast('Đã chuyển sang ảnh thực tế Khu Phòng Tắm & Sân Vườn (R10–R12)');
+          } else if (action === 'grout-match') {
+            state.activeZoneKey = 'material-lab';
+            state.activePhotoIndex = 0;
+            renderShowroomStage(true);
+            showToast('Đã chuyển sang Bàn Material Lab ướm màu keo chà ron 1,5–3 mm');
+          }
+        }
+      });
+
+      // Sao chép Địa chỉ & Hotline
+      const SALA_ADDRESS = '68 Nguyễn Cơ Thạch, Khu đô thị Sala, TP. Thủ Đức, TP.HCM';
+      document.getElementById('copyAddressBtn').addEventListener('click', () => {
+        copySafe(SALA_ADDRESS, 'Đã sao chép địa chỉ Showroom Flagship Sala');
+      });
+      document.getElementById('copyAddressInModalBtn').addEventListener('click', () => {
+        copySafe(SALA_ADDRESS, 'Đã sao chép địa chỉ Showroom Flagship Sala');
+      });
+      document.getElementById('copyHotlineBtn').addEventListener('click', () => {
+        copySafe('0909888777', 'Đã sao chép Hotline Showroom: 0909.888.777');
+      });
+
+      // Điều khiển Modal Chỉ đường Google Maps
+      const directionsModal = document.getElementById('directionsModal');
+      document.getElementById('openDirectionsModalBtn').addEventListener('click', () => {
+        directionsModal.classList.remove('hidden');
+        directionsModal.classList.add('flex');
+      });
+      document.getElementById('closeDirectionsModalBtn').addEventListener('click', () => {
+        directionsModal.classList.add('hidden');
+        directionsModal.classList.remove('flex');
+      });
+
+      // Điều khiển Modal Đặt lịch tư vấn 1:1
+      const bookingModal = document.getElementById('bookingModal');
+      const showroomBookingForm = document.getElementById('showroomBookingForm');
+      const bookingSuccessBox = document.getElementById('bookingSuccessBox');
+
+      document.getElementById('openBookingModalBtn').addEventListener('click', () => {
+        const zoneName = SHOWROOM_ZONES[state.activeZoneKey].tabName;
+        const noteInput = document.getElementById('bookingZonesNote');
+        if (!noteInput.value) {
+          noteInput.value = `Muốn xem thực tế ${zoneName} & thử đèn 3000K/6500K`;
+        }
+        showroomBookingForm.classList.remove('hidden');
+        bookingSuccessBox.classList.add('hidden');
+        bookingModal.classList.remove('hidden');
+        bookingModal.classList.add('flex');
+      });
+
+      document.getElementById('closeBookingModalBtn').addEventListener('click', () => {
+        bookingModal.classList.add('hidden');
+        bookingModal.classList.remove('flex');
+      });
+
+      showroomBookingForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const fd = new FormData(showroomBookingForm);
+        if (fd.get('drv_website')) return;
+
+        const name = fd.get('customer_name');
+        const role = fd.get('visitor_role');
+        const dateVal = fd.get('visit_date');
+        const slot = fd.get('visit_slot');
+
+        document.getElementById('bookingSummaryConfirmText').innerHTML =
+          `Cảm ơn <strong>${name}</strong> (${role}). Lịch hẹn vào khung giờ <strong>${slot}</strong> ngày <strong>${dateVal}</strong> tại 68 Nguyễn Cơ Thạch đã được ghi nhận. Chuyên viên Dravit sẽ nhắn xác nhận qua Zalo kèm vị trí đỗ xe trước cổng.`;
+
+        showroomBookingForm.classList.add('hidden');
+        bookingSuccessBox.classList.remove('hidden');
+      });
+
+      document.getElementById('doneBookingBtn').addEventListener('click', () => {
+        bookingModal.classList.add('hidden');
+        bookingModal.classList.remove('flex');
+        showroomBookingForm.reset();
+      });
+
+      // Điều khiển Lightbox phóng to ảnh thực tế
+      const photoLightboxModal = document.getElementById('photoLightboxModal');
+      document.getElementById('openShowroomLightboxBtn').addEventListener('click', () => {
+        const zone = SHOWROOM_ZONES[state.activeZoneKey];
+        const photoObj = zone.photos[state.activePhotoIndex];
+        document.getElementById('lightboxTitleText').textContent = `${zone.tabName} — ${photoObj.title}`;
+        document.getElementById('lightboxFullImg').src = photoObj.url;
+        photoLightboxModal.classList.remove('hidden');
+        photoLightboxModal.classList.add('flex');
+      });
+      document.getElementById('closeLightboxModalBtn').addEventListener('click', () => {
+        photoLightboxModal.classList.add('hidden');
+        photoLightboxModal.classList.remove('flex');
+      });
+
+      // Khởi tạo ngày mặc định là ngày mai cho form đặt lịch & chạy lần đầu
+      window.onload = function () {
+        const tomorrow = new Date(Date.now() + 86400000);
+        const yyyy = tomorrow.getFullYear();
+        const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
+        const dd = String(tomorrow.getDate()).padStart(2, '0');
+        document.getElementById('bookingDateInput').value = `${yyyy}-${mm}-${dd}`;
+
+        updateLiveShowroomOpenBadge();
+        renderShowroomStage(false);
+      };
+    })();
+  </script>
+</body>
+</html>

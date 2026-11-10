@@ -19,7 +19,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/bold/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/style.css">
-  <link rel="stylesheet" href="assets/css/main.css?v=20261107l">
+  <link rel="stylesheet" href="assets/css/main.css?v=20261111a">
   <link rel="stylesheet" href="assets/css/pages.css?v=20261107l">
 </head>
 <body data-page="blog-archive">
@@ -299,9 +299,9 @@
 
         <header class="drv-topic-head">
           <h2>Chọn gạch theo phòng</h2>
-          <a href="02-catalog-collection.html" class="drv-link u-text-xs">
+          <a href="02-catalog-collection.html" class="drv-more-btn">
             <span>Xem tất cả 18 bài viết</span>
-            <i class="ph ph-arrow-right drv-icon--xs" aria-hidden="true"></i>
+            <i class="ph-bold ph-caret-right drv-icon--xs" aria-hidden="true"></i>
           </a>
         </header>
 
@@ -418,9 +418,9 @@
 
         <header class="drv-topic-head">
           <h2>Kỹ thuật ốp lát &amp; đường ron</h2>
-          <a href="02-catalog-collection.html" class="drv-link u-text-xs">
+          <a href="02-catalog-collection.html" class="drv-more-btn">
             <span>Xem tất cả 14 bài viết</span>
-            <i class="ph ph-arrow-right drv-icon--xs" aria-hidden="true"></i>
+            <i class="ph-bold ph-caret-right drv-icon--xs" aria-hidden="true"></i>
           </a>
         </header>
 
@@ -534,9 +534,9 @@
 
         <header class="drv-topic-head" id="dinh-muc-bao-gia">
           <h2>Phối màu, xu hướng &amp; định mức báo giá</h2>
-          <a href="02-catalog-collection.html" class="drv-link u-text-xs">
+          <a href="02-catalog-collection.html" class="drv-more-btn">
             <span>Xem tất cả 16 bài viết</span>
-            <i class="ph ph-arrow-right drv-icon--xs" aria-hidden="true"></i>
+            <i class="ph-bold ph-caret-right drv-icon--xs" aria-hidden="true"></i>
           </a>
         </header>
 
@@ -569,8 +569,8 @@
               <a href="02-catalog-collection.html?van-gach=gia-go" class="drv-cro-pill-tag">
                 <span>Gạch vân gỗ 15x90</span>
               </a>
-              <a href="#quick-calculator" class="drv-cro-pill-tag">
-                <span>Máy tính số viên</span>
+              <a href="#quick-ai" class="drv-cro-pill-tag">
+                <span>Hỏi Trợ lý AI</span>
               </a>
             </div>
           </article>
@@ -650,75 +650,35 @@
 
         <header class="drv-topic-head">
           <h2>Công cụ tra cứu nhanh</h2>
-          <span class="u-text-xs u-text-muted u-hide-mobile">Quy đổi tự động theo quy cách đóng thùng thực tế</span>
+          <span class="u-text-xs u-text-muted u-hide-mobile">Hỏi AI hoặc tra nhanh bảng chỉ số chống trượt</span>
         </header>
 
         <div class="drv-blog-tools-grid">
 
-          <!-- TOOL 1: MÁY TÍNH NHANH SỐ VIÊN GẠCH -->
-          <div id="quick-calculator" class="drv-tool-card" role="region" aria-label="Công cụ tính nhanh số viên gạch">
+          <!-- TOOL 1: CTA CHAT VỚI TRỢ LÝ AI -->
+          <div id="quick-ai" class="drv-tool-card drv-ai-cta" role="region" aria-label="Chat với Trợ lý AI Dravit">
             <div class="drv-tool-card__head">
               <div class="l-cluster l-cluster--xs">
-                <i class="ph-bold ph-calculator u-text-moss drv-icon--sm" aria-hidden="true"></i>
-                <h3 class="u-text-base u-bold u-text-navy" style="margin:0">Tính nhanh số viên &amp; số thùng gạch</h3>
+                <i class="ph-fill ph-robot u-text-moss drv-icon--sm" aria-hidden="true"></i>
+                <h3 class="u-text-base u-bold u-text-navy" style="margin:0">Hỏi Trợ lý AI Dravit</h3>
               </div>
+              <span class="drv-badge drv-badge--outline"><span class="drv-ai-cta__dot" aria-hidden="true"></span>Trực tuyến</span>
             </div>
 
             <div class="drv-tool-card__body">
-              <div class="l-grid l-grid--2">
-                <div class="drv-field">
-                  <label for="quick-calc-area" class="drv-label">Diện tích cần dùng (m²)</label>
-                  <input id="quick-calc-area" type="number" class="drv-input u-tabular" value="25" min="1" max="1000" step="0.5">
-                </div>
+              <p class="drv-ai-cta__lead">Nói diện tích và không gian cần lát. Trợ lý sẽ gợi ý khổ gạch, bề mặt chống trượt và tính sẵn số thùng cho bạn.</p>
 
-                <div class="drv-field">
-                  <label for="quick-calc-size" class="drv-label">Kích thước gạch</label>
-                  <select id="quick-calc-size" class="drv-select">
-                    <option value="80x80" selected>80x80 cm (3 viên · 1,92 m²)</option>
-                    <option value="60x60">60x60 cm (4 viên · 1,44 m²)</option>
-                    <option value="30x60">30x60 cm (8 viên · 1,44 m²)</option>
-                    <option value="60x120">60x120 cm (2 viên · 1,44 m²)</option>
-                    <option value="15x90">15x90 cm (8 viên · 1,08 m²)</option>
-                  </select>
-                </div>
-              </div>
+              <ul class="drv-ai-cta__prompts" role="list">
+                <li><button type="button" class="drv-chip drv-chip--square" data-drv-action="ai-finder-open" data-drv-prompt="Phòng khách 25m2 nên chọn gạch khổ nào và cần bao nhiêu thùng?"><i class="ph ph-chat-circle-text drv-icon--xs" aria-hidden="true"></i><span>Phòng khách 25m² cần bao nhiêu thùng?</span></button></li>
+                <li><button type="button" class="drv-chip drv-chip--square" data-drv-action="ai-finder-open" data-drv-prompt="Nhà tắm nên chọn gạch bề mặt nào để không bị trơn?"><i class="ph ph-chat-circle-text drv-icon--xs" aria-hidden="true"></i><span>Nhà tắm chọn bề mặt nào không trơn?</span></button></li>
+                <li><button type="button" class="drv-chip drv-chip--square" data-drv-action="ai-finder-open" data-drv-prompt="Tư vấn gạch sân vườn 40m2 chống trượt, ngân sách vừa phải."><i class="ph ph-chat-circle-text drv-icon--xs" aria-hidden="true"></i><span>Gạch sân vườn chống trượt</span></button></li>
+              </ul>
 
-              <div class="l-cluster l-cluster--md">
-                <label class="drv-check">
-                  <input type="checkbox" id="quick-calc-scrap" checked>
-                  <span class="u-text-xs">Cộng 5% hao hụt</span>
-                </label>
-
-                <label class="drv-check">
-                  <input type="checkbox" id="quick-calc-round" checked>
-                  <span class="u-text-xs">Làm tròn chẵn thùng</span>
-                </label>
-              </div>
-
-              <div class="drv-calc-stats" aria-live="polite">
-                <div class="drv-calc-stat-item">
-                  <span class="drv-calc-stat-lbl">Số viên giao dịch</span>
-                  <span id="res-pieces" class="drv-calc-stat-val u-text-teal">42 viên</span>
-                </div>
-                <div class="drv-calc-stat-item">
-                  <span class="drv-calc-stat-lbl">Quy đổi thùng</span>
-                  <span id="res-boxes" class="drv-calc-stat-val u-text-navy">14 thùng</span>
-                </div>
-                <div class="drv-calc-stat-item">
-                  <span class="drv-calc-stat-lbl">Thực nhận</span>
-                  <span id="res-m2" class="drv-calc-stat-val">26,88 m²</span>
-                </div>
-                <div class="drv-calc-stat-item">
-                  <span class="drv-calc-stat-lbl">Trọng lượng</span>
-                  <span id="res-kg" class="drv-calc-stat-val">~588 kg</span>
-                </div>
-              </div>
-
-              <div class="l-cluster l-cluster--between" style="margin-top: auto; padding-top: var(--s-1)">
-                <a id="btn-calc-filter" href="02-catalog-collection.html?kich-thuoc=80x80" class="drv-btn drv-btn--moss drv-btn--sm">
-                  <span>Xem mẫu gạch 80x80</span>
-                  <i class="ph ph-arrow-right drv-icon--xs" aria-hidden="true"></i>
-                </a>
+              <div class="l-cluster l-cluster--between" style="margin-top: auto">
+                <button type="button" class="drv-btn drv-btn--moss" data-drv-action="ai-finder-open" data-drv-prompt="Tôi cần tư vấn chọn gạch và tính số thùng cho công trình.">
+                  <i class="ph-fill ph-robot drv-icon--sm" aria-hidden="true"></i>
+                  <span>Chat với AI tư vấn</span>
+                </button>
                 <button type="button" class="drv-btn drv-btn--outline drv-btn--sm" data-drv-action="dialog-open" data-drv-target="#drv-quote-modal">
                   <i class="ph ph-file-text drv-icon--xs" aria-hidden="true"></i>
                   <span>Nhận báo giá công trình</span>
@@ -852,68 +812,11 @@
 
   <script defer src="https://cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.min.js"></script>
   <script defer src="assets/js/core.js"></script>
-  <script defer src="assets/js/unit-calc.js"></script>
   <script defer src="assets/js/catalog-mock.js"></script>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // 1. Live Quick Tile Calculator
-      const areaInput = document.getElementById('quick-calc-area');
-      const sizeSelect = document.getElementById('quick-calc-size');
-      const scrapCheck = document.getElementById('quick-calc-scrap');
-      const roundCheck = document.getElementById('quick-calc-round');
-
-      const resPieces = document.getElementById('res-pieces');
-      const resBoxes = document.getElementById('res-boxes');
-      const resM2 = document.getElementById('res-m2');
-      const resKg = document.getElementById('res-kg');
-      const btnFilter = document.getElementById('btn-calc-filter');
-
-      const sizeData = {
-        '80x80': { m2PerPiece: 0.64, piecesPerBox: 3, kgPerPiece: 14, label: '80x80' },
-        '60x60': { m2PerPiece: 0.36, piecesPerBox: 4, kgPerPiece: 7.5, label: '60x60' },
-        '30x60': { m2PerPiece: 0.18, piecesPerBox: 8, kgPerPiece: 3.8, label: '30x60' },
-        '60x120': { m2PerPiece: 0.72, piecesPerBox: 2, kgPerPiece: 18, label: '60x120' },
-        '15x90': { m2PerPiece: 0.135, piecesPerBox: 8, kgPerPiece: 3.2, label: '15x90' }
-      };
-
-      function updateCalculator() {
-        const area = Math.max(0.1, parseFloat(areaInput.value) || 0);
-        const sizeKey = sizeSelect.value;
-        const cfg = sizeData[sizeKey] || sizeData['80x80'];
-
-        const scrapFactor = scrapCheck.checked ? 1.05 : 1.0;
-        const requiredArea = area * scrapFactor;
-
-        let rawPieces = Math.ceil(requiredArea / cfg.m2PerPiece);
-        let boxes = Math.ceil(rawPieces / cfg.piecesPerBox);
-
-        let finalPieces = rawPieces;
-        if (roundCheck.checked) {
-          finalPieces = boxes * cfg.piecesPerBox;
-        }
-
-        const deliveredM2 = (finalPieces * cfg.m2PerPiece).toFixed(2).replace('.', ',');
-        const deliveredKg = Math.round(finalPieces * cfg.kgPerPiece);
-
-        resPieces.textContent = `${finalPieces} viên`;
-        resBoxes.textContent = `${boxes} thùng`;
-        resM2.textContent = `${deliveredM2} m²`;
-        resKg.textContent = `~${deliveredKg} kg`;
-
-        btnFilter.href = `02-catalog-collection.html?kich-thuoc=${cfg.label}`;
-        btnFilter.querySelector('span').textContent = `Xem mẫu gạch ${cfg.label}`;
-      }
-
-      [areaInput, sizeSelect, scrapCheck, roundCheck].forEach(el => {
-        if (el) {
-          el.addEventListener('input', updateCalculator);
-          el.addEventListener('change', updateCalculator);
-        }
-      });
-      updateCalculator();
-
-      // 2. In-archive search filter & Category Tabs
+      // In-archive search filter & Category Tabs
       const searchInput = document.getElementById('blog-search-input');
       const searchClear = document.querySelector('.drv-blog-search__clear');
       const postCards = document.querySelectorAll('.drv-post-card, .drv-post-compact');
