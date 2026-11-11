@@ -17,26 +17,39 @@
   :root {
     /* 1. Brand Color Palette (Màu chính thương hiệu Dravit: #083A4F) */
     --c-brand-primary: #083A4F; /* Màu thương hiệu cốt lõi Dravit: Nút chính, Header/Footer, Brand solids */
+    --c-navy-950: #052330;      /* Deepest Navy: Gradient header / dark surface */
     --c-navy-900: #083A4F;      /* Brand Navy: Header text, các thẻ H1-H6, Nút chính Primary, Footer */
     --c-navy-800: #1E3A5F;      /* Navy Mid: Viền đậm, sub-brand */
     --c-navy-600: #386172;      /* Navy 60%: Viền đậm, icon phụ */
+    --c-navy-700: #2A4D68;      /* Navy 70%: Chữ phụ đậm, viền nhấn */
     --c-navy-400: #94A3B8;      /* Slate 400: Trạng thái disabled, viền input, dấu phân cách */
+    --c-navy-300: #CBD5E1;      /* Slate 300: Viền nhạt, divider đậm hơn grout */
+    --c-navy-500: #64748B;      /* Slate 500: Icon phụ, chữ meta nhạt */
     --c-navy-200: #E2E8F0;      /* Slate 200: Đường kẻ ron 1px (Grout line), divider */
+    --c-navy-100: #E2E8F0;      /* Grout line / subtle divider alias */
     --c-navy-hover: #0B4A64;    /* Hover state cho nút Primary Navy */
 
     /* 2. Text Colors (Giữ #0B192C cho nội dung để đọc siêu nét, chuẩn flat hiện đại) */
     --c-text-main: #0B192C;     /* Chữ nội dung: Deep Ink (16.3:1 trên White) - body text, mô tả SP, bảng thông số, input */
     --c-text-muted: #1E3A5F;    /* Chữ phụ, SKU, meta kỹ thuật (9.2:1 trên White) */
-    --c-text-link: var(--c-teal-700);
 
     --c-teal-500: #0D9488;      /* Brand Teal: Nền nút Báo giá, badge active (4.62:1 với chữ trắng) */
+    --c-teal-600: #0D9488;      /* Brand Teal mid alias */
     --c-teal-700: #0F766E;      /* Teal đậm: Link văn bản, chữ nhấn màu teal trên nền sáng (6.37:1) */
     --c-teal-100: #CCFBF1;      /* Teal nhạt: Nền chip lọc active, highlight nhẹ */
+    --c-teal-50: #F0FDFA;       /* Teal 50: Nền highlight cực nhạt */
+    --c-teal-300: #5EEAD4;      /* Teal 300: Viền highlight */
+    --c-teal-800: #115E59;      /* Teal 800: Chữ nhấn đậm trên nền teal nhạt */
 
     /* Backward compatibility aliases */
     --c-moss-500: var(--c-teal-500);
     --c-moss-700: var(--c-teal-700);
     --c-moss-100: var(--c-teal-100);
+    --c-moss-600: var(--c-teal-600);
+    --c-navy: var(--c-navy-900);
+    --c-sand-50: var(--c-ivory);
+    --c-coral-600: var(--c-sale);
+    --c-brand-sale: #C0392B;    /* Giữ nguyên fallback cũ */
 
     /* Warm Amber Pop Accent (Điểm nhấn nóng Showroom, Sale, Giỏ hàng) */
     --c-amber-500: #F59E0B;     /* Warm Amber: Điểm nhấn nóng cho badge Showroom, icon giỏ */
@@ -58,15 +71,13 @@
 
     /* 3. Surface & Line Aliases */
     --c-bg-page: var(--c-ivory);
-    --c-bg-surface: var(--c-white);
-    --c-bg-accent: var(--c-champagne);
-    --c-line: var(--c-navy-200);
     --c-backdrop: rgb(8 58 79 / 0.6);
 
     /* 4. Typography Families */
     --f-display: "Anton", "Segoe UI", system-ui, -apple-system, sans-serif;
     --f-body: "Quicksand", "Quicksand Fallback", "Segoe UI", system-ui, -apple-system, sans-serif;
     --f-mono: ui-monospace, "Cascadia Code", "Source Code Pro", monospace;
+    --font-sans: var(--f-body);
 
     /* 5. Fluid Typography Scale */
     --fs-display: clamp(2.25rem, 1.6rem + 2.8vw, 4rem);     /* Line-height 1.05, Anton */
@@ -74,6 +85,8 @@
     --fs-h2: clamp(1.5rem, 1.25rem + 1vw, 2rem);            /* Line-height 1.25, Quicksand 700 */
     --fs-h3: 1.25rem;                                       /* 20px, Line-height 1.35, Quicksand 700 */
     --fs-lg: 1.125rem;                                      /* 18px, Line-height 1.6, Quicksand 500/600 */
+    --fs-md: 1rem;
+    --fs-xl: 1.5rem;
     --fs-base: 1rem;                                        /* 16px, Line-height 1.6, Quicksand 500 */
     --fs-sm: 0.875rem;                                      /* 14px, Line-height 1.5, Quicksand 500 */
     --fs-xs: 0.75rem;                                       /* 12px, Line-height 1.4, Quicksand 600 */
@@ -86,15 +99,16 @@
 
     /* 6. Spacing Scale (4px / 8px Architectural Rhythm) */
     --s-1: 0.25rem;   /* 4px */
+    --s-1-5: 0.375rem; /* 6px */
     --s-2: 0.5rem;    /* 8px */
     --s-2-5: 0.625rem; /* 10px */
     --s-3: 0.75rem;   /* 12px */
+    --s-3-5: 0.875rem; /* 14px */
     --s-4: 1rem;      /* 16px */
     --s-5: 1.5rem;    /* 24px */
     --s-6: 2rem;      /* 32px */
     --s-7: 3rem;      /* 48px */
     --s-8: 4rem;      /* 64px */
-    --s-9: 6rem;      /* 96px */
 
     /* 7. Container & Grid Dimensions */
     --container-max: 1380px;
@@ -109,24 +123,27 @@
 
     /* 8. Shape, Grout Lines & Elevation */
     --r-sm: 4px;      /* Nút, input, tag kích thước, badge vuông, chip bộ lọc & điều hướng */
+    --r-2xs: 2px;
+    --r-xs: 2px;
     --r-md: 8px;      /* Card sản phẩm, khung ảnh, dialog */
+    --r-lg: 12px;
     --r-pill: 999px;  /* Tiến trình progress bar, bo tròn đặc biệt */
 
     --bw: 1px solid var(--c-navy-200);
     --bw-input: 1px solid var(--c-navy-400);
     --bw-strong: 1px solid var(--c-navy-900);
-    --bw-moss: 1px solid var(--c-moss-500);
 
+    --sh-sm: 0 2px 8px rgb(8 58 79 / 0.05);
+    --shadow-sm: var(--sh-sm);
+    --shadow-card: var(--sh-sm);
     --shadow-hover: 0 6px 20px rgb(11 25 44 / 0.08);
     --shadow-dropdown: 0 12px 32px rgb(11 25 44 / 0.12);
     --focus-ring: 2px solid var(--c-teal-500);
 
     /* 9. Fixed Z-Index Scale (baseline-ui) */
-    --z-base: 1;
     --z-sticky: 20;
     --z-dropdown: 30;
     --z-header: 40;
-    --z-drawer: 50;
     --z-modal: 60;
     --z-toast: 70;
 
@@ -139,6 +156,7 @@
     --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
     --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
     --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --t-fast: var(--dur-fast) var(--ease-out);
   }
 
   @media (min-width: 768px) {

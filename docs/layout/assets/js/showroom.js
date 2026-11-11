@@ -9,6 +9,12 @@
 (() => {
   'use strict';
 
+  /** Forward swallowed failures to the central error sink (core.js) when it is available */
+  const report = (scope, error, context) => {
+    if (window.Dravit && typeof window.Dravit.reportError === 'function') window.Dravit.reportError(scope, error, context);
+  };
+
+
   class DrvShowroom extends HTMLElement {
     connectedCallback() {
       if (this._ready) return;
@@ -22,9 +28,46 @@
       this.divider = this.querySelector('[data-sr-divider]');
       this.caption = this.querySelector('[data-sr-caption]');
 
+      this._userInteracted = false;
       this._bind();
       this._openBadge();
-      this._showGroup('slabs');
+      this._showGroup('slabs', false);
+      this._initStageIntro();
+    }
+
+    _canAnimate() {
+      return (
+        typeof window.anime === 'function' &&
+        !(window.Dravit && window.Dravit.motion && window.Dravit.motion.prefersReducedMotion())
+      );
+    }
+
+    _initStageIntro() {
+      if (!this.stage || !('IntersectionObserver' in window)) return;
+      const obs = new IntersectionObserver(
+        (entries, observer) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            observer.unobserve(entry.target);
+            if (this._userInteracted || !this._canAnimate()) return;
+            const o = { pct: 50 };
+            window.anime({
+              targets: o,
+              pct: [50, 36, 64, 50],
+              duration: 1150,
+              delay: 220,
+              easing: 'easeInOutSine',
+              update: () => {
+                if (this._userInteracted) return;
+                this.split = o.pct;
+                this._apply();
+              },
+            });
+          });
+        },
+        { threshold: 0.35 }
+      );
+      obs.observe(this.stage);
     }
 
     _openBadge() {
@@ -34,7 +77,7 @@
       el.textContent = h >= 8 && h < 21 ? 'Đang mở cửa · đến 21:00' : 'Mở cửa 8:00 – 21:00';
     }
 
-    _showGroup(key) {
+    _showGroup(key, animateThumbs = true) {
       this.querySelectorAll('[data-sr-zone]').forEach((tab) => {
         const on = tab.dataset.srZone === key;
         tab.classList.toggle('is-active', on);
@@ -46,7 +89,27 @@
       });
       const group = this.querySelector(`[data-sr-group="${key}"]`);
       const first = group && (group.querySelector('.is-active') || group.querySelector('.drv-sr__thumb'));
-      if (first) this._select(first, false);
+      if (first) this._select(first, animateThumbs);
+      if (animateThumbs && group && this._canAnimate()) {
+        const thumbs = Array.from(group.querySelectorAll('.drv-sr__thumb'));
+        if (thumbs.length) {
+          window.anime.remove(thumbs);
+          window.anime({
+            targets: thumbs,
+            opacity: [0, 1],
+            translateY: [8, 0],
+            delay: window.anime.stagger(50),
+            duration: 320,
+            easing: 'easeOutExpo',
+            complete() {
+              thumbs.forEach((el) => {
+                el.style.opacity = '';
+                el.style.transform = '';
+              });
+            },
+          });
+        }
+      }
     }
 
     _select(thumb, animate = true) {
@@ -78,7 +141,10 @@
         } else if (navigator.clipboard) {
           await navigator.clipboard.writeText(btn.dataset.srCopy);
         }
-      } catch (_) { /* vẫn báo toast để người dùng biết thao tác đã nhận */ }
+      } catch (err) {
+        // vẫn báo toast để người dùng biết thao tác đã nhận
+        report('clipboard', err);
+      }
       const icon = btn.querySelector('i');
       btn.classList.add('is-copied');
       if (icon) icon.className = 'ph-bold ph-check';
@@ -125,6 +191,7 @@
       let dragging = false;
       this.divider.addEventListener('pointerdown', (e) => {
         e.preventDefault();
+        this._userInteracted = true;
         dragging = true;
         this.divider.setPointerCapture?.(e.pointerId);
       });
@@ -135,12 +202,14 @@
       this.divider.addEventListener('keydown', (e) => {
         if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
         e.preventDefault();
+        this._userInteracted = true;
         this.split = Math.max(8, Math.min(92, this.split + (e.key === 'ArrowRight' ? 4 : -4)));
         this._apply();
       });
       // Bấm vào khung ảnh để đưa thanh so sánh tới vị trí đó
       this.stage.addEventListener('click', (e) => {
         if (e.target.closest('[data-sr-divider]')) return;
+        this._userInteracted = true;
         this._fromX(e.clientX);
       });
 

@@ -12,8 +12,8 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/bold/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/style.css">
-  <link rel="stylesheet" href="assets/css/main.css?v=20261111a">
-  <link rel="stylesheet" href="assets/css/pages.css?v=20261111b">
+  <link rel="stylesheet" href="assets/css/main.css?v=20261111m">
+  <link rel="stylesheet" href="assets/css/pages.css?v=20261111m">
 </head>
 <body>
   <a href="#main-content" class="drv-skip-link">Chuyển đến không gian Trợ lý AI Tìm gạch</a>
@@ -29,44 +29,44 @@
         <div class="drv-aif-topbar">
           <div class="drv-aif-topbar__brand">
             <div>
-              <nav class="drv-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: 4px;">
+              <nav class="drv-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: 3px;">
                 <a href="01-home.html">Trang chủ</a>
                 <span class="drv-breadcrumb__sep" aria-hidden="true">/</span>
                 <a href="02-catalog-collection.html">Gạch ốp lát</a>
                 <span class="drv-breadcrumb__sep" aria-hidden="true">/</span>
-                <span aria-current="page" class="u-bold u-text-navy">Trợ lý AI Tìm gạch &amp; Báo giá</span>
+                <span aria-current="page" class="u-bold u-text-navy">Trợ lý AI Tìm gạch</span>
               </nav>
-              <div class="l-cluster l-cluster--xs">
-                <h1 id="aif-page-heading" class="u-text-base u-bold u-text-navy" style="margin: 0; font-family: var(--f-display); letter-spacing: 0.02em; text-transform: uppercase;">
-                  TRỢ LÝ AI TÌM GẠCH &amp; BÁO GIÁ KHỐI LƯỢNG CÔNG TRÌNH
+              <div class="drv-aif-topbar__heading-row">
+                <h1 id="aif-page-heading" class="drv-aif-topbar__title">
+                  Trợ lý AI Tìm gạch &amp; Dự toán vật tư
                 </h1>
                 <span class="drv-aif-topbar__badge">
                   <i class="ph-fill ph-sparkle" aria-hidden="true"></i>
-                  <span>Chuẩn DCOF R9-R12 · Quy đổi thùng nguyên +5% hao hụt</span>
+                  <span>Chuẩn DCOF R9–R12 · Tự tính thùng</span>
                 </span>
               </div>
             </div>
           </div>
 
           <div class="drv-aif-topbar__controls">
-            <div class="drv-aif-modes" role="group" aria-label="Chế độ hiển thị khung chat AI">
+            <div class="drv-aif-modes" role="group" aria-label="Chế độ hiển thị">
               <button type="button" data-mode-switch="split" class="drv-aif-mode-btn is-active" aria-pressed="true">
                 <i class="ph-bold ph-columns" aria-hidden="true"></i>
-                <span>Không gian 2 cột</span>
+                <span>2 Cột</span>
               </button>
               <button type="button" data-mode-switch="stream" class="drv-aif-mode-btn" aria-pressed="false">
                 <i class="ph-bold ph-chat-centered-text" aria-hidden="true"></i>
-                <span>Luồng Chat đơn</span>
+                <span>Chat đơn</span>
               </button>
               <button type="button" data-mode-switch="widget" class="drv-aif-mode-btn" aria-pressed="false">
                 <i class="ph-bold ph-browsers" aria-hidden="true"></i>
-                <span>Widget Nổi góc trang</span>
+                <span>Widget</span>
               </button>
             </div>
 
             <button id="openQuoteHeaderBtn" type="button" class="drv-aif-quote-btn" aria-label="Mở danh sách yêu cầu báo giá">
               <i class="ph-bold ph-clipboard-text" aria-hidden="true"></i>
-              <span>Danh sách báo giá</span>
+              <span>Báo giá</span>
               <span id="headerTotalBoxesText" class="drv-aif-quote-btn__sub">0 thùng</span>
               <span id="headerQuoteBadge" class="drv-aif-quote-btn__badge">0</span>
             </button>
@@ -91,24 +91,24 @@
 
           <!-- MOCK CATALOG BACKDROP (Shown only when Mode = "widget" to preview floating widget on catalog) -->
           <section id="catalogMockBackdrop" class="drv-aif-backdrop-mock" aria-label="Mô phỏng trang danh mục khi bật Widget AI nổi">
-            <div class="l-cluster l-cluster--between" style="padding-bottom: 14px; margin-bottom: 16px; border-bottom: var(--bw);">
+            <div class="drv-aif-backdrop-mock__head">
               <div>
-                <span class="u-text-xs u-bold u-text-moss" style="text-transform: uppercase;">Chế độ xem thử: Floating AI Chat Widget</span>
-                <h2 class="u-text-base u-bold u-text-navy" style="margin: 2px 0 0;">Danh mục Gạch ốp lát chính hãng (/gach)</h2>
-                <p class="u-text-xs u-text-muted" style="margin: 2px 0 0;">Khách hàng đang duyệt danh mục truyền thống và mở cửa sổ Chat AI ở góc phải bên dưới màn hình.</p>
+                <span class="drv-aif-results__eyebrow">Xem thử chế độ Widget nổi</span>
+                <h2 class="drv-aif-results__title" style="margin-top: 2px;">Danh mục Gạch ốp lát chính hãng (/gach)</h2>
+                <p class="u-text-xs u-text-muted" style="margin-top: 2px;">Mô phỏng khách đang duyệt danh mục truyền thống và mở khung chat AI ở góc phải dưới màn hình.</p>
               </div>
               <div class="l-cluster l-cluster--xs">
                 <a href="02-catalog-collection.html" class="drv-btn drv-btn--outline drv-btn--sm">
-                  <span>Mở trang Danh mục Silo</span>
+                  <span>Mở Danh mục Silo</span>
                   <i class="ph ph-arrow-up-right drv-icon--xs" aria-hidden="true"></i>
                 </a>
                 <button type="button" id="triggerWidgetFromBackdropBtn" class="drv-btn drv-btn--primary drv-btn--sm">
                   <i class="ph-fill ph-sparkle drv-icon--xs" aria-hidden="true"></i>
-                  <span>Nhờ AI tính hộ số thùng &amp; lọc nhanh</span>
+                  <span>Bật cửa sổ Widget AI</span>
                 </button>
               </div>
             </div>
-            <div class="l-grid l-grid--3" style="opacity: 0.65;">
+            <div class="l-grid l-grid--3">
               <div class="u-bd u-rounded-sm u-pad-4 u-bg-ivory">
                 <span class="drv-badge drv-badge--moss">Sẵn kho</span>
                 <h3 class="u-text-sm u-bold u-text-navy" style="margin-top: 8px;">Gạch Vân Đá Marble Calacatta 80x80 (DRV-8801M)</h3>
@@ -140,112 +140,100 @@
                     <i class="ph-fill ph-robot" aria-hidden="true"></i>
                     <span class="drv-aif-chat__dot"></span>
                   </div>
-                  <div>
-                    <h2 class="drv-aif-chat__title">Dravit AI - Trợ lý tìm gạch</h2>
-                    <p id="aiEngineStatusText" class="drv-aif-chat__sub">Chuyên gia Porcelain &amp; Tính số thùng chuẩn xác</p>
+                  <div class="drv-aif-chat__head-info">
+                    <div class="drv-aif-chat__title-row">
+                      <h2 class="drv-aif-chat__title">Dravit AI</h2>
+                      <span class="drv-aif-chat__status-pill">Trực tuyến</span>
+                    </div>
+                    <p id="aiEngineStatusText" class="drv-aif-chat__sub">Tư vấn thông số &amp; tính số thùng</p>
                   </div>
                 </div>
 
                 <div class="drv-aif-chat__actions">
+                  <button id="expandToSplitBtn" type="button" class="drv-aif-head-pill drv-aif-expand-btn" title="Mở rộng không gian AI 2 cột" aria-label="Mở rộng không gian AI 2 cột" data-mode-switch="split">
+                    <i class="ph-bold ph-arrows-out-simple" aria-hidden="true"></i>
+                    <span>2 cột</span>
+                  </button>
                   <button id="resetConversationBtn" type="button" class="drv-aif-icon-btn" title="Làm mới cuộc trò chuyện" aria-label="Làm mới cuộc trò chuyện">
                     <i class="ph-bold ph-arrows-counter-clockwise" aria-hidden="true"></i>
                   </button>
-                  <button id="minimizeWidgetBtn" type="button" class="drv-aif-icon-btn" title="Thu gọn cửa sổ chat" aria-label="Thu gọn cửa sổ chat">
+                  <a id="escapeToStandardCatalogLink" href="02-catalog-collection.html" class="drv-aif-icon-btn" title="Chuyển sang bộ lọc truyền thống 14 tiêu chí" aria-label="Bộ lọc truyền thống">
+                    <i class="ph-bold ph-funnel" aria-hidden="true"></i>
+                  </a>
+                  <button id="minimizeWidgetBtn" type="button" class="drv-aif-icon-btn drv-aif-minimize-btn" title="Thu gọn cửa sổ chat" aria-label="Thu gọn cửa sổ chat">
                     <i class="ph-bold ph-minus" aria-hidden="true"></i>
                   </button>
-                  <a id="escapeToStandardCatalogLink" href="02-catalog-collection.html" class="drv-aif-escape-link" title="Chuyển sang bộ lọc truyền thống 14 tiêu chí">
-                    <span>Bộ lọc truyền thống</span>
-                    <i class="ph-bold ph-arrow-up-right" aria-hidden="true"></i>
-                  </a>
                 </div>
               </div>
 
               <!-- ACTIVE CONTEXT FACET STRIP -->
               <div id="activeContextStrip" class="drv-aif-context" hidden>
                 <div class="drv-aif-context__list">
-                  <span class="drv-aif-context__label"><i class="ph-fill ph-funnel" aria-hidden="true"></i> Tiêu chí đang lọc:</span>
-                  <div id="contextFacetsContainer" class="drv-aif-context__list"></div>
+                  <span class="drv-aif-context__label"><i class="ph-fill ph-funnel" aria-hidden="true"></i> Lọc:</span>
+                  <div id="contextFacetsContainer" class="drv-aif-context__tags"></div>
                 </div>
-                <button id="clearConstraintsBtn" type="button" class="drv-aif-context__clear">Xóa lọc</button>
+                <button id="clearConstraintsBtn" type="button" class="drv-aif-context__clear">Đặt lại</button>
               </div>
 
               <!-- CHAT MESSAGE STREAM -->
               <div id="ai-messages" class="drv-aif-messages" role="log" aria-live="polite" aria-relevant="additions">
                 <div class="drv-aif-msg">
-                  <div class="drv-aif-msg__avatar"><i class="ph-fill ph-robot" aria-hidden="true"></i></div>
+                  <div class="drv-aif-msg__avatar"><i class="ph-fill ph-user" aria-hidden="true"></i></div>
                   <div class="drv-aif-msg__bubble">
-                    <div class="drv-aif-msg__head">
-                      <span>Cố vấn kỹ thuật Gạch ốp lát Dravit</span>
-                      <span class="u-text-muted">Trực tuyến</span>
-                    </div>
+                    <span class="drv-aif-msg__sender">Cố vấn kỹ thuật Dravit</span>
                     <p style="margin: 0;">
-                      Xin chào! Mình là <strong>Dravit AI</strong>. Bạn chỉ cần mô tả không gian cần ốp lát, diện tích (m²) hoặc phong cách mong muốn, mình sẽ:
+                      Cho biết <strong>không gian, diện tích (m²)</strong> hoặc <strong>bề mặt mong muốn</strong> — hệ thống sẽ lọc mẫu đạt chuẩn DCOF và tính sẵn số thùng nguyên.
                     </p>
-                    <ul class="drv-aif-msg__list">
-                      <li>
-                        <i class="ph-fill ph-check-circle u-text-moss" style="margin-top: 2px;" aria-hidden="true"></i>
-                        <span>Chọn đúng mẫu gạch đạt chuẩn <strong>chống trượt (R10-R12)</strong> &amp; xương đá Porcelain chống thấm.</span>
-                      </li>
-                      <li>
-                        <i class="ph-fill ph-calculator u-text-moss" style="margin-top: 2px;" aria-hidden="true"></i>
-                        <span>Tự động quy đổi diện tích + <strong>5% hao hụt thi công</strong> ra <strong>số thùng nguyên</strong> chuẩn xác.</span>
-                      </li>
-                      <li>
-                        <i class="ph-fill ph-file-text u-text-moss" style="margin-top: 2px;" aria-hidden="true"></i>
-                        <span>Tạo danh sách yêu cầu <strong>báo giá chiết khấu theo khối lượng</strong> chỉ với 1 chạm.</span>
-                      </li>
-                    </ul>
                   </div>
                 </div>
               </div>
 
-              <!-- QUICK SUGGESTION CHIPS + 5% WASTE TOGGLE -->
-              <div id="chatSuggestionsBar" class="drv-aif-suggestions">
-                <div class="drv-aif-suggestions__head">
-                  <span><i class="ph-fill ph-lightbulb-filament" style="color: #f59e0b;" aria-hidden="true"></i> Gợi ý câu hỏi nhanh:</span>
-                  <label class="drv-aif-waste-toggle" title="Tự động cộng thêm 5% hao hụt cắt gạch khi tính số thùng">
-                    <input id="wasteToggleCheckbox" type="checkbox" checked>
-                    <span>+5% hao hụt thi công</span>
-                  </label>
-                </div>
+              <!-- QUICK SUGGESTION CHIPS -->
+              <div id="chatSuggestionsBar" class="drv-aif-suggestions" aria-label="Gợi ý câu hỏi nhanh">
                 <div class="drv-aif-suggestions__row">
                   <button type="button" class="drv-aif-chip suggestion-chip" data-prompt="Tìm gạch lát nền phòng khách 35m² vân đá trắng sáng sang trọng">
-                    Phòng khách 35m² vân đá sáng
+                    <i class="ph ph-sparkle" aria-hidden="true"></i>
+                    <span>Phòng khách 35m² vân đá</span>
                   </button>
                   <button type="button" class="drv-aif-chip suggestion-chip" data-prompt="Gạch lát nền nhà tắm 6m² chống trơn trượt cho người lớn tuổi">
-                    Nhà tắm 6m² chống trượt cho người già
+                    <i class="ph ph-sparkle" aria-hidden="true"></i>
+                    <span>Nhà tắm 6m² chống trượt R11</span>
                   </button>
                   <button type="button" class="drv-aif-chip suggestion-chip" data-prompt="Phòng ngủ 20m² muốn lát gạch giả gỗ tông ấm dễ vệ sinh">
-                    Phòng ngủ 20m² gạch giả gỗ ấm
+                    <i class="ph ph-sparkle" aria-hidden="true"></i>
+                    <span>Phòng ngủ 20m² giả gỗ</span>
                   </button>
                   <button type="button" class="drv-aif-chip suggestion-chip" data-prompt="Sân vườn ngoài trời 40m² cần gạch chịu lực chống rêu mốc">
-                    Sân vườn 40m² chịu lực R11
-                  </button>
-                  <button type="button" class="drv-aif-chip suggestion-chip" data-prompt="Sảnh biệt thự 60m² cần gạch khổ lớn 60x120 sẵn kho giao ngay">
-                    Sảnh 60m² khổ lớn 60x120 sẵn kho
+                    <i class="ph ph-sparkle" aria-hidden="true"></i>
+                    <span>Sân vườn 40m² chịu lực</span>
                   </button>
                 </div>
               </div>
 
-              <!-- CHAT INPUT FORM -->
+              <!-- UNIFIED CHAT COMPOSER -->
               <form id="aiChatForm" class="drv-aif-form" novalidate>
-                <div class="drv-aif-form__meta">
-                  <label for="aiQueryInput" class="u-bold u-text-navy">Mô tả công trình hoặc yêu cầu kỹ thuật của bạn</label>
-                  <span id="charCounter" class="u-tabular">0/500</span>
-                </div>
-                <div class="drv-aif-form__box">
+                <div class="drv-aif-composer">
                   <textarea id="aiQueryInput" name="query" rows="2" maxlength="500"
                     class="drv-aif-form__input"
-                    placeholder="VD: Tôi cần lát phòng khách 35m² thích gạch 80x80 vân đá sáng, dễ lau chùi..."
+                    aria-label="Mô tả công trình hoặc diện tích m²"
+                    placeholder="Nhập diện tích (m²), không gian hoặc bề mặt cần tìm..."
                     required></textarea>
-                  <button id="sendQueryBtn" type="submit" class="drv-aif-form__submit">
-                    <span>Gửi</span>
-                    <i class="ph-bold ph-paper-plane-right" aria-hidden="true"></i>
-                  </button>
-                </div>
-                <div class="drv-aif-form__foot">
-                  <span>Enter để gửi · Shift + Enter xuống dòng</span>
-                  <span>Thích tự lọc? <a href="02-catalog-collection.html">Mở bộ lọc 14 tiêu chí</a></span>
+                  <div class="drv-aif-composer__bar">
+                    <div class="drv-aif-composer__tools">
+                      <label class="drv-aif-waste-toggle" title="Tự động cộng thêm 5% hao hụt cắt gạch khi tính số thùng">
+                        <input id="wasteToggleCheckbox" type="checkbox" checked>
+                        <span class="drv-aif-waste-toggle__pill">
+                          <i class="ph-bold ph-check" aria-hidden="true"></i>
+                          <span>+5% hao hụt</span>
+                        </span>
+                      </label>
+                      <span id="charCounter" class="drv-aif-composer__count u-tabular">0/500</span>
+                    </div>
+                    <button id="sendQueryBtn" type="submit" class="drv-aif-form__submit" aria-label="Gửi yêu cầu tới AI">
+                      <span>Gửi</span>
+                      <i class="ph-bold ph-paper-plane-right" aria-hidden="true"></i>
+                    </button>
+                  </div>
                 </div>
               </form>
             </section>
@@ -257,35 +245,30 @@
               <div class="drv-aif-results__head">
                 <div class="drv-aif-results__top">
                   <div>
-                    <div class="drv-aif-results__eyebrow-row">
-                      <span class="drv-aif-results__eyebrow">Kết quả tư vấn kỹ thuật</span>
-                      <span id="matchedCountPill" class="drv-aif-pill drv-aif-pill--navy">6 mẫu phù hợp</span>
-                      <span class="drv-aif-pill drv-aif-pill--amber">
-                        <i class="ph-fill ph-tag" aria-hidden="true"></i>
-                        <span>Báo giá theo số thùng</span>
-                      </span>
+                    <div class="drv-aif-results__title-row">
+                      <h2 class="drv-aif-results__title">Đề xuất &amp; Dự toán khối lượng</h2>
+                      <span id="matchedCountPill" class="drv-aif-pill drv-aif-pill--teal">6 mẫu phù hợp</span>
                     </div>
-                    <h2 class="drv-aif-results__title">Đề xuất thông số &amp; Khối lượng vật tư</h2>
                     <p id="calcAreaSubtitle" class="drv-aif-results__sub">
-                      Đang tính quy đổi thùng nguyên cho diện tích <strong class="u-text-navy u-tabular">25 m²</strong> (+5% hao hụt = <span class="u-tabular">26,25 m²</span>)
+                      Tính cho <strong class="u-text-navy u-tabular">25 m²</strong> (+5% hao hụt = <span class="u-tabular">26,25 m²</span>)
                     </p>
                   </div>
 
                   <div class="drv-aif-results__actions">
                     <button id="openRefineDrawerBtn" type="button" class="drv-btn drv-btn--outline drv-btn--sm">
                       <i class="ph-bold ph-sliders-horizontal drv-icon--xs" aria-hidden="true"></i>
-                      <span>Tinh chỉnh thông số</span>
+                      <span>Lọc thông số</span>
                     </button>
                     <button id="addAllToQuoteBtn" type="button" class="drv-btn drv-btn--primary drv-btn--sm">
                       <i class="ph-bold ph-plus-circle drv-icon--xs" aria-hidden="true"></i>
-                      <span>Báo giá tất cả mẫu này</span>
+                      <span>Báo giá tất cả</span>
                     </button>
                   </div>
                 </div>
 
                 <!-- EXPANDABLE QUICK TECHNICAL REFINE BAR -->
                 <div id="quickRefineBar" class="drv-aif-refine-bar" hidden>
-                  <span class="u-text-xs u-bold u-text-muted" style="text-transform: uppercase;">Lọc nhanh kỹ thuật:</span>
+                  <span class="u-text-xs u-bold u-text-muted">Lọc nhanh:</span>
                   <button type="button" data-refine-prompt="Chỉ hiển thị các mẫu có chỉ số chống trượt từ R10 đến R11 trở lên" class="drv-chip drv-chip--square refine-filter-btn">
                     Chống trượt ≥ R10
                   </button>
@@ -301,59 +284,57 @@
                 </div>
               </div>
 
-              <!-- AI EXPLANATION BANNER -->
-              <div id="aiExplanationBanner" class="drv-aif-explain">
-                <div class="drv-aif-explain__icon">
-                  <i class="ph-fill ph-sparkle" aria-hidden="true"></i>
-                </div>
-                <div class="drv-aif-explain__body">
-                  <div class="drv-aif-explain__meta">
-                    <span class="drv-aif-explain__title">Nhận định chuyên môn từ Dravit AI</span>
-                    <span id="latencyBadge" class="drv-aif-explain__latency">Phản hồi 0,25s · Danh mục chuẩn Dravit</span>
+              <div class="drv-aif-results__scroll">
+                <!-- AI EXPLANATION BANNER -->
+                <div id="aiExplanationBanner" class="drv-aif-explain">
+                  <div class="drv-aif-explain__icon">
+                    <i class="ph-fill ph-sparkle" aria-hidden="true"></i>
                   </div>
-                  <p id="aiExplanationText" class="drv-aif-explain__text">
-                    Đang hiển thị <strong>6 mẫu gạch Porcelain xương đá (độ hút nước E ≤ 0,5%)</strong> tiêu biểu cho các không gian nhà ở Việt Nam. Nhập diện tích thực tế vào khung chat bên trái để AI tính chính xác số thùng và số viên cần đặt.
-                  </p>
-                  <p id="aiTradeoffNote" class="drv-aif-explain__tradeoff" hidden></p>
-                </div>
-              </div>
-
-              <!-- SKELETON LOADING GRID -->
-              <div id="resultsSkeletonGrid" class="drv-aif-grid" hidden aria-hidden="true">
-                <div class="u-bg-white u-pad-5"><div class="drv-skeleton" style="height: 280px;"></div></div>
-                <div class="u-bg-white u-pad-5"><div class="drv-skeleton" style="height: 280px;"></div></div>
-                <div class="u-bg-white u-pad-5"><div class="drv-skeleton" style="height: 280px;"></div></div>
-                <div class="u-bg-white u-pad-5"><div class="drv-skeleton" style="height: 280px;"></div></div>
-              </div>
-
-              <!-- PRODUCT CARDS GRID -->
-              <div id="aiProductGrid" class="drv-aif-grid" data-drv-stagger="product-grid"></div>
-
-              <!-- AI FEEDBACK LOOP -->
-              <div id="aiFeedbackBlock" class="drv-aif-feedback">
-                <div class="drv-aif-feedback__row">
-                  <div class="l-cluster l-cluster--xs">
-                    <i class="ph-duotone ph-chats-circle drv-icon u-text-moss" aria-hidden="true"></i>
-                    <span class="u-text-xs u-bold u-text-navy">Gợi ý của AI có sát với công trình của bạn không?</span>
-                  </div>
-                  <div class="l-cluster l-cluster--xs">
-                    <button type="button" data-feedback="helpful" class="drv-btn drv-btn--outline drv-btn--sm">
-                      <i class="ph-bold ph-thumbs-up drv-icon--xs u-text-moss" aria-hidden="true"></i>
-                      <span>Hữu ích</span>
-                    </button>
-                    <button type="button" data-feedback="not-helpful" class="drv-btn drv-btn--outline drv-btn--sm">
-                      <i class="ph-bold ph-thumbs-down drv-icon--xs" aria-hidden="true"></i>
-                      <span>Chưa sát ý</span>
-                    </button>
-                    <span id="feedbackThankYouMsg" class="u-text-xs u-bold u-text-moss" hidden></span>
+                  <div class="drv-aif-explain__body">
+                    <p id="aiExplanationText" class="drv-aif-explain__text">
+                      Đang hiển thị <strong>6 mẫu Porcelain xương đá (E ≤ 0,5%)</strong> phù hợp. Khối lượng quy đổi tự động theo số thùng nguyên.
+                    </p>
+                    <p id="aiTradeoffNote" class="drv-aif-explain__tradeoff" hidden></p>
                   </div>
                 </div>
 
-                <div id="negativeFeedbackReasonBox" class="drv-aif-feedback__reasons" hidden>
-                  <span class="u-text-xs u-text-muted">Bấm vào điểm bạn muốn AI điều chỉnh lại ngay:</span>
-                  <button type="button" data-reason="Cần mẫu chống trơn cao hơn (R11-R12)" class="drv-chip drv-chip--square reason-pill">Cần mẫu chống trơn cao hơn</button>
-                  <button type="button" data-reason="Muốn đổi sang gạch khổ lớn hơn 80x80 hoặc 60x120" class="drv-chip drv-chip--square reason-pill">Muốn khổ gạch lớn hơn</button>
-                  <button type="button" data-reason="Chỉ xem các mẫu có sẵn kho giao ngay" class="drv-chip drv-chip--square reason-pill">Chỉ xem mẫu có sẵn giao ngay</button>
+                <!-- SKELETON LOADING GRID -->
+                <div id="resultsSkeletonGrid" class="drv-aif-grid" hidden aria-hidden="true">
+                  <div class="u-bg-white u-bd u-rounded-sm u-pad-4"><div class="drv-skeleton" style="height: 250px;"></div></div>
+                  <div class="u-bg-white u-bd u-rounded-sm u-pad-4"><div class="drv-skeleton" style="height: 250px;"></div></div>
+                  <div class="u-bg-white u-bd u-rounded-sm u-pad-4"><div class="drv-skeleton" style="height: 250px;"></div></div>
+                  <div class="u-bg-white u-bd u-rounded-sm u-pad-4"><div class="drv-skeleton" style="height: 250px;"></div></div>
+                </div>
+
+                <!-- PRODUCT CARDS GRID -->
+                <div id="aiProductGrid" class="drv-aif-grid" data-drv-stagger="product-grid"></div>
+
+                <!-- AI FEEDBACK LOOP -->
+                <div id="aiFeedbackBlock" class="drv-aif-feedback">
+                  <div class="drv-aif-feedback__row">
+                    <div class="l-cluster l-cluster--xs">
+                      <i class="ph-fill ph-chat-circle-text drv-icon u-text-moss" aria-hidden="true"></i>
+                      <span class="u-text-xs u-bold u-text-navy">Đề xuất có sát yêu cầu công trình của bạn?</span>
+                    </div>
+                    <div class="l-cluster l-cluster--xs">
+                      <button type="button" data-feedback="helpful" class="drv-btn drv-btn--outline drv-btn--sm">
+                        <i class="ph-bold ph-thumbs-up drv-icon--xs u-text-moss" aria-hidden="true"></i>
+                        <span>Hữu ích</span>
+                      </button>
+                      <button type="button" data-feedback="not-helpful" class="drv-btn drv-btn--outline drv-btn--sm">
+                        <i class="ph-bold ph-thumbs-down drv-icon--xs" aria-hidden="true"></i>
+                        <span>Cần điều chỉnh</span>
+                      </button>
+                      <span id="feedbackThankYouMsg" class="u-text-xs u-bold u-text-moss" hidden></span>
+                    </div>
+                  </div>
+
+                  <div id="negativeFeedbackReasonBox" class="drv-aif-feedback__reasons" hidden>
+                    <span class="u-text-xs u-text-muted">Chọn tiêu chí muốn điều chỉnh:</span>
+                    <button type="button" data-reason="Cần mẫu chống trơn cao hơn (R11-R12)" class="drv-chip drv-chip--square reason-pill">Chống trơn cao hơn</button>
+                    <button type="button" data-reason="Muốn đổi sang gạch khổ lớn hơn 80x80 hoặc 60x120" class="drv-chip drv-chip--square reason-pill">Khổ gạch lớn hơn</button>
+                    <button type="button" data-reason="Chỉ xem các mẫu có sẵn kho giao ngay" class="drv-chip drv-chip--square reason-pill">Sẵn kho giao ngay</button>
+                  </div>
                 </div>
               </div>
             </section>
@@ -368,10 +349,12 @@
   <!-- GLOBAL FOOTER, DIALOGS & MOBILE BAR -->
   <drv-site-footer data-partial="partials/footer.html"></drv-site-footer>
 
-  <script defer src="https://cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.min.js"></script>
-  <script defer src="assets/js/core.js?v=20261110a"></script>
-  <script defer src="assets/js/unit-calc.js?v=20261110c"></script>
-  <script defer src="assets/js/ai-finder.js?v=20261110c"></script>
+  <script defer src="assets/js/vendor/anime.min.js?v=20261111m"></script>
+  <script defer src="assets/js/shell-partials.js?v=20261111m"></script>
+  <script defer src="assets/js/core.js?v=20261111m"></script>
+  <script defer src="assets/js/calc-core.js?v=20261111m"></script>
+  <script defer src="assets/js/unit-calc.js?v=20261111m"></script>
+  <script defer src="assets/js/ai-finder.js?v=20261111m"></script>
 </body>
 </html>
 

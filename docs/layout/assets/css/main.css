@@ -5,12 +5,8 @@
  */
 
 @layer reset, tokens, base, layout, components, woo, utilities;
-
-@import url("https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css");
-@import url("https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/bold/style.css");
-@import url("https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/style.css");
-@import url("./fonts.css");
-@import url("./tokens.css");
+@import url("./fonts.css?v=20261111m");
+@import url("./tokens.css?v=20261111m");
 
 /* ==========================================================================
    1. @layer reset
@@ -257,20 +253,8 @@
     --_gap: var(--s-2);
   }
 
-  .l-cluster--lg {
-    --_gap: var(--s-5);
-  }
-
   .l-cluster--between {
     --_justify: space-between;
-  }
-
-  .l-cluster--end {
-    --_justify: flex-end;
-  }
-
-  .l-cluster--start {
-    --_align: flex-start;
   }
 
   .l-cluster--nowrap {
@@ -290,10 +274,6 @@
     --_gap: var(--s-3);
   }
 
-  .l-grid--gap-lg {
-    --_gap: var(--s-6);
-  }
-
   .l-grid--2 {
     --_cols: 1;
   }
@@ -304,10 +284,6 @@
 
   .l-grid--4 {
     --_cols: 2;
-  }
-
-  .l-grid--12 {
-    --_cols: 4;
   }
 
   @media (min-width: 640px) {
@@ -332,60 +308,15 @@
     .l-grid--4 {
       --_cols: 3;
     }
-
-    .l-grid--12 {
-      --_cols: 8;
-    }
   }
 
   @media (min-width: 1024px) {
     .l-grid--4 {
       --_cols: 4;
     }
-
-    .l-grid--12 {
-      --_cols: 12;
-    }
   }
 
   /* Column Span Modifiers on Desktop (lg >= 1024px) */
-  .col-span-full {
-    grid-column: 1 / -1;
-  }
-
-  @media (min-width: 1024px) {
-    .lg-span-3 {
-      grid-column: span 3;
-    }
-
-    .lg-span-4 {
-      grid-column: span 4;
-    }
-
-    .lg-span-5 {
-      grid-column: span 5;
-    }
-
-    .lg-span-6 {
-      grid-column: span 6;
-    }
-
-    .lg-span-7 {
-      grid-column: span 7;
-    }
-
-    .lg-span-8 {
-      grid-column: span 8;
-    }
-
-    .lg-span-9 {
-      grid-column: span 9;
-    }
-
-    .lg-span-12 {
-      grid-column: span 12;
-    }
-  }
 
   /* 3.5 Signature Architectural Grout-Line Grid (.l-grout-grid)
      Creates crisp 1px solid grout lines between every cell without double borders */
@@ -408,26 +339,6 @@
     min-width: 0;
   }
 
-  .l-grout-grid--ivory {
-    --_cell-bg: var(--c-ivory);
-  }
-
-  .l-grout-grid--champagne {
-    --_cell-bg: var(--c-champagne);
-  }
-
-  .l-grout-grid--compact {
-    --_cell-pad: var(--s-4);
-  }
-
-  .l-grout-grid--flush {
-    --_cell-pad: 0;
-  }
-
-  .l-grout-grid--square {
-    border-radius: var(--r-sm);
-  }
-
   @media (min-width: 640px) {
 
     .l-grout-grid--2,
@@ -436,19 +347,9 @@
     }
   }
 
-  @media (min-width: 768px) {
-    .l-grout-grid--3 {
-      --_cols: 3;
-    }
-  }
-
   @media (min-width: 1024px) {
     .l-grout-grid--4 {
       --_cols: 4;
-    }
-
-    .l-grout-grid--5 {
-      --_cols: 5;
     }
   }
 
@@ -467,21 +368,8 @@
     --_bg: var(--c-white);
   }
 
-  .l-section--champagne {
-    --_bg: var(--c-champagne);
-  }
-
-  .l-section--navy {
-    --_bg: var(--c-navy-900);
-    --_fg: var(--c-ivory);
-  }
-
   .l-section--tight {
     --_pad-y: var(--s-6);
-  }
-
-  .l-section--hero {
-    --_pad-y: var(--s-5);
   }
 
   /* 3.7 Asymmetric Split Layout (.l-split) */
@@ -509,11 +397,6 @@
 
     .l-split--8-4 {
       grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
-      gap: var(--s-6);
-    }
-
-    .l-split--3-9 {
-      grid-template-columns: 280px minmax(0, 1fr);
       gap: var(--s-6);
     }
   }
@@ -562,10 +445,6 @@
 
   .drv-icon--sm {
     --_size: 16px;
-  }
-
-  .drv-icon--lg {
-    --_size: 24px;
   }
 
   .drv-icon--xl {
@@ -715,21 +594,12 @@
   }
 
   /* Button Variants (Only reassign --_* variables) */
-  .drv-btn--teal,
   .drv-btn--moss {
     --_bg: var(--c-teal-500);
     --_fg: var(--c-white);
     --_bd: var(--c-teal-500);
     --_bg-hover: var(--c-teal-700);
     --_bd-hover: var(--c-teal-700);
-  }
-
-  .drv-btn--amber {
-    --_bg: var(--c-amber-500);
-    --_fg: var(--c-navy-900);
-    --_bd: var(--c-amber-500);
-    --_bg-hover: var(--c-amber-600);
-    --_bd-hover: var(--c-amber-600);
   }
 
   .drv-btn--outline {
@@ -792,58 +662,58 @@
 
   /* 4.4b Inline Clean Flat Copy Button (No background, No border, Inherit text font-size, Inline with text) */
   .drv-btn-copy-inline {
-    background: transparent !important;
-    background-color: transparent !important;
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-    margin: 0 0 0 0.35em !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    vertical-align: middle !important;
-    line-height: 1 !important;
-    font-size: 1em !important;
-    color: var(--c-navy-500) !important;
-    cursor: pointer !important;
-    width: auto !important;
-    height: auto !important;
-    transition: color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out) !important;
+    background: transparent;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    padding: 0;
+    margin: 0 0 0 0.35em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    line-height: 1;
+    font-size: 1em;
+    color: var(--c-navy-500);
+    cursor: pointer;
+    width: auto;
+    height: auto;
+    transition: color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
   }
 
   .drv-btn-copy-inline i,
   .drv-btn-copy-inline [class*="ph-"] {
-    font-size: 1em !important;
-    width: 1em !important;
-    height: 1em !important;
-    line-height: 1 !important;
-    display: inline-block !important;
-    vertical-align: middle !important;
+    font-size: 1em;
+    width: 1em;
+    height: 1em;
+    line-height: 1;
+    display: inline-block;
+    vertical-align: middle;
   }
 
   .drv-btn-copy-inline:hover {
-    background: transparent !important;
-    background-color: transparent !important;
-    color: var(--c-moss-600) !important;
-    transform: scale(1.15) !important;
+    background: transparent;
+    background-color: transparent;
+    color: var(--c-moss-600);
+    transform: scale(1.15);
   }
 
   .drv-btn-copy-inline:active {
-    transform: scale(0.92) !important;
+    transform: scale(0.92);
   }
 
   .drv-btn-copy-inline:focus-visible {
-    outline: 2px solid var(--c-moss-500) !important;
-    outline-offset: 2px !important;
-    border-radius: var(--r-2xs) !important;
+    outline: 2px solid var(--c-moss-500);
+    outline-offset: 2px;
+    border-radius: var(--r-2xs);
   }
 
   .drv-btn-copy-inline:disabled {
-    cursor: not-allowed !important;
-    opacity: 0.35 !important;
-    transform: none !important;
-    color: var(--c-navy-300) !important;
+    cursor: not-allowed;
+    opacity: 0.35;
+    transform: none;
+    color: var(--c-navy-300);
   }
 
   /* Text Link Button with 200ms Underline Draw */
@@ -921,30 +791,6 @@
     --_bd: var(--c-moss-500);
   }
 
-  .drv-badge--hot {
-    --_bg: #ea580c;
-    --_fg: #ffffff;
-    --_bd: #ea580c;
-  }
-
-  .drv-badge--blue {
-    --_bg: #0284c7;
-    --_fg: #ffffff;
-    --_bd: #0284c7;
-  }
-
-  .drv-badge--purple {
-    --_bg: #6366f1;
-    --_fg: #ffffff;
-    --_bd: #6366f1;
-  }
-
-  .drv-badge--navy {
-    --_bg: var(--c-navy-900);
-    --_fg: var(--c-ivory);
-    --_bd: var(--c-navy-900);
-  }
-
   .drv-badge--champagne {
     --_bg: var(--c-champagne);
     --_fg: var(--c-navy-900);
@@ -989,10 +835,6 @@
     font-size: var(--fs-sm);
     font-weight: 600;
     white-space: nowrap;
-    transition:
-      background-color var(--dur-fast) var(--ease-out),
-      border-color var(--dur-fast) var(--ease-out),
-      color var(--dur-fast) var(--ease-out);
   }
 
   .drv-chip:hover:not(:disabled) {
@@ -1022,10 +864,6 @@
     border-radius: var(--r-sm);
     padding: 4px 10px;
     min-height: 36px;
-  }
-
-  .drv-chip--pill {
-    border-radius: var(--r-pill);
   }
 
   .drv-chip__count {
@@ -1174,39 +1012,6 @@
   }
 
   /* Color Swatch Filter Button */
-  .drv-swatch-list {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--s-2);
-  }
-
-  .drv-swatch-btn {
-    display: flex;
-    align-items: center;
-    gap: var(--s-2);
-    padding: 6px 10px;
-    background-color: var(--c-white);
-    border: var(--bw);
-    border-radius: var(--r-sm);
-    font-size: var(--fs-xs);
-    font-weight: 600;
-    text-align: left;
-  }
-
-  .drv-swatch-btn.is-active,
-  .drv-swatch-btn[aria-pressed="true"] {
-    background-color: var(--c-moss-100);
-    border-color: var(--c-moss-500);
-    font-weight: 700;
-  }
-
-  .drv-swatch-dot {
-    width: 18px;
-    height: 18px;
-    border-radius: 2px;
-    border: 1px solid var(--c-navy-400);
-    flex-shrink: 0;
-  }
 
   /* 4.8 Global Header & Mega Menu "Silo Matrix 4+1" (.drv-header) */
   .drv-header {
@@ -2227,11 +2032,6 @@
     height: 26px;
   }
 
-  .drv-size-glyph--15x90 {
-    width: 7px;
-    height: 26px;
-  }
-
   /* 4.9 Product Card Anatomy (.drv-card) */
   .drv-card {
     position: relative;
@@ -2288,52 +2088,6 @@
     gap: 4px;
   }
 
-  .drv-card__floats {
-    position: absolute;
-    right: 8px;
-    bottom: 8px;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .drv-card__float-btn {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background-color: rgb(255 255 255 / 0.94);
-    border: var(--bw);
-    color: var(--c-navy-900);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.9375rem;
-    box-shadow: var(--shadow-hover);
-    cursor: pointer;
-    transition:
-      background-color var(--dur-fast) var(--ease-out),
-      color var(--dur-fast) var(--ease-out),
-      transform var(--dur-fast) var(--ease-out);
-  }
-
-  .drv-card__float-btn:hover {
-    background-color: var(--c-navy-900);
-    color: var(--c-white);
-    transform: scale(1.08);
-  }
-
-  .drv-card__meta {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--s-2);
-    padding: var(--s-2) var(--s-3);
-    background-color: var(--c-ivory);
-    border-bottom: var(--bw);
-    font-size: var(--fs-xs);
-  }
-
   .drv-card__tags {
     display: flex;
     align-items: center;
@@ -2348,13 +2102,6 @@
     border-radius: var(--r-sm);
     font-weight: 700;
     color: var(--c-text-main);
-  }
-
-  .drv-card__tag--stock {
-    background-color: var(--c-amber-100);
-    border-color: var(--c-amber-500);
-    color: var(--c-amber-800);
-    font-variant-numeric: tabular-nums;
   }
 
   .drv-card__sku {
@@ -2395,17 +2142,6 @@
     position: absolute;
     inset: 0;
     z-index: 1;
-  }
-
-  .drv-card__stock-bar {
-    font-size: var(--fs-xs);
-    font-weight: 700;
-    color: var(--c-amber-800);
-    background-color: var(--c-warning-bg);
-    border: 1px solid var(--c-warning);
-    border-radius: var(--r-sm);
-    padding: 4px 8px;
-    font-variant-numeric: tabular-nums;
   }
 
   .drv-card__footer {
@@ -2458,40 +2194,6 @@
     font-weight: 500;
   }
 
-  .drv-card__action {
-    position: relative;
-    z-index: 2;
-    width: 36px;
-    height: 36px;
-    border-radius: var(--r-sm);
-    background-color: var(--c-ivory);
-    color: var(--c-text-main);
-    border: var(--bw);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    transition:
-      transform var(--dur-base) var(--ease-spring),
-      background-color var(--dur-fast) var(--ease-out),
-      color var(--dur-fast) var(--ease-out),
-      border-color var(--dur-fast) var(--ease-out);
-  }
-
-  @media (min-width: 768px) {
-    .drv-card:has(.drv-card__floats) .drv-card__action {
-      display: none;
-    }
-  }
-
-  .drv-card:hover .drv-card__action,
-  .drv-card__action:hover {
-    background-color: var(--c-navy-900);
-    color: var(--c-white);
-    border-color: var(--c-navy-900);
-    transform: scale(1.08);
-  }
-
   /* Compact 2-Column Mobile Product Card (<768px) — Option 1: 1 Primary Badge + Footer Action */
   @media (max-width: 767px) {
     .drv-card__badges {
@@ -2513,16 +2215,6 @@
     }
 
     /* Hide floating overlay buttons on mobile image; action lives in card footer */
-    .drv-card__floats {
-      display: none;
-    }
-
-    .drv-card__meta {
-      padding: 5px 6px;
-      gap: 3px;
-      flex-wrap: nowrap;
-      font-size: 12px;
-    }
 
     .drv-card__tags {
       flex-wrap: nowrap;
@@ -2593,14 +2285,6 @@
     .drv-card__price-piece {
       font-size: 0.75rem;
     }
-
-    .drv-card__action {
-      width: 30px;
-      height: 30px;
-      background-color: var(--c-navy-900);
-      color: var(--c-white);
-      border-color: var(--c-navy-900);
-    }
   }
 
   /* 4.9c Glass shine sweep on image hover (injected by core.js as .drv-shine) */
@@ -2628,9 +2312,6 @@
   }
 
   /* 4.9b Product Card "Quote" (.drv-card--quote) — SKU chip, eyebrow, contact-price, quote CTA */
-  .drv-card--quote {
-    --_pad: var(--s-4);
-  }
 
   .drv-card--quote:hover {
     box-shadow: var(--shadow-hover);
@@ -2657,15 +2338,6 @@
     gap: var(--s-2);
   }
 
-  .drv-card--quote .drv-card__sku {
-    flex-shrink: 0;
-    font-family: var(--f-mono);
-    font-size: var(--fs-xs);
-    font-weight: 700;
-    color: var(--c-navy-800);
-    letter-spacing: 0.02em;
-  }
-
   .drv-card__chip {
     display: inline-flex;
     align-items: center;
@@ -2678,13 +2350,6 @@
     font-variant-numeric: tabular-nums;
   }
 
-  .drv-card__chip--sku {
-    background-color: var(--c-navy-900);
-    color: var(--c-white);
-    font-family: var(--f-mono);
-    letter-spacing: 0.02em;
-  }
-
   .drv-card__chip--label {
     background-color: var(--c-teal-500);
     color: var(--c-white);
@@ -2693,28 +2358,6 @@
   .drv-card__chip--sale {
     background-color: var(--c-sale);
     color: var(--c-white);
-  }
-
-  .drv-card__chip--stock,
-  .drv-card__chip--spec {
-    position: absolute;
-    bottom: var(--s-2);
-    z-index: 2;
-  }
-
-  .drv-card__chip--stock {
-    left: var(--s-2);
-    background-color: rgb(8 58 79 / 0.72);
-    color: var(--c-teal-100);
-    backdrop-filter: blur(4px);
-  }
-
-  .drv-card__chip--spec {
-    right: var(--s-2);
-    background-color: var(--c-white);
-    color: var(--c-navy-900);
-    border: var(--bw);
-    font-family: var(--f-mono);
   }
 
   .drv-card__wish {
@@ -2773,6 +2416,7 @@
   }
 
   .drv-card--quote {
+    --_pad: var(--s-4);
     container-type: inline-size;
     container-name: pcard;
   }
@@ -4191,12 +3835,6 @@
     white-space: nowrap;
   }
 
-  .drv-footer__pill--verified {
-    background-color: rgb(13 148 136 / 0.22);
-    border-color: rgb(45 212 191 / 0.45);
-    color: var(--c-teal-100);
-  }
-
   /* Mobile Sticky Bottom Action Bar (< 1024px) */
   .drv-mobile-bar {
     position: fixed;
@@ -4392,9 +4030,6 @@
   }
 
   /* 4.22 Motion System, GPU Micro-interactions & Anime.js Showcase ---------- */
-  .drv-card:hover .drv-card__action {
-    transform: scale(1.06);
-  }
 
   .drv-chip {
     transition: background-color var(--dur-fast) var(--ease-out),
@@ -4545,6 +4180,30 @@
     color: var(--c-navy-900);
     font-variant-numeric: tabular-nums;
   }
+
+  /* Scroll & Hero Entrance Pre-Reveal Staging (Progressive Enhancement) */
+  html[data-drv-motion-ready="true"] .is-drv-pre-reveal {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0);
+    will-change: opacity, transform;
+  }
+
+  html[data-drv-motion-ready="true"] .is-drv-pre-reveal--scale {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0) scale(0.985);
+    will-change: opacity, transform;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html[data-drv-motion-ready="true"] .is-drv-pre-reveal,
+    html[data-drv-motion-ready="true"] .is-drv-pre-reveal--scale {
+      opacity: 1;
+      transform: none;
+      will-change: auto;
+      transition: none;
+      animation: none;
+    }
+  }
 }
 
 /* ==========================================================================
@@ -4577,10 +4236,6 @@
     font-weight: 700;
   }
 
-  .u-semibold {
-    font-weight: 600;
-  }
-
   .u-uppercase {
     text-transform: uppercase;
     letter-spacing: 0.04em;
@@ -4611,9 +4266,6 @@
   .u-text-navy {
     color: var(--c-text-main);
   }
-  .u-text-brand {
-    color: var(--c-navy-900);
-  }
 
   .u-text-muted {
     color: var(--c-navy-800);
@@ -4636,14 +4288,6 @@
     color: var(--c-success);
   }
 
-  .u-text-warning {
-    color: var(--c-warning);
-  }
-
-  .u-text-white {
-    color: var(--c-white);
-  }
-
   .u-bg-white {
     background-color: var(--c-white);
   }
@@ -4654,20 +4298,6 @@
 
   .u-bg-champagne {
     background-color: var(--c-champagne);
-  }
-
-  .u-bg-teal-100,
-  .u-bg-moss-100 {
-    background-color: var(--c-teal-100);
-  }
-
-  .u-bg-amber-100 {
-    background-color: var(--c-amber-100);
-  }
-
-  .u-bg-navy {
-    background-color: var(--c-navy-900);
-    color: var(--c-ivory);
   }
 
   .u-bd {
@@ -4696,15 +4326,6 @@
 
   .u-pad-4 {
     padding: var(--s-4);
-  }
-
-  .u-pad-5 {
-    padding: var(--s-5);
-  }
-
-  .u-sticky {
-    position: sticky;
-    top: calc(var(--header-top-h) + var(--s-4));
   }
 
   @media (max-width: 1023.98px) {

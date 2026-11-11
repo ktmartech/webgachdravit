@@ -5,11 +5,25 @@
 (() => {
   'use strict';
 
+  /** Forward swallowed failures to the central error sink (core.js) when it is available */
+  const report = (scope, error, context) => {
+    if (window.Dravit && typeof window.Dravit.reportError === 'function') window.Dravit.reportError(scope, error, context);
+  };
+
+
   const root = document.getElementById('qs-rooms-container');
   if (!root) return;
 
   const catalogEl = document.getElementById('qs-catalog');
-  const catalog = JSON.parse(catalogEl?.textContent || '{}');
+  /** @type {Record<string, any>} */
+  let catalog = {};
+  try {
+    const parsedCatalog = JSON.parse(catalogEl?.textContent || '{}');
+    if (parsedCatalog && typeof parsedCatalog === 'object' && !Array.isArray(parsedCatalog)) catalog = parsedCatalog;
+  } catch (e) {
+    // Malformed catalog JSON: keep an empty catalog so the page still renders
+    report('quote-catalog', e);
+  }
   const pickerModal = document.getElementById('drv-tile-picker-modal');
 
   const ROLE_OPTIONS = [
@@ -23,11 +37,12 @@
     'Lát ban công / sân phơi'
   ];
 
-  const TIERS = [
-    { min: 100, rate: 8 },
-    { min: 30, rate: 5 },
-    { min: 0, rate: 0 },
-  ];
+  /** Pure pricing / quantity maths (assets/js/calc-core.js, unit-tested) */
+  const calc = window.DravitCalc;
+  if (!calc) {
+    report('calc-core', new Error('calc-core.js must be loaded before quote-sheet.js'));
+    return;
+  }
 
   const nfInt = new Intl.NumberFormat('vi-VN');
   const nfDec = new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 2 });
@@ -95,10 +110,9 @@
     const kgPiece = Number(item.kgPiece);
     const m2Input = Math.max(0, Number(slot.m2) || 0);
 
-    const need = m2Input * (1 + waste);
-    const boxes = need > 0 ? Math.ceil(need / areaPiece / perBox - 1e-9) : 0;
+    const boxes = calc.boxesForArea({ areaM2: m2Input, waste, areaPiece, piecesPerBox: perBox });
     const pieces = boxes * perBox;
-    const pricePiece = Math.round(priceM2 * areaPiece);
+    const pricePiece = calc.pricePerPiece(priceM2, areaPiece);
     const quote = !(priceM2 > 0);
 
     return {
@@ -385,9 +399,7 @@
     });
 
     // Chiết khấu sản lượng
-    const tier = TIERS.find((t) => totalM2 >= t.min) || TIERS[TIERS.length - 1];
-    const discount = Math.round((subtotal * tier.rate) / 100);
-    const grand = subtotal - discount;
+    const { tier, discount, grand } = calc.volumeDiscount(subtotal, totalM2);
 
     setText('[data-qs-total-m2]', `${dec(totalM2)} m²`);
     setText('[data-qs-total-boxes]', `${totalBoxes} thùng`);
@@ -405,7 +417,7 @@
     // Cập nhật thanh tiến trình chiết khấu
     const tierStatusEl = document.querySelector('[data-qs-tier-status]');
     if (tierStatusEl) {
-      const nextTier = [...TIERS].reverse().find((t) => t.min > totalM2);
+      const nextTier = calc.nextVolumeTier(totalM2);
       if (nextTier) {
         tierStatusEl.innerHTML = `Đang giảm <strong>${tier.rate}%</strong> · Thêm <strong>${dec(nextTier.min - totalM2)} m²</strong> để đạt mức giảm <strong>${nextTier.rate}%</strong>`;
       } else {
@@ -747,7 +759,8 @@
     try {
       await (window.Dravit?.copyToClipboard ?? ((t) => navigator.clipboard.writeText(t)))(text);
       toast('Đã chép nội dung gửi Zalo.');
-    } catch {
+    } catch (err) {
+      report('clipboard', err);
       toast('Không chép được, vui lòng thử lại.');
     }
   }

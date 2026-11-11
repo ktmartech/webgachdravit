@@ -6,6 +6,19 @@
 (() => {
   'use strict';
 
+  /** Forward swallowed failures to the central error sink (core.js) when it is available */
+  const report = (scope, error, context) => {
+    if (window.Dravit && typeof window.Dravit.reportError === 'function') window.Dravit.reportError(scope, error, context);
+  };
+
+
+  /** Pure pricing / quantity maths (assets/js/calc-core.js, unit-tested) */
+  const calc = window.DravitCalc;
+  if (!calc) {
+    report('calc-core', new Error('calc-core.js must be loaded before unit-calc.js'));
+    return;
+  }
+
   const formatVnd = (n) =>
     window.Dravit ? window.Dravit.formatVnd(n) : `${new Intl.NumberFormat('vi-VN').format(Math.round(n))}đ`;
 
@@ -30,6 +43,10 @@
       this.outSummary = this.querySelector('[data-calc-summary]');
       this.outTotal = this.querySelector('[data-calc-total]');
       this.outRawNeed = this.querySelector('[data-calc-raw-need]');
+      this.outActualM2 = this.querySelector('[data-calc-actual-m2]');
+      this.outBoxesQuote = this.querySelector('[data-calc-boxes-quote]');
+      this.outBoxMeta = this.querySelector('[data-calc-box-meta]');
+      this.outBoxRule = this.querySelector('[data-calc-box-rule]');
 
       this.refreshConfig(false);
       this._bindEvents();
@@ -44,12 +61,12 @@
       this.weightPerBox = Number(this.dataset.weightPerBox || 42);
       this.sku = this.dataset.sku || 'DRV-8801M';
 
-      this.areaPiece = (this.pieceW * this.pieceH) / 1_000_000;
+      this.areaPiece = calc.pieceAreaM2(this.pieceW, this.pieceH);
       this.m2PerBox = Number((this.areaPiece * this.piecesPerBox).toFixed(4));
-      this.pricePiece = Math.round(this.priceM2 * this.areaPiece);
+      this.pricePiece = calc.pricePerPiece(this.priceM2, this.areaPiece);
       this.weightPerPiece = this.weightPerBox / this.piecesPerBox;
 
-      const outBoxRule = this.querySelector('[data-calc-box-rule]');
+      const outBoxRule = this.outBoxRule;
       if (outBoxRule) {
         outBoxRule.textContent = `${this.piecesPerBox} viên = ${formatDec(this.m2PerBox, 2)} m²`;
       }
@@ -113,12 +130,13 @@
       const useWaste = this.checkWaste ? Boolean(this.checkWaste.checked) : this.dataset.defaultWaste !== 'false';
       const roundBox = this.checkRoundBox ? Boolean(this.checkRoundBox.checked) : this.dataset.roundBox !== 'false';
 
-      const needM2 = areaVal * (useWaste ? 1.05 : 1);
-      let pieces = Math.max(1, Math.ceil(needM2 / this.areaPiece - 1e-9));
-
-      if (roundBox) {
-        pieces = Math.ceil(pieces / this.piecesPerBox) * this.piecesPerBox;
-      }
+      const { pieces, needM2 } = calc.tilesForArea({
+        areaM2: areaVal,
+        useWaste,
+        roundToBox: roundBox,
+        areaPiece: this.areaPiece,
+        piecesPerBox: this.piecesPerBox,
+      });
 
       if (this.inputPieces) {
         if ('value' in this.inputPieces) {
@@ -144,30 +162,23 @@
     }
 
     _renderOutput(pieces, inputM2, needM2) {
-      const fullBoxes = Math.floor(pieces / this.piecesPerBox);
-      const loosePieces = pieces % this.piecesPerBox;
-      const actualM2 = pieces * this.areaPiece;
-      const totalKg = Math.round(pieces * this.weightPerPiece);
-      const totalVnd = pieces * this.pricePiece;
-
-      let boxText = '';
-      if (loosePieces === 0) {
-        boxText = `${fullBoxes} thùng`;
-      } else if (fullBoxes > 0) {
-        boxText = `${fullBoxes} thùng + ${loosePieces} viên lẻ`;
-      } else {
-        boxText = `${loosePieces} viên lẻ`;
-      }
+      const { fullBoxes, loosePieces, boxText } = calc.boxBreakdown(pieces, this.piecesPerBox);
+      const { actualM2, totalKg, totalVnd } = calc.pieceTotals({
+        pieces,
+        areaPiece: this.areaPiece,
+        weightPerPiece: this.weightPerPiece,
+        pricePiece: this.pricePiece,
+      });
 
       const summaryString = `${pieces} viên = ${boxText} (${formatDec(actualM2, 2)} m² · ${formatDec(totalKg, 0)} kg)`;
 
-      const outActualM2 = this.querySelector('[data-calc-actual-m2]');
+      const outActualM2 = this.outActualM2;
       if (outActualM2) {
         outActualM2.textContent = `${formatDec(actualM2, 2)} m²`;
       }
-      const outBoxesQuote = this.querySelector('[data-calc-boxes-quote]');
+      const outBoxesQuote = this.outBoxesQuote;
       if (outBoxesQuote) outBoxesQuote.textContent = boxText;
-      const outBoxMeta = this.querySelector('[data-calc-box-meta]');
+      const outBoxMeta = this.outBoxMeta;
       if (outBoxMeta) {
         outBoxMeta.textContent = `${boxText} = ${pieces} viên · ${formatDec(totalKg, 0)} kg`;
       }
@@ -297,12 +308,7 @@
         const metaEl = row.querySelector('[data-row-conversion]');
         if (metaEl) {
           if (state.isTile) {
-            const boxStr =
-              state.loose === 0
-                ? `${state.boxes} thùng`
-                : state.boxes > 0
-                ? `${state.boxes} thùng + ${state.loose} viên lẻ`
-                : `${state.loose} viên lẻ`;
+            const boxStr = calc.boxBreakdown(state.qty, this.piecesPerBox).boxText;
             metaEl.textContent = `= ${boxStr} · ${formatDec(state.m2, 2)} m² · ${formatDec(state.weightKg, 0)} kg`;
           } else {
             metaEl.textContent = `= ${state.qty} ${this.unitLabel} · ${formatDec(state.weightKg, 1)} kg`;
@@ -412,14 +418,8 @@
     });
 
     // Option 4.1 (BOQ Quote Cart): Tiered Volume Discount & Final Estimated Total
-    let discountPercent = 0;
-    if (totalM2 >= 100) {
-      discountPercent = 8;
-    } else if (totalM2 >= 30) {
-      discountPercent = 5;
-    }
-    const discountAmount = Math.round((totalVnd * discountPercent) / 100);
-    const finalVnd = Math.max(0, totalVnd - discountAmount);
+    const { rate: discountPercent, discount: discountAmount, grand } = calc.volumeDiscount(totalVnd, totalM2);
+    const finalVnd = Math.max(0, grand);
 
     document.querySelectorAll('[data-boq-discount-rate]').forEach((el) => {
       el.textContent = `${discountPercent}%`;
@@ -724,7 +724,7 @@
       populateCartQuotePreview();
       const zaloText = document.getElementById('drv-quote-copy-zalo')?.dataset.drvValue || '';
       if (zaloText && navigator.clipboard) {
-        navigator.clipboard.writeText(zaloText).catch(() => {});
+        navigator.clipboard.writeText(zaloText).catch((e) => report('clipboard', e));
       }
       if (copyZaloBtn.dataset.drvAction === 'boq-copy-zalo') {
         event.preventDefault();
@@ -1036,8 +1036,8 @@
 
     const finalPriceM2 = basePriceM2 + surfaceDelta;
     const finalOldM2 = baseOldM2 + surfaceDelta;
-    const areaPiece = (pieceW * pieceH) / 1_000_000;
-    const finalPricePiece = Math.round(finalPriceM2 * areaPiece);
+    const areaPiece = calc.pieceAreaM2(pieceW, pieceH);
+    const finalPricePiece = calc.pricePerPiece(finalPriceM2, areaPiece);
     const sizePrefix = sizeLabel === '60x60' ? '66' : sizeLabel === '60x120' ? '612' : '88';
     const finalSku = `DRV-${sizePrefix}${colorCode.slice(-2)}${surfaceSuffix}`;
     const fullTitle = `Gạch lát nền Dravit Vân Đá Marble ${colorName} ${sizeLabel} ${finalSku}`;
@@ -1109,8 +1109,8 @@
 
     const finalPriceM2 = basePriceM2 + surfaceDelta;
     const finalOldM2 = baseOldM2 + surfaceDelta;
-    const areaPiece = (pieceW * pieceH) / 1_000_000;
-    const finalPricePiece = Math.round(finalPriceM2 * areaPiece);
+    const areaPiece = calc.pieceAreaM2(pieceW, pieceH);
+    const finalPricePiece = calc.pricePerPiece(finalPriceM2, areaPiece);
     const sizePrefix = sizeLabel === '60x60' ? '66' : sizeLabel === '60x120' ? '612' : '88';
     const finalSku = `DRV-${sizePrefix}${colorCode.slice(-2)}${surfaceSuffix}`;
     const fullTitle = `Gạch lát nền Dravit Vân Đá Marble ${colorName} ${sizeLabel} ${finalSku}`;

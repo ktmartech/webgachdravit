@@ -7,6 +7,12 @@
 (() => {
   'use strict';
 
+  /** Forward swallowed failures to the central error sink (core.js) when it is available */
+  const report = (scope, error, context) => {
+    if (window.Dravit && typeof window.Dravit.reportError === 'function') window.Dravit.reportError(scope, error, context);
+  };
+
+
   const STORAGE_KEY_QUOTE = 'drv_quote_items_v1';
   const STORAGE_KEY_CONTEXT = 'drv_ai_context_v1';
 
@@ -785,6 +791,54 @@
   /* ==========================================================================
      5. SHARED QUOTE STATE MANAGER (Syncs across all pages & components)
      ========================================================================== */
+  /** UTF-8 safe Base64 helpers (replace deprecated escape()/unescape()) */
+  function b64EncodeUtf8(str) {
+    const bytes = new TextEncoder().encode(str);
+    let bin = '';
+    bytes.forEach((b) => { bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+
+  function b64DecodeUtf8(b64) {
+    const bin = atob(b64);
+    const bytes = Uint8Array.from(bin, (c) => c.charCodeAt(0));
+    return new TextDecoder().decode(bytes);
+  }
+
+  const MAX_QUOTE_ITEMS = 50;
+  const SKU_PATTERN = /^[A-Za-z0-9._-]{1,40}$/;
+
+  /**
+   * Whitelist-validate untrusted quote items (from ?quote= URL or localStorage).
+   * Only SKU + box count are trusted; everything else is recomputed from the catalog.
+   * @param {unknown} raw
+   * @returns {Array<{sku:string,boxes:number,pieces:number,areaCovered:number,targetArea:number}>}
+   */
+  function sanitizeQuoteItems(raw) {
+    if (!Array.isArray(raw)) return [];
+    const seen = new Set();
+    const clean = [];
+    for (const entry of raw) {
+      if (clean.length >= MAX_QUOTE_ITEMS) break;
+      if (!entry || typeof entry !== 'object') continue;
+      const sku = typeof entry.sku === 'string' ? entry.sku.trim() : '';
+      if (!SKU_PATTERN.test(sku) || seen.has(sku)) continue;
+      const boxes = Math.max(1, Math.min(9999, Math.floor(Number(entry.boxes)) || 1));
+      const product = QuoteManager.findProduct(sku);
+      const pieces = boxes * product.pieces_per_box;
+      const targetArea = Number(entry.targetArea);
+      seen.add(sku);
+      clean.push({
+        sku,
+        boxes,
+        pieces,
+        areaCovered: Number((pieces * product.m2_per_piece).toFixed(2)),
+        targetArea: Number.isFinite(targetArea) ? Math.max(0, Math.min(100000, targetArea)) : 0
+      });
+    }
+    return clean;
+  }
+
   const QuoteManager = {
     items: [],
 
@@ -794,26 +848,25 @@
         const urlParams = new URLSearchParams(window.location.search);
         const quoteHash = urlParams.get('quote');
         if (quoteHash) {
-          const decoded = JSON.parse(decodeURIComponent(escape(atob(quoteHash))));
-          if (Array.isArray(decoded) && decoded.length > 0) {
+          const decoded = sanitizeQuoteItems(JSON.parse(b64DecodeUtf8(quoteHash)));
+          if (decoded.length > 0) {
             this.items = decoded;
             this.save();
             return this.items;
           }
         }
       } catch (e) {
-        // Ignore malformed hash
+        report('quote-url', e);
       }
 
       try {
         const raw = localStorage.getItem(STORAGE_KEY_QUOTE);
         if (raw) {
           const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed)) {
-            this.items = parsed;
-          }
+          this.items = sanitizeQuoteItems(parsed);
         }
       } catch (e) {
+        report('quote-storage', e, { op: 'read' });
         this.items = [];
       }
       return this.items;
@@ -823,7 +876,7 @@
       try {
         localStorage.setItem(STORAGE_KEY_QUOTE, JSON.stringify(this.items));
       } catch (e) {
-        // Ignore storage quota errors
+        report('quote-storage', e, { op: 'write' });
       }
       window.dispatchEvent(new CustomEvent('drv:quote-updated', { detail: { items: this.items } }));
     },
@@ -946,7 +999,7 @@
             <h2 class="drv-qp-head__title">Danh sách yêu cầu báo giá</h2>
           </div>
           <div class="l-cluster l-cluster--xs">
-            <button id="shareQuoteUrlBtn" type="button" class="drv-aif-escape-link" title="Sao chép link danh sách báo giá gửi cho KTS/Gia đình">
+            <button id="shareQuoteUrlBtn" type="button" class="drv-aif-head-pill" title="Sao chép link danh sách báo giá gửi cho KTS/Gia đình">
               <i class="ph-bold ph-share-network" aria-hidden="true"></i>
               <span id="shareQuoteBtnLabel">Chia sẻ</span>
             </button>
@@ -959,7 +1012,7 @@
         <div class="drv-qp-body">
           <div id="emptyQuoteState" class="drv-qp-empty">
             <div style="width: 48px; height: 48px; margin: 0 auto 10px; border-radius: 50%; background: var(--c-white); border: var(--bw); display: flex; align-items: center; justify-content: center; color: var(--c-text-muted); font-size: 22px;">
-              <i class="ph-duotone ph-Stack" aria-hidden="true"></i>
+              <i class="ph-bold ph-stack" aria-hidden="true"></i>
             </div>
             <h3 class="u-text-sm u-bold u-text-navy">Chưa có mẫu gạch nào trong danh sách</h3>
             <p class="u-text-xs u-text-muted" style="margin-top: 4px; max-width: 32ch; margin-inline: auto;">
@@ -1018,7 +1071,7 @@
                 </label>
                 <label class="drv-qp-persona">
                   <input type="radio" name="customer_persona" value="nha-thau">
-                  <span class="drv-qp-persona__box">Nhà thầuXD</span>
+                  <span class="drv-qp-persona__box">Nhà thầu XD</span>
                 </label>
                 <label class="drv-qp-persona">
                   <input type="radio" name="customer_persona" value="kts">
@@ -1176,20 +1229,23 @@
                 <i class="ph-fill ph-robot" aria-hidden="true"></i>
                 <span class="drv-aif-chat__dot"></span>
               </div>
-              <div>
-                <h2 class="drv-aif-chat__title">Dravit AI - Trợ lý tìm gạch</h2>
-                <p id="aiEngineStatusText" class="drv-aif-chat__sub">Chuyên gia Porcelain &amp; Tính số thùng chuẩn xác</p>
+              <div class="drv-aif-chat__head-info">
+                <div class="drv-aif-chat__title-row">
+                  <h2 class="drv-aif-chat__title">Dravit AI</h2>
+                  <span class="drv-aif-chat__status-pill">Trực tuyến</span>
+                </div>
+                <p id="aiEngineStatusText" class="drv-aif-chat__sub">Tư vấn thông số &amp; tính số thùng</p>
               </div>
             </div>
             <div class="drv-aif-chat__actions">
-              <a href="01.1-ai-finder.html" class="drv-aif-escape-link" title="Mở không gian AI 2 cột đầy đủ">
+              <a href="01.1-ai-finder.html" class="drv-aif-head-pill drv-aif-open-split-link" title="Mở rộng không gian AI 2 cột" aria-label="Mở rộng không gian AI 2 cột">
                 <i class="ph-bold ph-arrows-out-simple" aria-hidden="true"></i>
-                <span>Mở rộng</span>
+                <span>2 cột</span>
               </a>
               <button id="resetConversationBtn" type="button" class="drv-aif-icon-btn" title="Làm mới cuộc trò chuyện" aria-label="Làm mới cuộc trò chuyện">
                 <i class="ph-bold ph-arrows-counter-clockwise" aria-hidden="true"></i>
               </button>
-              <button id="minimizeWidgetBtn" type="button" class="drv-aif-icon-btn" title="Thu gọn cửa sổ chat" aria-label="Thu gọn cửa sổ chat">
+              <button id="minimizeWidgetBtn" type="button" class="drv-aif-icon-btn drv-aif-minimize-btn" title="Thu gọn cửa sổ chat" aria-label="Thu gọn cửa sổ chat">
                 <i class="ph-bold ph-minus" aria-hidden="true"></i>
               </button>
             </div>
@@ -1197,56 +1253,66 @@
 
           <div id="activeContextStrip" class="drv-aif-context" hidden>
             <div class="drv-aif-context__list">
-              <span class="drv-aif-context__label"><i class="ph-fill ph-funnel" aria-hidden="true"></i> Đang lọc:</span>
-              <div id="contextFacetsContainer" class="drv-aif-context__list"></div>
+              <span class="drv-aif-context__label"><i class="ph-fill ph-funnel" aria-hidden="true"></i> Lọc:</span>
+              <div id="contextFacetsContainer" class="drv-aif-context__tags"></div>
             </div>
-            <button id="clearConstraintsBtn" type="button" class="drv-aif-context__clear">Xóa lọc</button>
+            <button id="clearConstraintsBtn" type="button" class="drv-aif-context__clear">Đặt lại</button>
           </div>
 
           <div id="ai-messages" class="drv-aif-messages" role="log" aria-live="polite" aria-relevant="additions">
             <div class="drv-aif-msg">
-              <div class="drv-aif-msg__avatar"><i class="ph-fill ph-robot" aria-hidden="true"></i></div>
+              <div class="drv-aif-msg__avatar"><i class="ph-fill ph-user" aria-hidden="true"></i></div>
               <div class="drv-aif-msg__bubble">
-                <div class="drv-aif-msg__head">
-                  <span>Cố vấn kỹ thuật Gạch ốp lát Dravit</span>
-                  <span class="u-text-muted">Sẵn sàng</span>
-                </div>
-                <p style="margin: 0;">Xin chào! Mình là <strong>Dravit AI</strong>. Hãy mô tả không gian, diện tích (m²) hoặc phong cách bạn mong muốn để mình lọc mẫu chuẩn kỹ thuật và tính số thùng nguyên cần dùng.</p>
+                <span class="drv-aif-msg__sender">Cố vấn kỹ thuật Dravit</span>
+                <p style="margin: 0;">Cho biết <strong>không gian, diện tích (m²)</strong> hoặc <strong>bề mặt mong muốn</strong> — hệ thống sẽ lọc mẫu đạt chuẩn DCOF và tính sẵn số thùng nguyên.</p>
               </div>
             </div>
           </div>
 
-          <div id="chatSuggestionsBar" class="drv-aif-suggestions">
-            <div class="drv-aif-suggestions__head">
-              <span><i class="ph-fill ph-lightbulb-filament" style="color: #f59e0b;" aria-hidden="true"></i> Gợi ý nhanh:</span>
-              <label class="drv-aif-waste-toggle">
-                <input id="wasteToggleCheckbox" type="checkbox" checked>
-                <span>+5% hao hụt thi công</span>
-              </label>
-            </div>
+          <div id="chatSuggestionsBar" class="drv-aif-suggestions" aria-label="Gợi ý câu hỏi nhanh">
             <div class="drv-aif-suggestions__row">
-              <button type="button" class="drv-aif-chip suggestion-chip" data-prompt="Tìm gạch lát nền phòng khách 35m² vân đá trắng sáng sang trọng">Phòng khách 35m² vân đá sáng</button>
-              <button type="button" class="drv-aif-chip suggestion-chip" data-prompt="Gạch lát nền nhà tắm 6m² chống trơn trượt cho người lớn tuổi">Nhà tắm 6m² chống trượt R11</button>
-              <button type="button" class="drv-aif-chip suggestion-chip" data-prompt="Phòng ngủ 20m² muốn lát gạch giả gỗ tông ấm dễ vệ sinh">Phòng ngủ 20m² gạch giả gỗ</button>
-              <button type="button" class="drv-aif-chip suggestion-chip" data-prompt="Sân vườn ngoài trời 40m² cần gạch chịu lực chống rêu mốc">Sân vườn 40m² dày 20mm</button>
+              <button type="button" class="drv-aif-chip suggestion-chip" data-prompt="Tìm gạch lát nền phòng khách 35m² vân đá trắng sáng sang trọng">
+                <i class="ph ph-sparkle" aria-hidden="true"></i>
+                <span>Phòng khách 35m² vân đá</span>
+              </button>
+              <button type="button" class="drv-aif-chip suggestion-chip" data-prompt="Gạch lát nền nhà tắm 6m² chống trơn trượt cho người lớn tuổi">
+                <i class="ph ph-sparkle" aria-hidden="true"></i>
+                <span>Nhà tắm 6m² chống trượt R11</span>
+              </button>
+              <button type="button" class="drv-aif-chip suggestion-chip" data-prompt="Phòng ngủ 20m² muốn lát gạch giả gỗ tông ấm dễ vệ sinh">
+                <i class="ph ph-sparkle" aria-hidden="true"></i>
+                <span>Phòng ngủ 20m² giả gỗ</span>
+              </button>
+              <button type="button" class="drv-aif-chip suggestion-chip" data-prompt="Sân vườn ngoài trời 40m² cần gạch chịu lực chống rêu mốc">
+                <i class="ph ph-sparkle" aria-hidden="true"></i>
+                <span>Sân vườn 40m² chịu lực</span>
+              </button>
             </div>
           </div>
 
           <form id="aiChatForm" class="drv-aif-form" novalidate>
-            <div class="drv-aif-form__meta">
-              <label for="aiQueryInput" class="u-bold u-text-navy">Mô tả công trình hoặc yêu cầu kỹ thuật</label>
-              <span id="charCounter" class="u-tabular">0/500</span>
-            </div>
-            <div class="drv-aif-form__box">
-              <textarea id="aiQueryInput" rows="2" maxlength="500" class="drv-aif-form__input" placeholder="VD: Phòng khách 35m² thích gạch 80x80 vân đá sáng..." required></textarea>
-              <button id="sendQueryBtn" type="submit" class="drv-aif-form__submit">
-                <span>Gửi</span>
-                <i class="ph-bold ph-paper-plane-right" aria-hidden="true"></i>
-              </button>
-            </div>
-            <div class="drv-aif-form__foot">
-              <span>Tự động quy đổi m² ra số thùng nguyên</span>
-              <a href="01.1-ai-finder.html">Mở không gian AI 2 cột</a>
+            <div class="drv-aif-composer">
+              <textarea id="aiQueryInput" name="query" rows="2" maxlength="500"
+                class="drv-aif-form__input"
+                aria-label="Mô tả công trình hoặc diện tích m²"
+                placeholder="Nhập diện tích (m²), không gian hoặc bề mặt cần tìm..."
+                required></textarea>
+              <div class="drv-aif-composer__bar">
+                <div class="drv-aif-composer__tools">
+                  <label class="drv-aif-waste-toggle" title="Tự động cộng thêm 5% hao hụt cắt gạch khi tính số thùng">
+                    <input id="wasteToggleCheckbox" type="checkbox" checked>
+                    <span class="drv-aif-waste-toggle__pill">
+                      <i class="ph-bold ph-check" aria-hidden="true"></i>
+                      <span>+5% hao hụt</span>
+                    </span>
+                  </label>
+                  <span id="charCounter" class="drv-aif-composer__count u-tabular">0/500</span>
+                </div>
+                <button id="sendQueryBtn" type="submit" class="drv-aif-form__submit" aria-label="Gửi yêu cầu tới AI">
+                  <span>Gửi</span>
+                  <i class="ph-bold ph-paper-plane-right" aria-hidden="true"></i>
+                </button>
+              </div>
             </div>
           </form>
         </section>
@@ -1268,10 +1334,13 @@
     try {
       const savedCtx = sessionStorage.getItem(STORAGE_KEY_CONTEXT);
       if (savedCtx) {
-        conversationContext = { ...conversationContext, ...JSON.parse(savedCtx) };
+        const parsedCtx = JSON.parse(savedCtx);
+        if (parsedCtx && typeof parsedCtx === 'object' && !Array.isArray(parsedCtx)) {
+          conversationContext = { ...conversationContext, ...parsedCtx };
+        }
       }
     } catch (e) {
-      // Ignore
+      report('ai-context', e, { op: 'read' });
     }
 
     let currentRecommendedProducts = [];
@@ -1341,80 +1410,65 @@
 
       return `
         <article class="drv-aif-card" data-sku="${escapeHTML(product.sku)}">
-          <div>
-            <div class="drv-aif-card__media">
-              ${renderTilePatternSVG(product.pattern_type, product.sku)}
-              <div class="drv-aif-card__badges-top">
-                <div class="drv-aif-card__badges-left">
-                  <span class="drv-aif-tag-sku">${escapeHTML(product.sku)}</span>
-                  <span class="drv-aif-tag-match">${matchPercent}% khớp</span>
-                </div>
-                <span class="${stockClass}">${escapeHTML(product.stock_label)}</span>
+          <div class="drv-aif-card__media">
+            ${renderTilePatternSVG(product.pattern_type, product.sku)}
+            <div class="drv-aif-card__badges-top">
+              <div class="drv-aif-card__badges-left">
+                <span class="drv-aif-tag-sku">${escapeHTML(product.sku)}</span>
+                <span class="drv-aif-tag-match">${matchPercent}% khớp</span>
               </div>
-              <div class="drv-aif-card__badges-bottom">
-                <span class="${dcofClass}">
-                  <i class="ph-fill ph-shield-check" aria-hidden="true"></i> DCOF ${escapeHTML(product.dcof)}
-                </span>
-                <span class="drv-aif-tag-water">Hút nước ${escapeHTML(product.water_absorption)}</span>
+              <span class="${stockClass}">${escapeHTML(product.stock_label)}</span>
+            </div>
+            <div class="drv-aif-card__badges-bottom">
+              <span class="${dcofClass}">
+                <i class="ph-fill ph-shield-check" aria-hidden="true"></i> DCOF ${escapeHTML(product.dcof)}
+              </span>
+              <span class="drv-aif-tag-water">Hút nước ${escapeHTML(product.water_absorption)}</span>
+            </div>
+          </div>
+
+          <div class="drv-aif-card__body">
+            <div class="drv-aif-card__top">
+              <h3 class="drv-aif-card__title" data-open-spec="${escapeHTML(product.sku)}">
+                ${escapeHTML(product.title)}
+              </h3>
+              <div class="drv-aif-card__specs">
+                <span class="drv-aif-spec-pill">${escapeHTML(product.size_label)}</span>
+                <span class="drv-aif-spec-pill">${escapeHTML(product.surface)}</span>
+                <span class="drv-aif-spec-pill">${product.pieces_per_box} viên/thùng · ${formatDecVN(product.m2_per_box)} m²</span>
               </div>
+              <p class="drv-aif-card__desc">
+                ${escapeHTML(product.highlight)}
+              </p>
             </div>
 
-            <div class="drv-aif-card__body">
-              <div>
-                <div class="drv-aif-card__collection">
-                  <span>${escapeHTML(product.collection)}</span>
-                  <span>${escapeHTML(product.rectified)}</span>
+            <div class="drv-aif-card__calc">
+              <div class="drv-aif-card__calc-grid">
+                <div>
+                  <span class="drv-aif-card__calc-note">Đơn giá niêm yết</span>
+                  <div class="drv-aif-card__price-val">
+                    <strong>${new Intl.NumberFormat('vi-VN').format(product.price_m2)}đ</strong><small>/m²</small>
+                  </div>
                 </div>
-                <h3 class="drv-aif-card__title" data-open-spec="${escapeHTML(product.sku)}">
-                  ${escapeHTML(product.title)}
-                </h3>
-                <div class="drv-aif-card__specs">
-                  <span class="drv-aif-spec-pill">${escapeHTML(product.size_label)}</span>
-                  <span class="drv-aif-spec-pill">${escapeHTML(product.surface)}</span>
-                  <span class="drv-aif-spec-pill">${product.pieces_per_box} viên/thùng (${formatDecVN(product.m2_per_box)} m²)</span>
+                <div class="drv-aif-card__calc-right">
+                  <strong class="drv-aif-card__calc-boxes">${calc.boxes} thùng</strong>
+                  <span class="drv-aif-card__calc-area">${calc.actualPieces} viên · phủ ${formatDecVN(calc.actualAreaCovered)} m²</span>
                 </div>
-                <p class="u-text-xs u-text-muted" style="margin: 8px 0 0; line-height: 1.45;">
-                  ${escapeHTML(product.highlight)}
-                </p>
               </div>
 
-              <div class="drv-aif-card__calc">
-                <div class="drv-aif-card__calc-grid">
-                  <div>
-                    <span class="drv-aif-card__calc-label">Chính sách giá dự án &amp; lẻ</span>
-                    <span class="drv-aif-card__calc-mode">
-                      <i class="ph-fill ph-seal-percent u-text-moss" aria-hidden="true"></i>
-                      Báo giá chiết khấu theo số thùng
-                    </span>
-                    <span class="drv-aif-card__calc-note">Đơn giá niêm yết: ${new Intl.NumberFormat('vi-VN').format(product.price_m2)}đ/m²</span>
-                  </div>
-                  <div class="drv-aif-card__calc-right">
-                    <span class="drv-aif-card__calc-label">Cần cho ${calc.inputArea} m²</span>
-                    <strong class="drv-aif-card__calc-boxes">${calc.actualPieces} viên · ${calc.boxes} thùng</strong>
-                    <span class="drv-aif-card__calc-area">(Đủ phủ ${formatDecVN(calc.actualAreaCovered)} m²)</span>
-                  </div>
-                </div>
-
-                <div class="drv-aif-card__actions">
-                  <button type="button"
-                    data-add-quote="${escapeHTML(product.sku)}"
-                    class="drv-aif-btn-quote ${inQuoteItem ? 'is-in-quote' : ''}">
-                    <i class="ph-bold ${inQuoteItem ? 'ph-check-circle' : 'ph-plus-circle'}" aria-hidden="true"></i>
-                    <span>${inQuoteItem ? `Đã trong DS báo giá (${inQuoteItem.boxes} thùng)` : 'Thêm nhận báo giá'}</span>
-                  </button>
-                  <button type="button"
-                    data-quick-quote="${escapeHTML(product.sku)}"
-                    title="Nhận báo giá nhanh 1 chạm cho mẫu này"
-                    class="drv-aif-btn-quick">
-                    <i class="ph-fill ph-lightning" aria-hidden="true"></i>
-                  </button>
-                  <button type="button"
-                    data-open-spec="${escapeHTML(product.sku)}"
-                    title="Xem bảng thông số kỹ thuật đầy đủ"
-                    class="drv-aif-btn-spec">
-                    <i class="ph-bold ph-magnifying-glass-plus" aria-hidden="true"></i>
-                  </button>
-                </div>
+              <div class="drv-aif-card__actions">
+                <button type="button"
+                  data-open-spec="${escapeHTML(product.sku)}"
+                  class="drv-aif-btn-spec-full">
+                  <i class="ph-bold ph-sliders-horizontal" aria-hidden="true"></i>
+                  <span>Thông số</span>
+                </button>
+                <button type="button"
+                  data-add-quote="${escapeHTML(product.sku)}"
+                  class="drv-aif-btn-quote ${inQuoteItem ? 'is-in-quote' : ''}">
+                  <i class="ph-bold ${inQuoteItem ? 'ph-check-circle' : 'ph-plus-circle'}" aria-hidden="true"></i>
+                  <span>${inQuoteItem ? `Đã chọn (${inQuoteItem.boxes} thùng)` : 'Thêm báo giá'}</span>
+                </button>
               </div>
             </div>
           </div>
@@ -1430,7 +1484,7 @@
       const area = conversationContext.area_m2 || 25;
       const effectiveArea = includeWaste ? Number((area * 1.05).toFixed(2)) : area;
       if (calcAreaSubtitle) {
-        calcAreaSubtitle.innerHTML = `Đang tính quy đổi thùng nguyên cho diện tích <strong class="u-text-navy u-tabular">${area} m²</strong> (${includeWaste ? `+5% hao hụt = <span class="u-tabular">${formatDecVN(effectiveArea)} m²</span>` : 'chưa cộng hao hụt'})`;
+        calcAreaSubtitle.innerHTML = `Tính cho <strong class="u-text-navy u-tabular">${escapeHTML(String(area))} m²</strong> (${includeWaste ? `+5% hao hụt = <span class="u-tabular">${formatDecVN(effectiveArea)} m²</span>` : 'chưa cộng hao hụt'})`;
       }
 
       if (!aiProductGrid) return;
@@ -1507,10 +1561,10 @@
       div.id = 'aiTypingIndicator';
       div.className = 'drv-aif-msg';
       div.innerHTML = `
-        <div class="drv-aif-msg__avatar"><i class="ph-fill ph-robot" aria-hidden="true"></i></div>
+        <div class="drv-aif-msg__avatar"><i class="ph-fill ph-user" aria-hidden="true"></i></div>
         <div class="drv-aif-msg__bubble" style="display: flex; align-items: center; gap: 10px;">
           <div class="drv-aif-typing-dots"><span></span><span></span><span></span></div>
-          <span class="u-text-xs u-text-muted">Dravit AI đang phân tích thông số kỹ thuật &amp; tính số thùng...</span>
+          <span class="u-text-xs u-text-muted">Đang lọc thông số &amp; tính số thùng...</span>
         </div>
       `;
       chatMessagesEl.appendChild(div);
@@ -1541,15 +1595,17 @@
                 <span class="u-text-moss">DCOF ${escapeHTML(product.dcof)}</span>
               </div>
               <p class="drv-aif-mini-card__title">${escapeHTML(product.title)}</p>
-              <span class="drv-aif-mini-card__calc">Cần ${calc.boxes} thùng (${calc.actualPieces} viên = ${formatDecVN(calc.actualAreaCovered)} m²) · ${new Intl.NumberFormat('vi-VN').format(product.price_m2)}đ/m²</span>
             </div>
-            <div class="drv-aif-mini-card__actions">
-              <button type="button" data-add-quote="${escapeHTML(product.sku)}" class="drv-btn drv-btn--primary drv-btn--sm" style="padding: 5px 10px; font-size: 12px;">
-                ${inQuote ? 'Đã chọn' : '+ Báo giá'}
-              </button>
-              <button type="button" data-open-spec="${escapeHTML(product.sku)}" class="drv-btn drv-btn--outline drv-btn--sm" style="padding: 5px 8px; font-size: 12px;">
-                Chi tiết
-              </button>
+            <div class="drv-aif-mini-card__foot">
+              <span class="drv-aif-mini-card__calc">${calc.boxes} thùng (${formatDecVN(calc.actualAreaCovered)} m²) · ${new Intl.NumberFormat('vi-VN').format(product.price_m2)}đ/m²</span>
+              <div class="drv-aif-mini-card__actions">
+                <button type="button" data-open-spec="${escapeHTML(product.sku)}" class="drv-aif-mini-btn drv-aif-mini-btn--ghost">
+                  Chi tiết
+                </button>
+                <button type="button" data-add-quote="${escapeHTML(product.sku)}" class="drv-aif-mini-btn drv-aif-mini-btn--primary">
+                  ${inQuote ? 'Đã chọn' : '+ Báo giá'}
+                </button>
+              </div>
             </div>
           </div>
         `;
@@ -1561,21 +1617,20 @@
       const div = document.createElement('div');
       div.className = 'drv-aif-msg';
       div.innerHTML = `
-        <div class="drv-aif-msg__avatar"><i class="ph-fill ph-robot" aria-hidden="true"></i></div>
+        <div class="drv-aif-msg__avatar"><i class="ph-fill ph-user" aria-hidden="true"></i></div>
         <div class="drv-aif-msg__bubble">
           <div class="drv-aif-msg__head">
-            <span>Phân tích kỹ thuật Dravit AI</span>
-            <span class="drv-aif-pill drv-aif-pill--navy">${rankedProducts.length} mẫu đạt chuẩn</span>
+            <span>Đề xuất kỹ thuật</span>
+            <span class="drv-aif-pill drv-aif-pill--navy">${rankedProducts.length} mẫu phù hợp</span>
           </div>
           <p style="margin: 0;">${formatSimpleMarkdown(explanation)}</p>
           ${clarification ? `
             <div class="drv-aif-clarify">
               <i class="ph-fill ph-chat-circle-dots u-text-moss" style="margin-top: 2px;" aria-hidden="true"></i>
-              <span><strong>Gợi ý làm rõ:</strong> ${escapeHTML(clarification)}</span>
+              <span>${escapeHTML(clarification)}</span>
             </div>
           ` : ''}
           <div class="drv-aif-inline-cards" ${forceInlineStyle}>
-            <span class="u-text-xs u-bold u-text-muted" style="text-transform: uppercase;">Top mẫu gạch phù hợp nhất:</span>
             ${inlineCardsHTML}
           </div>
         </div>
@@ -1608,7 +1663,7 @@
       try {
         sessionStorage.setItem(STORAGE_KEY_CONTEXT, JSON.stringify(conversationContext));
       } catch (e) {
-        // Ignore
+        report('ai-context', e, { op: 'write' });
       }
 
       const ranked = scoreAndRankCatalog(conversationContext);
@@ -1950,6 +2005,14 @@
         return;
       }
 
+      // 2b. Open Split Mode from Link
+      const openSplitLink = target.closest('.drv-aif-open-split-link');
+      if (openSplitLink && document.querySelector('[data-mode-switch="split"]')) {
+        e.preventDefault();
+        document.querySelector('[data-mode-switch="split"]').click();
+        return;
+      }
+
       // 3. Layout Mode Switcher (split | stream | widget)
       const modeBtn = target.closest('[data-mode-switch]');
       if (modeBtn && aiFinderEl) {
@@ -2088,10 +2151,10 @@
       // 16. Share Quote URL
       if (target.closest('#shareQuoteUrlBtn')) {
         if (QuoteManager.items.length === 0) return;
-        const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(QuoteManager.items))));
+        const encoded = b64EncodeUtf8(JSON.stringify(QuoteManager.items));
         const shareUrl = `${window.location.origin}${window.location.pathname}?quote=${encoded}`;
         if (navigator.clipboard?.writeText) {
-          navigator.clipboard.writeText(shareUrl).catch(() => {});
+          navigator.clipboard.writeText(shareUrl).catch((e) => report('clipboard', e));
         }
         const lbl = document.getElementById('shareQuoteBtnLabel');
         if (lbl) {
@@ -2238,7 +2301,7 @@
         setTimeout(() => handleUserQuery(initialQuery), 150);
       }
     } catch (e) {
-      // Ignore
+      report('ai-query', e);
     }
   }
 

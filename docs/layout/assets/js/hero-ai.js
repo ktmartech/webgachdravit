@@ -475,7 +475,7 @@
       const rect = heroSection.getBoundingClientRect();
       pointer.targetX = e.clientX - rect.left;
       pointer.targetY = e.clientY - rect.top;
-    });
+    }, { passive: true });
 
     heroSection.addEventListener('touchmove', function (e) {
       if (e.touches && e.touches.length > 0) {
@@ -486,8 +486,23 @@
       }
     }, { passive: true });
 
-    window.addEventListener('resize', updateCanvasMetrics);
-    window.addEventListener('scroll', updateAICardCenter, { passive: true });
+    /** Coalesce bursts of events into at most one call per animation frame */
+    function rafThrottle(fn) {
+      let queued = false;
+      return function () {
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(function () {
+          queued = false;
+          fn();
+        });
+      };
+    }
+
+    window.addEventListener('resize', rafThrottle(updateCanvasMetrics), { passive: true });
+    window.addEventListener('scroll', rafThrottle(function () {
+      if (isIntersecting) updateAICardCenter();
+    }), { passive: true });
 
     // NLP Entity Extractor
     function parseVietnameseTilePrompt(text) {
@@ -560,12 +575,21 @@
         badges,
         specRec,
         boxesText: `${boxesNeeded} thùng (${tileSize.replace('mm', '')})`,
-        budgetText: `~${estimatedCost.toLocaleString('vi-VN')}đ`
+        budgetText: `~${estimatedCost.toLocaleString('vi-VN')}đ`,
+        estimatedCost
       };
     }
 
     let typingTimer = null;
     let typewriterInterval = null;
+    let lastEstimatedCost = 0;
+
+    function canAnimateUI() {
+      return (
+        typeof window.anime === 'function' &&
+        !(window.Dravit && window.Dravit.motion && window.Dravit.motion.prefersReducedMotion())
+      );
+    }
 
     function refreshAIExtractionUI(isTypingNow = false) {
       if (!input) return;
@@ -590,15 +614,36 @@
 
       const parsed = parseVietnameseTilePrompt(val);
       if (parsed) {
+        const wasHidden = extractedEntitiesBox && extractedEntitiesBox.style.display === 'none';
         if (extractedEntitiesBox) extractedEntitiesBox.style.display = 'block';
         if (entityBadgesList) {
           entityBadgesList.innerHTML = parsed.badges
             .map(b => `<span class="drv-ai-entity-tag">${b}</span>`)
             .join('');
+          if ((wasHidden || !isTypingNow) && canAnimateUI()) {
+            const tags = entityBadgesList.querySelectorAll('.drv-ai-entity-tag');
+            window.anime.remove(tags);
+            window.anime({
+              targets: tags,
+              opacity: [0, 1],
+              translateY: [6, 0],
+              scale: [0.96, 1],
+              delay: window.anime.stagger(40),
+              duration: 280,
+              easing: 'easeOutExpo',
+              complete() {
+                tags.forEach(t => {
+                  t.style.opacity = '';
+                  t.style.transform = '';
+                });
+              }
+            });
+          }
         }
         if (resSpec) resSpec.textContent = parsed.specRec;
         if (resBoxes) resBoxes.textContent = parsed.boxesText;
         if (resBudget) resBudget.textContent = parsed.budgetText;
+        lastEstimatedCost = parsed.estimatedCost || 0;
       }
     }
 
@@ -685,7 +730,55 @@
         setTimeout(function () {
           refreshAIExtractionUI(false);
           if (ctaBtnLabel) ctaBtnLabel.textContent = 'Nhận tư vấn ngay';
-          if (aiResultPanel) aiResultPanel.style.display = 'block';
+          if (aiResultPanel) {
+            aiResultPanel.style.display = 'block';
+            if (canAnimateUI()) {
+              const items = aiResultPanel.querySelectorAll('.drv-ai-result-item');
+              window.anime.remove([aiResultPanel, ...items]);
+              window.anime({
+                targets: aiResultPanel,
+                opacity: [0, 1],
+                translateY: [10, 0],
+                duration: 360,
+                easing: 'easeOutExpo',
+                complete() {
+                  aiResultPanel.style.opacity = '';
+                  aiResultPanel.style.transform = '';
+                }
+              });
+              if (items.length) {
+                window.anime({
+                  targets: items,
+                  opacity: [0, 1],
+                  translateY: [8, 0],
+                  delay: window.anime.stagger(55, { start: 60 }),
+                  duration: 340,
+                  easing: 'easeOutExpo',
+                  complete() {
+                    items.forEach(el => {
+                      el.style.opacity = '';
+                      el.style.transform = '';
+                    });
+                  }
+                });
+              }
+              if (
+                resBudget &&
+                lastEstimatedCost > 0 &&
+                window.Dravit &&
+                window.Dravit.motion &&
+                typeof window.Dravit.motion.animateNumber === 'function'
+              ) {
+                window.Dravit.motion.animateNumber(
+                  resBudget,
+                  Math.round(lastEstimatedCost * 0.65),
+                  lastEstimatedCost,
+                  v => `~${Math.round(v).toLocaleString('vi-VN')}đ`,
+                  420
+                );
+              }
+            }
+          }
         }, 850);
       });
     }
@@ -710,14 +803,31 @@
       });
     });
 
+    const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let pipelineTimer = null;
+
+    function pipelineTick() {
+      if (pausePipeline || specCards.length === 0) return;
+      specCards.forEach(c => c.classList.remove('is-active'));
+      specCards[activePipelineIndex].classList.add('is-active');
+      activePipelineIndex = (activePipelineIndex + 1) % specCards.length;
+    }
+
+    /** Run the spotlight loop only while the hero is on screen, the tab is visible and motion is allowed */
+    function syncPipeline() {
+      const shouldRun = specCards.length > 0 && isIntersecting && !document.hidden && !reducedMotionQuery.matches;
+      if (shouldRun && pipelineTimer === null) {
+        pipelineTimer = setInterval(pipelineTick, 2800);
+      } else if (!shouldRun && pipelineTimer !== null) {
+        clearInterval(pipelineTimer);
+        pipelineTimer = null;
+      }
+    }
+
     if (specCards.length > 0) {
       specCards[0].classList.add('is-active');
-      setInterval(function () {
-        if (pausePipeline || specCards.length === 0) return;
-        specCards.forEach(c => c.classList.remove('is-active'));
-        specCards[activePipelineIndex].classList.add('is-active');
-        activePipelineIndex = (activePipelineIndex + 1) % specCards.length;
-      }, 2800);
+      document.addEventListener('visibilitychange', syncPipeline);
+      if (reducedMotionQuery.addEventListener) reducedMotionQuery.addEventListener('change', syncPipeline);
     }
 
     // IntersectionObserver to pause canvas animation loop when hero is off-screen
@@ -725,7 +835,9 @@
       const observer = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
           isIntersecting = entry.isIntersecting;
+          syncPipeline();
           if (isIntersecting) {
+            updateAICardCenter();
             lastFrameTime = performance.now();
             animateLoop();
           } else {
@@ -738,11 +850,12 @@
 
     updateCanvasMetrics();
     animateLoop();
+    syncPipeline();
 
     const openFullAiChatBtn = document.getElementById('openFullAiChatBtn');
     if (openFullAiChatBtn) {
       openFullAiChatBtn.addEventListener('click', function () {
-        const q = (promptTextarea && promptTextarea.value.trim()) || 'Phòng khách 50m², thích gạch vân đá Marble sáng bóng dễ lau chùi';
+        const q = (input && input.value.trim()) || 'Phòng khách 50m², thích gạch vân đá Marble sáng bóng dễ lau chùi';
         if (window.Dravit && window.Dravit.aiFinder && typeof window.Dravit.aiFinder.ask === 'function') {
           window.Dravit.aiFinder.ask(q);
         }

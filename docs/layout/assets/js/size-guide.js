@@ -23,13 +23,60 @@
       this.size = '80x80';
       this.room = 'Phòng trên 20 m²';
       this._bind();
-      this._render();
+      this._render(false);
+      this._initScaleEntrance();
     }
 
     _$(s) { return this.querySelector(s); }
     _out(k, v) { this.querySelectorAll(`[data-sg-out="${k}"]`).forEach((e) => { e.textContent = v; }); }
 
-    _render() {
+    _canAnimate() {
+      return (
+        typeof window.anime === 'function' &&
+        !(window.Dravit && window.Dravit.motion && window.Dravit.motion.prefersReducedMotion())
+      );
+    }
+
+    _initScaleEntrance() {
+      const canvas = this._$('.drv-scale-canvas');
+      if (!canvas || !this._canAnimate() || !('IntersectionObserver' in window)) return;
+      const tiles = Array.from(canvas.querySelectorAll('.drv-scale-item'));
+      if (!tiles.length) return;
+
+      tiles.forEach((el) => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(14px) scale(0.94)';
+      });
+
+      const obs = new IntersectionObserver(
+        (entries, observer) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            observer.unobserve(entry.target);
+            window.anime.remove(tiles);
+            window.anime({
+              targets: tiles,
+              opacity: [0, 1],
+              translateY: [14, 0],
+              scale: [0.94, 1],
+              delay: window.anime.stagger(60, { start: 80 }),
+              duration: 440,
+              easing: 'easeOutExpo',
+              complete() {
+                tiles.forEach((el) => {
+                  el.style.opacity = '';
+                  el.style.transform = '';
+                });
+              },
+            });
+          });
+        },
+        { threshold: 0.15 }
+      );
+      obs.observe(canvas);
+    }
+
+    _render(animate = true) {
       const s = SIZES[this.size];
       this.querySelectorAll('[data-sg-size]').forEach((b) => b.classList.toggle('is-active', b.dataset.sgSize === this.size));
       this.querySelectorAll('[data-sg-room]').forEach((b) => b.classList.toggle('is-active', b.dataset.sgRoom === this.room));
@@ -51,6 +98,27 @@
       if (cat) cat.href = `02-catalog-collection.html?kich-thuoc=${this.size}`;
       const ai = this._$('[data-sg-ai]');
       if (ai) ai.href = `01.1-ai-finder.html?kich-thuoc=${this.size}`;
+
+      if (animate && this._canAnimate()) {
+        const specCells = Array.from(this.querySelectorAll('.drv-sg-spec dd'));
+        if (specCells.length) {
+          window.anime.remove(specCells);
+          window.anime({
+            targets: specCells,
+            opacity: [0.35, 1],
+            translateY: [4, 0],
+            delay: window.anime.stagger(35),
+            duration: 260,
+            easing: 'easeOutExpo',
+            complete() {
+              specCells.forEach((el) => {
+                el.style.opacity = '';
+                el.style.transform = '';
+              });
+            },
+          });
+        }
+      }
     }
 
     _mode(mode) {
@@ -59,7 +127,24 @@
         b.classList.toggle('is-active', on);
         b.setAttribute('aria-pressed', String(on));
       });
-      this.querySelectorAll('[data-sg-view]').forEach((v) => { v.hidden = v.dataset.sgView !== mode; });
+      this.querySelectorAll('[data-sg-view]').forEach((v) => {
+        const active = v.dataset.sgView === mode;
+        v.hidden = !active;
+        if (active && this._canAnimate()) {
+          window.anime.remove(v);
+          window.anime({
+            targets: v,
+            opacity: [0, 1],
+            translateY: [8, 0],
+            duration: 300,
+            easing: 'easeOutExpo',
+            complete() {
+              v.style.opacity = '';
+              v.style.transform = '';
+            },
+          });
+        }
+      });
     }
 
     _zone(zone) {
@@ -68,9 +153,29 @@
         b.classList.toggle('is-active', on);
         b.setAttribute('aria-pressed', String(on));
       });
+      const visibleItems = [];
       this.querySelectorAll('[data-sg-surface]').forEach((li) => {
-        li.hidden = zone !== 'all' && !li.dataset.sgSurface.split(' ').includes(zone);
+        const hide = zone !== 'all' && !li.dataset.sgSurface.split(' ').includes(zone);
+        li.hidden = hide;
+        if (!hide) visibleItems.push(li);
       });
+      if (visibleItems.length && this._canAnimate()) {
+        window.anime.remove(visibleItems);
+        window.anime({
+          targets: visibleItems,
+          opacity: [0, 1],
+          translateY: [10, 0],
+          delay: window.anime.stagger(45),
+          duration: 320,
+          easing: 'easeOutExpo',
+          complete() {
+            visibleItems.forEach((el) => {
+              el.style.opacity = '';
+              el.style.transform = '';
+            });
+          },
+        });
+      }
     }
 
     _bind() {
