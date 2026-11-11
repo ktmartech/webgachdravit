@@ -22,6 +22,13 @@ Trước khi thực hiện bất kỳ task nào, **BẮT BUỘC** đọc file `d
 | Tốc độ, ảnh, font, LiteSpeed Cache | `docs/08_Performance_Hosting.md` |
 | Lộ trình Phase 0–6, test cases nghiệm thu | `docs/09_Roadmap_QA_Testplan.md` |
 | Giọng văn thương hiệu, từ vựng, chống văn AI | `docs/10_Brand_Voice_And_Content_Guide.md` |
+| Từ điển toàn bộ Meta keys, CPT, `drv_settings`, CSV | `docs/14_Data_Dictionary_And_Settings.md` |
+| Hợp đồng REST API, Store API, `<drv-*>`, `data-drv-*`, Events | `docs/15_REST_API_And_JS_Contract.md` |
+| Bản đồ port 12 trang HTML mẫu sang PHP, `drv_ui()`, danh sách bỏ | `docs/16_Template_Component_Porting_Guide.md` |
+| Đặc tả BOQ (`/danh-sach-bao-gia`) & CPT `drv_lead` | `docs/17_Quote_BOQ_And_Lead_Spec.md` |
+| Vận hành đơn HPOS Admin, Auto-cancel & Email templates | `docs/18_Order_Ops_And_Email_Spec.md` |
+| Header, Mega Menu 4+1 từ config, Walkers & Live Search | `docs/19_Navigation_Header_Search_Spec.md` |
+| Mô hình Cẩm nang, E-E-A-T, Patterns, Shortcodes & TOC | `docs/20_Blog_Editorial_And_Content_Model.md` |
 
 ---
 

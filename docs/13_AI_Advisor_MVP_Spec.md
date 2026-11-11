@@ -1,8 +1,15 @@
 # 13. Đặc tả AI Tư vấn Chọn gạch (MVP ~420 SKU, hệ thống đóng kín)
 
-> **Phạm vi:** quy mô hiện tại (~420 SKU, vài chục phiên/ngày). Mở rộng lớn hơn xem `12_AI_Advisor_Strategy_Analysis.md` §11.
-> **Phụ thuộc:** `00` (ADR D-01..D-19), `03` (catalog), `04` (giá/AreaPack), `05` (facet), `07` (UI), `10` (giọng văn), `12` (chiến lược, `drv_price_state`).
-> **Trạng thái:** đề xuất, chờ duyệt (D-20..D-23 trong `12` §9 và các điểm mở ở §14). Chưa có code.
+> **Phạm vi:** quy mô Phase 3 MVP (~420 SKU, vài chục phiên/ngày). Mở rộng lớn hơn xem [12_AI_Advisor_Strategy_Analysis.md](12_AI_Advisor_Strategy_Analysis.md) §11.
+> **Phụ thuộc:** `00` (ADR `D-01`..`D-30`), `03` (catalog), `04` (giá/`Units\Calc`), `05` (facet), `07` (UI), `10` (giọng văn), `12` (chiến lược), `14` (từ điển dữ liệu), `15` (hợp đồng REST/JS), `17` (BOQ & `drv_lead`).
+> **Trạng thái:** **Phase 3 - Đề xuất (`D-41`..`D-49`)**, chờ duyệt trước khi code Phase 3. Riêng `drv_price_state` (`D-20`), CPT `drv_lead` (`D-23`) và cờ tắt AI ở Phase 1 (`D-25`) đã được phê duyệt trong `00`.
+
+> [!IMPORTANT]
+> **Ràng buộc đồng bộ bắt buộc với hệ thống lõi (`D-20`..`D-30`):**
+> 1. **Cờ bật/tắt ở Phase 1 (`D-25`):** Phase 1 xuất bản với `drv_settings.features.ai_enabled = false` (ẩn mọi nút/chip gọi AI; trang `/tro-ly-ai-tim-gach` để `noindex, follow` và được `SlugGuard` bảo vệ chờ Phase 3).
+> 2. **Chuẩn hóa Slug Slot theo `03_Catalog_Data_Model.md` §2:** Mọi giá trị slot trong `SlotNormalizer` và schema LLM **bắt buộc** khớp slug chuẩn: `pa_van-gach` (`gia-go`, `van-da-marble`, `van-da-tu-nhien`, `terrazzo`, `van-xi-mang`, `mosaic`), `pa_be-mat` (`bong-kieng`, `mo`, `ban-bong`, `nham`, `sugar`, `carving`), `pa_mau-sac` (`trang`, `xam`, `kem`, `vang`, `nau`, `den`, `xanh-duong`, `xanh-la`, `hong`, `da-sac`), `pa_khong-gian` (`phong-khach`, `nha-tam`, `phong-bep`, `san-vuon`, `ngoai-troi`, `mat-tien`, `phong-ngu`, `ho-boi`). Đổi nhãn hiển thị UI sang **"Chống trượt R"** thay cho "DCOF".
+> 3. **Luật an toàn chống trượt `R` tối thiểu (`kb-an-toan-chong-truot.md` & `QueryEngine`):** Bắt buộc áp dụng đồng nhất cho **`nha-tam` (`≥ R10`)**, **`phong-bep` (`≥ R10`)**, **`ngoai-troi` / `san-vuon` (`≥ R11`)**, và **`ho-boi` (`≥ R12`)** (có kỹ thuật ký duyệt theo `O-15`).
+> 4. **Hợp đồng REST (`15_REST_API_And_JS_Contract.md`):** Response của `POST /wp-json/dravit/v1/advisor` bổ sung `context_facets`, `items[].match_score`, `items[].stock_label`; tách endpoint nhận đánh giá `POST /wp-json/dravit/v1/advisor/feedback`.
 
 ---
 
@@ -81,15 +88,15 @@ Dữ liệu cá nhân khách, đơn hàng, giá vốn, nội dung nội bộ ch�
 
 | Nhóm | Trường | Dùng để | Thiếu thì |
 |---|---|---|---|
-| Định danh | `sku`, tên, collection, family/mã mẫu | Hiển thị, gom biến thể | Không vào AI |
-| Giá | `drv_price_state`, giá/m² (nếu có), `_price` theo viên | Hiển thị, tính tiền | Mặc định `quote_only`, không bao giờ hiện 0đ |
-| Đóng gói | viên/thùng, m²/thùng, kg/thùng | Số thùng, trọng lượng | Không tính được → chỉ hiện "liên hệ" |
-| Kích thước | `pa_kich_thuoc`, độ dày | Khổ theo diện tích | Loại khỏi gợi ý theo khổ |
-| An toàn | Mức chống trượt R, hút nước, cường độ | **Lọc cứng** nhà tắm/ngoài trời | **Loại khỏi mọi truy vấn có ràng buộc an toàn** |
-| Phong cách | `pa_be_mat`, `pa_hoa_van`, màu chủ đạo, tông | Chấm điểm mềm | Điểm 0 cho tiêu chí đó |
-| Không gian | `pa_khong_gian`, dùng ngoài trời (có/không) | Lọc/điểm | Loại khỏi truy vấn theo không gian |
-| Kho | tồn kho, có ở showroom | Lọc/nhãn | Coi như "hỏi tồn kho" |
-| Mô tả AI | `drv_ai_blurb` (1-2 câu, dữ kiện) | Diễn đạt | Dùng mẫu câu từ thuộc tính |
+| Định danh | `sku`, tên, `product_cat` (28 collection), `drv_series` (family/mã mẫu) | Hiển thị, gom biến thể | Không vào AI |
+| Giá | `drv_price_state` (`D-20`), `drv_price_m2` (nếu có), `_price` theo viên | Hiển thị, tính tiền | Mặc định `quote_only`, không bao giờ hiện 0đ |
+| Đóng gói | `drv_pieces_per_box`, `drv_m2_per_box`, `drv_kg_per_box`, `drv_round_mode` (`D-24`) | Số thùng, viên, trọng lượng | Không tính được → chỉ hiện "liên hệ" |
+| Kích thước | `pa_kich-thuoc`, `pa_do-day` (`drv_thickness_mm`) | Khổ theo diện tích | Loại khỏi gợi ý theo khổ |
+| An toàn | Chỉ số chống trượt R (`pa_dcof`: `r9`..`r13`), `pa_do-hut-nuoc`, cường độ | **Lọc cứng** nhà tắm/bếp/ngoài trời/hồ bơi | **Loại khỏi mọi truy vấn có ràng buộc an toàn** |
+| Phong cách | `pa_be-mat` (`bong-kieng`, `mo`, `ban-bong`, `nham`, `sugar`, `carving`), `pa_van-gach` (`gia-go`, `van-da-marble`...), `pa_mau-sac`, `pa_phong-cach` | Chấm điểm mềm | Điểm 0 cho tiêu chí đó |
+| Không gian | `pa_khong-gian` (`phong-khach`, `nha-tam`, `phong-bep`, `san-vuon`, `ngoai-troi`, `mat-tien`, `phong-ngu`, `ho-boi`) | Lọc/điểm | Loại khỏi truy vấn theo không gian |
+| Kho | Tồn kho (viên → quy đổi thùng), `drv_flag = showroom` (`drv_showroom_shelf`) | Lọc/nhãn `stock_label` | Coi như "hỏi tồn kho" |
+| Mô tả AI | `drv_ai_blurb` (≤30 từ, dữ kiện) | Diễn đạt | Dùng mẫu câu từ thuộc tính |
 
 **Cổng hoàn thiện dữ liệu:** báo cáo "SKU thiếu trường AI" trong admin (nối với `03` §3.4). SKU thiếu trường an toàn vẫn bán bình thường, chỉ không được AI đề xuất cho không gian có ràng buộc.
 
@@ -132,8 +139,8 @@ Các nhánh quan trọng:
 ### 5.1 Lọc cứng (không được nới lỏng, không để LLM can thiệp)
 
 1. Trạng thái: có thể bán/báo giá; `out_of_stock` chỉ hiện khi không còn lựa chọn khác và có nhãn rõ.
-2. Không gian ↔ chống trượt tối thiểu (bảng trong `kb-an-toan-chong-truot.md`; ví dụ khởi điểm trong `12`: nhà tắm/bếp từ R10, ngoài trời từ R11, **cần kỹ thuật xác nhận**).
-3. Ngoài trời/sân vườn/gara: cờ dùng ngoài trời, độ dày/chịu lực theo `kb`.
+2. Không gian ↔ chỉ số chống trượt `R` tối thiểu (bảng trong `kb-an-toan-chong-truot.md`, ký duyệt theo `O-15`): **`nha-tam` ≥ `r10`**, **`phong-bep` ≥ `r10`**, **`ngoai-troi` / `san-vuon` ≥ `r11`**, **`ho-boi` ≥ `r12`** (áp dụng đồng nhất trên mọi hàm lọc cứng, không bỏ sót `phong-bep`).
+3. Ngoài trời/sân vườn/gara: thuộc `ngoai-troi`/`san-vuon`, độ dày/chịu lực (`pa_do-day = day` cho gara) theo `kb`.
 4. Ngân sách tối đa **khi khách nêu rõ**: chỉ áp cho SKU có giá; SKU `quote_only` giữ lại nhưng gắn nhãn "chưa có giá niêm yết" (xem §5.4).
 
 ### 5.2 Chấm điểm mềm (trọng số khởi điểm, hiệu chỉnh bằng bộ test §12)
@@ -245,61 +252,66 @@ Bật prompt caching cho phần cố định (luật + tri thức). Bản prompt
 
 ---
 
-## 9. Cấu trúc code trong theme (D-07: namespace `Dravit\`, không plugin, không bảng DB)
+## 9. Cấu trúc code trong theme (`D-07`, `D-41`: namespace `Dravit\Advisor\`, không plugin, không bảng DB)
 
-```
+```text
 wp-content/themes/dravit/
-  src/Advisor/
-    AdvisorController.php      REST dravit/v1/advisor
-    Guard.php                  nonce, rate-limit, honeypot, độ dài
+  inc/Advisor/
+    AdvisorController.php      REST dravit/v1/advisor & dravit/v1/advisor/feedback
+    Guard.php                  nonce (/dravit/v1/nonce), rate-limit, honeypot, origin, độ dài
     ScopeGate.php              phạm vi + intent (gọi LlmClient hoặc luật)
-    SlotNormalizer.php         từ điển đồng nghĩa, giá trị hợp lệ
-    Catalog/CatalogSearch.php  interface
-    Catalog/SnapshotSearch.php triển khai trên snapshot (MVP)
+    SlotNormalizer.php         từ điển đồng nghĩa, ép đúng slug chuẩn 03 §2
+    Catalog/CatalogSearch.php  interface (D-47)
+    Catalog/SnapshotSearch.php triển khai trên snapshot (MVP, D-49)
     Catalog/SnapshotBuilder.php dựng snapshot từ WC
-    QueryEngine.php            lọc cứng, chấm điểm, dedupe family
-    PriceState.php             drv_price_state
-    UnitCalc.php               dùng chung AreaPack (04), số thùng/viên
+    QueryEngine.php            lọc cứng (gồm nha-tam/phong-bep >= R10...), chấm điểm, dedupe family
     KnowledgeBase.php          nạp/chọn file kb theo topic
     Llm/LlmClient.php          interface (Anthropic implementation)
     Llm/PromptBuilder.php
     Validator.php
     Fallback.php               luật + mẫu câu
-    Renderer.php               drv_ui('product-card'), D-17
-    Logger.php                 interface -> CPT drv_ai_query
-  config/ai-rules.php          trọng số, ngưỡng, danh sách trắng
+    Renderer.php               drv_ui('product-card'), D-17 + dùng chung Dravit\Units\Calc (D-24)
+    Logger.php                 interface AdvisorLog -> CPT drv_ai_query (D-43)
+  config/ai-rules.php          trọng số, ngưỡng an toàn R, danh sách trắng (D-49)
   config/knowledge/*.md|yaml
   config/prompts/*.md
-  assets/js/advisor/           ES2022 module (Vite), SSE + JSON fallback, Custom Element <drv-ai-finder>
+  assets/src/js/ai-finder.js   ES2022 module (Vite lazy chunk), SSE + JSON fallback, Custom Element <drv-ai-finder>
 ```
 
-Giữ `CatalogSearch`, `LlmClient`, `ResultCache`, `AdvisorLog` là interface ngay từ đầu để lên quy mô thì chỉ đổi triển khai (`12` §11.6).
+Giữ `CatalogSearch`, `LlmClient`, `ResultCache`, `AdvisorLog` là interface ngay từ đầu (`D-47`) để lên quy mô thì chỉ đổi triển khai (`12` §11.6).
 
-Frontend: tái dùng giao diện prototype `01.1-ai-finder`; thay mock `ai-finder.js` bằng gọi REST thật. Tuân thủ `01`/`07`: lưới ron 1px, `@layer`, `<i class="ph ...">`, `role="log"` + `aria-live`, điều khiển bàn phím.
+Frontend: tái dùng giao diện prototype `01.1-ai-finder` (bỏ thanh mode switcher/backdrop demo của prototype theo `16`); chỉ nạp khi `drv_settings.features.ai_enabled = true` (`D-25`). Tuân thủ `01`/`07`: lưới ron 1px, `@layer`, `<i class="ph ...">`, `role="log"` + `aria-live`, điều khiển bàn phím.
 
 ---
 
-## 10. REST
+## 10. Hợp đồng REST (`15_REST_API_And_JS_Contract.md`)
 
-Giữ hợp đồng `12` §5.6 (`POST /wp-json/dravit/v1/advisor`), bổ sung:
+**1) `POST /wp-json/dravit/v1/advisor`** — Giữ hợp đồng `12` §5.6, chuẩn hóa đầy đủ các trường:
 
 | Trường | Ý nghĩa |
 |---|---|
 | `intent` | `recommend / compare / calc / knowledge / policy / handoff / out_of_scope` |
+| `context_facets` | `{ "collection_url": "/gach-...", "filter_url": "/gach-...?..." }` nối sang bộ lọc 14 tiêu chí truyền thống |
+| `items[].match_score` | Điểm khớp đã chuẩn hóa (`0–100`) từ `QueryEngine` |
+| `items[].stock_label` | Nhãn tồn kho quy đổi theo thùng (`"Còn 46 thùng"`, `"Sắp hết"`, `"Đặt theo dự án"`) |
 | `kb_refs[]` | ID tri thức đã dùng (để hiển thị "Nguồn" và để kiểm thử) |
-| `degraded` | `true` khi dùng fallback |
+| `degraded` | `true` khi dùng fallback thuần luật |
 | `handoff` | `{ "zalo_url": …, "summary": "…" }` khi cần chuyển nhân viên |
-| `catalog_version` | version snapshot đã dùng (truy vết khi dữ liệu đổi) |
+| `catalog_version` | Version snapshot đã dùng (truy vết khi dữ liệu đổi) |
 
-Lỗi trả mã rõ (429 rate-limit, 503 tạm thời) và luôn kèm `fallback_url` tới bộ lọc truyền thống. Header `X-Robots-Tag: noindex`. SSE là tăng cường; mặc định JSON.
+**2) `POST /wp-json/dravit/v1/advisor/feedback`** — Ghi nhận đánh giá từng lượt hỏi:
+- Request: `{ "request_id": int, "rating": "up" | "down", "reason"?: string }` (kèm token `/dravit/v1/nonce`).
+- Response: `200 { "ok": true }`, cập nhật meta vào bản ghi `drv_ai_query` tương ứng.
+
+Lỗi trả mã rõ (`429` rate-limit, `503` tạm thời) và luôn kèm `fallback_url` tới bộ lọc truyền thống. Header `X-Robots-Tag: noindex`. SSE là tăng cường; mặc định JSON.
 
 ---
 
 ## 11. Bảo mật, riêng tư, nhật ký
 
-- Khóa API trong `wp-config`/biến môi trường, không bao giờ ra frontend. `permission_callback` kiểm tra nonce + origin; rate-limit 10 lượt/IP/10 phút + trần theo ngày; honeypot.
+- Khóa API trong `wp-config`/biến môi trường, không bao giờ ra frontend. `permission_callback` kiểm tra token từ `GET /dravit/v1/nonce` (`no-store`, `D-30`) + `Origin`; rate-limit 10 lượt/IP/10 phút + trần ngân sách theo ngày; honeypot.
 - Không gửi tên/SĐT/email vào LLM; phát hiện PII trong tin nhắn và che trước khi gửi/log.
-- Log vào CPT private `drv_ai_query`: slot, ID đề xuất, intent, `kb_refs`, `degraded`, độ trễ, token, 👍/👎 + lý do. Dọn sau 90 ngày. Lead thật (có liên hệ) vào CPT `drv_lead`, **không** tạo WC Order (HPOS, D-23).
+- Log hội thoại AI vào CPT private `drv_ai_query` (`D-43`): slot, ID đề xuất, intent, `kb_refs`, `degraded`, độ trễ, token, đánh giá `up`/`down` + lý do; tự dọn sau 90 ngày. Lead thật (có liên hệ / gửi báo giá) lưu vào CPT private `drv_lead` (`D-23` đã chốt), **không** tạo WC Order nháp (HPOS `D-22`).
 - Dữ liệu gửi cho nhà cung cấp LLM: nêu trong chính sách quyền riêng tư; tắt huấn luyện trên dữ liệu API theo điều khoản nhà cung cấp (**xác minh khi ký**).
 - Sao lưu/rollback: prompt, `kb`, `ai-rules.php` nằm trong git, có phiên bản.
 
@@ -354,11 +366,18 @@ P1 mang lại giá trị sớm, thấp rủi ro, và chính là lớp fallback v
 
 ---
 
-## 15. Quyết định đề nghị duyệt
+## 15. Bảng tổng hợp ADR Phase 3 đề nghị duyệt (`D-41`..`D-49`)
 
-| ID | Đề xuất |
-|---|---|
-| D-20..D-23 | Như `12` §9 (trạng thái giá; AI trong theme; không RAG ở MVP; CPT cho lead/log) |
-| D-28 | Hệ thống **đóng kín**: chỉ dữ liệu WC + `kb` đã duyệt; không tool web; phạm vi chỉ ngành gạch; có ScopeGate + Validator + `kb_refs` bắt buộc |
-| D-29 | Dùng **catalog snapshot** (file + cache) thay `WP_Query` mỗi lượt hỏi, sau interface `CatalogSearch` |
-| D-30 | Luật tư vấn và an toàn nằm trong code/config có phiên bản; LLM không quyết định ràng buộc cứng |
+> **Phân tách với ADR đã chốt:** `D-20` (`drv_price_state`), `D-23` (CPT `drv_lead` cho BOQ & Lead thật) và `D-25` (`features.ai_enabled = false` ở Phase 1) **đã được phê duyệt chính thức trong [00_Project_Brief_Decisions.md](00_Project_Brief_Decisions.md)**. Bảng dưới đây tổng hợp trọn vẹn dải **`D-41` → `D-49`** dành riêng cho kiến trúc Trợ lý AI Phase 3 (đồng bộ với [12_AI_Advisor_Strategy_Analysis.md](12_AI_Advisor_Strategy_Analysis.md) §9 & §11.8):
+
+| ID | Nội dung đề xuất | Trạng thái |
+|---|---|---|
+| **`D-41`** | AI Advisor MVP chạy **trong theme** (`REST /wp-json/dravit/v1/advisor`), tách interface `LlmClient` | **Phase 3 - Đề xuất** (`12` §9) |
+| **`D-42`** | Không dùng Vector DB / RAG ở MVP; nạp bộ tri thức ngành (`config/knowledge/`) vào system prompt + prompt caching | **Phase 3 - Đề xuất** (`12` §9) |
+| **`D-43`** | Lưu nhật ký câu hỏi & feedback AI ở MVP vào **CPT private `drv_ai_query`** (dọn sau 90 ngày; lead thật vào `drv_lead` theo `D-23`) | **Phase 3 - Đề xuất** (`12` §9) |
+| **`D-44`** | Cho phép **Search Index ngoài WordPress** (Typesense/Meilisearch/OpenSearch) khi chạm ngưỡng Tier 1 (ngoại lệ có điều kiện của `D-07`) | **Phase 3 (Tier 1) - Đề xuất** (`12` §11.8) |
+| **`D-45`** | Tách **Advisor Service độc lập** ở Tier 2; WordPress vẫn là nguồn sự thật về giá/tồn kho/đơn hàng | **Phase 3 (Tier 2) - Đề xuất** (`12` §11.8) |
+| **`D-46`** | Đưa **nhật ký hội thoại AI ra ngoài WordPress** từ Tier 1; WordPress chỉ lưu lead thật (`drv_lead`) | **Phase 3 (Tier 1) - Đề xuất** (`12` §11.8) |
+| **`D-47`** | Interface hóa `CatalogSearch`, `ResultCache`, `AdvisorLog` ngay từ MVP để chuyển tầng không đổi logic | **Phase 3 - Đề xuất** (`12` §11.8) |
+| **`D-48`** | Hệ thống **đóng kín (Closed-world)**: chỉ dùng dữ liệu WC + `config/knowledge/` đã duyệt; tắt mọi tool web; có `ScopeGate` + `Validator` + `kb_refs` bắt buộc | **Phase 3 - Đề xuất** |
+| **`D-49`** | Truy hồi MVP trên **Catalog Snapshot** (`catalog-snapshot.json` + object cache sau `CatalogSearch`) kết hợp **luật tư vấn & an toàn đánh phiên bản trong code** (`config/ai-rules.php`); LLM không quyết định ràng buộc cứng | **Phase 3 - Đề xuất** |

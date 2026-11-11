@@ -1,7 +1,14 @@
 # 12. Phân tích tổng quan & Chiến lược AI Tư vấn Chọn gạch
 
-> Phạm vi: tổng hợp `docs/00–11`, `tinhangai.md`, 12 prototype `docs/layout/*.html`. Mục tiêu: giúp **người mới** chọn đúng gạch (có giá hoặc chưa có giá) qua AI, và chốt hướng kỹ thuật tích hợp.
-> Trạng thái: **đề xuất, chờ duyệt** (theo AGENTS.md §5.2). Cần ghi ADR D-20..D-23 vào `00` sau khi duyệt (§9).
+> **Phạm vi:** tổng hợp `docs/00–20`, 12 prototype `docs/layout/*.html`. Mục tiêu: giúp **người mới** chọn đúng gạch (có giá hoặc chưa có giá) qua AI ở **Phase 3**, và chốt hướng kỹ thuật tích hợp.
+> **Trạng thái:** Nền tảng `drv_price_state` (`D-20`), CPT `drv_lead` (`D-23`) và cờ bật/tắt AI (`D-25`) **đã chốt trong [00_Project_Brief_Decisions.md](00_Project_Brief_Decisions.md)**. Các quyết định kiến trúc AI Phase 3 đánh số dải riêng **`D-41` → `D-49`** (trạng thái: **Phase 3 - Đề xuất**, xem §9, §11.8 và [13_AI_Advisor_MVP_Spec.md](13_AI_Advisor_MVP_Spec.md) §15).
+
+> [!IMPORTANT]
+> **Ràng buộc đồng bộ bắt buộc với hệ thống lõi (`D-20`..`D-30`):**
+> 1. **Trạng thái ở Phase 1 (`D-25`):** Xuất bản với `drv_settings.features.ai_enabled = false` (ẩn mọi nút/chip mở AI trên toàn site; URL `/tro-ly-ai-tim-gach` giữ `noindex, follow` và nằm trong danh sách bảo vệ của `SlugGuard` chờ mở ở Phase 3).
+> 2. **Chuẩn hóa Slug Slot (`03_Catalog_Data_Model.md` §2):** Mọi slot trích xuất ở Phase 3 **bắt buộc** khớp 100% slug taxonomy chuẩn: `pa_van-gach` (`gia-go`, `van-da-marble`, `van-da-tu-nhien`, `terrazzo`, `van-xi-mang`, `mosaic`), `pa_be-mat` (`bong-kieng`, `mo`, `ban-bong`, `nham`, `sugar`, `carving` — cấm dùng `mo-matt`, `nham-san`), `pa_mau-sac` (`trang`, `xam`, `kem`, `vang`, `nau`, `den`, `xanh-duong`, `xanh-la`, `hong`, `da-sac`), `pa_khong-gian` (đủ 8 không gian). Nhãn UI hiển thị **"Chống trượt R"** thay cho "DCOF".
+> 3. **Luật an toàn chống trượt `R` tối thiểu:** Bắt buộc áp dụng đồng nhất cho cả **`nha-tam` (`≥ R10`)**, **`phong-bep` (`≥ R10`)**, **`ngoai-troi` / `san-vuon` (`≥ R11`)**, và **`ho-boi` (`≥ R12`)** (ký duyệt kỹ thuật theo `O-15`).
+> 4. **Hợp đồng REST (`15_REST_API_And_JS_Contract.md`):** Response `POST /wp-json/dravit/v1/advisor` bắt buộc có `context_facets` (để nối sang URL lọc truyền thống), từng `items[]` có `match_score` và `stock_label`; phản hồi chất lượng gửi qua `POST /wp-json/dravit/v1/advisor/feedback`.
 
 ---
 
@@ -31,9 +38,9 @@
 
 ---
 
-## 3. Mô hình sản phẩm "có giá / không giá" (nền tảng của toàn bộ luồng)
+## 3. Mô hình sản phẩm "có giá / không giá" (`drv_price_state` — Đã chốt trong `D-20`)
 
-Hiện doc chỉ nói `drv_price_m2` bắt buộc (03 §5.1) nhưng prototype đã có SKU giá 0. Cần chuẩn hóa thành **`drv_price_state`** (1 meta, tự suy ra được):
+Mô hình **`drv_price_state`** dưới đây đã được hợp nhất và phê duyệt trong Quyết định **`D-20`** ([00_Project_Brief_Decisions.md](00_Project_Brief_Decisions.md)):
 
 | State | Điều kiện | Hiển thị card | CTA chính | Vào giỏ? | AI được nói gì |
 |---|---|---|---|---|---|
@@ -95,10 +102,10 @@ flowchart LR
   R --> FE
 ```
 
-- **Hard constraints** (lọc cứng, không cho LLM phá): không gian ↔ chống trượt (nhà tắm/bếp ≥ R10; ngoài trời ≥ R11), độ dày/chịu lực sân vườn-gara, tồn kho > 0 (hoặc nhãn), `price_max` nếu khách nêu rõ.
-- **Soft score** (xếp hạng): phong cách, màu, bề mặt, khổ phù hợp diện tích (bảng gợi ý 07 §3 Section 5: <15m² → 60x60; >20m² → 80x80/60x120), vân, showroom.
-- **Số liệu do server tính**: giá, `≈ giá/viên`, số viên/thùng/m²/kg (`AreaPack` + công thức 04 §2-3); LLM nhận kết quả để diễn đạt, **không tự tính**.
-- **HTML card** dùng cùng `drv_ui('product-card')` như SSR (D-17) → không lệch giao diện.
+- **Hard constraints** (lọc cứng, không cho LLM phá): không gian ↔ chống trượt tối thiểu (`nha-tam` ≥ `r10`, `phong-bep` ≥ `r10`, `ngoai-troi` / `san-vuon` ≥ `r11`, `ho-boi` ≥ `r12`), độ dày/chịu lực sân vườn-gara (`do-day = day`), tồn kho > 0 (hoặc gắn nhãn), `price_max` nếu khách nêu rõ.
+- **Soft score** (xếp hạng): phong cách, màu (`pa_mau-sac`), bề mặt (`pa_be-mat`: `bong-kieng`, `mo`, `ban-bong`, `nham`, `sugar`, `carving`), khổ phù hợp diện tích (bảng gợi ý `07` §3: `<15 m²` → `60x60`; `>20 m²` → `80x80`/`60x120`), vân (`pa_van-gach`: `gia-go`, `van-da-marble`...), có mẫu tại showroom (`drv_flag = showroom`).
+- **Số liệu do server tính**: giá, `≈ giá/viên`, số viên/thùng/m²/kg qua lõi dùng chung `Dravit\Units\Calc` (`D-24`, theo đúng `drv_round_mode` từng SKU); LLM nhận kết quả để diễn đạt, **không tự tính**.
+- **HTML card** dùng cùng `drv_ui('product-card')` như SSR (`D-17`) → không lệch giao diện.
 
 ### 5.2 Hai đường triển khai (cần quyết định)
 
@@ -141,54 +148,93 @@ Mẹo giảm chi phí/độ trễ: prompt caching cho system prompt; cache kết
 - **Fallback khi LLM lỗi/timeout 8s:** chuyển sang xếp hạng thuần luật (soft score) + thông báo "Đang dùng gợi ý nhanh"; nút "Bộ lọc 14 tiêu chí".
 - **Rate-limit:** 10 lượt/IP/10 phút, ngân sách API theo ngày/tháng, honeypot, nonce (public REST nhưng `permission_callback` kèm kiểm tra origin/nonce + transient limit).
 - **Privacy:** không gửi SĐT/tên/email vào LLM; log lưu câu hỏi đã ẩn PII.
-- **Lưu feedback/log:** không tạo bảng riêng (D-07) → CPT private `drv_ai_query` (hoặc gộp `drv_lead`) với meta: slot, id đề xuất, 👍/👎 + lý do, latency, token. Dọn sau 90 ngày.
-- **Không index:** `X-Robots-Tag: noindex` cho `advisor` (đã là chuẩn REST `dravit/v1`), trang `/tro-ly-ai-tim-gach/` đã `index` trong prototype: giữ vì là landing, nhưng kết quả hội thoại **không** có URL riêng.
+- **Lưu feedback/log:** không tạo bảng riêng (`D-07`) → nhật ký câu hỏi & feedback AI lưu vào CPT private `drv_ai_query` (`D-43`, tự dọn sau 90 ngày); yêu cầu báo giá/lead thật lưu vào CPT private `drv_lead` (`D-23` đã chốt).
+- **Không index:** `X-Robots-Tag: noindex` cho mọi endpoint REST `dravit/v1/*`; trang `/tro-ly-ai-tim-gach` (không dấu `/` cuối, `D-21`) để `noindex, follow` suốt Phase 1 (`D-25`) và chỉ mở `index, follow` khi go-live Phase 3 (kết quả hội thoại không sinh URL riêng).
 - **A11y:** `role="log"` + `aria-live` (đã có), điều khiển bàn phím, không phụ thuộc streaming để đọc.
 
-### 5.6 Hợp đồng REST (đề xuất)
+### 5.6 Hợp đồng REST (Phase 3 — đồng bộ `15_REST_API_And_JS_Contract.md`)
 
-`POST /wp-json/dravit/v1/advisor`
+**1) Truy vấn tư vấn:** `POST /wp-json/dravit/v1/advisor`
 
 ```json
 // request
-{ "session": "uuid", "message": "nhà tắm 6m2 cho người già",
-  "slots": { "space": "nha-tam", "area_m2": 6 }, "waste": 0.05, "stream": true }
+{
+  "session": "uuid",
+  "message": "nhà tắm 6m2 cho người già",
+  "slots": { "space": "nha-tam", "area_m2": 6 },
+  "waste": 0.05,
+  "stream": true
+}
 
-// response (mỗi mục luôn có price_state)
-{ "slots": { "space":"nha-tam","area_m2":6,"min_dcof":"r10" },
-  "explanation": "…", "tradeoff": null, "clarification": "Bạn thích tông sáng hay đậm?",
+// response (mỗi mục luôn có price_state, match_score, stock_label; kèm context_facets làm lối thoát sang bộ lọc)
+{
+  "slots": { "space": "nha-tam", "area_m2": 6, "min_dcof": "r10" },
+  "context_facets": {
+    "collection_url": "/gach-nha-tam",
+    "filter_url": "/gach-nha-tam?be-mat=mo,nham&dcof=r10,r11"
+  },
+  "explanation": "…",
+  "tradeoff": null,
+  "clarification": "Bạn thích tông sáng hay đậm?",
   "items": [
-    { "id": 123, "sku": "DRV-TRZ60", "price_state": "priced",
-      "calc": { "pieces": 20, "boxes": 5, "m2": 7.2, "total_vnd": 2304000 },
-      "why": "R11, hút nước ≤0,5%, hợp nhà tắm", "html": "<li>…</li>" },
-    { "id": 456, "sku": "DRV-6122B", "price_state": "quote_only",
-      "calc": { "pieces": 10, "boxes": 5, "m2": 7.2, "total_vnd": null },
-      "why": "…", "html": "<li>…</li>" } ],
+    {
+      "id": 123,
+      "sku": "DRV-TRZ60",
+      "price_state": "priced",
+      "match_score": 94,
+      "stock_label": "Còn 46 thùng",
+      "calc": { "pieces": 20, "boxes": 5, "m2": 7.2, "kg": 155.0, "total_vnd": 2304000 },
+      "why": "Chống trượt R11, hút nước ≤0,5%, hợp nhà tắm",
+      "html": "<li>…</li>"
+    },
+    {
+      "id": 456,
+      "sku": "DRV-6122B",
+      "price_state": "quote_only",
+      "match_score": 88,
+      "stock_label": "Đặt theo dự án",
+      "calc": { "pieces": 10, "boxes": 5, "m2": 7.2, "kg": 162.0, "total_vnd": null },
+      "why": "…",
+      "html": "<li>…</li>"
+    }
+  ],
   "totals": { "priced_count": 1, "quote_only_count": 1, "priced_total_vnd": 2304000 },
-  "request_id": 789 }
+  "request_id": 789
+}
 ```
+
 SSE: sự kiện `slots` → `explanation` (token stream) → `items` → `done`. Nếu SSE không khả dụng, trả JSON thường (progressive enhancement).
+
+**2) Đánh giá kết quả:** `POST /wp-json/dravit/v1/advisor/feedback`
+
+```json
+// request
+{ "request_id": 789, "rating": "up", "reason": "" }
+// response: 200 { "ok": true }
+```
 
 ---
 
 ## 6. Dữ liệu cần chuẩn hóa để AI "đủ thông minh"
 
-Chất lượng AI = chất lượng dữ liệu (đúng với `tinhangai.md` §4). Bổ sung/siết:
+Chất lượng AI = chất lượng dữ liệu. Bổ sung/siết trên nền [03_Catalog_Data_Model.md](03_Catalog_Data_Model.md) và [14_Data_Dictionary_And_Settings.md](14_Data_Dictionary_And_Settings.md):
 
 | Hạng mục | Việc cần làm |
 |---|---|
-| Meta bắt buộc cho **mọi** SKU kể cả `quote_only` | kích thước, dày, viên/thùng, kg/thùng, độ hút nước, bề mặt, DCOF/R, không gian, vân, màu, phong cách (thiếu → AI không xếp hạng được) |
-| `drv_price_state` | suy ra tự động + cho phép admin ép `quote_only` |
-| `drv_ai_blurb` (≤30 từ, tùy chọn) | mô tả ngắn thực tế cho phần "Vì sao hợp" |
-| Bảng luật không gian → ràng buộc | `config/ai-rules.php`: nhà tắm≥R10, ngoài trời≥R11, ram dốc≥R12; khổ theo diện tích; thân thiện người già/trẻ nhỏ |
-| Từ điển đồng nghĩa VN | "chống trơn"=chống trượt, "nhà vệ sinh/WC/toilet", "giả gỗ/vân gỗ", "m2/mét vuông" |
-| Bộ test | 50-100 câu hỏi thật + đáp án mong đợi (đề xuất ở 11 §4.2) để đo độ chính xác trước go-live |
+| Meta & taxonomy bắt buộc cho **mọi** SKU kể cả `quote_only` | Kích thước (`pa_kich-thuoc`), độ dày (`pa_do-day`), viên/thùng, kg/thùng, độ hút nước (`pa_do-hut-nuoc`), bề mặt (`pa_be-mat`: `bong-kieng`, `mo`, `ban-bong`, `nham`, `sugar`, `carving`), chống trượt R (`pa_dcof`: `r9`..`r13`), không gian (`pa_khong-gian`), vân (`pa_van-gach`: `gia-go`, `van-da-marble`...), màu (`pa_mau-sac`), phong cách (`pa_phong-cach`) |
+| `drv_price_state` (`D-20`) | Suy dẫn tự động (`priced` / `sale` / `quote_only` / `out_of_stock`) |
+| `drv_ai_blurb` (≤30 từ, tùy chọn) | Mô tả dữ kiện thực tế cho phần "Vì sao hợp" (`14_Data_Dictionary_And_Settings.md`) |
+| Bảng luật không gian → ràng buộc cứng | `config/ai-rules.php`: `nha-tam` ≥ `r10`, `phong-bep` ≥ `r10`, `ngoai-troi` / `san-vuon` ≥ `r11`, `ho-boi` ≥ `r12`; khổ theo diện tích; thân thiện người già/trẻ nhỏ (`O-15`) |
+| Từ điển đồng nghĩa VN | Ánh xạ về đúng slug chuẩn `03 §2`: "chống trơn" → chống trượt R, "nhà vệ sinh/WC/toilet" → `nha-tam`, "bếp" → `phong-bep`, "giả gỗ/vân gỗ" → `gia-go`, "nhám/sần" → `nham`, "mờ/matt" → `mo` |
+| Bộ test | 80–120 câu hỏi thật + đáp án mong đợi (`13` §12) để đo độ chính xác trước khi bật `features.ai_enabled = true` |
 
-Chính xác kỹ thuật: ảnh hưởng nội dung AI nói ra. **R9–R13 là thang DIN 51130 (độ dốc trượt), còn DCOF là chỉ số ma sát ANSI khác thang.** Docs/ prototype đang gộp ("Chuẩn DCOF R9–R12", `pa_dcof` chứa `r9..r13`). Nên đổi nhãn hiển thị thành "Chỉ số chống trượt R" và, nếu có DCOF thật, tách facet riêng; nếu không, AI không được nói "DCOF 0,42" khi dữ liệu là R-rating.
+Chính xác kỹ thuật: ảnh hưởng nội dung AI nói ra. **R9–R13 là thang DIN 51130 (độ dốc trượt), còn DCOF là chỉ số ma sát ANSI khác thang.** Taxonomy nội bộ giữ tên `pa_dcof` (`r9..r13`), nhưng nhãn hiển thị trên toàn UI & lời thoại AI thống nhất gọi là **"Chỉ số chống trượt R"** (cấm AI tự bịa "DCOF 0,42" khi dữ liệu gốc là R-rating).
 
 ---
 
-## 7. Điểm không nhất quán trong tài liệu cần xử lý
+## 7. Điểm không nhất quán trong tài liệu (Đã xử lý tại `D-20`..`D-30` & `docs/11`, `17`)
+
+> Hạng mục 1–8, 10–12 dưới đây đã được giải quyết dứt điểm trong đợt đồng bộ tài liệu 2026-11-11 (`00` `D-20`..`D-30`, `11` deprecated §2, `17_Quote_BOQ_And_Lead_Spec.md`). Giữ bảng dưới để truy vết:
 
 | # | Phát hiện | Đề xuất |
 |---|---|---|
@@ -222,16 +268,20 @@ KPI đo (GA4 `calculator_use`, `generate_lead` đã có ở 06 §9; thêm): `adv
 
 ---
 
-## 9. Quyết định cần chủ dự án duyệt
+## 9. Quyết định kiến trúc AI Phase 3 (`D-41`..`D-43`, liên kết `D-20`, `D-23`, `D-25`)
 
-| ID | Đề xuất | Lựa chọn |
+> **Lưu ý đánh số ADR (xử lý xung đột `X-4`):** `D-20` (`drv_price_state`), `D-23` (CPT `drv_lead` cho BOQ & Lead) và `D-25` (`features.ai_enabled = false` ở Phase 1) **đã được phê duyệt chính thức trong [00_Project_Brief_Decisions.md](00_Project_Brief_Decisions.md)**. Toàn bộ đề xuất kiến trúc riêng cho Trợ lý AI Phase 3 được quy hoạch vào dải **`D-41` → `D-49`** (`D-41`..`D-47` tại đây; `D-48`..`D-49` tại [13_AI_Advisor_MVP_Spec.md](13_AI_Advisor_MVP_Spec.md) §15).
+
+| ID | Nội dung quyết định / đề xuất | Trạng thái |
 |---|---|---|
-| D-20 | Chuẩn hóa `drv_price_state` (priced / sale / quote_only / project_price / out_of_stock) và luật hiển thị §3 | Duyệt / chỉnh |
-| D-21 | AI Advisor MVP chạy **trong theme** (REST `dravit/v1/advisor`), tách `LlmClient`; backend FastAPI chỉ khi chạm ngưỡng §5.2 | A (khuyến nghị) / B |
-| D-22 | Không dùng vector DB/RAG ở MVP; tri thức ngành trong system prompt + prompt caching | Duyệt / chỉnh |
-| D-23 | Dùng CPT private `drv_lead` / `drv_ai_query` thay WC Order cho báo giá & log (tránh HPOS/đơn hàng ảo) | Duyệt / chỉnh |
-| — | Chọn nhà cung cấp LLM + ngân sách tháng trần | Anthropic (khuyến nghị theo `11`) / khác |
-| — | Nhãn "R" vs "DCOF" trên UI & dữ liệu | Đổi sang "Chống trượt R" |
+| `D-20` | Chuẩn hóa `drv_price_state` (`priced` / `sale` / `quote_only` / `out_of_stock`) và luật hiển thị §3 | **Đã duyệt** (`00`) |
+| `D-23` | Lưu BOQ & Lead thật vào CPT private `drv_lead` (không tạo WC Order nháp) | **Đã duyệt** (`00`, `17`) |
+| `D-25` | Phase 1 tắt cờ `drv_settings.features.ai_enabled = false`, `/tro-ly-ai-tim-gach` để `noindex` | **Đã duyệt** (`00`) |
+| **`D-41`** | AI Advisor MVP chạy **trong theme** (`REST /wp-json/dravit/v1/advisor`), tách interface `LlmClient`; chỉ chuyển sang service riêng khi chạm ngưỡng §5.2 | **Phase 3 - Đề xuất** (A khuyến nghị) |
+| **`D-42`** | Không dùng Vector DB / RAG ở MVP; nạp bộ tri thức ngành (`config/knowledge/`) vào system prompt + bật prompt caching | **Phase 3 - Đề xuất** |
+| **`D-43`** | Lưu nhật ký câu hỏi & feedback AI ở MVP vào **CPT private `drv_ai_query`** (dọn sau 90 ngày; tách biệt với `drv_lead` của `D-23`) | **Phase 3 - Đề xuất** |
+| — | Chọn nhà cung cấp LLM + ngân sách tháng trần | Anthropic (khuyến nghị) / chốt trước Phase 3 |
+| — | Nhãn "R" vs "DCOF" trên UI & dữ liệu | Đổi hiển thị sang **"Chống trượt R"** (`pa_dcof`: `r9`..`r13`) |
 
 ## 10. Rủi ro chính & giảm thiểu
 
@@ -343,14 +393,14 @@ Không xây Tier 2 sớm. Nhưng viết MVP sao cho **đổi hạ tầng không 
 
 Các ngưỡng là **đề xuất khởi điểm, chưa đo**; điều chỉnh theo số liệu thật từ Tier 0.
 
-### 11.8 Quyết định bổ sung cần duyệt
+### 11.8 Quyết định mở rộng quy mô cần duyệt (`D-44`..`D-47` — Phase 3+)
 
-| ID | Đề xuất | Lựa chọn |
+| ID | Đề xuất | Trạng thái |
 |---|---|---|
-| D-24 | Cho phép **search index ngoài WordPress** (Typesense/Meilisearch/OpenSearch) khi chạm ngưỡng Tier 1, như **ngoại lệ có điều kiện** của D-07 (không phải bảng DB trong WP, không phải plugin) | Duyệt / chỉnh |
-| D-25 | Advisor Service tách rời ở Tier 2, WordPress vẫn là nguồn sự thật; viết bằng ngôn ngữ nào (PHP/Node/Python) quyết định sau | Duyệt / chỉnh |
-| D-26 | Log hội thoại ngoài WP từ Tier 1; WP chỉ lưu lead thật | Duyệt / chỉnh |
-| D-27 | Interface hóa `CatalogSearch`, `ResultCache`, `AdvisorLog` ngay trong MVP (§11.6) | Duyệt / chỉnh |
-| — | Xác nhận quy mô (100k sản phẩm hay biến thể; phiên/ngày thực tế; ngân sách tháng trần cho Tier 2) | Cần số liệu |
+| **`D-44`** | Cho phép **Search Index ngoài WordPress** (Typesense / Meilisearch / OpenSearch) khi chạm ngưỡng Tier 1, như **ngoại lệ có điều kiện** của `D-07` (không tạo bảng DB trong WP, không cài plugin thừa) | **Phase 3 (Tier 1) - Đề xuất** |
+| **`D-45`** | Tách **Advisor Service độc lập** ở Tier 2, WordPress vẫn là nguồn sự thật duy nhất về giá/tồn kho/đơn hàng; ngôn ngữ triển khai (PHP/Node/Python) chốt khi chạm ngưỡng | **Phase 3 (Tier 2) - Đề xuất** |
+| **`D-46`** | Đưa **nhật ký hội thoại AI ra ngoài WordPress** từ Tier 1; WordPress chỉ lưu lead thật (`drv_lead`, `D-23`) | **Phase 3 (Tier 1) - Đề xuất** |
+| **`D-47`** | Interface hóa `CatalogSearch`, `ResultCache`, `AdvisorLog` ngay trong MVP (§11.6) để chuyển tầng không đổi logic nghiệp vụ | **Phase 3 - Đề xuất** |
+| — | Xác nhận quy mô mục tiêu dài hạn (số sản phẩm vs biến thể; phiên/ngày thực tế; ngân sách tháng trần cho Tier 2) | Cần số liệu trước khi lên Tier 1/2 |
 
 Lưu ý: nếu mục tiêu 100k SKU là thật, các doc `02`, `03`, `05`, `08` (hosting, import, facet, ngân sách hiệu suất) cũng phải xem lại; không chỉ riêng AI.

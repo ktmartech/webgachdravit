@@ -17,10 +17,10 @@
   - Chỉ chấp nhận các key nằm trong `config/facets.php`.
   - Mỗi slug giá trị phải qua `sanitize_title()` và kiểm tra tồn tại trong taxonomy/config tương ứng.
   - Giới hạn cứng `per_page <= 48`, `page >= 1`.
-- Với Checkout và Form Báo giá công trình (`drv_lead`):
-  - Kiểm tra `wp_verify_nonce()` / `check_ajax_referer()`.
-  - Validate SĐT Việt Nam bằng regex `^(0|\+84)(3|5|7|8|9)\d{8}$`.
-  - Áp dụng honeypot field + giới hạn tần suất gửi (rate-limit bằng transient theo IP) cho form báo giá và endpoint tìm kiếm.
+- Với Checkout, Báo giá BOQ (`/wp-json/dravit/v1/quote/submit`) và Form Lead (`/wp-json/dravit/v1/lead` → `drv_lead`):
+  - Dưới LiteSpeed Page Cache, lấy token tươi qua `GET /wp-json/dravit/v1/nonce` (`Cache-Control: no-store`) trước khi gửi (`D-30`), kiểm tra `wp_verify_nonce()` + `Origin` header.
+  - Validate SĐT Việt Nam bằng regex `^(0|\+84)(3|5|7|8|9)\d{8}$`; MST (khi tick VAT) bằng regex `^\d{10}(-\d{3})?$`.
+  - Áp dụng honeypot (`drv_website`) + time-trap (`≥ 3s`) + giới hạn tần suất gửi (rate-limit bằng transient theo IP) + giới hạn số dòng BOQ (`≤ 30` hạng mục). **Server bắt buộc tính lại 100% số lượng & đơn giá**, không tin số tiền từ client.
 
 ### 1.3 Escape Output & Database Safety
 - Mọi biến PHP xuất ra HTML bắt buộc dùng đúng hàm escape ngay tại điểm xuất:

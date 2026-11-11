@@ -48,8 +48,10 @@ Can thiệp qua `rank_math/frontend/robots` và `rank_math/frontend/canonical`:
 ## 4. Schema JSON-LD & GEO (Tối ưu cho AI đọc)
 
 - **Schema bắt buộc (mở rộng trên graph của Rank Math qua `rank_math/json_ld`):**
-  - Collection: `BreadcrumbList` + `CollectionPage` (`isPartOf` trỏ về `/gach#webpage`) + `ItemList` + `FAQPage` (khi có FAQ).
-  - Sản phẩm: `Product` với đầy đủ `sku`, `brand`, `material`, `color`, `pattern`, mảng `additionalProperty` (`PropertyValue` cho kích thước, độ dày, bề mặt, độ hút nước, DCOF/R, PEI, quy cách thùng) và `Offer` chứa 2 `UnitPriceSpecification` (`C62` cho `viên` và `MTK` cho `m²`).
+  - Collection: `BreadcrumbList` + `CollectionPage` (`isPartOf` trỏ về `/gach#webpage`) + `ItemList` (24 SP đầu khi index) + `FAQPage` (**chỉ** lấy từ mảng `drv_faq` đang hiển thị thực tế trên trang).
+  - Sản phẩm: `Product` với đầy đủ `sku`, `brand` (`"DRAVIT"`), `material`, `color`, `pattern`, kích thước/khối lượng, mảng `additionalProperty` và `Offer` chứa 2 `UnitPriceSpecification` (`C62` cho `viên` và `MTK` cho `m²`; ẩn `Offer` nếu SP thuộc diện Liên hệ báo giá `D-20`). **CẤM** nhồi mã lô vào `mpn`.
+  - Cẩm nang: `BlogPosting` + `author` (`Person`) + `reviewedBy` trên `WebPage` + `FAQPage` (khi có FAQ hiển thị). **CẤM** xuất `HowTo` (đã deprecated) và **CẤM** chèn microdata `itemscope` trùng lặp với JSON-LD.
+  - Liên hệ & Trang chủ: `ContactPage` + `HomeAndConstructionBusiness` lấy trực tiếp từ `drv_settings.showrooms`.
   - **CẤM** xuất `aggregateRating` hoặc `review` giả khi chưa có đánh giá thật.
 - **Chuẩn GEO:**
   - Mọi thông số kỹ thuật, giá bán, tóm tắt nhanh (`<dl>`) và FAQ phải nằm trong HTML tĩnh từ server (`<table>`, `<dl>`, `<details>`), **CẤM** nhốt thông số quan trọng trong file ảnh hoặc chỉ render bằng JS.

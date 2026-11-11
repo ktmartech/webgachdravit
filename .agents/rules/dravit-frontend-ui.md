@@ -7,7 +7,7 @@
 
 ## 1. Nhận diện Thị giác: "Architectural Grout-Line Grid" (Lưới Đường Ron)
 
-- **Motif cốt lõi:** Mọi khối thông tin, thẻ sản phẩm, bảng thông số và thanh điều hướng được phân tách bằng **đường kẻ ron `1px solid var(--c-navy-200)` thẳng tắp**, căn hàng tuyệt đối, bo góc nhỏ vuông vức (`--r-sm: 4px` cho nút/input/tag/chip/nav, `--r-md: 8px` cho card/ảnh, `--r-pill: 999px` cho progress bar).
+- **Motif cốt lõi:** Mọi khối thông tin, thẻ sản phẩm, bảng thông số và thanh điều hướng được phân tách bằng **đường kẻ ron `1px solid var(--c-navy-200)` thẳng tắp**, container chuẩn **`1380px`** (`D-28`), căn hàng tuyệt đối, bo góc nhỏ vuông vức (`--r-xs: 2px`, `--r-sm: 4px` cho nút/input/badge vuông/nav, `--r-md: 8px` cho card/ảnh/dialog, `--r-lg: 12px`, `--r-pill: 999px` cho chip lọc, tag tròn & progress bar).
 - **Nền tảng thẩm mỹ (`design-taste-frontend`):** Ảnh chụp vật liệu & phối cảnh thực tế dẫn dắt, nền phẳng (`--c-ivory`, `--c-white`, `--c-champagne`), không hiệu ứng màu mè kiểu chợ điện tử.
 
 ---
@@ -59,12 +59,13 @@ Mọi token khai báo tại `assets/src/tokens/tokens.json` và sinh ra `tokens.
    - Tác vụ đơn (mở `<dialog>`, copy mã SKU, toggle): dùng `data-drv-action="..."` bắt ở cấp `document` trong `core.js`.
    - Component có state (Bộ tính `<drv-unit-calc>`, `<drv-qty-input>`, `<drv-filter-form>`): dùng `customElements.define()` trên **Light DOM** (không dùng Shadow DOM) để tự động khởi tạo cả khi HTML được chèn động qua AJAX.
 4. **Shared Utils (`assets/src/js/utils/`):** Dùng chung `formatVnd`, `formatDecimalVn`, `httpGet`, `debounce`, `toast`; không viết lặp hàm tiện ích trong từng file JS.
-- **Thư viện duy nhất được phép:**
-  - Lightbox/Zoom ảnh sản phẩm: **PhotoSwipe 5** (dynamic `import()` khi click ảnh).
-  - Micro-interactions / Staggered Reveal / Number Odometer: **Anime.js v3.2.2** (`~6.5KB gzip` qua CDN/ESM, chỉ dùng cho Staggered Grid Reveal `[data-drv-stagger]`, đếm số Odometer trong `<drv-unit-calc>` và Spring Cart Badge Bounce; toàn bộ Hover/UI thường ngày dùng Pure CSS GPU `transform`/`opacity`).
+- **Thư viện duy nhất được phép (`D-19`, `D-28`, `D-30`):**
+  - Lightbox/Zoom ảnh sản phẩm & Cẩm nang: **PhotoSwipe 5** (1 module duy nhất `import()` động khi click ảnh).
+  - Micro-interactions / Staggered Reveal / Number Odometer: **Anime.js v3.2.2** (`~6.5KB gzip` tự host qua Vite chunk, `import()` động khi có `[data-drv-stagger]`/`[data-drv-reveal]` hoặc `<drv-unit-calc>`; toàn bộ Hover/UI thường ngày dùng Pure CSS GPU `transform`/`opacity`).
   - Carousel/Slider: CSS `scroll-snap` + ~1KB JS điều hướng.
   - Modal/Drawer/Bottom sheet: Native `<dialog>` và Popover API.
-  - Icon: **Phosphor Icons CDN** (`@phosphor-icons/web@2.1.2` qua jsDelivr CDN: `regular`, `bold`, `fill`, sử dụng thẻ `<i class="ph ph-..." aria-hidden="true"></i>`).
+  - Icon: **Phosphor Icons Subset tự host** (`assets/fonts/phosphor-subset.woff2`, chứa ~140 icon dùng thực tế, cú pháp `<i class="ph ph-..." aria-hidden="true"></i>`).
+  - Ảnh QR thanh toán: `img.vietqr.io` (chỉ render khi đơn BACS ở trạng thái `on-hold`).
 
 ### Motion & Micro-interactions Rules (Option A + B Kết Hợp)
 - **Option A — Pure CSS GPU (`transform`, `opacity` — 0KB JS):**
@@ -78,10 +79,10 @@ Mọi token khai báo tại `assets/src/tokens/tokens.json` và sinh ra `tokens.
   - Bắt buộc tôn trọng `@media (prefers-reduced-motion: reduce)`.
 
 ### Nghiêm cấm tuyệt đối ở Frontend
-- ❌ **CẤM:** Tailwind/Bootstrap, jQuery mới (ngoài trang Cart/Checkout của WC), React/Vue/Alpine, GSAP/Three.js, Swiper.js.
+- ❌ **CẤM:** Tailwind/Bootstrap, jQuery mới (ngoài trang Cart/Checkout của WC), React/Vue/Alpine, GSAP/Three.js, Swiper.js, classic script IIFE toàn cục, auto-inject widget nặng toàn site (`ai-finder.js`), hiệu ứng `glass-shine` trên `mouseover` toàn trang, nút Wishlist ở Phase 1.
 - ❌ **CẤM:** `!important` trong CSS, inline `<script>` / `<style>` (trừ Critical CSS ≤ 14KB trên `<head>` và JSON config nhỏ).
 - ❌ **CẤM:** Animate thuộc tính gây Layout Thrashing (`width`, `height`, `top`, `left`, `margin`), parallax nặng, carousel tự chạy, đồng hồ đếm ngược Flash Sale giả, banner dọc bám 2 bên màn hình, icon danh mục hình tròn.
-- ❌ **CẤM:** Dùng icon ký tự Unicode/text (`→`, `←`, `↓`, `▾`, `▸`, `⇄`, `×`, `−`, `+`, `✓`, `●`, `☰`, `✅`, `❌`) hoặc emoji (`🔍`, `📍`, `📞`, `💬`, `🛒`) trên giao diện HTML/JS. Mọi biểu tượng bắt buộc dùng class của thư viện **Phosphor Icons CDN** (`<i class="ph ph-..."></i>`).
+- ❌ **CẤM:** Dùng icon ký tự Unicode/text (`→`, `←`, `↓`, `▾`, `▸`, `⇄`, `×`, `−`, `+`, `✓`, `●`, `☰`, `✅`, `❌`) hoặc emoji (`🔍`, `📍`, `📞`, `💬`, `🛒`) trên giao diện HTML/JS. Mọi biểu tượng bắt buộc dùng `<i class="ph ph-..."></i>` từ font Phosphor subset tự host.
 - ❌ **CẤM:** Gọi Google Fonts CDN bên ngoài (font chữ bắt buộc self-host `.woff2`).
 
 ---

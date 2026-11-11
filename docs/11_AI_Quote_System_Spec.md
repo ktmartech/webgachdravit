@@ -1,38 +1,50 @@
-firecrawl
-# 11. Hệ thống Báo giá & AI Gợi ý Sản phẩm
+# 11. Hệ thống Báo giá & AI Gợi ý Sản phẩm (Tài liệu Khởi thảo — Đã Thay Thế Một Phần)
 
-> Quyết định: D-XX (AI-powered Quote System), D-YY (Conversational Product Finder)
-> Skill: `wordpress`, `ai-integration`, `wp-rest-api`, `form-cro`, `backend-security-coder`
+> **Quyết định liên quan:** `D-23` (BOQ & CPT `drv_lead` ở Phase 1 — đã chốt), `D-25` (Tắt cờ AI `features.ai_enabled = false` ở Phase 1 — đã chốt), `D-41`..`D-49` (Kiến trúc Trợ lý AI Phase 3 — đề xuất).
+> **Skill:** `wordpress`, `wp-rest-api`, `form-cro`, `backend-security-coder`
+
+> [!WARNING]
+> **THÔNG BÁO QUAN TRỌNG VỀ TRẠNG THÁI TÀI LIỆU:**
+> - **Mục §2 (Quote Builder dùng PHP session/transient, WC Order `drv-quote-draft`, hook non-HPOS và Google reCAPTCHA) ĐÃ DEPRECATED** theo các Quyết định **`D-22`, `D-23`, `D-30`** trong [00_Project_Brief_Decisions.md](00_Project_Brief_Decisions.md). **Tuyệt đối không triển khai code theo §2.**
+> - **Đặc tả chuẩn cho Báo giá công trình BOQ & Lead (Phase 1):** Xem **[17_Quote_BOQ_And_Lead_Spec.md](17_Quote_BOQ_And_Lead_Spec.md)** (`localStorage` `drv_quote_v2` + CPT private `drv_lead` + `GET /dravit/v1/nonce` + HPOS `OrderConverter`).
+> - **Đặc tả chuẩn cho Trợ lý AI Tìm gạch (Phase 3):** Xem **[12_AI_Advisor_Strategy_Analysis.md](12_AI_Advisor_Strategy_Analysis.md)** và **[13_AI_Advisor_MVP_Spec.md](13_AI_Advisor_MVP_Spec.md)** (hệ thống đóng kín `D-41`..`D-49`; ở Phase 1 mặc định `drv_settings.features.ai_enabled = false` theo `D-25`).
 
 ## 1. Tổng quan
 
 ### 1.1 Mục tiêu
 
 Nâng cấp trải nghiệm mua hàng từ catalog thụ động sang hệ thống tư vấn chủ động, giúp khách hàng:
-- **Tính năng 1 (Quote Builder):** Tự tạo bảng báo giá nhiều sản phẩm, để lại thông tin → chuyển về hệ thống CRM/sale.
-- **Tính năng 2 (AI Tile Finder):** Nhập nhu cầu bằng ngôn ngữ tự nhiên → AI gợi ý sản phẩm phù hợp dựa trên thuộc tính, ngữ cảnh và ràng buộc.
+- **Tính năng 1 (Quote Builder / BOQ):** Tự tạo bảng báo giá nhiều sản phẩm theo hạng mục phòng, để lại thông tin → lưu vào CPT `drv_lead` cho sale xử lý (xem đặc tả chính thức tại [17_Quote_BOQ_And_Lead_Spec.md](17_Quote_BOQ_And_Lead_Spec.md)).
+- **Tính năng 2 (AI Tile Finder):** Nhập nhu cầu bằng ngôn ngữ tự nhiên → AI gợi ý sản phẩm phù hợp dựa trên thuộc tính, ngữ cảnh và ràng buộc an toàn (xem đặc tả chính thức tại [12_AI_Advisor_Strategy_Analysis.md](12_AI_Advisor_Strategy_Analysis.md) & [13_AI_Advisor_MVP_Spec.md](13_AI_Advisor_MVP_Spec.md)).
 
-### 1.2 Vị trí trong roadmap
+### 1.2 Vị trí trong roadmap (Đã cập nhật theo `D-23`, `D-25`)
 
-| Phase | Tính năng |
-|---|---|
-| **Phase 2** (sau Phase 1 hoàn thành) | Tính năng 1 — Quote Builder cơ bản (không AI) |
-| **Phase 3** | Tính năng 2 — AI Tile Finder với LLM integration |
-| **Phase 4+** | Nâng cấp: Visual similarity search, AR preview, Multi-room quote |
+| Phase | Tính năng | Tài liệu chuẩn |
+|---|---|---|
+| **Phase 1** | Danh sách Báo giá công trình BOQ (`/danh-sach-bao-gia`) & Thu nhận Lead tập trung (`drv_lead`), không dùng AI (`features.ai_enabled = false`) | [17_Quote_BOQ_And_Lead_Spec.md](17_Quote_BOQ_And_Lead_Spec.md) |
+| **Phase 3** | Trợ lý AI Tìm gạch (`/tro-ly-ai-tim-gach`) đóng kín trên Catalog Snapshot + bộ tri thức đã duyệt (`D-41`..`D-49`) | [12_AI_Advisor_Strategy_Analysis.md](12_AI_Advisor_Strategy_Analysis.md), [13_AI_Advisor_MVP_Spec.md](13_AI_Advisor_MVP_Spec.md) |
+| **Phase 4+** | Nâng cấp: Visual similarity search (Vision), Zalo/Messenger chung endpoint, mở rộng Tier 1/2 | [12_AI_Advisor_Strategy_Analysis.md](12_AI_Advisor_Strategy_Analysis.md) §11 |
 
 ### 1.3 Nguyên tắc thiết kế
 
-1. **Progressive Enhancement:** Quote Builder hoạt động ngay cả khi JS bị tắt (form fallback).
-2. **Privacy-first:** Dữ liệu khách hàng không gửi ra ngoài khi huấn luyện AI (chỉ metadata sản phẩm).
-3. **No Vendor Lock-in:** AI model có thể swap giữa OpenAI, Anthropic Claude, hoặc self-hosted Llama.
+1. **Progressive Enhancement:** BOQ & Form Lead hoạt động an toàn dưới LiteSpeed Cache nhờ `/dravit/v1/nonce` (`D-30`).
+2. **Privacy-first:** Dữ liệu cá nhân khách hàng (tên, SĐT, email) không bao giờ gửi vào LLM prompt (chỉ gửi metadata sản phẩm).
+3. **No Vendor Lock-in:** AI model trừu tượng hóa qua `LlmClient` interface + có lớp fallback thuần luật khi LLM lỗi.
 4. **Tuân thủ kiến trúc Dravit:**
-   - Logic nằm trong theme namespace `Dravit\Quote` & `Dravit\AiTileFinder`.
-   - Không tạo custom DB tables (dùng WC Order + post meta).
-   - Vanilla JS modules + REST API.
+   - Logic nằm trong theme dưới namespace `Dravit\` (`Dravit\Quote`, `Dravit\Leads`, `Dravit\Advisor`).
+   - Không tạo custom DB tables: dùng CPT private `drv_lead` cho báo giá/lead (`D-23`), CPT `drv_ai_query` cho nhật ký AI (`D-43`), và WC Order CRUD chuẩn HPOS 100% cho đơn hàng thật (`D-22`).
+   - Vanilla JS ES2022 modules + REST API, icon Phosphor subset tự host (`D-28`, không dùng emoji trong UI).
 
 ---
 
-## 2. Tính năng 1: Quote Builder (Báo giá Đa Sản phẩm)
+## 2. Tính năng 1: Quote Builder (Báo giá Đa Sản phẩm) — [DEPRECATED]
+
+> [!WARNING]
+> **TOÀN BỘ MỤC §2 DƯỚI ĐÂY ĐÃ DEPRECATED THEO `D-22`, `D-23`, `D-30` VÀ CHỈ GIỮ LẠI ĐỂ ĐỐI CHIẾU LỊCH SỬ.**
+> - **Không dùng** PHP session/transient `_drv_quote_*` hay endpoint `/quote/add-item` → Đã thay bằng lưu nháp phía client tại `localStorage` (`drv_quote_v2`) kết hợp hydrate qua `GET /wp-json/dravit/v1/products`.
+> - **Không tạo** đơn nháp `WC_Order` với trạng thái `drv-quote-draft` (làm nhảy số đơn, sai lệch báo cáo & tồn kho) → Đã thay bằng **CPT private `drv_lead`** (`_drv_lead_type = 'boq'`) và chỉ tạo đơn HPOS `wc-cho-xac-nhan` khi Admin bấm *"Tạo đơn hàng từ báo giá"* (`OrderConverter`).
+> - **Không dùng** Google reCAPTCHA v3 (ngoài whitelist `02 §4`) → Đã thay bằng `GET /wp-json/dravit/v1/nonce` (`no-store`) + honeypot + time-trap (`≥ 3s`) + rate-limit IP + kiểm tra `Origin`.
+> - **Đọc đặc tả chính thức tại:** **[17_Quote_BOQ_And_Lead_Spec.md](17_Quote_BOQ_And_Lead_Spec.md)**.
 
 ### 2.1 User Flow
 
@@ -151,183 +163,57 @@ class QuotePanelController extends HTMLElement {
 customElements.define('drv-quote-panel', QuotePanelController);
 ```
 
-#### 2.2.2 Backend (PHP)
+#### 2.2.2 Backend (PHP) — [DEPRECATED: Đã chuyển sang CPT `drv_lead` tại `17`]
 
-**A. Data Model**
+**A. Data Model (Đã thay thế theo `D-22`, `D-23`)**
 
-Lưu trữ quote draft dưới dạng **WooCommerce Order** với:
-- `post_type` = `shop_order`
-- `post_status` = `drv-quote-draft` (custom status)
-- Meta keys:
-  - `_drv_quote_type` = `customer_request` (phân biệt với order thường)
-  - `_drv_quote_source` = `quote_builder` hoặc `ai_finder`
-  - `_customer_note` = ghi chú khách hàng
-  - `_drv_submitted_at` = timestamp
+- **Thiết kế chính thức (Phase 1):** Báo giá công trình BOQ lưu vào **CPT private `drv_lead`** (`_drv_lead_type = 'boq'`, snapshot JSON `_drv_boq` do server tính lại 100%). **CẤM** lưu báo giá nháp vào `shop_order` hay dùng slug `drv-quote-draft`. Khi khách chốt mua, Admin bấm Action *"Tạo đơn hàng từ báo giá"* (`OrderConverter`) để sinh đơn hàng HPOS thật ở trạng thái `wc-cho-xac-nhan` (`≤ 20` ký tự, gắn `_drv_source_lead_id`). Xem đầy đủ tại [17_Quote_BOQ_And_Lead_Spec.md](17_Quote_BOQ_And_Lead_Spec.md).
 
-Line items lưu bình thường qua WC Order Item API.
+**B. REST API Endpoints (Đã chuẩn hóa sang `15` & `17`)**
 
-**B. REST API Endpoints**
+> Lưu ý: Đoạn code phác thảo ban đầu dưới đây đã được chỉnh sửa bỏ đường dẫn non-HPOS `post.php` và đánh dấu thay thế bằng `POST /wp-json/dravit/v1/quote/submit` (lưu `drv_lead`) + `GET /wp-json/dravit/v1/products` (hydrate từ `localStorage` `drv_quote_v2`). Không cài đặt `/quote/items` hay `/quote/add-item` dùng PHP session.
 
 ```php
-namespace Dravit\Quote;
-
-class QuoteController {
-  public function register_routes() {
-    register_rest_route('dravit/v1', '/quote/items', [
-      'methods'  => 'GET',
-      'callback' => [$this, 'get_items'],
-      'permission_callback' => '__return_true'
-    ]);
-
-    register_rest_route('dravit/v1', '/quote/add-item', [
-      'methods'  => 'POST',
-      'callback' => [$this, 'add_item'],
-      'permission_callback' => '__return_true',
-      'args' => [
-        'product_id' => ['required' => true, 'type' => 'integer'],
-        'quantity'   => ['required' => true, 'type' => 'integer']
-      ]
-    ]);
-
-    register_rest_route('dravit/v1', '/quote/submit', [
-      'methods'  => 'POST',
-      'callback' => [$this, 'submit_quote'],
-      'permission_callback' => '__return_true',
-      'args' => [
-        'items' => ['required' => true, 'type' => 'array'],
-        'customer' => ['required' => true, 'type' => 'object']
-      ]
-    ]);
-  }
-
-  public function submit_quote(\WP_REST_Request $request): \WP_REST_Response {
-    $items = $request['items'];
-    $customer = $request['customer'];
-
-    // Validate
-    if (empty($items) || count($items) > 20) {
-      return new \WP_REST_Response(['error' => 'Invalid items count'], 400);
-    }
-
-    // Sanitize
-    $customer_name  = sanitize_text_field($customer['customer_name']);
-    $customer_phone = sanitize_text_field($customer['customer_phone']);
-    $customer_email = sanitize_email($customer['customer_email'] ?? '');
-    $customer_note  = sanitize_textarea_field($customer['customer_note'] ?? '');
-
-    // Tạo WC Order
-    $order = wc_create_order(['status' => 'drv-quote-draft']);
-    $order->set_customer_note($customer_note);
-    $order->update_meta_data('_drv_quote_type', 'customer_request');
-    $order->update_meta_data('_drv_quote_source', 'quote_builder');
-    $order->update_meta_data('_drv_submitted_at', time());
-    $order->update_meta_data('_billing_first_name', $customer_name);
-    $order->update_meta_data('_billing_phone', $customer_phone);
-    $order->update_meta_data('_billing_email', $customer_email);
-
-    foreach ($items as $item) {
-      $product = wc_get_product($item['product_id']);
-      if (!$product) continue;
-
-      $order->add_product($product, $item['quantity']);
-    }
-
-    $order->calculate_totals();
-    $order->save();
-
-    // Gửi email cho admin/sale
-    $this->send_quote_notification($order);
-
-    // Gửi email xác nhận cho khách
-    $this->send_customer_confirmation($order, $customer_email);
-
-    // Xóa session quote
-    $this->clear_session_quote();
-
-    return new \WP_REST_Response([
-      'success' => true,
-      'quote_id' => $order->get_id()
-    ], 200);
-  }
-
-  private function send_quote_notification(\WC_Order $order): void {
-    $to = get_option('drv_settings')['quote_email'] ?? get_option('admin_email');
-    $subject = sprintf('[DRAVIT] Báo giá mới #%d từ %s',
-      $order->get_id(),
-      $order->get_meta('_billing_first_name')
-    );
-
-    $message = sprintf(
-      "Khách hàng: %s\nSĐT: %s\nEmail: %s\n\nSản phẩm:\n%s\n\nTổng tạm tính: %s\n\nGhi chú:\n%s\n\nXem chi tiết: %s",
-      $order->get_meta('_billing_first_name'),
-      $order->get_meta('_billing_phone'),
-      $order->get_meta('_billing_email'),
-      $this->format_items_text($order),
-      wc_price($order->get_total()),
-      $order->get_customer_note(),
-      admin_url('post.php?post=' . $order->get_id() . '&action=edit')
-    );
-
-    wp_mail($to, $subject, $message);
-  }
-}
+// [DEPRECATED DRAFT — Xem bản chính thức tại docs/17_Quote_BOQ_And_Lead_Spec.md]
+// Khi làm việc với WC_Order thật (vd sau khi OrderConverter chuyển từ drv_lead sang đơn HPOS):
+// - BẮT BUỘC dùng HPOS CRUD: $order->get_meta(), $order->update_meta_data(), $order->save()
+// - URL trang sửa đơn trong Admin: $order->get_edit_order_url() (CẤM dùng admin_url('post.php?post=...'))
+// - Slug trạng thái đơn custom bắt buộc có tiền tố 'wc-' và tổng độ dài <= 20 ký tự (vd: 'wc-cho-xac-nhan')
 ```
 
-**C. Admin Panel Integration**
+**C. Admin Panel Integration (Chuẩn HPOS — Cấm dùng hook `shop_order` cũ)**
+
+> Lưu ý kỹ thuật bắt buộc (`D-22`): Mọi tùy biến danh sách đơn hàng WooCommerce phải dùng hook HPOS `woocommerce_page_wc-orders` (nhận trực tiếp đối tượng `\WC_Order`), **tuyệt đối không copy** `manage_edit-shop_order_columns` hay `manage_shop_order_posts_custom_column`. Xem chi tiết vận hành đơn HPOS tại [18_Order_Ops_And_Email_Spec.md](18_Order_Ops_And_Email_Spec.md).
 
 ```php
-// Thêm custom order status
-add_action('init', function() {
-  register_post_status('drv-quote-draft', [
-    'label' => 'Báo giá chờ xử lý',
-    'public' => false,
-    'exclude_from_search' => false,
-    'show_in_admin_all_list' => true,
-    'show_in_admin_status_list' => true,
-    'label_count' => _n_noop(
-      'Báo giá chờ xử lý <span class="count">(%s)</span>',
-      'Báo giá chờ xử lý <span class="count">(%s)</span>'
-    )
-  ]);
+// Ví dụ chuẩn HPOS khi thêm cột nguồn báo giá trên danh sách đơn hàng thật:
+add_filter('manage_woocommerce_page_wc-orders_columns', function (array $columns): array {
+    $columns['drv_source_lead'] = 'Nguồn BOQ';
+    return $columns;
 });
 
-// Thêm vào dropdown status WC
-add_filter('wc_order_statuses', function($statuses) {
-  $statuses['drv-quote-draft'] = 'Báo giá chờ xử lý';
-  return $statuses;
-});
-
-// Custom columns trong order list
-add_filter('manage_edit-shop_order_columns', function($columns) {
-  $columns['quote_type'] = 'Loại';
-  return $columns;
-});
-
-add_action('manage_shop_order_posts_custom_column', function($column, $post_id) {
-  if ($column === 'quote_type') {
-    $order = wc_get_order($post_id);
-    $type = $order->get_meta('_drv_quote_type');
-    if ($type === 'customer_request') {
-      echo '<span class="badge">Báo giá</span>';
+add_action('manage_woocommerce_page_wc-orders_custom_column', function (string $column, \WC_Order $order): void {
+    if ($column === 'drv_source_lead') {
+        $lead_id = (int) $order->get_meta('_drv_source_lead_id');
+        if ($lead_id > 0) {
+            echo '<span class="drv-badge">BOQ #' . esc_html((string) $lead_id) . '</span>';
+        }
     }
-  }
 }, 10, 2);
 ```
 
-### 2.3 UX Enhancements
+### 2.3 UX Enhancements (Cập nhật theo `17`)
 
-1. **Auto-save:** Quote items tự động lưu vào session/localStorage mỗi khi thay đổi.
-2. **Persistent cart:** Khách quay lại sau vẫn thấy quote items (dựa trên session cookie hoặc user meta).
-3. **Mobile-friendly:** Quote panel hiển thị dạng bottom sheet trên mobile.
-4. **Share quote:** Tạo URL tạm `?quote={hash}` để khách có thể chia sẻ quote với người khác (xem only, hết hạn sau 7 ngày).
+1. **Auto-save phía client:** Mọi thay đổi lưu trực tiếp vào `localStorage` (`drv_quote_v2`, hỗ trợ chia theo hạng mục phòng + mức hao hụt `0/5/10%`), không tạo PHP session gây miss LiteSpeed Cache.
+2. **Chiết khấu dự kiến (`D-23`):** Bậc khối lượng (`≥ 30 m²: 5%`, `≥ 100 m²: 8%`) chỉ hiển thị tham khảo trên `/danh-sach-bao-gia`, không tự trừ vào giỏ bán lẻ.
+3. **Mobile-friendly:** `<drv-quote-panel>` mở dạng drawer/bottom sheet và liên thông với trang `/danh-sach-bao-gia`.
 
-### 2.4 Security & Validation
+### 2.4 Security & Validation (Chuẩn hóa theo `D-30`)
 
-1. **Rate limiting:** Giới hạn 5 quote submissions/IP/giờ (dùng transient `_drv_quote_limit_{ip}`).
-2. **Honeypot field:** Thêm trường ẩn `drv_website` (bot thường điền) → reject nếu có giá trị.
-3. **reCAPTCHA v3:** Tích hợp invisible reCAPTCHA, reject nếu score < 0.5.
-4. **Sanitization:** Tất cả input đều sanitize (`sanitize_text_field`, `sanitize_email`, `absint`).
-5. **Max items:** Giới hạn tối đa 20 sản phẩm/quote.
+1. **Fresh Nonce dưới Page Cache:** Lấy token ngay trước khi gửi qua `GET /wp-json/dravit/v1/nonce` (`Cache-Control: no-store`).
+2. **Rate limiting:** Giới hạn số lượt gửi theo IP hash (trả HTTP `429` khi vượt ngưỡng).
+3. **Honeypot + Time-trap + Origin check:** Từ chối nếu điền trường ẩn, thời gian mở form `< 3s`, hoặc sai `Origin` (**không dùng Google reCAPTCHA v3** do nằm ngoài whitelist `02 §4`).
+4. **Server Recompute & Sanitization:** Server tính lại 100% số lượng/thành tiền từ DB qua `Dravit\Units\Calc`, mọi input qua `sanitize_*` + kiểm tra tối đa `max_items` (`drv_settings.quote.max_items`).
 
 ---
 
@@ -894,26 +780,9 @@ wp-content/themes/dravit/
     └── ai-settings.php                # LLM provider config
 ```
 
-### 5.2 Dependencies
+### 5.2 Dependencies (Đã cập nhật theo Whitelist `02` §4 & `D-28`)
 
-**Composer (PHP):**
-```json
-{
-  "require": {
-    "guzzlehttp/guzzle": "^7.8",
-    "symfony/cache": "^6.4"
-  }
-}
-```
-
-**NPM (JS build):**
-```json
-{
-  "dependencies": {
-    "marked": "^11.0.0"
-  }
-}
-```
+> **Lưu ý kiến trúc:** Không cài `guzzlehttp/guzzle`, `symfony/cache` (Composer `vendor/`) hay `marked` (NPM) trên production theo `D-04`, `D-07`, `D-28`. Sử dụng trực tiếp `wp_remote_post`, WP Object Cache / Catalog Snapshot và render JSON có cấu trúc (xem [13_AI_Advisor_MVP_Spec.md](13_AI_Advisor_MVP_Spec.md)).
 
 ### 5.3 Environment Variables
 
@@ -1120,4 +989,4 @@ Phase 5 (Q3 2027):       Multi-room quoting + Voice input
 
 ---
 
-**Tài liệu này tuân thủ ADR D-XX và D-YY, cập nhật vào `docs/00_Project_Brief_Decisions.md` sau khi phê duyệt.**
+**Tài liệu này đã được chuẩn hóa sang các Quyết định `D-23`, `D-25` (đã chốt trong [00_Project_Brief_Decisions.md](00_Project_Brief_Decisions.md) & [17_Quote_BOQ_And_Lead_Spec.md](17_Quote_BOQ_And_Lead_Spec.md)) và dải đề xuất `D-41`..`D-49` (Phase 3 AI trong [12_AI_Advisor_Strategy_Analysis.md](12_AI_Advisor_Strategy_Analysis.md) & [13_AI_Advisor_MVP_Spec.md](13_AI_Advisor_MVP_Spec.md)).**

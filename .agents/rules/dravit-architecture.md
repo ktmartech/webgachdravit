@@ -11,8 +11,8 @@
 - **Không tách Plugin riêng:** Toàn bộ logic nghiệp vụ (`Catalog`, `Units`, `Filters`, `Seo`, `Woo`, `Admin`) gộp chung trong `wp-content/themes/dravit/inc/` dưới namespace `Dravit\` và nạp qua PSR-4 autoloader trong `functions.php` (không dùng `vendor/` runtime trên server).
 - **Đơn ngôn ngữ (Tiếng Việt 100%):** Website chỉ sử dụng **1 ngôn ngữ duy nhất là Tiếng Việt (`lang="vi"`)**.
   - **CẤM:** cài Polylang/WPML, tạo cấu trúc URL đa ngôn ngữ (`/en/`, `/zh/`), tạo helper dịch đa ngôn ngữ hoặc tách template theo ngôn ngữ (`-{lang}.php`).
-- **Không tạo bảng Database riêng ở Phase 1:** Mọi dữ liệu lưu trong cấu trúc chuẩn của WordPress và WooCommerce (`product_cat`, `pa_*`, post meta qua WC CRUD, term meta, option `drv_settings`).
-- **Tương thích HPOS 100%:** Mọi thao tác với đơn hàng bắt buộc dùng `wc_get_order()`, `$order->get_meta()`, `$order->update_meta_data()`, `$order->save()`. **CẤM** dùng `get_post_meta()` / `update_post_meta()` cho đơn hàng.
+- **Không tạo bảng Database riêng ở Phase 1 (`D-07`, `D-23`):** Mọi dữ liệu lưu trong cấu trúc chuẩn của WordPress và WooCommerce (`product_cat`, `pa_*`, post meta qua WC CRUD, term meta, user meta, CPT private `drv_lead` cho báo giá BOQ & form lead, option `drv_settings`).
+- **Tương thích HPOS 100% & Slug ≤ 20 ký tự (`D-22`):** Mọi thao tác với đơn hàng bắt buộc dùng `wc_get_order()`, `$order->get_meta()`, `$order->update_meta_data()`, `$order->save()`. **CẤM** dùng `get_post_meta()` / `update_post_meta()` cho đơn hàng. Mọi custom `post_status` / order status bắt buộc dài `≤ 20` ký tự tính cả tiền tố `wc-`.
 
 ---
 
@@ -25,30 +25,34 @@ wp-content/themes/dravit/
 │   ├── collections.php          # 28 Smart Collections (slug, group, h1, rule, priority, phase)
 │   ├── facets.php               # 14 bộ lọc (FLT-01..14, param, taxonomy, UI, nhóm SEO)
 │   ├── units.php                # Hệ đơn vị bán & pricing models (area_pack, piece, set, pack)
+│   ├── size-guide.php           # Cấu hình tương quan kích thước & bề mặt trên Home
 │   └── provinces-vn.php         # 34 Tỉnh/Thành phố Việt Nam
 ├── inc/
 │   ├── Theme.php                # Bootstrap các module theo thứ tự
-│   ├── Core/                    # Setup, Assets, Vite, Cleanup, Settings, Helpers, Template
-│   ├── Catalog/                 # CollectionSync, RuleMatcher, PrimaryCategory, SlugGuard, SaleSync, ResyncJob
-│   ├── Units/                   # UnitRegistry, PricingModel/{AreaPack,Piece,Set,Pack}, PriceHtml, QuantityRules
+│   ├── Core/                    # Setup, Assets, Vite, Cleanup, Settings, Helpers, Template, Menu/*
+│   ├── Catalog/                 # CollectionSync, RuleMatcher, PrimaryCategory, SlugGuard, SaleSync, ResyncJob, SearchController
+│   ├── Units/                   # UnitRegistry, Calc, PricingModel/{AreaPack,Piece,Set,Pack}, PriceHtml, QuantityRules
 │   ├── Filters/                 # FacetRegistry, UrlState, QueryBuilder, FacetCounter, CatalogController, Renderer
+│   ├── Quote/                   # QuoteController, BoqService, OrderConverter
+│   ├── Leads/                   # LeadPostType, LeadController, AntiSpamGuard, LeadNotifier, AdminColumns
+│   ├── Content/                 # Toc, ReadingTime, BlockStyles, Patterns, Shortcodes
 │   ├── Seo/                     # RobotsMatrix, Canonical, SchemaGraph, Breadcrumbs, InternalLinks, LlmsTxt
-│   ├── Woo/                     # Hooks, AssetsDequeue, CheckoutVN, QuoteShippingMethod, OrderFlow, Emails/*, BankQR
-│   └── Admin/                   # ProductDataTab, TermFields, ToolsResync
-├── header.php · footer.php · index.php · front-page.php · page.php · single.php · archive.php · search.php · 404.php
-├── page-templates/              # template-showroom.php, template-policy.php
-├── template-parts/              # header/, footer/, catalog/, product/, blog/, common/
-├── woocommerce/                 # Chỉ override các template bắt buộc (archive-product, content-product, single-product, cart, checkout)
-├── patterns/                    # Gutenberg block patterns cho trang nội dung
+│   ├── Woo/                     # Hooks, AssetsDequeue, CheckoutVN, QuoteShippingMethod, OrderFlow, OrderMeta, StoreApiExtend, Emails/*, BankQR
+│   └── Admin/                   # ProductDataTab, TermFields, PostFields, UserFields, OrderMetabox, ToolsResync
+├── header.php · footer.php · index.php · home.php · category.php · front-page.php · page.php · single.php · archive.php · search.php · 404.php
+├── page-templates/              # template-contact.php, template-quote.php, template-policy.php, template-ai-finder.php
+├── template-parts/              # ui/, header/, footer/, home/, catalog/, product/, cart/, checkout/, order/, quote/, blog/, common/
+├── woocommerce/                 # Chỉ override các template bắt buộc (archive-product, content-product, single-product, cart, checkout, emails)
+├── patterns/                    # Gutenberg block patterns cho trang nội dung & cẩm nang
 ├── assets/
 │   ├── src/tokens/tokens.json   # Nguồn token duy nhất
-│   ├── src/css/                 # @layer reset, tokens, base, layout, components, woo, utilities
-│   ├── src/js/                  # ES Modules: core.js, catalog.js, load-more.js, gallery.js, calculator.js, cart.js, search.js, checkout-vn.js
+│   ├── src/css/                 # @layer reset, tokens, base, layout, components, woo, utilities + pages/*
+│   ├── src/js/                  # ES Modules: core.js, home.js, catalog.js, search.js, product.js, cart.js, checkout-vn.js, order.js, quote.js, blog.js, utils/{calc,format,http,dom,toast,storage}.js
 │   ├── dist/                    # Vite build output + .vite/manifest.json
-│   ├── fonts/                   # anton-vi.woff2, quicksand-vf-vi.woff2
+│   ├── fonts/                   # anton-vi.woff2, quicksand-vf-vi.woff2, phosphor-subset.woff2
 │   ├── images/                  # Logo WebP/PNG tối ưu
 │   └── data/wards/              # JSON Phường/Xã theo mã tỉnh (lazy load)
-└── tools/                       # Scripts build-time (tokens, fonts, wards)
+└── tools/                       # Scripts build-time (tokens, fonts, icons, wards)
 ```
 
 ---
