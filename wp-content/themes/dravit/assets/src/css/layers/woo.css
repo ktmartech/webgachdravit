@@ -1,0 +1,26 @@
+/* @layer woo - WooCommerce Classic Shortcode & Store Notice Foundations */
+@layer woo {
+  .woocommerce-notices-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+  }
+
+  .woocommerce-message,
+  .woocommerce-info,
+  .woocommerce-error {
+    padding: var(--s-3) var(--s-4);
+    border: var(--bw);
+    border-left: 3px solid var(--c-teal-500);
+    border-radius: var(--r-sm);
+    background-color: var(--c-white);
+    color: var(--c-text-main);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+  }
+
+  .woocommerce-error {
+    border-left-color: var(--c-sale);
+    background-color: var(--c-sale-bg);
+  }
+}

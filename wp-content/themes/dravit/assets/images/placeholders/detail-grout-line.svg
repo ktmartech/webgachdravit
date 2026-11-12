@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+  <!-- 1.5mm Precision Grout Line Intersection Detail -->
+  <rect width="600" height="600" fill="#CDD8DB"/>
+  <!-- 4 Tile Quadrants Separated by Precision 1.5mm Grout Joint -->
+  <rect x="20" y="20" width="274" height="274" fill="#FAF9F5" stroke="#9CB0B9" stroke-width="1.5"/>
+  <rect x="306" y="20" width="274" height="274" fill="#F5F4F0" stroke="#9CB0B9" stroke-width="1.5"/>
+  <rect x="20" y="306" width="274" height="274" fill="#F5F4F0" stroke="#9CB0B9" stroke-width="1.5"/>
+  <rect x="306" y="306" width="274" height="274" fill="#FAF9F5" stroke="#9CB0B9" stroke-width="1.5"/>
+  <!-- Highlight Ring on Grout Intersection -->
+  <circle cx="300" cy="300" r="64" fill="none" stroke="#3C7D7C" stroke-width="4" stroke-dasharray="8 6"/>
+</svg>
+

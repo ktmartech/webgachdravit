@@ -1,0 +1,459 @@
+@layer components {
+/* 4.17 Native <dialog> Modals, Drawers & Bottom Sheets (.drv-dialog) */
+  @keyframes drv-modal-in {
+    from {
+      opacity: 0;
+      transform: translateY(20px) scale(0.95);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes drv-modal-out {
+    from {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    to {
+      opacity: 0;
+      transform: translateY(14px) scale(0.96);
+    }
+  }
+
+  @keyframes drv-drawer-right-in {
+    from {
+      opacity: 0.4;
+      transform: translateX(100%);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes drv-drawer-right-out {
+    from {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    to {
+      opacity: 0;
+      transform: translateX(100%);
+    }
+  }
+
+  @keyframes drv-drawer-left-in {
+    from {
+      opacity: 0.4;
+      transform: translateX(-100%);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes drv-drawer-left-out {
+    from {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    to {
+      opacity: 0;
+      transform: translateX(-100%);
+    }
+  }
+
+  @keyframes drv-bottom-sheet-in {
+    from {
+      opacity: 0.4;
+      transform: translateY(100%);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes drv-bottom-sheet-out {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    to {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+  }
+
+  @keyframes drv-backdrop-in {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes drv-backdrop-out {
+    from {
+      opacity: 1;
+    }
+
+    to {
+      opacity: 0;
+    }
+  }
+
+  .drv-dialog {
+    background-color: var(--c-white);
+    color: var(--c-text-main);
+    border: var(--bw-strong);
+    border-radius: var(--r-md);
+    padding: 0;
+    max-width: min(600px, 94vw);
+    width: 100%;
+    max-height: 90dvh;
+    margin: auto;
+    box-shadow: var(--shadow-dropdown);
+    overflow: hidden;
+  }
+
+  .drv-dialog[open] {
+    display: flex;
+    flex-direction: column;
+    animation: drv-modal-in var(--dur-drawer) var(--ease-out-expo) both;
+  }
+
+  .drv-dialog[open].is-closing,
+  .drv-dialog.is-closing {
+    animation: drv-modal-out 220ms var(--ease-out) both;
+    pointer-events: none;
+  }
+
+  .drv-dialog::backdrop {
+    background-color: var(--c-backdrop);
+    backdrop-filter: blur(2px);
+    animation: drv-backdrop-in var(--dur-drawer) var(--ease-out) both;
+  }
+
+  .drv-dialog[open].is-closing::backdrop,
+  .drv-dialog.is-closing::backdrop {
+    animation: drv-backdrop-out 220ms var(--ease-out) both;
+  }
+
+  .drv-dialog--drawer-right {
+    margin: 0 0 0 auto;
+    max-width: min(440px, 92vw);
+    height: 100dvh;
+    max-height: 100dvh;
+    border-radius: 0;
+    border-top: none;
+    border-bottom: none;
+    border-right: none;
+  }
+
+  .drv-dialog--drawer-right[open] {
+    animation: drv-drawer-right-in 320ms var(--ease-out-expo) both;
+  }
+
+  .drv-dialog--drawer-right[open].is-closing,
+  .drv-dialog--drawer-right.is-closing {
+    animation: drv-drawer-right-out 230ms var(--ease-out) both;
+  }
+
+  .drv-dialog--drawer-left {
+    margin: 0 auto 0 0;
+    max-width: min(360px, 90vw);
+    height: 100dvh;
+    max-height: 100dvh;
+    border-radius: 0;
+    border-top: none;
+    border-bottom: none;
+    border-left: none;
+  }
+
+  .drv-dialog--drawer-left[open] {
+    animation: drv-drawer-left-in 320ms var(--ease-out-expo) both;
+  }
+
+  .drv-dialog--drawer-left[open].is-closing,
+  .drv-dialog--drawer-left.is-closing {
+    animation: drv-drawer-left-out 230ms var(--ease-out) both;
+  }
+
+  .drv-dialog--bottom-sheet {
+    margin: auto 0 0;
+    max-width: 100%;
+    width: 100%;
+    max-height: 86dvh;
+    border-radius: var(--r-md) var(--r-md) 0 0;
+  }
+
+  .drv-dialog--bottom-sheet[open] {
+    animation: drv-bottom-sheet-in 320ms var(--ease-out-expo) both;
+  }
+
+  .drv-dialog--bottom-sheet[open].is-closing,
+  .drv-dialog--bottom-sheet.is-closing {
+    animation: drv-bottom-sheet-out 230ms var(--ease-out) both;
+  }
+
+  .drv-dialog__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-3);
+    padding: var(--s-3) var(--s-5);
+    background-color: var(--c-ivory);
+    border-bottom: var(--bw);
+    flex-shrink: 0;
+  }
+
+  .drv-dialog__title {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    font-family: var(--f-body);
+    font-size: var(--fs-base);
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--c-navy-900);
+    min-width: 0;
+  }
+
+  .drv-dialog__actions {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    flex-shrink: 0;
+  }
+
+  .drv-dialog__head [data-drv-action="dialog-close"],
+  .drv-dialog [data-drv-action="dialog-close"].drv-btn--icon {
+    width: 36px;
+    height: 36px;
+    min-height: 36px;
+    padding: 0;
+    border-radius: var(--r-sm);
+    border: none;
+    background-color: transparent;
+    color: var(--c-navy-900);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: none;
+    transition:
+      background-color var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out);
+  }
+
+  .drv-dialog__head [data-drv-action="dialog-close"]:hover,
+  .drv-dialog__head [data-drv-action="dialog-close"]:active,
+  .drv-dialog [data-drv-action="dialog-close"].drv-btn--icon:hover,
+  .drv-dialog [data-drv-action="dialog-close"].drv-btn--icon:active {
+    background-color: var(--c-champagne);
+    color: var(--c-teal-700);
+    border-color: transparent;
+    transform: none;
+  }
+
+  .drv-dialog__body {
+    padding: var(--s-5);
+    overflow-y: auto;
+    flex: 1;
+  }
+
+  .drv-dialog__foot {
+    padding: var(--s-4) var(--s-5);
+    background-color: var(--c-ivory);
+    border-top: var(--bw);
+    flex-shrink: 0;
+  }
+
+  /* Mobile Drawer Multi-Level Menu (Cấp 2 & Cấp 3 Accordion) */
+  .drv-mob-nav {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-4);
+  }
+
+  .drv-mob-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .drv-mob-group__title {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--c-teal-700);
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--c-navy-200);
+    margin-bottom: 4px;
+  }
+
+  .drv-mob-accordion {
+    border-bottom: 1px solid var(--c-navy-200);
+  }
+
+  .drv-mob-accordion:last-child {
+    border-bottom: none;
+  }
+
+  .drv-mob-accordion__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-2);
+    min-height: 44px;
+    padding: 8px 4px;
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    color: var(--c-navy-900);
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+    transition: color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
+  }
+
+  .drv-mob-accordion__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .drv-mob-accordion__summary:hover {
+    color: var(--c-teal-700);
+  }
+
+  .drv-mob-accordion[open] > .drv-mob-accordion__summary {
+    color: var(--c-teal-700);
+  }
+
+  .drv-mob-accordion__caret {
+    font-size: 12px;
+    color: var(--c-navy-400);
+    transition: transform var(--dur-base) var(--ease-out), color var(--dur-fast) var(--ease-out);
+  }
+
+  .drv-mob-accordion[open] > .drv-mob-accordion__summary .drv-mob-accordion__caret {
+    transform: rotate(180deg);
+    color: var(--c-teal-700);
+  }
+
+  .drv-mob-accordion__body {
+    padding: 4px 0 10px 10px;
+  }
+
+  .drv-mob-accordion[open] > .drv-mob-accordion__body {
+    animation: drv-mega-in 220ms var(--ease-out-expo) both;
+  }
+
+  .drv-mob-sublist {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    border-left: 2px solid var(--c-teal-500);
+    background-color: var(--c-ivory);
+    border-radius: 0 var(--r-sm) var(--r-sm) 0;
+    padding: 4px 0;
+  }
+
+  .drv-mob-sublink {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-2);
+    padding: 8px 12px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--c-text-main);
+    text-decoration: none;
+    transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+  }
+
+  .drv-mob-sublink:hover,
+  .drv-mob-sublink:active {
+    background-color: var(--c-white);
+    color: var(--c-navy-900);
+    font-weight: 600;
+  }
+
+  .drv-mob-viewall {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--c-teal-700);
+    text-decoration: none;
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+
+  .drv-mob-viewall:hover {
+    color: var(--c-navy-900);
+    text-decoration: underline;
+  }
+
+
+  /* 4.21 Toast Notification (.drv-toast-region) */
+  @keyframes drv-toast-in {
+    from {
+      opacity: 0;
+      transform: translateY(16px) scale(0.96);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .drv-toast-region {
+    position: fixed;
+    bottom: calc(var(--mobile-bar-h) + var(--s-4));
+    right: var(--s-4);
+    z-index: var(--z-toast);
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+    max-width: min(380px, 92vw);
+  }
+
+  @media (width >= 1024px) {
+    .drv-toast-region {
+      bottom: var(--s-5);
+      right: var(--s-5);
+    }
+  }
+
+  .drv-toast {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-3);
+    padding: var(--s-3) var(--s-4);
+    background-color: var(--c-navy-900);
+    color: var(--c-white);
+    border-left: 4px solid var(--c-moss-500);
+    border-radius: var(--r-sm);
+    box-shadow: var(--shadow-dropdown);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    animation: drv-toast-in var(--dur-base) var(--ease-spring) both;
+  }
+}

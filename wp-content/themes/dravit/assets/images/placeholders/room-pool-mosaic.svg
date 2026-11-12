@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <!-- Pool deck with R12 anti-slip coping and mosaic basin -->
+  <rect width="800" height="220" fill="#E3EEED"/>
+  <rect x="0" y="0" width="800" height="28" fill="#083A4F"/>
+  <circle cx="110" cy="170" r="70" fill="#3C7D7C" opacity="0.85"/>
+  <circle cx="190" cy="196" r="44" fill="#2F6664"/>
+  <!-- Deck: 60x60 structured pavers -->
+  <rect x="0" y="220" width="800" height="380" fill="#B8C3C8"/>
+  <g stroke="#8A9BA3" stroke-width="2">
+    <line x1="0" y1="220" x2="800" y2="220" stroke="#083A4F"/>
+    <line x1="0" y1="270" x2="800" y2="270"/>
+    <line x1="160" y1="220" x2="100" y2="600"/>
+    <line x1="640" y1="220" x2="700" y2="600"/>
+  </g>
+  <!-- Pool basin with mosaic grid -->
+  <polygon points="200,300 600,300 680,560 120,560" fill="#0D9488"/>
+  <g stroke="#5EC4B6" stroke-width="1" stroke-opacity="0.6">
+    <line x1="190" y1="340" x2="610" y2="340"/>
+    <line x1="178" y1="380" x2="622" y2="380"/>
+    <line x1="166" y1="420" x2="634" y2="420"/>
+    <line x1="154" y1="460" x2="646" y2="460"/>
+    <line x1="142" y1="500" x2="658" y2="500"/>
+    <line x1="130" y1="540" x2="670" y2="540"/>
+    <line x1="280" y1="300" x2="240" y2="560"/>
+    <line x1="360" y1="300" x2="345" y2="560"/>
+    <line x1="440" y1="300" x2="455" y2="560"/>
+    <line x1="520" y1="300" x2="560" y2="560"/>
+  </g>
+  <polygon points="200,300 600,300 680,560 120,560" fill="none" stroke="#F8FAFC" stroke-width="10"/>
+  <!-- Water light ripples -->
+  <g stroke="#CCFBF1" stroke-width="3" fill="none" stroke-opacity="0.7">
+    <path d="M260,390 C300,380 330,400 370,388"/>
+    <path d="M420,450 C460,440 500,462 540,448"/>
+  </g>
+</svg>
+

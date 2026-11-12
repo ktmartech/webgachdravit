@@ -1,0 +1,486 @@
+<?php
+declare(strict_types=1);
+
+namespace Dravit\Admin;
+
+use Dravit\Core\ServiceProviderInterface;
+use Dravit\Core\Settings;
+
+defined('ABSPATH') || exit;
+
+/**
+ * Trang cấu hình tập trung `drv_settings` 9 Tabs trong `Giao diện -> Cài đặt Dravit` (docs/14 §8, Step 1).
+ */
+final class SettingsPage implements ServiceProviderInterface {
+    public const MENU_SLUG = 'drv-settings';
+
+    public function register(): void {
+        if (!is_admin()) {
+            return;
+        }
+        add_action('admin_menu', [$this, 'register_menu']);
+        add_action('admin_init', [$this, 'register_setting']);
+        add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_assets']);
+    }
+
+    public function enqueue_admin_assets(string $hook_suffix): void {
+        if ($hook_suffix !== 'appearance_page_' . self::MENU_SLUG) {
+            return;
+        }
+        wp_enqueue_media();
+        wp_add_inline_script('media-editor', $this->get_media_picker_script());
+    }
+
+    public function register_menu(): void {
+        $cap = current_user_can('manage_woocommerce') ? 'manage_woocommerce' : 'manage_options';
+        add_theme_page(
+            'Cài đặt Hệ thống DRAVIT',
+            'Cài đặt Dravit',
+            $cap,
+            self::MENU_SLUG,
+            [$this, 'render_page']
+        );
+    }
+
+    public function register_setting(): void {
+        register_setting(
+            'drv_settings_group',
+            Settings::OPTION_KEY,
+            [
+                'type'              => 'array',
+                'sanitize_callback' => [$this, 'sanitize_callback'],
+                'default'           => Settings::defaults(),
+            ]
+        );
+    }
+
+    /**
+     * @param mixed $raw
+     * @return array<string, mixed>
+     */
+    public function sanitize_callback(mixed $raw): array {
+        $input = is_array($raw) ? $raw : [];
+        $clean = Settings::sanitize($input);
+        $clean = $this->handle_logo_uploads($clean);
+
+        if (isset($input['company']) && is_array($input['company']) && array_key_exists('header_logo_id', $input['company']) && function_exists('set_theme_mod')) {
+            $header_id = (int) ($clean['company']['header_logo_id'] ?? 0);
+            if ($header_id > 0) {
+                set_theme_mod('custom_logo', $header_id);
+            } elseif (function_exists('remove_theme_mod')) {
+                remove_theme_mod('custom_logo');
+            }
+        }
+
+        return $clean;
+    }
+
+    /**
+     * Xử lý tải file logo trực tiếp từ máy tính và lưu vào WP Media Library.
+     *
+     * @param array<string, mixed> $clean
+     * @return array<string, mixed>
+     */
+    private function handle_logo_uploads(array $clean): array {
+        if (!is_admin() || !current_user_can('upload_files')) {
+            return $clean;
+        }
+        if (!isset($_POST['option_page']) || sanitize_key((string) wp_unslash($_POST['option_page'])) !== 'drv_settings_group') {
+            return $clean;
+        }
+        check_admin_referer('drv_settings_group-options');
+
+        $upload_map = [
+            'drv_upload_header_logo' => 'header_logo_id',
+            'drv_upload_footer_logo' => 'footer_logo_id',
+        ];
+
+        foreach ($upload_map as $file_field => $setting_key) {
+            if (!isset($_FILES[$file_field]['error'], $_FILES[$file_field]['name'])) {
+                continue;
+            }
+            $error_code = (int) $_FILES[$file_field]['error'];
+            if ($error_code === UPLOAD_ERR_NO_FILE) {
+                continue;
+            }
+            $file_name = sanitize_file_name((string) wp_unslash($_FILES[$file_field]['name']));
+            if ($error_code !== UPLOAD_ERR_OK || $file_name === '') {
+                add_settings_error(Settings::OPTION_KEY, $file_field . '_err', 'Không thể tải file logo lên. Vui lòng kiểm tra dung lượng tệp.');
+                continue;
+            }
+
+            if (!function_exists('media_handle_upload')) {
+                require_once ABSPATH . 'wp-admin/includes/image.php';
+                require_once ABSPATH . 'wp-admin/includes/file.php';
+                require_once ABSPATH . 'wp-admin/includes/media.php';
+            }
+
+            $attachment_id = media_handle_upload($file_field, 0);
+            if (is_wp_error($attachment_id)) {
+                add_settings_error(Settings::OPTION_KEY, $file_field . '_wp_err', $attachment_id->get_error_message());
+                continue;
+            }
+
+            if (!wp_attachment_is_image($attachment_id)) {
+                wp_delete_attachment($attachment_id, true);
+                add_settings_error(Settings::OPTION_KEY, $file_field . '_mime', 'Tệp tải lên phải là định dạng hình ảnh hợp lệ (WebP, PNG, SVG, JPG).');
+                continue;
+            }
+
+            if (!isset($clean['company']) || !is_array($clean['company'])) {
+                $clean['company'] = Settings::defaults()['company'];
+            }
+            $clean['company'][$setting_key] = (int) $attachment_id;
+        }
+
+        return $clean;
+    }
+
+    public function render_page(): void {
+        if (!current_user_can('manage_options') && !current_user_can('manage_woocommerce')) {
+            wp_die('Bạn không có quyền truy cập trang này.');
+        }
+
+        $tabs = [
+            'company' => '1. Công ty & Pháp lý',
+            'contact' => '2. Liên hệ & Showroom',
+            'bank'    => '3. Ngân hàng VietQR',
+            'order'   => '4. Đơn hàng & Vận chuyển',
+            'quote'   => '5. Báo giá BOQ',
+            'home'    => '6. Trang chủ',
+            'seo'     => '7. SEO & GEO (/llms.txt)',
+            'forms'   => '8. Fluent Forms Slots',
+            'ai'      => '9. Trợ lý AI Tìm gạch',
+        ];
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only tab switcher
+        $active_tab = isset($_GET['tab']) ? sanitize_key((string) wp_unslash($_GET['tab'])) : 'company';
+        if (!array_key_exists($active_tab, $tabs)) {
+            $active_tab = 'company';
+        }
+
+        $s    = Settings::all();
+        $room = $s['showrooms'][0] ?? Settings::defaults()['showrooms'][0];
+        ?>
+        <div class="wrap">
+            <h1>Cài đặt Hệ thống Gạch Ốp Lát DRAVIT</h1>
+            <?php settings_errors(); ?>
+            <nav class="nav-tab-wrapper wp-clearfix" aria-label="Nhóm cấu hình Dravit">
+                <?php foreach ($tabs as $slug => $label) :
+                    $tab_url = add_query_arg(['page' => self::MENU_SLUG, 'tab' => $slug], admin_url('themes.php'));
+                    $cls     = 'nav-tab' . ($active_tab === $slug ? ' nav-tab-active' : '');
+                    ?>
+                    <a href="<?php echo esc_url($tab_url); ?>" class="<?php echo esc_attr($cls); ?>"><?php echo esc_html($label); ?></a>
+                <?php endforeach; ?>
+            </nav>
+
+            <form method="post" action="options.php" enctype="multipart/form-data">
+                <?php settings_fields('drv_settings_group'); ?>
+
+                <?php if ($active_tab === 'company') : ?>
+                    <table class="form-table" role="presentation">
+                        <?php
+                        $this->render_logo_row(
+                            'Logo Header (nền sáng)',
+                            'header_logo_id',
+                            'drv_upload_header_logo',
+                            (int) ($s['company']['header_logo_id'] ?? 0),
+                            DRV_URI . '/assets/images/logo-navy.png',
+                            false
+                        );
+                        $this->render_logo_row(
+                            'Logo Footer (nền tối)',
+                            'footer_logo_id',
+                            'drv_upload_footer_logo',
+                            (int) ($s['company']['footer_logo_id'] ?? 0),
+                            DRV_URI . '/assets/images/logo-ivory.png',
+                            true
+                        );
+                        ?>
+                        <tr>
+                            <th scope="row"><label for="drv-legal-name">Tên pháp nhân công ty</label></th>
+                            <td><input id="drv-legal-name" type="text" class="regular-text" name="drv_settings[company][legal_name]" value="<?php echo esc_attr((string) $s['company']['legal_name']); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="drv-tax-id">Mã số thuế (MST)</label></th>
+                            <td><input id="drv-tax-id" type="text" class="regular-text" name="drv_settings[company][tax_id]" value="<?php echo esc_attr((string) $s['company']['tax_id']); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="drv-comp-addr">Địa chỉ trụ sở (Chuẩn 2 cấp)</label></th>
+                            <td><input id="drv-comp-addr" type="text" class="large-text" name="drv_settings[company][address]" value="<?php echo esc_attr((string) $s['company']['address']); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="drv-bct-url">Link Bộ Công Thương (nếu đã duyệt)</label></th>
+                            <td><input id="drv-bct-url" type="url" class="large-text" name="drv_settings[company][bct_url]" value="<?php echo esc_attr((string) $s['company']['bct_url']); ?>"></td>
+                        </tr>
+                    </table>
+                <?php elseif ($active_tab === 'contact') : ?>
+                    <table class="form-table" role="presentation">
+                        <tr>
+                            <th scope="row"><label for="drv-hotline">Hotline tư vấn chính</label></th>
+                            <td><input id="drv-hotline" type="text" class="regular-text" name="drv_settings[contact][hotline]" value="<?php echo esc_attr((string) $s['contact']['hotline']); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="drv-zalo">Số Zalo OA / Tư vấn</label></th>
+                            <td><input id="drv-zalo" type="text" class="regular-text" name="drv_settings[contact][zalo]" value="<?php echo esc_attr((string) $s['contact']['zalo']); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="drv-email-proj">Email phòng dự án B2B</label></th>
+                            <td><input id="drv-email-proj" type="email" class="regular-text" name="drv_settings[contact][project_email]" value="<?php echo esc_attr((string) $s['contact']['project_email']); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="drv-hours">Khung giờ làm việc</label></th>
+                            <td><input id="drv-hours" type="text" class="regular-text" name="drv_settings[contact][working_hours]" value="<?php echo esc_attr((string) $s['contact']['working_hours']); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="drv-sr-name">Tên Showroom chính</label></th>
+                            <td><input id="drv-sr-name" type="text" class="regular-text" name="drv_settings[showrooms][0][name]" value="<?php echo esc_attr((string) $room['name']); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="drv-sr-addr">Địa chỉ Showroom</label></th>
+                            <td><input id="drv-sr-addr" type="text" class="large-text" name="drv_settings[showrooms][0][address]" value="<?php echo esc_attr((string) $room['address']); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="drv-sr-maps">Google Maps URL</label></th>
+                            <td><input id="drv-sr-maps" type="url" class="large-text" name="drv_settings[showrooms][0][maps_url]" value="<?php echo esc_attr((string) $room['maps_url']); ?>"></td>
+                        </tr>
+                    </table>
+                <?php elseif ($active_tab === 'bank') : ?>
+                    <table class="form-table" role="presentation">
+                        <tr>
+                            <th scope="row"><label for="drv-bank-bin">Mã BIN ngân hàng (NAPAS)</label></th>
+                            <td><input id="drv-bank-bin" type="text" class="regular-text" name="drv_settings[bank][bank_bin]" value="<?php echo esc_attr((string) $s['bank']['bank_bin']); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="drv-bank-name">Tên ngân hàng</label></th>
+                            <td><input id="drv-bank-name" type="text" class="regular-text" name="drv_settings[bank][bank_name]" value="<?php echo esc_attr((string) $s['bank']['bank_name']); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="drv-bank-acc">Số tài khoản nhận VietQR</label></th>
+                            <td><input id="drv-bank-acc" type="text" class="regular-text" name="drv_settings[bank][account_no]" value="<?php echo esc_attr((string) $s['bank']['account_no']); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="drv-bank-holder">Chủ tài khoản (Không dấu)</label></th>
+                            <td><input id="drv-bank-holder" type="text" class="large-text" name="drv_settings[bank][account_name]" value="<?php echo esc_attr((string) $s['bank']['account_name']); ?>"></td>
+                        </tr>
+                    </table>
+                <?php elseif ($active_tab === 'order') : ?>
+                    <table class="form-table" role="presentation">
+                        <tr>
+                            <th scope="row"><label for="drv-waste">Tỷ lệ hao hụt mặc định (%)</label></th>
+                            <td><input id="drv-waste" type="number" min="0" max="25" name="drv_settings[order][default_waste_pct]" value="<?php echo esc_attr((string) $s['order']['default_waste_pct']); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="drv-sla">Cam kết thời gian phản hồi (SLA)</label></th>
+                            <td><input id="drv-sla" type="text" class="large-text" name="drv_settings[order][sla_text]" value="<?php echo esc_attr((string) $s['order']['sla_text']); ?>"></td>
+                        </tr>
+                    </table>
+                <?php elseif ($active_tab === 'quote') : ?>
+                    <table class="form-table" role="presentation">
+                        <tr>
+                            <th scope="row"><label for="drv-quote-max">Số hạng mục tối đa trên bảng BOQ</label></th>
+                            <td><input id="drv-quote-max" type="number" min="5" max="50" name="drv_settings[quote][max_items]" value="<?php echo esc_attr((string) $s['quote']['max_items']); ?>"></td>
+                        </tr>
+                    </table>
+                <?php elseif ($active_tab === 'home') : ?>
+                    <table class="form-table" role="presentation">
+                        <tr>
+                            <th scope="row"><label for="drv-hero-title">Tiêu đề Hero Trang chủ</label></th>
+                            <td><input id="drv-hero-title" type="text" class="large-text" name="drv_settings[home][hero_title]" value="<?php echo esc_attr((string) $s['home']['hero_title']); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="drv-hero-sub">Mô tả phụ Hero</label></th>
+                            <td><input id="drv-hero-sub" type="text" class="large-text" name="drv_settings[home][hero_sub]" value="<?php echo esc_attr((string) $s['home']['hero_sub']); ?>"></td>
+                        </tr>
+                    </table>
+                <?php elseif ($active_tab === 'seo') : ?>
+                    <table class="form-table" role="presentation">
+                        <tr>
+                            <th scope="row">Xuất bản động <code>/llms.txt</code></th>
+                            <td>
+                                <label>
+                                    <input type="hidden" name="drv_settings[seo][llms_enabled]" value="0">
+                                    <input type="checkbox" name="drv_settings[seo][llms_enabled]" value="1" <?php checked(!empty($s['seo']['llms_enabled'])); ?>>
+                                    Cho phép AI Search Engines đọc hồ sơ năng lực &amp; 28 danh mục gạch chuẩn
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="drv-geo-sum">Tóm tắt thương hiệu GEO</label></th>
+                            <td><input id="drv-geo-sum" type="text" class="large-text" name="drv_settings[seo][geo_brand_summary]" value="<?php echo esc_attr((string) $s['seo']['geo_brand_summary']); ?>"></td>
+                        </tr>
+                    </table>
+                <?php elseif ($active_tab === 'forms') : ?>
+                    <p class="description">Nhập Form ID của Fluent Forms cho từng vị trí (để <code>0</code> để dùng form native chống spam mặc định của theme theo ADR D-31).</p>
+                    <table class="form-table" role="presentation">
+                        <?php
+                        $form_labels = [
+                            'quote_modal'      => 'Modal Báo giá công trình toàn trang',
+                            'pdp_consult'      => 'Tư vấn kỹ thuật trên trang Sản phẩm',
+                            'contact_page'     => 'Form trang Liên hệ (/lien-he)',
+                            'showroom_booking' => 'Form Đặt lịch hẹn xem mẫu Showroom',
+                            'blog_inline'      => 'Form nhận báo giá trong bài Cẩm nang',
+                        ];
+                        foreach ($form_labels as $slot => $lbl) :
+                            ?>
+                            <tr>
+                                <th scope="row"><label for="<?php echo esc_attr('drv-ff-' . $slot); ?>"><?php echo esc_html($lbl); ?></label></th>
+                                <td><input id="<?php echo esc_attr('drv-ff-' . $slot); ?>" type="number" min="0" name="drv_settings[forms][<?php echo esc_attr($slot); ?>]" value="<?php echo esc_attr((string) ($s['forms'][$slot] ?? 0)); ?>"></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </table>
+                <?php elseif ($active_tab === 'ai') : ?>
+                    <table class="form-table" role="presentation">
+                        <tr>
+                            <th scope="row">Kích hoạt Trợ lý AI Tìm gạch</th>
+                            <td>
+                                <label>
+                                    <input type="hidden" name="drv_settings[features][ai_enabled]" value="0">
+                                    <input type="checkbox" name="drv_settings[features][ai_enabled]" value="1" <?php checked(!empty($s['features']['ai_enabled'])); ?>>
+                                    Hiển thị nút Trợ lý AI trên Header &amp; cho phép truy cập <code>/tro-ly-ai-tim-gach</code>
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="drv-ai-provider">Engine xử lý (D-32)</label></th>
+                            <td>
+                                <select id="drv-ai-provider" name="drv_settings[ai][provider]">
+                                    <option value="rule_only" <?php selected((string) $s['ai']['provider'], 'rule_only'); ?>>RuleOnlyDriver (0đ phí API, &lt; 200ms - Khuyên dùng MVP)</option>
+                                    <option value="gemini" <?php selected((string) $s['ai']['provider'], 'gemini'); ?>>Google Gemini Structured JSON</option>
+                                    <option value="anthropic" <?php selected((string) $s['ai']['provider'], 'anthropic'); ?>>Anthropic Claude Closed-World</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="drv-ai-key">API Key (chỉ cần khi chọn Gemini/Anthropic)</label></th>
+                            <td><input id="drv-ai-key" type="password" class="regular-text" autocomplete="off" name="drv_settings[ai][api_key]" value="<?php echo esc_attr((string) $s['ai']['api_key']); ?>"></td>
+                        </tr>
+                    </table>
+                <?php endif; ?>
+
+                <?php submit_button('Lưu cấu hình Dravit'); ?>
+            </form>
+        </div>
+        <?php
+    }
+
+    private function render_logo_row(
+        string $label,
+        string $setting_key,
+        string $upload_name,
+        int $attachment_id,
+        string $default_src,
+        bool $dark_preview
+    ): void {
+        $preview_src = $default_src;
+        if ($attachment_id > 0) {
+            $media_url = wp_get_attachment_image_url($attachment_id, 'full');
+            if (is_string($media_url) && $media_url !== '') {
+                $preview_src = $media_url;
+            } else {
+                $attachment_id = 0;
+            }
+        }
+
+        $bg_style = $dark_preview
+            ? 'background:#083a4f;padding:8px 12px;border-radius:4px;max-height:36px;width:auto;display:block;margin-bottom:8px;'
+            : 'background:#ffffff;border:1px solid #dcdcde;padding:8px 12px;border-radius:4px;max-height:36px;width:auto;display:block;margin-bottom:8px;';
+        $field_id = 'drv-' . str_replace('_', '-', $setting_key);
+        ?>
+        <tr>
+            <th scope="row"><label for="<?php echo esc_attr($field_id . '-file'); ?>"><?php echo esc_html($label); ?></label></th>
+            <td data-drv-media-field>
+                <img src="<?php echo esc_url($preview_src); ?>"
+                     data-drv-media-preview
+                     data-default-src="<?php echo esc_url($default_src); ?>"
+                     style="<?php echo esc_attr($bg_style); ?>"
+                     alt="<?php echo esc_attr($label); ?>">
+                <input type="hidden"
+                       id="<?php echo esc_attr($field_id); ?>"
+                       name="drv_settings[company][<?php echo esc_attr($setting_key); ?>]"
+                       value="<?php echo esc_attr((string) $attachment_id); ?>"
+                       data-drv-media-input>
+                <p>
+                    <button type="button" class="button button-secondary" data-drv-media-pick>Chọn từ Thư viện Media</button>
+                    &nbsp;
+                    <button type="button"
+                            class="button-link button-link-delete"
+                            data-drv-media-clear
+                            <?php echo $attachment_id <= 0 ? 'hidden' : ''; ?>>Khôi phục logo mặc định</button>
+                </p>
+                <p class="description">
+                    Hoặc tải file trực tiếp lên Media khi bấm <strong>Lưu cấu hình Dravit</strong>:
+                    <input type="file"
+                           id="<?php echo esc_attr($field_id . '-file'); ?>"
+                           name="<?php echo esc_attr($upload_name); ?>"
+                           accept="image/webp,image/png,image/jpeg,image/svg+xml"
+                           data-drv-media-file>
+                </p>
+            </td>
+        </tr>
+        <?php
+    }
+
+    private function get_media_picker_script(): string {
+        return <<<'JS'
+document.addEventListener('click', (event) => {
+    const target = event.target instanceof Element ? event.target : null;
+    if (!target) return;
+
+    const pickBtn = target.closest('[data-drv-media-pick]');
+    if (pickBtn) {
+        event.preventDefault();
+        const wrap = pickBtn.closest('[data-drv-media-field]');
+        if (!wrap || typeof wp === 'undefined' || !wp.media) return;
+
+        const frame = wp.media({
+            title: 'Chọn hoặc tải Logo lên Thư viện Media',
+            button: { text: 'Sử dụng Logo này' },
+            library: { type: 'image' },
+            multiple: false,
+        });
+
+        frame.on('select', () => {
+            const attachment = frame.state().get('selection').first().toJSON();
+            const input = wrap.querySelector('[data-drv-media-input]');
+            const preview = wrap.querySelector('[data-drv-media-preview]');
+            const clearBtn = wrap.querySelector('[data-drv-media-clear]');
+            const fileInput = wrap.querySelector('[data-drv-media-file]');
+            if (input) input.value = String(attachment.id || 0);
+            if (preview && attachment.url) preview.src = attachment.url;
+            if (clearBtn) clearBtn.hidden = false;
+            if (fileInput) fileInput.value = '';
+        });
+
+        frame.open();
+        return;
+    }
+
+    const clearBtn = target.closest('[data-drv-media-clear]');
+    if (clearBtn) {
+        event.preventDefault();
+        const wrap = clearBtn.closest('[data-drv-media-field]');
+        if (!wrap) return;
+        const input = wrap.querySelector('[data-drv-media-input]');
+        const preview = wrap.querySelector('[data-drv-media-preview]');
+        const fileInput = wrap.querySelector('[data-drv-media-file]');
+        if (input) input.value = '0';
+        if (preview && preview.dataset.defaultSrc) preview.src = preview.dataset.defaultSrc;
+        if (fileInput) fileInput.value = '';
+        clearBtn.hidden = true;
+    }
+});
+
+document.addEventListener('change', (event) => {
+    const fileInput = event.target instanceof HTMLInputElement && event.target.matches('[data-drv-media-file]') ? event.target : null;
+    if (!fileInput || !fileInput.files || !fileInput.files[0]) return;
+    const wrap = fileInput.closest('[data-drv-media-field]');
+    const preview = wrap ? wrap.querySelector('[data-drv-media-preview]') : null;
+    if (preview) {
+        preview.src = URL.createObjectURL(fileInput.files[0]);
+    }
+});
+JS;
+    }
+}
+

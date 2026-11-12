@@ -1,7 +1,10 @@
 # WordPress Core & Configurations
 wp-admin/
 wp-includes/
-wp-content/
+wp-content/*
+!wp-content/themes/
+wp-content/themes/*
+!wp-content/themes/dravit/
 wp-*.php
 index.php
 license.txt
@@ -11,6 +14,15 @@ local-xdebuginfo.php
 .htaccess
 wp-config.php
 wp-config-sample.php
+wp-cli.local.yml
+
+# Theme dev/build artifacts (excluded from repo & production zip)
+wp-content/themes/dravit/node_modules/
+wp-content/themes/dravit/vendor/
+wp-content/themes/dravit/assets/dist/hot
+wp-content/themes/dravit/.phpunit.result.cache
+wp-content/themes/dravit/coverage/
+wp-content/themes/dravit/tools/.font-cache/
 
 # Local dev & system files
 *.log

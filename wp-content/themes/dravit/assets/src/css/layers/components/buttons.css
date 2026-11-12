@@ -1,0 +1,261 @@
+@layer components {
+/* 4.4 Buttons (.drv-btn) — Single Property Declaration via --_* */
+  .drv-btn {
+    --_bg: var(--c-navy-900);
+    --_fg: var(--c-white);
+    --_bd: var(--c-navy-900);
+    --_bg-hover: var(--c-teal-500);
+    --_fg-hover: var(--c-white);
+    --_bd-hover: var(--c-teal-500);
+    --_h: 48px;
+    --_px: var(--s-5);
+    --_fs: var(--fs-base);
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s-2);
+    min-height: var(--_h);
+    padding-inline: var(--_px);
+    background-color: var(--_bg);
+    color: var(--_fg);
+    border: 1px solid var(--_bd);
+    border-radius: var(--r-sm);
+    font-family: var(--f-body);
+    font-size: var(--_fs);
+    font-weight: 700;
+    line-height: 1.2;
+    white-space: nowrap;
+    text-align: center;
+    user-select: none;
+    transition:
+      transform var(--dur-base) var(--ease-out-expo),
+      box-shadow var(--dur-base) var(--ease-out-expo),
+      background-color var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out);
+  }
+
+  @media (width >= 1024px) {
+    .drv-btn {
+      --_h: 44px;
+    }
+  }
+
+  .drv-btn:hover:not(:disabled) {
+    background-color: var(--_bg-hover);
+    color: var(--_fg-hover);
+    border-color: var(--_bd-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgb(8 58 79 / 18%);
+  }
+
+  .drv-btn .ph-arrow-right,
+  .drv-btn .ph-caret-right,
+  .drv-btn .ph-arrow-up-right {
+    transition: transform var(--dur-base) var(--ease-out-expo);
+  }
+
+  .drv-btn:hover:not(:disabled) .ph-arrow-right,
+  .drv-btn:hover:not(:disabled) .ph-caret-right {
+    transform: translateX(4px);
+  }
+
+  .drv-btn:hover:not(:disabled) .ph-arrow-up-right {
+    transform: translate(3px, -3px);
+  }
+
+  .drv-btn:active:not(:disabled) {
+    transform: translateY(0) scale(0.97);
+    box-shadow: none;
+  }
+
+  .drv-btn:disabled,
+  .drv-btn[aria-disabled="true"] {
+    --_bg: var(--c-navy-200);
+    --_fg: var(--c-navy-800);
+    --_bd: var(--c-navy-400);
+
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+
+  /* Button Variants (Only reassign --_* variables) */
+  .drv-btn--moss {
+    --_bg: var(--c-teal-500);
+    --_fg: var(--c-white);
+    --_bd: var(--c-teal-500);
+    --_bg-hover: var(--c-teal-700);
+    --_bd-hover: var(--c-teal-700);
+  }
+
+  .drv-btn--outline {
+    --_bg: transparent;
+    --_fg: var(--c-navy-900);
+    --_bd: var(--c-navy-900);
+    --_bg-hover: var(--c-navy-900);
+    --_fg-hover: var(--c-white);
+    --_bd-hover: var(--c-navy-900);
+  }
+
+  .drv-btn--soft {
+    --_bg: var(--c-ivory);
+    --_fg: var(--c-navy-900);
+    --_bd: var(--c-navy-200);
+    --_bg-hover: var(--c-champagne);
+    --_fg-hover: var(--c-navy-900);
+    --_bd-hover: var(--c-navy-600);
+  }
+
+  .drv-btn--white {
+    --_bg: var(--c-white);
+    --_fg: var(--c-navy-900);
+    --_bd: var(--c-white);
+    --_bg-hover: var(--c-champagne);
+    --_fg-hover: var(--c-navy-900);
+    --_bd-hover: var(--c-champagne);
+  }
+
+  .drv-btn--ghost {
+    --_bg: transparent;
+    --_fg: var(--c-navy-900);
+    --_bd: transparent;
+    --_bg-hover: var(--c-moss-100);
+    --_fg-hover: var(--c-navy-900);
+    --_bd-hover: transparent;
+  }
+
+  /* Button Sizes */
+  .drv-btn--sm {
+    --_h: 36px;
+    --_px: var(--s-3);
+    --_fs: var(--fs-sm);
+  }
+
+  .drv-btn--lg {
+    --_h: 52px;
+    --_px: var(--s-6);
+    --_fs: var(--fs-base);
+  }
+
+  .drv-btn--full {
+    width: 100%;
+  }
+
+  .drv-btn--icon {
+    --_px: 0;
+
+    width: var(--_h);
+  }
+
+  /* 4.4b Inline Clean Flat Copy Button (No background, No border, Inherit text font-size, Inline with text) */
+  .drv-btn-copy-inline {
+    background: transparent;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    padding: 0;
+    margin: 0 0 0 0.35em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    line-height: 1;
+    font-size: 1em;
+    color: var(--c-navy-500);
+    cursor: pointer;
+    width: auto;
+    height: auto;
+    transition: color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+  }
+
+  .drv-btn-copy-inline i,
+  .drv-btn-copy-inline [class*="ph-"] {
+    font-size: 1em;
+    width: 1em;
+    height: 1em;
+    line-height: 1;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .drv-btn-copy-inline:hover {
+    background: transparent;
+    background-color: transparent;
+    color: var(--c-moss-600);
+    transform: scale(1.15);
+  }
+
+  .drv-btn-copy-inline:active {
+    transform: scale(0.92);
+  }
+
+  .drv-btn-copy-inline:focus-visible {
+    outline: 2px solid var(--c-moss-500);
+    outline-offset: 2px;
+    border-radius: var(--r-2xs);
+  }
+
+  .drv-btn-copy-inline:disabled {
+    cursor: not-allowed;
+    opacity: 0.35;
+    transform: none;
+    color: var(--c-navy-300);
+  }
+
+  /* Text Link Button with 200ms Underline Draw */
+  .drv-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-1);
+    color: var(--c-moss-700);
+    font-weight: 700;
+    font-size: var(--fs-sm);
+    position: relative;
+    padding-bottom: 2px;
+  }
+
+  .drv-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1.5px;
+    background-color: currentcolor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+
+  .drv-link:hover::after {
+    transform: scaleX(1);
+  }
+
+
+  /* 4.19 Load More & Progress Bar (.drv-load-more-wrap) */
+  .drv-load-more-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--s-3);
+    padding-top: var(--s-6);
+    text-align: center;
+  }
+
+  .drv-progress {
+    width: min(280px, 100%);
+    height: 4px;
+    background-color: var(--c-navy-200);
+    border-radius: var(--r-pill);
+    overflow: hidden;
+  }
+
+  .drv-progress__bar {
+    height: 100%;
+    background-color: var(--c-moss-500);
+    transition: transform var(--dur-base) var(--ease-out);
+    transform-origin: left;
+  }
+}

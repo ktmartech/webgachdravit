@@ -1,0 +1,172 @@
+/* @layer plugins - Fluent Forms & Rank Math Architectural Skin (ADR D-31, 0 !important, 0 HEX) */
+@layer plugins {
+  .fluentform {
+    font-family: var(--f-body);
+    color: var(--c-text-main);
+  }
+
+  .fluentform .ff-el-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-1-5);
+    margin-bottom: var(--s-4);
+  }
+
+  .fluentform .ff-el-input--label label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-1);
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    color: var(--c-navy-900);
+    line-height: 1.4;
+  }
+
+  .fluentform .ff-el-input--label.ff-el-is-required.asterisk-right label::after,
+  .fluentform .ff-el-input--label .ff-asterisk {
+    color: var(--c-sale);
+    font-weight: 700;
+  }
+
+  .fluentform .ff-el-form-control {
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 12px;
+    border: var(--bw-input);
+    border-radius: var(--r-sm);
+    background-color: var(--c-white);
+    color: var(--c-text-main);
+    font-family: var(--f-body);
+    font-size: var(--fs-base);
+    font-weight: 500;
+    line-height: 1.5;
+    box-shadow: none;
+    transition:
+      border-color var(--dur-fast) var(--ease-out),
+      box-shadow var(--dur-fast) var(--ease-out);
+  }
+
+  .fluentform textarea.ff-el-form-control {
+    min-height: 96px;
+    resize: vertical;
+  }
+
+  .fluentform .ff-el-form-control::placeholder {
+    color: var(--c-navy-500);
+    opacity: 1;
+  }
+
+  .fluentform .ff-el-form-control:hover {
+    border-color: var(--c-navy-700);
+  }
+
+  .fluentform .ff-el-form-control:focus,
+  .fluentform .ff-el-form-control:focus-visible {
+    outline: none;
+    border-color: var(--c-teal-500);
+    box-shadow: 0 0 0 3px var(--c-teal-100);
+  }
+
+  .fluentform .ff-el-form-check-label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    min-height: 36px;
+    font-size: var(--fs-sm);
+    color: var(--c-text-main);
+    cursor: pointer;
+  }
+
+  .fluentform .ff-el-form-check-input {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--c-teal-500);
+    cursor: pointer;
+  }
+
+  .fluentform .ff-btn-submit,
+  .fluentform button.ff-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s-2);
+    min-height: 44px;
+    padding: 10px 20px;
+    border: 1px solid var(--c-teal-500);
+    border-radius: var(--r-sm);
+    background-color: var(--c-teal-500);
+    color: var(--c-white);
+    font-family: var(--f-body);
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    line-height: 1.2;
+    cursor: pointer;
+    transition:
+      background-color var(--dur-fast) var(--ease-out),
+      transform var(--dur-instant) var(--ease-out);
+  }
+
+  .fluentform .ff-btn-submit:hover,
+  .fluentform button.ff-btn:hover {
+    background-color: var(--c-teal-700);
+    border-color: var(--c-teal-700);
+  }
+
+  .fluentform .ff-btn-submit:active,
+  .fluentform button.ff-btn:active {
+    transform: scale(0.98);
+  }
+
+  .fluentform .ff-el-is-error .ff-el-form-control {
+    border-color: var(--c-sale);
+    background-color: var(--c-white);
+  }
+
+  .fluentform .error.text-danger,
+  .fluentform .ff-el-is-error .error {
+    margin-top: var(--s-1);
+    color: var(--c-sale);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+  }
+
+  .ff-message-success,
+  .fluentform .ff-message-success {
+    padding: var(--s-4);
+    border: 1px solid var(--c-success);
+    border-radius: var(--r-md);
+    background-color: var(--c-success-bg);
+    color: var(--c-navy-900);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+  }
+
+  .fluentform .ff-errors-in-stack {
+    padding: var(--s-3) var(--s-4);
+    border: 1px solid var(--c-sale);
+    border-radius: var(--r-md);
+    background-color: var(--c-sale-bg);
+    color: var(--c-sale);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+  }
+
+  /* Rank Math Breadcrumb & FAQ Block compatibility */
+  .rank-math-breadcrumb p {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-1-5);
+    font-size: var(--fs-xs);
+    color: var(--c-text-muted);
+    max-width: none;
+  }
+
+  .rank-math-breadcrumb a {
+    color: var(--c-text-muted);
+  }
+
+  .rank-math-breadcrumb a:hover {
+    color: var(--c-teal-700);
+  }
+}

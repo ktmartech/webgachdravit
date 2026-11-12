@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <!-- Outdoor Patio & Pool Deck with R11 Basalt Tiles -->
+  <rect width="800" height="280" fill="#E3EEED"/>
+  <!-- Architectural Pergola & Greenery -->
+  <rect x="0" y="0" width="800" height="36" fill="#083A4F"/>
+  <rect x="80" y="36" width="24" height="244" fill="#083A4F"/>
+  <rect x="520" y="36" width="24" height="244" fill="#083A4F"/>
+  <circle cx="690" cy="190" r="65" fill="#3C7D7C" opacity="0.8"/>
+  <circle cx="640" cy="220" r="45" fill="#2F6664" opacity="0.9"/>
+  <!-- R11 Structured Stone Patio Floor -->
+  <rect x="0" y="280" width="800" height="320" fill="#8A9BA3"/>
+  <!-- Pool Water Inset -->
+  <polygon points="480,350 800,350 800,540 420,540" fill="#3C7D7C" stroke="#F5F4F0" stroke-width="6"/>
+  <!-- 60x60 Outdoor Paver Grout Lines -->
+  <g stroke="#386172" stroke-width="2">
+    <line x1="0" y1="280" x2="800" y2="280"/>
+    <line x1="0" y1="350" x2="480" y2="350"/>
+    <line x1="0" y1="435" x2="450" y2="435"/>
+    <line x1="0" y1="540" x2="800" y2="540"/>
+    <line x1="160" y1="280" x2="60" y2="600"/>
+    <line x1="320" y1="280" x2="250" y2="600"/>
+    <line x1="480" y1="280" x2="420" y2="600"/>
+  </g>
+</svg>
+

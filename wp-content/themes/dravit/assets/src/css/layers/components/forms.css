@@ -1,0 +1,120 @@
+@layer components {
+/* 4.7 Form Controls (.drv-field, .drv-input, .drv-select, .drv-check) */
+  .drv-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .drv-label {
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    color: var(--c-text-main);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-2);
+  }
+
+  .drv-label__req {
+    color: var(--c-sale);
+    margin-left: 2px;
+  }
+
+  .drv-label__hint {
+    font-size: var(--fs-xs);
+    font-weight: 500;
+    color: var(--c-navy-800);
+  }
+
+  .drv-input,
+  .drv-select,
+  .drv-textarea {
+    --_bd: var(--c-navy-400);
+    --_bg: var(--c-white);
+
+    width: 100%;
+    min-height: 44px;
+    padding: 9px 14px;
+    background-color: var(--_bg);
+    color: var(--c-text-main);
+    border: 1px solid var(--_bd);
+    border-radius: var(--r-sm);
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    transition: border-color var(--dur-fast) var(--ease-out);
+  }
+
+  .drv-input--sm,
+  .drv-select.drv-input--sm {
+    min-height: 36px;
+    height: 36px;
+    padding: 6px 12px;
+    font-size: var(--fs-xs);
+  }
+
+  .drv-textarea {
+    min-height: 96px;
+    resize: vertical;
+  }
+
+  .drv-input::placeholder,
+  .drv-textarea::placeholder {
+    color: var(--c-navy-800);
+    opacity: 0.75;
+  }
+
+  .drv-input:focus,
+  .drv-select:focus,
+  .drv-textarea:focus {
+    --_bd: var(--c-moss-500);
+
+    outline: var(--focus-ring);
+    outline-offset: 1px;
+  }
+
+  .drv-input[aria-invalid="true"],
+  .drv-select[aria-invalid="true"] {
+    --_bd: var(--c-sale);
+
+    background-color: var(--c-sale-bg);
+  }
+
+  .drv-field__error {
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    color: var(--c-sale);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* Custom Checkbox & Radio Row */
+  .drv-check {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--c-text-main);
+    cursor: pointer;
+    min-height: 32px;
+    user-select: none;
+  }
+
+  .drv-check input[type="checkbox"],
+  .drv-check input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--c-moss-500);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .drv-check--disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  /* Color Swatch Filter Button */
+}

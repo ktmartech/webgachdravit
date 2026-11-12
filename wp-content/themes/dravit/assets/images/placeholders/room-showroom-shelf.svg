@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <!-- Dravit Showroom Display Racks & Lighting Test Zone -->
+  <rect width="800" height="600" fill="#083A4F"/>
+  <!-- Warm Architectural Track Lights -->
+  <rect x="60" y="24" width="680" height="8" fill="#9CB0B9"/>
+  <polygon points="180,32 110,160 250,160" fill="#E7E2CE" opacity="0.18"/>
+  <polygon points="400,32 330,160 470,160" fill="#E7E2CE" opacity="0.18"/>
+  <polygon points="620,32 550,160 690,160" fill="#E7E2CE" opacity="0.18"/>
+  <!-- Sliding Tile Display Cassettes -->
+  <g stroke="#CDD8DB" stroke-width="3">
+    <rect x="80" y="90" width="180" height="320" rx="4" fill="#F5F4F0"/>
+    <rect x="310" y="90" width="180" height="320" rx="4" fill="#E7E2CE"/>
+    <rect x="540" y="90" width="180" height="320" rx="4" fill="#CDD8DB"/>
+  </g>
+  <!-- Sample Grout & Surface Comparison Table -->
+  <rect x="140" y="450" width="520" height="110" rx="6" fill="#3C7D7C" stroke="#E7E2CE" stroke-width="2"/>
+  <rect x="175" y="470" width="90" height="70" rx="3" fill="#F5F4F0"/>
+  <rect x="285" y="470" width="90" height="70" rx="3" fill="#E7E2CE"/>
+  <rect x="395" y="470" width="90" height="70" rx="3" fill="#9CB0B9"/>
+  <rect x="505" y="470" width="120" height="70" rx="3" fill="#083A4F"/>
+</svg>
+

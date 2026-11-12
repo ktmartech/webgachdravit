@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+  <rect width="600" height="600" fill="#E7E2CE"/>
+  <rect x="28" y="28" width="544" height="544" fill="#6A7B82" stroke="#386172" stroke-width="3"/>
+  <!-- Structured R11 Basalt Texture Ridges -->
+  <g stroke="#083A4F" stroke-opacity="0.28" stroke-width="3">
+    <line x1="28" y1="76" x2="572" y2="76"/>
+    <line x1="28" y1="124" x2="572" y2="124"/>
+    <line x1="28" y1="172" x2="572" y2="172"/>
+    <line x1="28" y1="220" x2="572" y2="220"/>
+    <line x1="28" y1="268" x2="572" y2="268"/>
+    <line x1="28" y1="316" x2="572" y2="316"/>
+    <line x1="28" y1="364" x2="572" y2="364"/>
+    <line x1="28" y1="412" x2="572" y2="412"/>
+    <line x1="28" y1="460" x2="572" y2="460"/>
+    <line x1="28" y1="508" x2="572" y2="508"/>
+  </g>
+  <g fill="#F5F4F0" opacity="0.18">
+    <circle cx="140" cy="140" r="4"/>
+    <circle cx="290" cy="210" r="5"/>
+    <circle cx="440" cy="160" r="4"/>
+    <circle cx="180" cy="360" r="5"/>
+    <circle cx="390" cy="430" r="4"/>
+  </g>
+</svg>
+

@@ -9,8 +9,8 @@
 ## 1. Thứ Tự Ưu Tiên Tài Liệu (Document Hierarchy)
 
 Khi có mâu thuẫn thông tin, tuân thủ nghiêm ngặt thứ tự:
-1. `docs/00_Project_Brief_Decisions.md` (Các quyết định kiến trúc ADR D-01 → D-30 mới nhất).
-2. Tài liệu chuyên đề & đặc tả hợp đồng hệ thống `docs/01_*.md` → `docs/20_*.md`.
+1. `docs/00_Project_Brief_Decisions.md` (Các quyết định kiến trúc ADR D-01 → D-35 mới nhất).
+2. Tài liệu chuyên đề & đặc tả hợp đồng hệ thống `docs/01_*.md` → `docs/21_*.md`.
 3. `docs/branding/Thiet_Ke_Silo_URL_Va_Bo_Loc_GachDravit.md` (Chuẩn URL không dấu `/` cuối, H1, Breadcrumb, 28 Collection, 14 Facet).
 4. `docs/branding/DRAVIT_Brand Guidelines_Xanh Navy + Rêu.pdf` (Lưu ý: Bảng màu thực tế tuân theo D-11 trong `docs/00_Project_Brief_Decisions.md`).
 
@@ -23,7 +23,7 @@ Khi có mâu thuẫn thông tin, tuân thủ nghiêm ngặt thứ tự:
 ### 2.1 Thư mục `docs/`
 | Mã | File | Nội dung cốt lõi | Đọc khi |
 |---|---|---|---|
-| `00` | [00_Project_Brief_Decisions.md](docs/00_Project_Brief_Decisions.md) | Persona, KPI, Phạm vi Phase 1, Nhật ký ADR D-01..D-30 | Bắt đầu mọi task |
+| `00` | [00_Project_Brief_Decisions.md](docs/00_Project_Brief_Decisions.md) | Persona, KPI, Phạm vi Phase 1, Nhật ký ADR D-01..D-34 | Bắt đầu mọi task |
 | `01` | [01_Brand_Design_System.md](docs/01_Brand_Design_System.md) | Design tokens, Typography, Bảng màu, Lưới ron 1px, 4-layer UI | Mọi task Frontend/CSS |
 | `02` | [02_Technical_Architecture.md](docs/02_Technical_Architecture.md) | Cấu trúc theme, PSR-4, Vite entries, Whitelist libs, Bảo mật | Mọi task Backend/Build |
 | `03` | [03_Catalog_Data_Model.md](docs/03_Catalog_Data_Model.md) | 28 Collections, 14 Attributes, `CollectionSync`, `PrimaryCategory` | Xử lý Catalog & Data |
@@ -42,6 +42,7 @@ Khi có mâu thuẫn thông tin, tuân thủ nghiêm ngặt thứ tự:
 | `18` | [18_Order_Ops_And_Email_Spec.md](docs/18_Order_Ops_And_Email_Spec.md) | Vận hành đơn HPOS Admin, Action Scheduler auto-cancel, Email templates | Xử lý đơn & Email |
 | `19` | [19_Navigation_Header_Search_Spec.md](docs/19_Navigation_Header_Search_Spec.md) | Header 2 tầng, Mega Menu 4+1 từ config, Walkers, Live Search không dấu | Header, Menu, Tìm kiếm |
 | `20` | [20_Blog_Editorial_And_Content_Model.md](docs/20_Blog_Editorial_And_Content_Model.md) | Mô hình Cẩm nang, E-E-A-T, Block Styles/Patterns, Shortcodes, TOC | Cẩm nang / Gutenberg |
+| `21` | [21_Theme_Build_Execution_Roadmap.md](docs/21_Theme_Build_Execution_Roadmap.md) | **Roadmap thực thi 12 Steps dựng Theme (`D-31..34`):** cắt 4 tầng `drv_section()` (`S-3`), Rules × Skills, Unit Tests, AI/GEO/BOQ/FluentForms | Thực thi code Theme |
 | `L` | [layout/00_LAYOUT_AUDIT_REPORT.md](docs/layout/00_LAYOUT_AUDIT_REPORT.md) | Báo cáo audit đối chiếu 12 HTML prototypes vs bộ docs | Tra cứu quyết định port |
 
 ### 2.2 Quy tắc chuyên biệt `.agents/rules/`
@@ -59,9 +60,9 @@ Khi có mâu thuẫn thông tin, tuân thủ nghiêm ngặt thứ tự:
 1. **Classic PHP Theme + `theme.json` (D-01):**
    - Codebase nằm tại `wp-content/themes/dravit/`.
    - `theme.json` chỉ khai báo tokens cho Gutenberg editor. Toàn bộ logic render qua template PHP.
-2. **Không tách Plugin riêng ở Phase 1 (D-07):**
+2. **Không tách Plugin nghiệp vụ riêng (D-07, D-31):**
    - Mọi logic nghiệp vụ đóng gói trong theme dưới namespace `Dravit\`, nạp qua PSR-4 autoloader tự viết trong `functions.php`.
-   - Không cài thêm plugin ngoài bộ 3: **WooCommerce**, **Rank Math Free**, **LiteSpeed Cache**.
+   - Hệ sinh thái plugin tương thích chuẩn: **WooCommerce**, **Rank Math Free**, **LiteSpeed Cache**, và **Fluent Forms** (tích hợp qua `Core\Integrations\FluentFormsBridge` + CSS `@layer plugins`, `D-31`; không cài Page Builder hay SCF/ACF theo `D-34`).
 3. **Đơn ngôn ngữ 100% Tiếng Việt (D-01, Rule Architecture):**
    - Chỉ `lang="vi"`. Nghiêm cấm cài Polylang/WPML, cấm prefix URL `/vi/` hay `/en/`.
 4. **Không tạo Custom Database Tables (D-07, D-23):**

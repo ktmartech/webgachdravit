@@ -7,7 +7,7 @@
 
 | # | File | Nội dung | Đọc khi |
 |---|---|---|---|
-| `00` | [00_Project_Brief_Decisions.md](00_Project_Brief_Decisions.md) | Mục tiêu, phạm vi Phase 1, persona, **nhật ký quyết định (ADR `D-01`..`D-30`; dải `D-41`..`D-49` cho Phase 3)**, giả định, việc còn mở (`O-01`..`O-15`) | Bắt đầu dự án / mọi task |
+| `00` | [00_Project_Brief_Decisions.md](00_Project_Brief_Decisions.md) | Mục tiêu, phạm vi Phase 1, persona, **nhật ký quyết định (ADR `D-01`..`D-35`; dải `D-41`..`D-49` cho AI mở rộng)**, giả định, việc còn mở (`O-01`..`O-15`) | Bắt đầu dự án / mọi task |
 | `01` | [01_Brand_Design_System.md](01_Brand_Design_System.md) | Brand, design tokens, bảng màu `D-11`, typography, lưới ron 1px, kiến trúc component 4 lớp (`D-17`) | Mọi task Frontend/UI |
 | `02` | [02_Technical_Architecture.md](02_Technical_Architecture.md) | Stack, cấu trúc theme `Dravit\`, PSR-4, Vite entries, whitelist thư viện (`D-28`), bảo mật, deploy | Mọi task Backend/Build |
 | `03` | [03_Catalog_Data_Model.md](03_Catalog_Data_Model.md) | Taxonomy, 14 attributes chuẩn, 28 Smart Collections, `CollectionSync`, `PrimaryCategory` (`D-27`), `SlugGuard` | Catalog, import, admin |
@@ -28,6 +28,7 @@
 | `18` | [18_Order_Ops_And_Email_Spec.md](18_Order_Ops_And_Email_Spec.md) | Vận hành đơn hàng HPOS (`wc-cho-xac-nhan` → `on-hold`/`processing`), Action Scheduler tự hủy, Email templates & VietQR (`D-22`) | Xử lý đơn hàng & Email |
 | `19` | [19_Navigation_Header_Search_Spec.md](19_Navigation_Header_Search_Spec.md) | Header 2 tầng, Mega Menu 4+1 từ config (`drv_mega_html`), Walkers, Live Search không dấu, Mobile Drawer/Bar/Dock (`D-29`) | Header, Menu, Tìm kiếm |
 | `20` | [20_Blog_Editorial_And_Content_Model.md](20_Blog_Editorial_And_Content_Model.md) | Mô hình Cẩm nang (`/cam-nang`, `/chu-de/{slug}`), E-E-A-T, Gutenberg Patterns, Shortcodes nhúng SP/bảng giá, TOC | Cẩm nang / Gutenberg |
+| `21` | [21_Theme_Build_Execution_Roadmap.md](21_Theme_Build_Execution_Roadmap.md) | **Roadmap thực thi 12 Steps xây dựng WP Theme `dravit` (`D-31`..`D-34`):** cắt Bottom-Up 4 tầng + `drv_section()` (`S-3`), Rules × Skills, Unit Tests, AI Ready, GEO-SEO, BOQ & Fluent Forms Bridge | Triển khai code Theme từng Step |
 | `LA` | [layout/00_LAYOUT_AUDIT_REPORT.md](layout/00_LAYOUT_AUDIT_REPORT.md) | Báo cáo audit đối chiếu 12 HTML prototypes vs bộ docs và bảng chốt quyết định `Q1–Q28` → `D-21`..`D-30` | Tra cứu quyết định port |
 | `LR` | [layout/00_UI_UX_Layout_Roadmap.md](layout/00_UI_UX_Layout_Roadmap.md) | Lộ trình 12 Steps dựng bộ HTML/CSS/JS prototype mẫu tại `docs/layout/` | Tham chiếu UI prototype |
 | `S` | [branding/Thiet_Ke_Silo_URL_Va_Bo_Loc_GachDravit.md](branding/Thiet_Ke_Silo_URL_Va_Bo_Loc_GachDravit.md) (+ [`.xlsx`](branding/Thiet_Ke_Silo_URL_Va_Bo_Loc_GachDravit.xlsx)) | Silo URL không dấu `/` cuối, 28 collection (H1, breadcrumb, phase), 14 bộ lọc, seed 8 SKU, `IL-01`..`06` | Catalog, SEO, filter |
@@ -35,8 +36,8 @@
 
 ## Thứ tự ưu tiên khi tài liệu mâu thuẫn
 
-1. **[00_Project_Brief_Decisions.md](00_Project_Brief_Decisions.md)** (Các quyết định kiến trúc ADR `D-01` → `D-30` đã chốt mới nhất).
-2. Tài liệu chuyên đề & đặc tả hợp đồng hệ thống **[01_Brand_Design_System.md](01_Brand_Design_System.md)** → **[20_Blog_Editorial_And_Content_Model.md](20_Blog_Editorial_And_Content_Model.md)** *(lưu ý `11 §2` đã deprecated và thay thế hoàn toàn bằng `17`; `12`–`13` là đặc tả kiến trúc AI cho Phase 3)*.
+1. **[00_Project_Brief_Decisions.md](00_Project_Brief_Decisions.md)** (Các quyết định kiến trúc ADR `D-01` → `D-34` đã chốt mới nhất).
+2. Tài liệu chuyên đề, đặc tả hợp đồng & lộ trình thực thi **[01_Brand_Design_System.md](01_Brand_Design_System.md)** → **[21_Theme_Build_Execution_Roadmap.md](21_Theme_Build_Execution_Roadmap.md)** *(lưu ý `11 §2` đã deprecated và thay thế hoàn toàn bằng `17`; `12`–`13` là đặc tả kiến trúc AI với lõi `RuleOnlyDriver` + Interfaces đã mở sẵn ngay từ Phase 1 theo `D-32`)*.
 3. **[branding/Thiet_Ke_Silo_URL_Va_Bo_Loc_GachDravit.md](branding/Thiet_Ke_Silo_URL_Va_Bo_Loc_GachDravit.md)**: chuẩn cho URL (không dấu `/` cuối, `D-21`), H1, breadcrumb, phase của 28 collection, 14 bộ lọc. Riêng **slug giá trị thuộc tính** và **trọng số `priority`** tuân theo bảng chuẩn hóa trong [03_Catalog_Data_Model.md](03_Catalog_Data_Model.md) (`D-27`).
 4. **[branding/DRAVIT_Brand Guidelines_Xanh Navy + Rêu.pdf](branding/DRAVIT_Brand%20Guidelines_Xanh%20Navy%20+%20R%C3%AAu.pdf)** *(Lưu ý: Bảng màu thực tế tuân theo Quyết định `D-11` trong `00`: Brand Primary `#083A4F` + Deep Ink text `#0B192C` + Brand Teal `#0D9488` / `#0F766E` + Warm Amber `#F59E0B` trên Clean Slate `#F8FAFC`)*.
 

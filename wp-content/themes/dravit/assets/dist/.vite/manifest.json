@@ -1,0 +1,77 @@
+{
+  "_dom-sfpH5BVj.js": {
+    "file": "js/chunks/dom-sfpH5BVj.js",
+    "name": "dom"
+  },
+  "assets/fonts/anton-vi.woff2": {
+    "file": "fonts/anton-vi.woff2",
+    "src": "assets/fonts/anton-vi.woff2"
+  },
+  "assets/fonts/phosphor-subset.woff2": {
+    "file": "fonts/phosphor-subset.woff2",
+    "src": "assets/fonts/phosphor-subset.woff2"
+  },
+  "assets/fonts/quicksand-vf-vi.woff2": {
+    "file": "fonts/quicksand-vf-vi.woff2",
+    "src": "assets/fonts/quicksand-vf-vi.woff2"
+  },
+  "assets/src/css/global.css": {
+    "file": "css/global-CczTBtCj.css",
+    "src": "assets/src/css/global.css",
+    "isEntry": true
+  },
+  "assets/src/css/pages/ui-kit.css": {
+    "file": "css/pages/ui-kit-BXPlnwA_.css",
+    "src": "assets/src/css/pages/ui-kit.css",
+    "isEntry": true
+  },
+  "assets/src/js/chunks/ai-finder.js": {
+    "file": "js/chunks/ai-finder-l0sNRNKZ.js",
+    "name": "chunks/ai-finder",
+    "src": "assets/src/js/chunks/ai-finder.js",
+    "isEntry": true
+  },
+  "assets/src/js/chunks/calc-elements.js": {
+    "file": "js/chunks/calc-elements-bn-3QwtF.js",
+    "name": "calc-elements",
+    "src": "assets/src/js/chunks/calc-elements.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "assets/src/js/core.js",
+      "_dom-sfpH5BVj.js"
+    ]
+  },
+  "assets/src/js/chunks/motion.js": {
+    "file": "js/chunks/motion-Xq4Jxat4.js",
+    "name": "chunks/motion",
+    "src": "assets/src/js/chunks/motion.js",
+    "isEntry": true,
+    "isDynamicEntry": true,
+    "imports": [
+      "_dom-sfpH5BVj.js"
+    ]
+  },
+  "assets/src/js/chunks/quote.js": {
+    "file": "js/chunks/quote-l0sNRNKZ.js",
+    "name": "chunks/quote",
+    "src": "assets/src/js/chunks/quote.js",
+    "isEntry": true
+  },
+  "assets/src/js/core.js": {
+    "file": "js/core-bouc6Efi.js",
+    "name": "core",
+    "src": "assets/src/js/core.js",
+    "isEntry": true,
+    "imports": [
+      "_dom-sfpH5BVj.js"
+    ],
+    "dynamicImports": [
+      "assets/src/js/chunks/motion.js",
+      "assets/src/js/chunks/motion.js",
+      "assets/src/js/chunks/motion.js",
+      "assets/src/js/chunks/motion.js",
+      "assets/src/js/chunks/calc-elements.js",
+      "assets/src/js/chunks/motion.js"
+    ]
+  }
+}

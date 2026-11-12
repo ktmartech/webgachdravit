@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <!-- Showroom zone: surface & grout colour comparison board under 3000K / 6500K light -->
+  <rect width="800" height="600" fill="#F1F5F9"/>
+  <rect x="0" y="0" width="400" height="600" fill="#FEF3C7" opacity="0.55"/>
+  <rect x="40" y="40" width="720" height="440" rx="6" fill="#FFFFFF" stroke="#083A4F" stroke-width="3"/>
+  <!-- 4 surface samples -->
+  <g stroke="#94A3B8" stroke-width="2">
+    <rect x="80" y="80" width="140" height="140" fill="#F8FAFC"/>
+    <rect x="240" y="80" width="140" height="140" fill="#E2E8F0"/>
+    <rect x="420" y="80" width="140" height="140" fill="#94A3B8"/>
+    <rect x="580" y="80" width="140" height="140" fill="#386172"/>
+  </g>
+  <path d="M90,120 C130,110 160,150 210,130" stroke="#94A3B8" stroke-width="2" fill="none"/>
+  <g fill="#64748B" opacity="0.5">
+    <circle cx="450" cy="110" r="3"/><circle cx="480" cy="150" r="3"/><circle cx="520" cy="120" r="3"/>
+    <circle cx="460" cy="190" r="3"/><circle cx="530" cy="180" r="3"/><circle cx="500" cy="100" r="3"/>
+  </g>
+  <!-- Grout width samples 1.5mm / 2mm / 3mm -->
+  <g fill="#E7E2CE" stroke="#94A3B8" stroke-width="1.5">
+    <rect x="80" y="260" width="96" height="96"/>
+    <rect x="178" y="260" width="96" height="96"/>
+    <rect x="300" y="260" width="96" height="96"/>
+    <rect x="400" y="260" width="96" height="96"/>
+    <rect x="530" y="260" width="96" height="96"/>
+    <rect x="636" y="260" width="96" height="96"/>
+  </g>
+  <rect x="176" y="260" width="2" height="96" fill="#083A4F"/>
+  <rect x="396" y="260" width="4" height="96" fill="#0D9488"/>
+  <rect x="626" y="260" width="10" height="96" fill="#386172"/>
+  <rect x="80" y="390" width="640" height="56" rx="4" fill="#083A4F"/>
+  <rect x="0" y="500" width="800" height="100" fill="#386172"/>
+  <rect x="120" y="520" width="560" height="10" fill="#0B4A64"/>
+</svg>
+

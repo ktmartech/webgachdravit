@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+  <defs>
+    <linearGradient id="cem-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#D5D9DC"/>
+      <stop offset="50%" stop-color="#C3C9CD"/>
+      <stop offset="100%" stop-color="#B2BAC0"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="600" fill="#E7E2CE"/>
+  <rect x="28" y="28" width="544" height="544" fill="url(#cem-bg)" stroke="#9CB0B9" stroke-width="2"/>
+  <!-- Subtle Matte Concrete Clouding -->
+  <ellipse cx="190" cy="180" rx="140" ry="90" fill="#DDE1E4" opacity="0.45"/>
+  <ellipse cx="420" cy="390" rx="150" ry="110" fill="#9CB0B9" opacity="0.28"/>
+  <path d="M60,460 C180,430 320,480 540,440" stroke="#6A8994" stroke-width="2" stroke-opacity="0.25" fill="none"/>
+  <path d="M80,150 C240,175 390,130 520,165" stroke="#FFFFFF" stroke-width="2" stroke-opacity="0.3" fill="none"/>
+</svg>
+

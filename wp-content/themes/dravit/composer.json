@@ -1,0 +1,44 @@
+{
+  "name": "dravit/theme",
+  "description": "WordPress + WooCommerce Custom Theme for DRAVIT (gachdravit.vn) — Dev & QA Harness Only",
+  "type": "wordpress-theme",
+  "license": "proprietary",
+  "require": {
+    "php": ">=8.1"
+  },
+  "require-dev": {
+    "brain/monkey": "^2.6",
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+    "mockery/mockery": "^1.6",
+    "php-stubs/woocommerce-stubs": "^9.6",
+    "phpstan/extension-installer": "^1.4",
+    "phpstan/phpstan": "^2.1",
+    "phpunit/phpunit": "^10.5",
+    "szepeviktor/phpstan-wordpress": "^2.0",
+    "wp-coding-standards/wpcs": "^3.1"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Dravit\\": "inc/",
+      "Dravit\\Tests\\": "tests/php/"
+    }
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "sort-packages": true,
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "phpstan/extension-installer": true
+    }
+  },
+  "scripts": {
+    "test": "phpunit --configuration phpunit.xml.dist",
+    "phpstan": "phpstan analyse --configuration=phpstan.neon.dist --memory-limit=512M",
+    "phpcs": "phpcs --standard=phpcs.xml.dist",
+    "check": [
+      "@phpstan",
+      "@test"
+    ]
+  }
+}
+

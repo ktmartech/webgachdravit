@@ -1,8 +1,8 @@
 # 16. Bản đồ Port Giao diện Mẫu sang WordPress & Thư viện Component drv_ui()
 
 > **Nguồn đối chiếu:** Bộ 12 file HTML mẫu tại `docs/layout/` (`00`..`10` + `partials/` + `assets/{css,js}`) và báo cáo kiểm toán [00_LAYOUT_AUDIT_REPORT.md](layout/00_LAYOUT_AUDIT_REPORT.md).
-> **Quyết định kiến trúc ràng buộc:** `D-01` (Classic PHP Theme), `D-04` (Vanilla CSS `@layer` + Vite ES2022), `D-15` (Classic Shortcode Cart/Checkout), `D-17` (Component 4 lớp `drv_ui()`), `D-18`..`D-30`.
-> **Tài liệu liên quan:** [01_Brand_Design_System.md](01_Brand_Design_System.md) · [02_Technical_Architecture.md](02_Technical_Architecture.md) · [07_UI_UX_Page_Specs.md](07_UI_UX_Page_Specs.md) · [08_Performance_Hosting.md](08_Performance_Hosting.md) · [14_Data_Dictionary_And_Settings.md](14_Data_Dictionary_And_Settings.md) · [15_REST_API_And_JS_Contract.md](15_REST_API_And_JS_Contract.md).
+> **Quyết định kiến trúc ràng buộc:** `D-01` (Classic PHP Theme), `D-04` (Vanilla CSS `@layer` + Vite ES2022), `D-15` (Classic Shortcode Cart/Checkout), `D-17` (Component 4 lớp `drv_ui()`), `D-18`..`D-34` (nâng cấp `D-31` Fluent Forms Bridge + `@layer plugins`, `D-32` mở sẵn `Dravit\Advisor\*` + `RuleOnlyDriver`, `D-34` cắt Bottom-Up 4 tầng & `drv_section()` `SectionRegistry` thuần code `S-3`).
+> **Tài liệu liên quan:** [01_Brand_Design_System.md](01_Brand_Design_System.md) · [02_Technical_Architecture.md](02_Technical_Architecture.md) · [07_UI_UX_Page_Specs.md](07_UI_UX_Page_Specs.md) · [08_Performance_Hosting.md](08_Performance_Hosting.md) · [14_Data_Dictionary_And_Settings.md](14_Data_Dictionary_And_Settings.md) · [15_REST_API_And_JS_Contract.md](15_REST_API_And_JS_Contract.md) · [21_Theme_Build_Execution_Roadmap.md](21_Theme_Build_Execution_Roadmap.md).
 
 ---
 

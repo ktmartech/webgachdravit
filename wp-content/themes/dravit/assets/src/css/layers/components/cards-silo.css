@@ -1,0 +1,637 @@
+@layer components {
+/* 4.9 Product Card Anatomy (.drv-card) */
+  .drv-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--c-white);
+    border: var(--bw);
+    border-radius: var(--r-md);
+    overflow: hidden;
+    transition: border-color var(--dur-base) var(--ease-out);
+  }
+
+  .drv-card:hover {
+    border-color: var(--c-teal-500);
+  }
+
+  .drv-card__media {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    background-color: var(--c-champagne);
+    overflow: hidden;
+    border-bottom: var(--bw);
+  }
+
+  .drv-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--dur-slow) var(--ease-out-expo), opacity var(--dur-base) var(--ease-out);
+  }
+
+  .drv-card__img--hover {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+  }
+
+  .drv-card:hover .drv-card__img--primary {
+    transform: scale(1.06);
+  }
+
+  .drv-card:hover .drv-card__img--hover {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+
+  .drv-card__badges {
+    position: absolute;
+    top: var(--s-2);
+    left: var(--s-2);
+    z-index: 2;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .drv-card__tags {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+
+  .drv-card__tag {
+    padding: 2px 6px;
+    background-color: var(--c-white);
+    border: var(--bw);
+    border-radius: var(--r-sm);
+    font-weight: 700;
+    color: var(--c-text-main);
+  }
+
+  .drv-card__sku {
+    color: var(--c-navy-800);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .drv-card__body {
+    padding: var(--s-3);
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+    flex: 1;
+    justify-content: space-between;
+  }
+
+  .drv-card__title {
+    font-size: 0.9375rem;
+
+    /* 15px */
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--c-navy-900);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 2.8em;
+  }
+
+  .drv-card__link {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .drv-card__link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  .drv-card__footer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--s-2);
+    padding-top: var(--s-2);
+    border-top: var(--bw);
+  }
+
+  .drv-card__prices {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    flex: 1 1 auto;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .drv-card__price-main {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .drv-card__price-m2 {
+    font-size: 1.125rem;
+
+    /* 18px */
+    font-weight: 700;
+    color: var(--c-text-main);
+    line-height: 1.15;
+  }
+
+  .drv-card__price-m2--sale {
+    color: var(--c-sale);
+  }
+
+  .drv-card__price-old {
+    font-size: var(--fs-xs);
+    color: var(--c-navy-800);
+    text-decoration: line-through;
+  }
+
+  .drv-card__price-piece {
+    font-size: 0.8125rem;
+
+    /* 13px */
+    color: var(--c-navy-800);
+    font-weight: 500;
+  }
+
+  /* Compact 2-Column Mobile Product Card (<768px) — Option 1: 1 Primary Badge + Footer Action */
+  @media (width <= 767px) {
+    .drv-card__badges {
+      top: 6px;
+      left: 6px;
+      gap: 3px;
+      max-width: calc(100% - 12px);
+    }
+
+    .drv-card__badges .drv-badge {
+      font-size: 12px;
+      padding: 2px 6px;
+      line-height: 1.2;
+    }
+
+    /* Only show the 1st primary badge on mobile so tile texture is never obscured */
+    .drv-card__badges .drv-badge:nth-child(n+2) {
+      display: none;
+    }
+
+    /* Hide floating overlay buttons on mobile image; action lives in card footer */
+
+    .drv-card__tags {
+      flex-wrap: nowrap;
+      overflow: hidden;
+      min-width: 0;
+      gap: 3px;
+    }
+
+    .drv-card__tag {
+      padding: 1px 4px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .drv-card__sku {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    /* Subtle Showroom shelf status dot next to SKU on mobile instead of secondary image badge */
+    .drv-card[data-showroom="true"] .drv-card__sku::before {
+      content: "";
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background-color: var(--c-moss-500);
+      box-shadow: 0 0 0 1.5px var(--c-moss-100);
+      flex-shrink: 0;
+    }
+
+    .drv-card__body {
+      padding: 8px;
+      gap: 6px;
+    }
+
+    .drv-card__title {
+      font-size: 0.8125rem;
+      line-height: 1.35;
+      min-height: 2.7em;
+    }
+
+    .drv-card__footer {
+      padding-top: 6px;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .drv-card__prices {
+      min-height: 42px;
+      justify-content: flex-end;
+    }
+
+    .drv-card__price-main {
+      gap: 4px;
+    }
+
+    .drv-card__price-m2 {
+      font-size: 0.9375rem;
+    }
+
+    .drv-card__price-old {
+      font-size: 0.75rem;
+    }
+
+    .drv-card__price-piece {
+      font-size: 0.75rem;
+    }
+  }
+
+
+  /* 4.9b Product Card "Quote" (.drv-card--quote) — SKU chip, eyebrow, contact-price, quote CTA */
+
+  .drv-card--quote:hover {
+    box-shadow: var(--shadow-hover);
+  }
+
+  .drv-card--quote .drv-card__media {
+    border-bottom: 0;
+  }
+
+  .drv-card--quote .drv-card__badges {
+    top: var(--s-2);
+    left: var(--s-2);
+    right: var(--s-2);
+    flex-flow: row wrap;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .drv-card__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--s-2);
+  }
+
+  .drv-card__chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: var(--r-sm);
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.4;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .drv-card__chip--label {
+    background-color: var(--c-teal-500);
+    color: var(--c-white);
+  }
+
+  .drv-card__chip--sale {
+    background-color: var(--c-sale);
+    color: var(--c-white);
+  }
+
+  .drv-card__chip--showroom {
+    background-color: var(--c-amber-100);
+    color: var(--c-navy-900);
+    border: 1px solid var(--c-amber-500);
+  }
+
+  .drv-card__remove {
+    position: absolute;
+    top: var(--s-2);
+    right: var(--s-2);
+    z-index: 3;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(255 255 255 / 94%);
+    border: var(--bw);
+    color: var(--c-navy-600);
+    font-size: 0.75rem;
+    transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+  }
+
+  .drv-card__remove:hover {
+    background-color: var(--c-sale-bg);
+    color: var(--c-sale);
+  }
+
+  .drv-card--quote {
+    --_pad: var(--s-4);
+
+    container-type: inline-size;
+    container-name: pcard;
+  }
+
+  .drv-card--quote .drv-card__body {
+    padding: var(--s-4);
+    gap: var(--s-3);
+    justify-content: flex-start;
+  }
+
+  /* Hàng đầu: tag kích thước + bề mặt (trái) · mã SKU (phải) */
+  .drv-card--quote .drv-card__head {
+    align-items: center;
+    flex-wrap: wrap;
+    row-gap: 4px;
+  }
+
+  .drv-card--quote .drv-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .drv-card--quote .drv-card__tag {
+    padding: 2px 8px;
+    background-color: var(--c-champagne);
+    border: var(--bw);
+    border-radius: var(--r-sm);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    color: var(--c-text-main);
+  }
+
+  .drv-card--quote .drv-card__sku {
+    flex-shrink: 0;
+    margin-left: auto;
+    font-family: var(--f-mono);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    color: var(--c-navy-600);
+    letter-spacing: 0.02em;
+  }
+
+  .drv-card--quote .drv-card__title {
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.4;
+    min-height: 2.8em;
+  }
+
+  /* Tình trạng mẫu / kho */
+  .drv-card__avail {
+    display: block;
+    max-width: none;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--c-text-main);
+  }
+
+  .drv-card__avail::before {
+    content: "";
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    margin-right: 6px;
+    vertical-align: 1px;
+    border-radius: 50%;
+    background-color: var(--c-success);
+  }
+
+  .drv-card__avail strong {
+    color: var(--c-teal-700);
+  }
+
+  /* Chân card: giá (trái) · nút (phải) */
+  .drv-card--quote .drv-card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-3);
+    margin-top: auto;
+    padding-top: var(--s-3);
+    border-top: var(--bw);
+  }
+
+  .drv-card--quote .drv-card__prices {
+    flex: 1 1 auto;
+    min-width: 0;
+    gap: 2px;
+  }
+
+  .drv-card--quote .drv-card__price-m2 {
+    font-size: 1rem;
+  }
+
+  .drv-card--quote .drv-card__price-main {
+    gap: 2px 6px;
+  }
+
+  .drv-card--quote .drv-card__price-piece {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--c-text-muted);
+    line-height: 1.4;
+  }
+
+  .drv-card__price-contact {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--c-text-main);
+    line-height: 1.2;
+  }
+
+  .drv-card__price-contact i {
+    color: var(--c-amber-500);
+    font-size: 1rem;
+  }
+
+  .drv-card__buy {
+    position: relative;
+    z-index: 2;
+    flex-shrink: 0;
+
+    --_h: 40px;
+    --_fs: 0.8125rem;
+    --_px: var(--s-3);
+
+    gap: 6px;
+    box-shadow: none;
+  }
+
+  /* Card hẹp (lưới 2 cột trên mobile, cột sidebar…): xếp giá trên, nút full-width dưới */
+  @container pcard (max-width: 280px) {
+    .drv-card--quote .drv-card__body {
+      padding: 10px;
+      gap: 8px;
+    }
+
+    .drv-card--quote .drv-card__footer {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+    }
+
+    .drv-card__buy {
+      width: 100%;
+
+      --_h: 38px;
+      --_px: 8px;
+    }
+
+    .drv-card--quote .drv-card__tag {
+      padding: 1px 6px;
+      font-size: 12px;
+    }
+
+    .drv-card--quote .drv-card__sku {
+      font-size: 12px;
+    }
+
+    .drv-card--quote .drv-card__title {
+      font-size: 0.875rem;
+      min-height: 2.7em;
+    }
+
+    .drv-card__avail {
+      font-size: 0.75rem;
+    }
+
+    .drv-card__price-contact,
+    .drv-card--quote .drv-card__price-m2 {
+      font-size: 0.9375rem;
+    }
+
+    .drv-card--quote .drv-card__price-piece {
+      font-size: 12px;
+      white-space: normal;
+    }
+  }
+
+  @media (width <= 767px) {
+    .drv-card--quote .drv-card__badges {
+      top: 6px;
+      left: 6px;
+      right: 6px;
+      gap: 3px;
+    }
+
+    .drv-card--quote .drv-card__badges .drv-card__chip:nth-child(n+3) {
+      display: none;
+    }
+
+    .drv-card__chip {
+      font-size: 12px;
+      padding: 1px 6px;
+    }
+  }
+
+  .drv-shop-look__scene {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border: var(--bw);
+    border-radius: var(--r-md) var(--r-md) 0 0;
+  }
+
+  .drv-load-more-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--s-3);
+    padding-top: var(--s-4);
+  }
+
+  .drv-load-more__progress {
+    width: min(260px, 100%);
+    height: 4px;
+    background-color: var(--c-navy-200);
+    border-radius: var(--r-pill);
+    overflow: hidden;
+  }
+
+  .drv-load-more__bar {
+    display: block;
+    height: 100%;
+    width: var(--_pct, 25%);
+    background-color: var(--c-teal-500);
+    transition: width var(--dur-base) var(--ease-out-expo);
+  }
+
+  /* 4.10 Visual Sub-Silo Tile (.drv-silo-tile) */
+  .drv-silo-tile {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-3);
+    padding: 8px 12px 8px 8px;
+    background-color: var(--c-white);
+    border: var(--bw);
+    border-radius: var(--r-sm);
+    min-width: 190px;
+    transition:
+      border-color var(--dur-fast) var(--ease-out),
+      background-color var(--dur-fast) var(--ease-out),
+      transform var(--dur-base) var(--ease-out-expo),
+      box-shadow var(--dur-base) var(--ease-out-expo);
+  }
+
+  .drv-silo-tile:hover,
+  .drv-silo-tile.is-active {
+    border-color: var(--c-moss-500);
+    background-color: var(--c-moss-100);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .drv-silo-tile__thumb {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--r-sm);
+    background-color: var(--c-champagne);
+    border: var(--bw);
+    object-fit: cover;
+    flex-shrink: 0;
+    transition: transform var(--dur-base) var(--ease-out-expo);
+  }
+
+  .drv-silo-tile:hover .drv-silo-tile__thumb {
+    transform: scale(1.08);
+  }
+
+  .drv-silo-tile__info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .drv-silo-tile__name {
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    color: var(--c-text-main);
+  }
+
+  .drv-silo-tile__count {
+    font-size: var(--fs-xs);
+    color: var(--c-navy-800);
+    font-variant-numeric: tabular-nums;
+  }
+}

@@ -1,0 +1,209 @@
+@layer layout {
+  /* 3.1 Container (max 1380px, equal edges) */
+  .l-container {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-pad);
+  }
+
+  /* 3.2 Vertical Stack (.l-stack) */
+  .l-stack {
+    --_space: var(--s-4);
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--_space);
+  }
+
+  .l-stack--xs {
+    --_space: var(--s-1);
+  }
+
+  .l-stack--sm {
+    --_space: var(--s-2);
+  }
+
+  .l-stack--md {
+    --_space: var(--s-4);
+  }
+
+  .l-stack--lg {
+    --_space: var(--s-5);
+  }
+
+  .l-stack--xl {
+    --_space: var(--s-6);
+  }
+
+  /* 3.3 Horizontal Cluster (.l-cluster) */
+  .l-cluster {
+    --_gap: var(--s-3);
+    --_align: center;
+    --_justify: flex-start;
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: var(--_align);
+    justify-content: var(--_justify);
+    gap: var(--_gap);
+  }
+
+  .l-cluster--xs {
+    --_gap: var(--s-1);
+  }
+
+  .l-cluster--sm {
+    --_gap: var(--s-2);
+  }
+
+  .l-cluster--between {
+    --_justify: space-between;
+  }
+
+  .l-cluster--nowrap {
+    flex-wrap: nowrap;
+  }
+
+  /* 3.4 Responsive 12-Col Grid (.l-grid) */
+  .l-grid {
+    --_cols: 1;
+    --_gap: var(--grid-gap);
+
+    display: grid;
+    grid-template-columns: repeat(var(--_cols), minmax(0, 1fr));
+    gap: var(--_gap);
+  }
+
+  .l-grid--gap-sm {
+    --_gap: var(--s-3);
+  }
+
+  .l-grid--2 {
+    --_cols: 1;
+  }
+
+  .l-grid--3 {
+    --_cols: 1;
+  }
+
+  .l-grid--4 {
+    --_cols: 2;
+  }
+
+  @media (width >= 640px) {
+    .l-grid--2 {
+      --_cols: 2;
+    }
+
+    .l-grid--3 {
+      --_cols: 2;
+    }
+
+    .l-grid--4 {
+      --_cols: 2;
+    }
+  }
+
+  @media (width >= 768px) {
+    .l-grid--3 {
+      --_cols: 3;
+    }
+
+    .l-grid--4 {
+      --_cols: 3;
+    }
+  }
+
+  @media (width >= 1024px) {
+    .l-grid--4 {
+      --_cols: 4;
+    }
+  }
+
+  /* Column Span Modifiers on Desktop (lg >= 1024px) */
+
+  /* 3.5 Signature Architectural Grout-Line Grid (.l-grout-grid)
+     Creates crisp 1px solid grout lines between every cell without double borders */
+  .l-grout-grid {
+    --_cols: 1;
+    --_cell-bg: var(--c-white);
+    --_cell-pad: var(--s-5);
+
+    display: grid;
+    grid-template-columns: repeat(var(--_cols), minmax(0, 1fr));
+    gap: 1px;
+    background-color: var(--c-navy-200);
+    border: var(--bw);
+    border-radius: var(--r-md);
+    overflow: hidden;
+  }
+
+  .l-grout-grid>* {
+    background-color: var(--_cell-bg);
+    padding: var(--_cell-pad);
+    min-width: 0;
+  }
+
+  @media (width >= 640px) {
+    .l-grout-grid--2,
+    .l-grout-grid--4 {
+      --_cols: 2;
+    }
+  }
+
+  @media (width >= 1024px) {
+    .l-grout-grid--4 {
+      --_cols: 4;
+    }
+  }
+
+  /* 3.6 Section Wrapper (.l-section) — Alternating Ivory / White / Champagne */
+  .l-section {
+    --_bg: var(--c-ivory);
+    --_fg: var(--c-navy-900);
+    --_pad-y: var(--sec-pad-y);
+
+    background-color: var(--_bg);
+    color: var(--_fg);
+    padding-block: var(--_pad-y);
+    border-bottom: var(--bw);
+  }
+
+  .l-section--white {
+    --_bg: var(--c-white);
+  }
+
+  .l-section--tight {
+    --_pad-y: var(--s-6);
+  }
+
+  /* 3.7 Asymmetric Split Layout (.l-split) */
+  .l-split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-6);
+    align-items: start;
+  }
+
+  .l-split > * {
+    min-width: 0;
+  }
+
+  @media (width >= 1024px) {
+    .l-split--catalog {
+      grid-template-columns: 280px minmax(0, 1fr);
+      gap: var(--s-6);
+    }
+
+    .l-split--7-5 {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      gap: var(--s-6);
+    }
+
+    .l-split--8-4 {
+      grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+      gap: var(--s-6);
+    }
+  }
+}

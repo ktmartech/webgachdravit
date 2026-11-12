@@ -1,0 +1,207 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 3,
+  "settings": {
+    "appearanceTools": false,
+    "useRootPaddingAwareAlignments": false,
+    "layout": {
+      "contentSize": "780px",
+      "wideSize": "1380px"
+    },
+    "color": {
+      "custom": false,
+      "customDuotone": false,
+      "customGradient": false,
+      "defaultDuotone": false,
+      "defaultGradients": false,
+      "defaultPalette": false,
+      "palette": [
+        {
+          "slug": "navy-900",
+          "color": "#083A4F",
+          "name": "Dravit Navy Primary"
+        },
+        {
+          "slug": "text-main",
+          "color": "#0B192C",
+          "name": "Deep Ink Text"
+        },
+        {
+          "slug": "text-muted",
+          "color": "#1E3A5F",
+          "name": "Slate Muted Text"
+        },
+        {
+          "slug": "teal-500",
+          "color": "#0D9488",
+          "name": "Brand Teal"
+        },
+        {
+          "slug": "teal-100",
+          "color": "#CCFBF1",
+          "name": "Teal Soft Highlight"
+        },
+        {
+          "slug": "amber-500",
+          "color": "#F59E0B",
+          "name": "Warm Amber Accent"
+        },
+        {
+          "slug": "amber-100",
+          "color": "#FEF3C7",
+          "name": "Warm Amber Soft"
+        },
+        {
+          "slug": "champagne",
+          "color": "#F1F5F9",
+          "name": "Slate 100 Surface"
+        },
+        {
+          "slug": "ivory",
+          "color": "#F8FAFC",
+          "name": "Slate 50 Background"
+        },
+        {
+          "slug": "white",
+          "color": "#FFFFFF",
+          "name": "Pure White"
+        },
+        {
+          "slug": "navy-200",
+          "color": "#E2E8F0",
+          "name": "Grout Line Border"
+        },
+        {
+          "slug": "sale",
+          "color": "#E11D48",
+          "name": "Sale / Alert"
+        },
+        {
+          "slug": "success",
+          "color": "#059669",
+          "name": "In Stock / Success"
+        }
+      ]
+    },
+    "typography": {
+      "customFontSize": false,
+      "dropCap": false,
+      "fluid": false,
+      "fontFamilies": [
+        {
+          "slug": "display",
+          "name": "Anton Display",
+          "fontFamily": "\"Anton\", \"Segoe UI\", system-ui, -apple-system, sans-serif"
+        },
+        {
+          "slug": "body",
+          "name": "Quicksand Body",
+          "fontFamily": "\"Quicksand\", \"Quicksand Fallback\", \"Segoe UI\", system-ui, -apple-system, sans-serif"
+        },
+        {
+          "slug": "mono",
+          "name": "Technical Mono",
+          "fontFamily": "ui-monospace, \"Cascadia Code\", \"Source Code Pro\", monospace"
+        }
+      ],
+      "fontSizes": [
+        {
+          "slug": "xs",
+          "size": "0.75rem",
+          "name": "XS (12px)"
+        },
+        {
+          "slug": "sm",
+          "size": "0.875rem",
+          "name": "SM (14px)"
+        },
+        {
+          "slug": "base",
+          "size": "1rem",
+          "name": "Base (16px)"
+        },
+        {
+          "slug": "lg",
+          "size": "1.125rem",
+          "name": "LG (18px)"
+        },
+        {
+          "slug": "h3",
+          "size": "1.25rem",
+          "name": "H3 (20px)"
+        },
+        {
+          "slug": "h2",
+          "size": "clamp(1.5rem, 1.25rem + 1vw, 2rem)",
+          "name": "H2 Fluid"
+        },
+        {
+          "slug": "h1",
+          "size": "clamp(1.875rem, 1.4rem + 2vw, 3rem)",
+          "name": "H1 Fluid"
+        }
+      ]
+    },
+    "spacing": {
+      "customSpacingSize": false,
+      "defaultSpacingSizes": false,
+      "units": [
+        "px",
+        "rem"
+      ],
+      "spacingSizes": [
+        {
+          "slug": "1",
+          "size": "0.25rem",
+          "name": "4px"
+        },
+        {
+          "slug": "2",
+          "size": "0.5rem",
+          "name": "8px"
+        },
+        {
+          "slug": "3",
+          "size": "0.75rem",
+          "name": "12px"
+        },
+        {
+          "slug": "4",
+          "size": "1rem",
+          "name": "16px"
+        },
+        {
+          "slug": "5",
+          "size": "1.5rem",
+          "name": "24px"
+        },
+        {
+          "slug": "6",
+          "size": "2rem",
+          "name": "32px"
+        },
+        {
+          "slug": "7",
+          "size": "3rem",
+          "name": "48px"
+        },
+        {
+          "slug": "8",
+          "size": "4rem",
+          "name": "64px"
+        }
+      ]
+    }
+  },
+  "styles": {
+    "color": {
+      "background": "var(--c-ivory)",
+      "text": "var(--c-text-main)"
+    },
+    "typography": {
+      "fontFamily": "var(--f-body)",
+      "fontSize": "var(--fs-base)",
+      "lineHeight": "var(--lh-base)"
+    }
+  }
+}

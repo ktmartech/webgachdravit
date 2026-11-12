@@ -1,0 +1,75 @@
+/* Page stylesheet: /ui-kit showcase helpers (local/dev only) */
+@layer components {
+  .drv-uikit-swatch-bar {
+    height: 64px;
+    border-radius: var(--r-sm);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-inline: var(--s-3);
+  }
+
+  .drv-uikit-swatch-bar--navy {
+    background-color: var(--c-navy-900);
+    color: var(--c-white);
+  }
+
+  .drv-uikit-swatch-bar--ink {
+    background-color: var(--c-text-main);
+    color: var(--c-white);
+  }
+
+  .drv-uikit-swatch-bar--line {
+    background-color: var(--c-navy-200);
+    border: var(--bw-input);
+    color: var(--c-navy-900);
+  }
+
+  .drv-uikit-swatch-bar--teal {
+    background-color: var(--c-teal-500);
+    color: var(--c-white);
+  }
+
+  .drv-uikit-swatch-bar--teal-dark {
+    background-color: var(--c-teal-700);
+    color: var(--c-white);
+  }
+
+  .drv-uikit-swatch-bar--amber {
+    background-color: var(--c-amber-500);
+    color: var(--c-navy-900);
+  }
+
+  .drv-uikit-swatch-bar--ivory {
+    background-color: var(--c-ivory);
+    border: var(--bw);
+    color: var(--c-navy-900);
+  }
+
+  .drv-uikit-func-grid {
+    height: 64px;
+  }
+
+  .drv-uikit-func-chip {
+    border-radius: var(--r-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    color: var(--c-white);
+  }
+
+  .drv-uikit-func-chip--sale {
+    background-color: var(--c-sale);
+  }
+
+  .drv-uikit-func-chip--success {
+    background-color: var(--c-success);
+  }
+
+  .drv-uikit-func-chip--warning {
+    background-color: var(--c-warning);
+  }
+}
+

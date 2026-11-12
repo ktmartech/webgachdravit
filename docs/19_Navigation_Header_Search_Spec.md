@@ -193,28 +193,29 @@ Trên trang `/thanh-toan` (trừ màn hình `order-received` sau khi đặt thà
 
 ## 2. Nguồn Dữ liệu Menu & Walkers (`inc/Core/Menu/*`, `D-29`)
 
-### 2.1 Các Vị trí `register_nav_menus` Chuẩn
+### 2.1 Các Vị trí `register_nav_menus` Chuẩn (`D-29`, `D-35` — Phương án `M-1`)
 
-Đăng ký trong `Dravit\Core\Menu\MenuSetup::register()`:
+Đăng ký trong `Dravit\Core\Menu\MenuSetup::register()` với Custom Fields gốc của WordPress (`wp_nav_menu_item_custom_fields`: `_drv_icon`, `_drv_badge`, `_drv_highlight`, `_drv_preview_badge`, `_drv_preview_desc`, `_drv_preview_price`, `_drv_preview_img`), không cài plugin ACF/SCF:
 
 | Location slug | Tên hiển thị trong `WP Admin -> Giao diện -> Menu` | Khu vực hiển thị | Độ sâu tối đa (`depth`) |
 |---|---|---|---|
+| `mega_menu` | `Mega Menu 4+1 - Tất cả danh mục gạch (Tự fallback config/collections.php khi trống)` | Cột 1–4 của Mega Menu Desktop & Khối Danh mục Gạch trong Mobile Drawer (`D-35`) | `3` (Cấp 1 Cột → Cấp 2 Nhóm con / Link → Cấp 3 Link con) |
 | `primary_silo_nav` | `Thanh điều hướng ngang - Nhóm gạch chính (Tầng 2 trái)` | Cạnh nút `"Tất cả gạch"` trên Tier 2 (có fallback tự động nếu Admin chưa gán menu) | `3` (Cấp 1 ngang → Cấp 2 Dropdown → Cấp 3 Flyout) |
 | `primary_utility` | `Thanh điều hướng ngang - Tiện ích phải (Tầng 2 phải)` | Cụm phải Tier 2 & phần dưới Mobile Drawer (`Cẩm nang`, `Liên hệ & Showroom`) | `1` |
-| `footer_col_2` | `Footer Cột 2 - Danh mục gạch chủ lực` | Cột 2 Footer (8 link danh mục trọng tâm) | `1` |
+| `footer_col_2` | `Footer Cột 2 - Danh mục gạch chủ lực` | Cột 2 Footer (tự lấy tiêu đề cột theo tên Menu WP được gán) | `1` |
 | `footer_col_3` | `Footer Cột 3 - Dịch vụ & Công cụ dự toán` | Cột 3 Footer (`BOQ`, `Cẩm nang`, `Giới thiệu`, `Liên hệ`) | `1` |
 | `footer_col_4` | `Footer Cột 4 - Chính sách & Pháp lý` | Cột 4 Footer (Đổi trả, Vận chuyển, Thanh toán, Bảo mật, Điều khoản) | `1` |
 
-> **URL Sanitizer trên Menu Admin (`wp_update_nav_menu_item`):** Hook kiểm tra mọi link nội bộ cùng domain trong `nav_menu`: tự động cắt dấu `/` cuối (`rtrim($url, '/')`, trừ trang chủ `'/'`) theo `D-21`, và hiển thị cảnh báo Admin Notice nếu biên tập viên dán nhầm URL có query `?param` vào menu điều hướng chính.
+> **URL Sanitizer trên Menu Admin (`wp_update_nav_menu_item`):** Hook kiểm tra mọi link nội bộ cùng domain trong `nav_menu`: tự động cắt dấu `/` cuối (`rtrim($url, '/')`, trừ trang chủ `'/'`) theo `D-21`, chặn rò rỉ `?param` vào Mega Menu tĩnh, và hiển thị cảnh báo Admin Notice nếu biên tập viên dán nhầm URL có query `?param` vào menu điều hướng chính.
 
-### 2.2 Tại sao Mega Menu 4+1 & Mobile Category Accordion Sinh Tự động từ `config/collections.php` (`D-29`)
+### 2.2 Cơ chế Kép cho Mega Menu 4+1 & Mobile Category Accordion: Editable `mega_menu` + Fallback `config/collections.php` (`D-29`, `D-35`)
 
 Bản HTML prototype (`partials/header.html`) mắc 3 lỗi kiến trúc nghiêm trọng: (1) chèn hàng loạt link query không tồn tại (`?nhom=`, `?loai=`, `?van=`, `?do-day=20mm`, `?be-mat=chong-tron`) làm thất thoát PageRank vào các URL `noindex`, (2) bỏ sót nhiều collection trong 28 Smart Collections chuẩn, và (3) gõ cứng số lượng sản phẩm giả.
 
-Để triệt tiêu 100% sai lệch giữa con người và cấu trúc SEO Silo:
-1. **Nguồn dữ liệu duy nhất:** Cả **Mega Menu 4+1** (Desktop) và **Khối Danh mục Gạch trong Mobile Drawer** đều được class `Dravit\Core\Menu\MegaMenuRenderer` sinh tất định từ `config/collections.php` kết hợp `product_cat` term meta và bộ đếm `drv_term_stats_{term_id}`.
-2. **Bảo toàn 100% URL Tĩnh (`index, follow`):** Mọi thẻ `<a href>` bên trong Mega Menu chỉ trỏ tới **đúng 28 URL tĩnh của Smart Collections** (không dấu `/` cuối, **0 link chứa `?param`**).
-3. **Đồng bộ nhãn & thứ tự:** Khi thêm sản phẩm hoặc chạy `CollectionSync`, số lượng mẫu (`$term->count`) và giá khởi điểm (`price_min_m2`) trên Mega Menu tự cập nhật mà Admin không cần sửa menu thủ công.
+Theo `D-35` (**Phương án `M-1`**), `Dravit\Core\Menu\MegaMenuRenderer` kết hợp linh hoạt khả năng kéo-thả chỉnh sửa trong WP Admin với lưới an toàn SEO Silo:
+1. **Chỉnh sửa 100% qua `Giao diện -> Menu` (`mega_menu`):** Khi vị trí `mega_menu` được gán Menu WP, cấp 1 tạo thành các cột của ma trận Mega Menu, cấp 2/3 tạo thành nhóm con hoặc link danh mục; các mục trỏ tới `product_cat` tự động lấy số lượng mẫu thực tế (`$term->count`), ảnh đại diện và dữ liệu Preview Cột 5 từ term meta (hoặc ghi đè bằng `_drv_preview_*` ngay trên mục menu).
+2. **Fallback tự động 100% từ `config/collections.php`:** Nếu Admin bỏ trống vị trí `mega_menu`, hệ thống tự động dựng đủ 4 cột × 28 Smart Collections từ `config/collections.php` + `drv_term_stats_{term_id}`.
+3. **Bảo toàn 100% URL Tĩnh (`index, follow`) & Cache `0` DB Query:** Toàn bộ HTML render xong được lưu vào transient `drv_mega_html` (tự động xóa khi lưu menu, sửa `product_cat`, chạy `CollectionSync` hoặc lưu `drv_settings`), cam kết **không dấu `/` cuối** và **`0` link chứa `?param`**.
 
 **Bảng ánh xạ chính xác 4 Cột Danh mục trong Mega Menu (`7 + 8 + 7 + 5 = 27` collection con + 1 gốc `/gach` = đủ 28 URL):**
 

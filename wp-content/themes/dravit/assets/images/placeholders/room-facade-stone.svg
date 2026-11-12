@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <!-- Townhouse facade clad with 60x120 stone-look porcelain -->
+  <rect width="800" height="600" fill="#DCE8EA"/>
+  <rect x="120" y="40" width="560" height="520" fill="#E7E2CE"/>
+  <!-- 60x120 vertical cladding grout lines -->
+  <g stroke="#B8B09E" stroke-width="2">
+    <line x1="213" y1="40" x2="213" y2="560"/>
+    <line x1="306" y1="40" x2="306" y2="560"/>
+    <line x1="399" y1="40" x2="399" y2="560"/>
+    <line x1="492" y1="40" x2="492" y2="560"/>
+    <line x1="585" y1="40" x2="585" y2="560"/>
+    <line x1="120" y1="226" x2="680" y2="226"/>
+    <line x1="120" y1="412" x2="680" y2="412"/>
+  </g>
+  <!-- Balcony & windows -->
+  <rect x="200" y="90" width="400" height="110" fill="#083A4F"/>
+  <g stroke="#9CB0B9" stroke-width="3">
+    <line x1="333" y1="90" x2="333" y2="200"/>
+    <line x1="466" y1="90" x2="466" y2="200"/>
+  </g>
+  <rect x="180" y="200" width="440" height="14" fill="#386172"/>
+  <rect x="230" y="270" width="340" height="110" fill="#386172"/>
+  <!-- Ground floor entrance -->
+  <rect x="300" y="440" width="200" height="120" fill="#083A4F"/>
+  <line x1="400" y1="440" x2="400" y2="560" stroke="#9CB0B9" stroke-width="3"/>
+  <!-- Planter -->
+  <rect x="140" y="510" width="120" height="50" fill="#386172"/>
+  <circle cx="200" cy="500" r="34" fill="#3C7D7C"/>
+  <rect x="540" y="510" width="120" height="50" fill="#386172"/>
+  <circle cx="600" cy="500" r="34" fill="#3C7D7C"/>
+  <rect x="0" y="560" width="800" height="40" fill="#8A9BA3"/>
+</svg>
+

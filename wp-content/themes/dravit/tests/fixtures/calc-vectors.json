@@ -1,0 +1,333 @@
+{
+  "fromM2": [
+    {
+      "id": "T-01-floating-point-guard-80x80",
+      "input": {
+        "areaM2": 1.92,
+        "wastePct": 0,
+        "areaPiece": 0.64,
+        "piecesPerBox": 3,
+        "roundMode": "box",
+        "qtyMin": 3,
+        "priceM2": 385000,
+        "kgPerBox": 42,
+        "unitLabel": "viên"
+      },
+      "expected": {
+        "needM2": 1.92,
+        "pieces": 3,
+        "fullBoxes": 1,
+        "loosePieces": 0,
+        "boxText": "1 thùng",
+        "actualM2": 1.92,
+        "pricePiece": 246400,
+        "totalVnd": 739200,
+        "totalKg": 42,
+        "isQuote": false
+      }
+    },
+    {
+      "id": "T-02-living-room-25m2-with-5pct-waste",
+      "input": {
+        "areaM2": 25,
+        "wastePct": 5,
+        "areaPiece": 0.64,
+        "piecesPerBox": 3,
+        "roundMode": "box",
+        "qtyMin": 3,
+        "priceM2": 385000,
+        "kgPerBox": 42,
+        "unitLabel": "viên"
+      },
+      "expected": {
+        "needM2": 26.25,
+        "pieces": 42,
+        "fullBoxes": 14,
+        "loosePieces": 0,
+        "boxText": "14 thùng",
+        "actualM2": 26.88,
+        "pricePiece": 246400,
+        "totalVnd": 10348800,
+        "totalKg": 588,
+        "isQuote": false
+      }
+    },
+    {
+      "id": "T-03-big-slab-120x240-piece-mode",
+      "input": {
+        "areaM2": 7,
+        "wastePct": 0,
+        "areaPiece": 2.88,
+        "piecesPerBox": 1,
+        "roundMode": "piece",
+        "qtyMin": 1,
+        "priceM2": 1250000,
+        "kgPerBox": 68,
+        "unitLabel": "tấm"
+      },
+      "expected": {
+        "needM2": 7,
+        "pieces": 3,
+        "fullBoxes": 3,
+        "loosePieces": 0,
+        "boxText": "3 thùng",
+        "actualM2": 8.64,
+        "pricePiece": 3600000,
+        "totalVnd": 10800000,
+        "totalKg": 204,
+        "isQuote": false
+      }
+    },
+    {
+      "id": "T-04-subway-7-5x30-qty-min-clamp",
+      "input": {
+        "areaM2": 0.1,
+        "wastePct": 0,
+        "areaPiece": 0.0225,
+        "piecesPerBox": 44,
+        "roundMode": "piece",
+        "qtyMin": 10,
+        "priceM2": 450000,
+        "kgPerBox": 14,
+        "unitLabel": "viên"
+      },
+      "expected": {
+        "needM2": 0.1,
+        "pieces": 10,
+        "fullBoxes": 0,
+        "loosePieces": 10,
+        "boxText": "10 viên lẻ",
+        "actualM2": 0.225,
+        "pricePiece": 10125,
+        "totalVnd": 101250,
+        "totalKg": 3.2,
+        "isQuote": false
+      }
+    },
+    {
+      "id": "T-05-quote-only-zero-price",
+      "input": {
+        "areaM2": 10,
+        "wastePct": 5,
+        "areaPiece": 0.18,
+        "piecesPerBox": 8,
+        "roundMode": "box",
+        "qtyMin": 8,
+        "priceM2": 0,
+        "kgPerBox": 26,
+        "unitLabel": "viên"
+      },
+      "expected": {
+        "needM2": 10.5,
+        "pieces": 64,
+        "fullBoxes": 8,
+        "loosePieces": 0,
+        "boxText": "8 thùng",
+        "actualM2": 11.52,
+        "pricePiece": 0,
+        "totalVnd": 0,
+        "totalKg": 208,
+        "isQuote": true
+      }
+    },
+    {
+      "id": "U-09-piece-mode-loose-pieces",
+      "input": {
+        "areaM2": 5,
+        "wastePct": 0,
+        "areaPiece": 0.36,
+        "piecesPerBox": 4,
+        "roundMode": "piece",
+        "qtyMin": 1,
+        "priceM2": 320000,
+        "kgPerBox": 30,
+        "unitLabel": "viên"
+      },
+      "expected": {
+        "needM2": 5,
+        "pieces": 14,
+        "fullBoxes": 3,
+        "loosePieces": 2,
+        "boxText": "3 thùng + 2 viên lẻ",
+        "actualM2": 5.04,
+        "pricePiece": 115200,
+        "totalVnd": 1612800,
+        "totalKg": 105,
+        "isQuote": false
+      }
+    }
+  ],
+  "fromBoxes": [
+    {
+      "id": "boxes-standard-5-boxes",
+      "input": {
+        "boxes": 5,
+        "areaPiece": 0.64,
+        "piecesPerBox": 3,
+        "qtyMin": 6,
+        "priceM2": 385000,
+        "kgPerBox": 42,
+        "unitLabel": "viên"
+      },
+      "expected": {
+        "pieces": 15,
+        "fullBoxes": 5,
+        "actualM2": 9.6,
+        "totalVnd": 3696000,
+        "totalKg": 210
+      }
+    },
+    {
+      "id": "boxes-clamped-by-qty-min-6",
+      "input": {
+        "boxes": 1,
+        "areaPiece": 0.64,
+        "piecesPerBox": 3,
+        "qtyMin": 6,
+        "priceM2": 385000,
+        "kgPerBox": 42,
+        "unitLabel": "viên"
+      },
+      "expected": {
+        "pieces": 6,
+        "fullBoxes": 2,
+        "actualM2": 3.84,
+        "totalVnd": 1478400,
+        "totalKg": 84
+      }
+    }
+  ],
+  "fromPieces": [
+    {
+      "id": "pieces-box-mode-rounds-7-to-9",
+      "input": {
+        "pieces": 7,
+        "areaPiece": 0.64,
+        "piecesPerBox": 3,
+        "roundMode": "box",
+        "qtyMin": 3,
+        "priceM2": 385000,
+        "kgPerBox": 42,
+        "unitLabel": "viên"
+      },
+      "expected": {
+        "pieces": 9,
+        "fullBoxes": 3,
+        "boxText": "3 thùng",
+        "actualM2": 5.76,
+        "totalVnd": 2217600
+      }
+    },
+    {
+      "id": "pieces-piece-mode-keeps-7",
+      "input": {
+        "pieces": 7,
+        "areaPiece": 0.64,
+        "piecesPerBox": 3,
+        "roundMode": "piece",
+        "qtyMin": 1,
+        "priceM2": 385000,
+        "kgPerBox": 42,
+        "unitLabel": "viên"
+      },
+      "expected": {
+        "pieces": 7,
+        "fullBoxes": 2,
+        "loosePieces": 1,
+        "boxText": "2 thùng + 1 viên lẻ",
+        "actualM2": 4.48,
+        "totalVnd": 1724800
+      }
+    }
+  ],
+  "cartLine": [
+    {
+      "id": "cart-line-loose-pieces-needed-for-next-box",
+      "input": {
+        "pieces": 14,
+        "areaPiece": 0.36,
+        "piecesPerBox": 4,
+        "kgPerBox": 30,
+        "priceM2": 320000,
+        "unitLabel": "viên"
+      },
+      "expected": {
+        "pieces": 14,
+        "fullBoxes": 3,
+        "loosePieces": 2,
+        "neededForNextBox": 2,
+        "boxText": "3 thùng + 2 viên lẻ",
+        "actualM2": 5.04,
+        "totalKg": 105,
+        "pricePiece": 115200,
+        "lineTotalVnd": 1612800
+      }
+    }
+  ],
+  "boqSlot": [
+    {
+      "id": "boq-slot-30m2-waste-10pct",
+      "input": {
+        "targetM2": 30,
+        "wastePct": 10,
+        "areaPiece": 0.36,
+        "piecesPerBox": 4,
+        "priceM2": 320000,
+        "kgPerBox": 30,
+        "unitLabel": "viên"
+      },
+      "expected": {
+        "needM2": 33,
+        "pieces": 92,
+        "fullBoxes": 23,
+        "actualM2": 33.12,
+        "totalVnd": 10598400,
+        "totalKg": 690
+      }
+    },
+    {
+      "id": "boq-slot-zero-m2",
+      "input": {
+        "targetM2": 0,
+        "wastePct": 5,
+        "areaPiece": 0.64,
+        "piecesPerBox": 3,
+        "priceM2": 385000,
+        "kgPerBox": 42,
+        "unitLabel": "viên"
+      },
+      "expected": {
+        "pieces": 0,
+        "fullBoxes": 0,
+        "boxText": "0 thùng",
+        "totalVnd": 0
+      }
+    }
+  ],
+  "volumeDiscount": [
+    { "subtotal": 10000000, "m2": 20, "rate": 0, "discountVnd": 0, "grandVnd": 10000000 },
+    { "subtotal": 20000000, "m2": 50, "rate": 5, "discountVnd": 1000000, "grandVnd": 19000000 },
+    { "subtotal": 100000000, "m2": 150, "rate": 8, "discountVnd": 8000000, "grandVnd": 92000000 }
+  ],
+  "vehicleHint": [
+    { "kg": 0, "expected": "Chưa có khối lượng" },
+    { "kg": 800, "expected": "Xe tải nhẹ 1 tấn" },
+    { "kg": 1800, "expected": "Xe tải 2,5 tấn" },
+    { "kg": 4200, "expected": "Xe tải 5 tấn" },
+    { "kg": 7500, "expected": "Xe tải 8 tấn / chia chuyến" }
+  ],
+  "quickAdd": [
+    {
+      "input": { "defaultBuyUnit": "m2", "roundMode": "box", "piecesPerBox": 3, "qtyMin": 3 },
+      "expected": 3
+    },
+    {
+      "input": { "defaultBuyUnit": "thung", "roundMode": "piece", "piecesPerBox": 44, "qtyMin": 10 },
+      "expected": 44
+    },
+    {
+      "input": { "defaultBuyUnit": "vien", "roundMode": "piece", "piecesPerBox": 44, "qtyMin": 10 },
+      "expected": 10
+    }
+  ]
+}
