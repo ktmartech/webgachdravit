@@ -1,8 +1,8 @@
-export function qs(selector, root = document) {
+export function qs(selector, root = typeof document !== 'undefined' ? document : null) {
   return root ? root.querySelector(selector) : null;
 }
 
-export function qsa(selector, root = document) {
+export function qsa(selector, root = typeof document !== 'undefined' ? document : null) {
   return root ? Array.from(root.querySelectorAll(selector)) : [];
 }
 

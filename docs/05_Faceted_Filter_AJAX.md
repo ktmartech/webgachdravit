@@ -32,7 +32,7 @@ Lưu ý: `van-gach` và `chat-lieu` là **2 tham số URL độc lập** (dù ch
 | 11 | `do-hut-nuoc` | `pa_do-hut-nuoc` | Checkbox (`duoi-0-5`, `0-5-3`, `3-6`, `6-10`, `tren-10`) | Luôn là `<input>`, **cấm `<a href>`** | `tech` |
 | 12 | `do-day` | `pa_do-day` | Checkbox (`mong`, `tieu-chuan`, `day`) | Luôn là `<input>`, **cấm `<a href>`** | `tech` |
 | 13 | `gia` | `drv_price_band` | Radio (`duoi-200k`, `200k-350k`, `350k-600k`, `tren-600k`, `gia-du-an`) | Luôn là `<input type="radio">`, **cấm `<a href>`** | `tech` |
-| 14 | `showroom` · `sort` | `drv_flag` (`showroom=1`) · `orderby` (`moi-ve \| ban-chay \| gia-tang \| gia-giam`) | Toggle card đầu sidebar (`showroom`) + Select trên toolbar (`sort`) | Luôn là `<input>` / `<select>`, **cấm `<a href>`** | `tech` |
+| 14 | `showroom` · `sort` | `drv_flag` (`showroom=1`) · `orderby` (`moi-ve \| showroom-truoc \| kho-lon \| kho-nho \| gia-tang \| gia-giam`) | Toggle card đầu sidebar (`showroom`) + Select trên toolbar (`sort`) | Luôn là `<input>` / `<select>`, **cấm `<a href>`** | `tech` |
 
 ```php
 // config/facets.php (trích cấu trúc chuẩn)
@@ -67,10 +67,12 @@ return [
         'flt' => 'FLT-14', 'label' => 'Sắp xếp', 'seo' => 'tech', 'ui' => 'select', 'order' => 140,
         'default' => 'moi-ve',
         'values' => [
-            'moi-ve'   => 'date',
-            'ban-chay' => 'popularity',
-            'gia-tang' => 'price_m2_asc',
-            'gia-giam' => 'price_m2_desc',
+            'moi-ve'         => 'featured_date',
+            'showroom-truoc' => 'showroom_first',
+            'kho-lon'        => 'tile_area_desc',
+            'kho-nho'        => 'tile_area_asc',
+            'gia-tang'       => 'price_m2_asc',
+            'gia-giam'       => 'price_m2_desc',
         ],
     ],
     // ... các facet còn lại: cong-nang(10), khong-gian(20), van-gach(30), chat-lieu(35),
@@ -116,10 +118,11 @@ base = URL tĩnh không dấu '/' cuối: /gach, /gach-lat-nen, ..., /bo-suu-tap
 
 - Hook vào `pre_get_posts` cho main query (`is_product_category()` / `is_tax(['pa_bo-suu-tap', 'pa_xuat-xu'])`) và tái sử dụng nguyên bản trong REST `CatalogController` -> **một nguồn truy vấn duy nhất**.
 - Mỗi facet đang chọn sinh 1 mệnh đề `tax_query` (`operator => 'IN'`), nối giữa các facet bằng `relation => 'AND'`, luôn giới hạn trong term gốc của trang hiện tại.
-- Sắp xếp (`sort`):
-  - `moi-ve` (mặc định): `menu_order ASC, date DESC`.
-  - `ban-chay`: `total_sales DESC, date DESC`.
-  - `gia-tang` / `gia-giam`: sắp theo meta số `drv_price_m2`. Các sản phẩm không niêm yết giá (`drv_price_m2` trống hoặc `≤ 0`, thuộc `gia-du-an`) luôn được xếp **sau** toàn bộ sản phẩm có giá ở cả 2 chiều tăng/giảm để không đẩy mẫu `0đ` lên đầu khi chọn giá thấp đến cao (`D-20`).
+- Sắp xếp (`sort` — tối ưu cho danh mục hỗn hợp SP có giá niêm yết & SP Liên hệ báo giá):
+  - `moi-ve` (mặc định — *Đề xuất nổi bật*): `menu_order ASC, date DESC`.
+  - `showroom-truoc` (*Ưu tiên mẫu tại Showroom*): ưu tiên sản phẩm có mẫu trưng bày thật tại kệ Showroom (`drv_flag = showroom`), sau đó `menu_order ASC, date DESC`.
+  - `kho-lon` / `kho-nho` (*Khổ gạch: Lớn → Nhỏ / Nhỏ → Lớn*): sắp theo diện tích viên gạch `drv_piece_w_mm * drv_piece_h_mm` (hỗ trợ đồng nhất cho cả SP có giá và SP báo giá).
+  - `gia-tang` / `gia-giam` (*Giá niêm yết: Thấp → Cao / Cao → Thấp*): sắp theo giá hiệu lực trên m² (`drv_sale_price_m2` nếu đang khuyến mãi, ngược lại `drv_price_m2`). Các sản phẩm không niêm yết giá (`drv_price_m2` trống hoặc `≤ 0`, thuộc `gia-du-an`) luôn được xếp **sau** toàn bộ sản phẩm có giá ở cả 2 chiều tăng/giảm để không đẩy mẫu `0đ` lên đầu khi chọn giá thấp đến cao (`D-20`).
 - `per_page = 24` (lấy từ `drv_settings.catalog.per_page`). Chỉ lấy sản phẩm hiển thị trong catalog (`product_visibility`), đẩy sản phẩm hết hàng (`outofstock`) xuống cuối danh sách.
 
 ## 5. Đếm Facet (`Filters\FacetCounter`)

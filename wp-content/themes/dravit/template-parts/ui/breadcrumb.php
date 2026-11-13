@@ -6,34 +6,57 @@ use Dravit\Seo\Breadcrumbs;
 defined('ABSPATH') || exit;
 
 /** @var array<string, mixed> $args */
-$items = isset($args['items']) && is_array($args['items']) && $args['items'] !== []
+$raw_items = isset($args['items']) && is_array($args['items']) && $args['items'] !== []
     ? $args['items']
     : Breadcrumbs::getCurrentTrail();
+
+$items = [];
+foreach ($raw_items as $raw_item) {
+    if (!is_array($raw_item)) {
+        continue;
+    }
+    $label = trim((string) ($raw_item['label'] ?? ''));
+    if ($label === '') {
+        continue;
+    }
+    $items[] = [
+        'label' => $label,
+        'url'   => isset($raw_item['url']) && is_string($raw_item['url']) ? trim($raw_item['url']) : '',
+    ];
+}
 
 if ($items === []) {
     return;
 }
+
+$variant = sanitize_key((string) ($args['variant'] ?? ''));
+$extra   = trim((string) ($args['class'] ?? ''));
+$classes = ['drv-breadcrumb'];
+
+if ($variant !== '' && in_array($variant, ['bar', 'inverse'], true)) {
+    $classes[] = 'drv-breadcrumb--' . $variant;
+}
+if ($extra !== '') {
+    foreach (preg_split('/\s+/', $extra) ?: [] as $cls) {
+        $clean = sanitize_html_class($cls);
+        if ($clean !== '') {
+            $classes[] = $clean;
+        }
+    }
+}
+
 $last_idx = count($items) - 1;
 ?>
-<nav class="drv-breadcrumb" aria-label="Đường dẫn">
+<nav class="<?php echo esc_attr(implode(' ', $classes)); ?>" aria-label="Đường dẫn">
     <ol class="drv-breadcrumb__list">
         <?php foreach ($items as $idx => $item) :
-            if (!is_array($item)) {
-                continue;
-            }
-            $label  = trim((string) ($item['label'] ?? ''));
-            $url    = isset($item['url']) && is_string($item['url']) ? trim($item['url']) : '';
             $is_end = ($idx === $last_idx);
-            if ($label === '') {
-                continue;
-            }
             ?>
-            <li class="drv-breadcrumb__item">
-                <?php if (!$is_end && $url !== '') : ?>
-                    <a href="<?php echo esc_url($url); ?>" class="drv-breadcrumb__link"><?php echo esc_html($label); ?></a>
-                    <span class="drv-breadcrumb__sep" aria-hidden="true">/</span>
+            <li class="drv-breadcrumb__item<?php echo $is_end ? ' drv-breadcrumb__item--current' : ''; ?>">
+                <?php if (!$is_end && $item['url'] !== '') : ?>
+                    <a href="<?php echo esc_url($item['url']); ?>" class="drv-breadcrumb__link"><?php echo esc_html($item['label']); ?></a>
                 <?php else : ?>
-                    <span class="drv-breadcrumb__current" aria-current="page"><?php echo esc_html($label); ?></span>
+                    <span class="drv-breadcrumb__current" aria-current="page"><?php echo esc_html($item['label']); ?></span>
                 <?php endif; ?>
             </li>
         <?php endforeach; ?>

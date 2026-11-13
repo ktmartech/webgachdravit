@@ -1,6 +1,6 @@
 {
-  "_dom-sfpH5BVj.js": {
-    "file": "js/chunks/dom-sfpH5BVj.js",
+  "_dom-B0H8ceLe.js": {
+    "file": "js/chunks/dom-B0H8ceLe.js",
     "name": "dom"
   },
   "_format-C6F-Ty1S.js": {
@@ -28,13 +28,18 @@
     "src": "assets/fonts/quicksand-vf-vi.woff2"
   },
   "assets/src/css/global.css": {
-    "file": "css/global-BGT9uARe.css",
+    "file": "css/global-CKcynXj-.css",
     "src": "assets/src/css/global.css",
     "isEntry": true
   },
   "assets/src/css/pages/ai-finder.css": {
-    "file": "css/pages/ai-finder-CJTEutWa.css",
+    "file": "css/pages/ai-finder-NvqbX1vo.css",
     "src": "assets/src/css/pages/ai-finder.css",
+    "isEntry": true
+  },
+  "assets/src/css/pages/catalog.css": {
+    "file": "css/pages/catalog-BMBfP-Zv.css",
+    "src": "assets/src/css/pages/catalog.css",
     "isEntry": true
   },
   "assets/src/css/pages/home.css": {
@@ -47,6 +52,22 @@
     "src": "assets/src/css/pages/ui-kit.css",
     "isEntry": true
   },
+  "assets/src/js/catalog.js": {
+    "file": "js/catalog-D7QXdJEQ.js",
+    "name": "catalog",
+    "src": "assets/src/js/catalog.js",
+    "isEntry": true,
+    "imports": [
+      "_toast-KqNPVw1v.js",
+      "assets/src/js/core.js",
+      "_dom-B0H8ceLe.js",
+      "_format-C6F-Ty1S.js",
+      "_storage-EVK1Hd-i.js"
+    ],
+    "dynamicImports": [
+      "assets/src/js/chunks/motion.js"
+    ]
+  },
   "assets/src/js/chunks/ai-finder.js": {
     "file": "js/chunks/ai-finder-WIhJA4Iw.js",
     "name": "chunks/ai-finder",
@@ -58,13 +79,13 @@
     ]
   },
   "assets/src/js/chunks/calc-elements.js": {
-    "file": "js/chunks/calc-elements-aMtBTJnm.js",
+    "file": "js/chunks/calc-elements-B9ed7X10.js",
     "name": "calc-elements",
     "src": "assets/src/js/chunks/calc-elements.js",
     "isDynamicEntry": true,
     "imports": [
       "_format-C6F-Ty1S.js",
-      "_dom-sfpH5BVj.js"
+      "_dom-B0H8ceLe.js"
     ]
   },
   "assets/src/js/chunks/hero-canvas.js": {
@@ -74,14 +95,14 @@
     "isDynamicEntry": true
   },
   "assets/src/js/chunks/motion.js": {
-    "file": "js/chunks/motion-B_i2SqHY.js",
+    "file": "js/chunks/motion-BfftLj8j.js",
     "name": "chunks/motion",
     "src": "assets/src/js/chunks/motion.js",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
       "node_modules/animejs/lib/anime.es.js",
-      "_dom-sfpH5BVj.js"
+      "_dom-B0H8ceLe.js"
     ]
   },
   "assets/src/js/chunks/quote.js": {
@@ -91,13 +112,13 @@
     "isEntry": true
   },
   "assets/src/js/core.js": {
-    "file": "js/core-n2YkcPHr.js",
+    "file": "js/core-CC9lhEF_.js",
     "name": "core",
     "src": "assets/src/js/core.js",
     "isEntry": true,
     "imports": [
       "_toast-KqNPVw1v.js",
-      "_dom-sfpH5BVj.js",
+      "_dom-B0H8ceLe.js",
       "_format-C6F-Ty1S.js",
       "_storage-EVK1Hd-i.js"
     ],
@@ -116,13 +137,13 @@
     ]
   },
   "assets/src/js/home.js": {
-    "file": "js/home-DEy0pNde.js",
+    "file": "js/home-_y3Jwgw9.js",
     "name": "home",
     "src": "assets/src/js/home.js",
     "isEntry": true,
     "imports": [
       "_toast-KqNPVw1v.js",
-      "_dom-sfpH5BVj.js",
+      "_dom-B0H8ceLe.js",
       "_format-C6F-Ty1S.js"
     ],
     "dynamicImports": [
@@ -137,13 +158,13 @@
     ]
   },
   "assets/src/js/search.js": {
-    "file": "js/search-BWus8zjK.js",
+    "file": "js/search-BOYNBrJI.js",
     "name": "search",
     "src": "assets/src/js/search.js",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
-      "_dom-sfpH5BVj.js",
+      "_dom-B0H8ceLe.js",
       "_format-C6F-Ty1S.js"
     ]
   },

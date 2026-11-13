@@ -1,4 +1,5 @@
 @import "./components/primitives.css";
+@import "./components/breadcrumb.css";
 @import "./components/buttons.css";
 @import "./components/badges-chips.css";
 @import "./components/forms.css";

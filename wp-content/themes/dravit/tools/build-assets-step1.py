@@ -350,6 +350,7 @@ def build_phosphor_subset() -> tuple[int, int]:
         "    font-style: normal;",
         "    font-weight: 400;",
         "    font-variant: normal;",
+        "    font-synthesis: none;",
         "    text-transform: none;",
         "    line-height: 1;",
         "    letter-spacing: 0;",

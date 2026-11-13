@@ -157,5 +157,32 @@ final class TemplateRenderTest extends TestCase {
         self::assertStringContainsString('aria-current="step"', $steps);
         self::assertStringContainsString('is-done', $steps);
     }
+
+    public function test_breadcrumb_primitive_renders_clean_items_without_duplicate_separators(): void {
+        $html = drv_ui_html('breadcrumb', [
+            'items' => [
+                ['label' => 'Trang chủ', 'url' => 'https://gachdravit.vn'],
+                ['label' => 'Gạch', 'url' => 'https://gachdravit.vn/gach'],
+                ['label' => 'Gạch Lát Nền'],
+            ],
+        ]);
+
+        self::assertStringContainsString('class="drv-breadcrumb"', $html);
+        self::assertStringContainsString('<ol class="drv-breadcrumb__list">', $html);
+        self::assertStringContainsString('<a href="https://gachdravit.vn" class="drv-breadcrumb__link">Trang chủ</a>', $html);
+        self::assertStringContainsString('<a href="https://gachdravit.vn/gach" class="drv-breadcrumb__link">Gạch</a>', $html);
+        self::assertStringContainsString('<span class="drv-breadcrumb__current" aria-current="page">Gạch Lát Nền</span>', $html);
+        self::assertStringNotContainsString('drv-breadcrumb__sep', $html);
+
+        $barHtml = drv_ui_html('breadcrumb', [
+            'variant' => 'bar',
+            'items'   => [
+                ['label' => 'Trang chủ', 'url' => 'https://gachdravit.vn'],
+                ['label' => 'Gạch Lát Nền'],
+            ],
+        ]);
+
+        self::assertStringContainsString('drv-breadcrumb--bar', $barHtml);
+    }
 }
 

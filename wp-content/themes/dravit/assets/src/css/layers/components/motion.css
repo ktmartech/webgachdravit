@@ -1,5 +1,4 @@
 @layer components {
-
   /* Glass shine sweep khi hover ảnh (span.drv-shine do core.js chèn) */
   .drv-shine {
     position: absolute;
@@ -24,7 +23,8 @@
     left: 160%;
     transition: left 0.7s ease;
   }
-/* 4.22 Motion System, GPU Micro-interactions & Anime.js Showcase ---------- */
+
+  /* 4.22 Motion System, GPU Micro-interactions & Anime.js Showcase ---------- */
 
   .drv-chip {
     transition: background-color var(--dur-fast) var(--ease-out),

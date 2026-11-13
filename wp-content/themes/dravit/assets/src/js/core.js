@@ -110,6 +110,9 @@ export function closeDialog(target) {
   }
 
   const finishClose = () => {
+    if (typeof document === 'undefined') {
+      return;
+    }
     dialog.classList.remove('is-closing');
     if (typeof dialog.close === 'function' && dialog.open) {
       dialog.close();

@@ -37,10 +37,8 @@
   }
 
   .drv-aif-topbar__brand .drv-breadcrumb {
-    padding-block: 0;
     margin-bottom: 3px;
-    border-bottom: none;
-    font-size: 0.75rem;
+    font-size: var(--fs-xs);
   }
 
   .drv-aif-topbar__heading-row {

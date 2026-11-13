@@ -244,7 +244,7 @@ final class HomeData {
                 'lookbook' => [
                     'kicker'      => 'Phối cảnh sàn chính',
                     'title'       => 'Sàn mở liên thông khách - bếp',
-                    'placeholder' => 'room-living-calacatta.svg',
+                    'placeholder' => 'rooms/room-living-calacatta.jpg',
                     'img_alt'     => 'Phối cảnh gạch lát nền 80x80 xương đá Porcelain cho phòng khách liên thông bếp',
                     'specs'       => [
                         ['dt' => 'Xương gạch', 'dd' => 'Porcelain BIa (≤ 0,5%)'],
@@ -270,7 +270,7 @@ final class HomeData {
                 'lookbook' => [
                     'kicker'      => 'Phối cảnh mảng tường',
                     'title'       => 'Ốp tường nhà tắm & vách bếp sạch dầu mỡ',
-                    'placeholder' => 'room-bathroom-terrazzo.svg',
+                    'placeholder' => 'rooms/room-bathroom-terrazzo.jpg',
                     'img_alt'     => 'Phối cảnh gạch ốp tường 30x60 và 60x120 cho phòng tắm hiện đại',
                     'specs'       => [
                         ['dt' => 'Quy cách chuẩn', 'dd' => '30×60 cm · 60×120 cm'],
@@ -359,7 +359,7 @@ final class HomeData {
                 'lookbook' => [
                     'kicker'    => $lb['kicker'],
                     'title'     => $lb['title'],
-                    'img_url'   => self::placeholderUrl($lb['placeholder']),
+                    'img_url'   => self::attachmentUrl(0, 'large', $lb['placeholder']),
                     'img_alt'   => $lb['img_alt'],
                     'specs'     => $lb['specs'],
                     'cta_label' => $lb['cta_label'],

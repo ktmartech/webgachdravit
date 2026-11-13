@@ -357,7 +357,7 @@ function drv_section(string $name, array $props = []): void {
   - `PHPUnit`: `UrlStateTest` (`R-3..R-8`), `QueryBuilderTest`, `FacetCounterTest`.
   - `Vitest`: `filter-form.test.js` (`pushState`/`popstate`, `AbortController` `F-5`, 1 `<form>` duy nhất `F-13`, `aria-live`).
 - **Check hoàn thành (`Gate 6`):**
-  - [ ] Toàn bộ test cases `F-1`..`F-15` trong `09 §3.5` pass 100% (chạy tốt cả khi tắt JS); PSI Mobile đạt `≥ 90`.
+  - [x] Toàn bộ test cases `F-1`..`F-15` trong `09 §3.5` pass 100% (chạy tốt cả khi tắt JS); PSI Mobile đạt `≥ 90`.
 
 ---
 

@@ -23,6 +23,7 @@ final class Assets implements ServiceProviderInterface {
         $config = [
             'restUrl'                 => untrailingslashit(rest_url('dravit/v1')),
             'nonceEndpoint'           => untrailingslashit(rest_url('dravit/v1/nonce')),
+            'catalogEndpoint'         => untrailingslashit(rest_url('dravit/v1/catalog')),
             'searchEndpoint'          => untrailingslashit(rest_url('dravit/v1/search')),
             'searchHitEndpoint'       => untrailingslashit(rest_url('dravit/v1/search/hit')),
             'advisorEndpoint'         => untrailingslashit(rest_url('dravit/v1/advisor')),
@@ -50,6 +51,18 @@ final class Assets implements ServiceProviderInterface {
         }
 
         if (
+            drv_is_woo_active()
+            && (
+                (function_exists('is_shop') && is_shop())
+                || (function_exists('is_product_category') && is_product_category())
+                || (function_exists('is_tax') && is_tax(['pa_bo-suu-tap', 'pa_xuat-xu']))
+            )
+        ) {
+            self::enqueue_style('drv-page-catalog', 'assets/src/css/pages/catalog.css');
+            self::enqueue_module('drv-catalog', 'assets/src/js/catalog.js');
+        }
+
+        if (
             (bool) drv_setting('features.ai_enabled', true)
             && (
                 (function_exists('is_page_template') && is_page_template('page-templates/template-ai-finder.php'))
@@ -66,11 +79,16 @@ final class Assets implements ServiceProviderInterface {
             return;
         }
 
-        $body_font_url = DRV_URI . '/assets/dist/fonts/quicksand-vf-vi.woff2';
-        printf(
-            '<link rel="preload" href="%s" as="font" type="font/woff2" crossorigin>' . "\n",
-            esc_url($body_font_url)
-        );
+        $fonts = [
+            DRV_URI . '/assets/dist/fonts/quicksand-vf-vi.woff2',
+            DRV_URI . '/assets/dist/fonts/phosphor-subset.woff2',
+        ];
+        foreach ($fonts as $font_url) {
+            printf(
+                '<link rel="preload" href="%s" as="font" type="font/woff2" crossorigin>' . "\n",
+                esc_url($font_url)
+            );
+        }
     }
 
     public static function enqueue_style(string $handle, string $entry): void {

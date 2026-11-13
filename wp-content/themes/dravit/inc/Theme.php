@@ -31,6 +31,9 @@ use Dravit\Core\RestSecurity;
 use Dravit\Core\ServiceProviderInterface;
 use Dravit\Core\Settings;
 use Dravit\Core\Setup;
+use Dravit\Filters\CatalogController;
+use Dravit\Filters\FacetCounter;
+use Dravit\Filters\QueryBuilder;
 use Dravit\Seo\Breadcrumbs;
 use Dravit\Seo\Canonical;
 use Dravit\Seo\LlmsTxt;
@@ -112,6 +115,9 @@ final class Theme {
             $providers[] = WooProductHooks::class;
             $providers[] = CollectionSync::class;
             $providers[] = SaleSync::class;
+            $providers[] = QueryBuilder::class;
+            $providers[] = FacetCounter::class;
+            $providers[] = CatalogController::class;
             $providers[] = SnapshotBuilder::class;
 
             if ($is_admin) {

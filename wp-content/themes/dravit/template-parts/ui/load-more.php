@@ -28,6 +28,7 @@ $next_batch   = min($per_page, $remaining);
     <?php if ($remaining > 0 && $next_url !== null) : ?>
         <a href="<?php echo esc_url($next_url); ?>" rel="next" class="drv-btn drv-btn--outline" data-drv-load-more>
             <span>Xem thêm <?php echo esc_html((string) $next_batch); ?> mẫu gạch</span>
+            <span class="drv-spin-ring drv-spin-ring--sm drv-loadmore-spinner" aria-hidden="true"></span>
             <?php drv_ui('icon', ['name' => 'arrow-down', 'size' => 'xs']); ?>
         </a>
     <?php endif; ?>

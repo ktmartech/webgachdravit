@@ -140,7 +140,8 @@
     gap: var(--s-2);
     overflow-x: auto;
     scroll-snap-type: x mandatory;
-    padding-bottom: 4px;
+    padding: 6px 4px;
+    margin: -6px -4px;
     scrollbar-width: none;
   }
 

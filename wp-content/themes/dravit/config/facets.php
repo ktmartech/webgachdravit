@@ -433,10 +433,12 @@ return [
     ],
 
     'sort_options' => [
-        'moi-ve'   => 'Mới cập nhật',
-        'ban-chay' => 'Bán chạy nhất',
-        'gia-tang' => 'Giá thấp đến cao',
-        'gia-giam' => 'Giá cao đến thấp',
+        'moi-ve'         => 'Đề xuất nổi bật',
+        'showroom-truoc' => 'Ưu tiên mẫu tại Showroom',
+        'kho-lon'        => 'Khổ gạch: Lớn → Nhỏ',
+        'kho-nho'        => 'Khổ gạch: Nhỏ → Lớn',
+        'gia-tang'       => 'Giá niêm yết: Thấp → Cao',
+        'gia-giam'       => 'Giá niêm yết: Cao → Thấp',
     ],
 ];
 
