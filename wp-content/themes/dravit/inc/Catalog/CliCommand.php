@@ -24,7 +24,19 @@ final class CliCommand implements ServiceProviderInterface {
         \WP_CLI::add_command('dravit seed-products', [$this, 'seed_products']);
         \WP_CLI::add_command('dravit resync-catalog', [$this, 'resync_catalog']);
         \WP_CLI::add_command('dravit reindex-search', [$this, 'reindex_search']);
+        \WP_CLI::add_command('dravit build-ai-snapshot', [$this, 'build_ai_snapshot']);
         \WP_CLI::add_command('dravit import-master', [$this, 'import_master']);
+    }
+
+    public function build_ai_snapshot(): void {
+        $snapshot = (new \Dravit\Advisor\Catalog\SnapshotBuilder())->build();
+        if (class_exists('\WP_CLI')) {
+            \WP_CLI::success(sprintf(
+                'Đã dựng catalog-snapshot.json (version=%s, %d SKU gạch) cho Trợ lý AI.',
+                (string) ($snapshot['version'] ?? 'v0'),
+                (int) ($snapshot['count'] ?? 0)
+            ));
+        }
     }
 
     public function seed_catalog(): void {

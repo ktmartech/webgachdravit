@@ -1,0 +1,366 @@
+id: kb-tu-dien-dong-nghia
+topic: tu-dien
+version: "1.0.0"
+reviewed_by: "Ban Kỹ Thuật DRAVIT"
+reviewed_at: "2026-11-13"
+
+space:
+  phong-khach:
+    - "phòng khách"
+    - "sảnh khách"
+    - "phòng sinh hoạt chung"
+    - "tầng trệt"
+  nha-tam:
+    - "nhà tắm"
+    - "phòng tắm"
+    - "nhà vệ sinh"
+    - "phòng vệ sinh"
+    - "toilet"
+    - "wc"
+    - "khu tắm đứng"
+    - "sàn tắm"
+  phong-bep:
+    - "phòng bếp"
+    - "nhà bếp"
+    - "khu bếp"
+    - "phòng ăn"
+    - "bàn ăn"
+    - "tường bếp"
+    - "vách bếp"
+    - "sàn bếp"
+    - "nền bếp"
+    - "lát bếp"
+    - "ốp bếp"
+    - "bếp nấu"
+  phong-ngu:
+    - "phòng ngủ"
+    - "ngủ master"
+  san-vuon:
+    - "sân vườn ngoài trời"
+    - "sân vườn"
+    - "lối đi sân"
+    - "lối dạo"
+    - "sân trước"
+    - "sân sau"
+    - "hiên nhà"
+  ngoai-troi:
+    - "ngoài trời"
+    - "ban công"
+    - "sân thượng"
+    - "lô gia"
+    - "logia"
+    - "mái hiên"
+  mat-tien:
+    - "mặt tiền"
+    - "trụ cổng"
+    - "cột cổng"
+    - "tường ngoài"
+  ho-boi:
+    - "hồ bơi"
+    - "bể bơi"
+    - "thành bể"
+  gara-o-to:
+    - "gara ô tô"
+    - "gara oto"
+    - "gara xe"
+    - "nhà để xe"
+    - "bãi đỗ xe"
+    - "sân đỗ xe"
+    - "ô tô đậu"
+    - "xe hơi đậu"
+  quan-cafe:
+    - "quán cafe"
+    - "quán cà phê"
+    - "nhà hàng"
+    - "văn phòng"
+    - "showroom"
+    - "cửa hàng"
+  sanh-thuong-mai:
+    - "đại sảnh"
+    - "sảnh lớn"
+    - "sảnh khách sạn"
+    - "sảnh thương mại"
+    - "lát sảnh"
+    - "ốp sảnh"
+  biet-thu:
+    - "biệt thự"
+    - "penthouse"
+    - "villa"
+  hanh-lang-cau-thang:
+    - "hành lang"
+    - "cầu thang"
+  phong-tho:
+    - "phòng thờ"
+
+function:
+  gach-the:
+    - "gạch thẻ"
+    - "subway"
+  gach-bong:
+    - "gạch bông"
+  bong-gio:
+    - "gạch bông gió"
+    - "bông gió"
+    - "thông gió"
+    - "chắn nắng"
+  op-mat-bep-lavabo:
+    - "mặt bếp"
+    - "bàn đảo"
+    - "đảo bếp"
+    - "mặt lavabo"
+    - "bàn lavabo"
+  trang-tri:
+    - "trang trí"
+    - "điểm nhấn"
+    - "gạch điểm"
+  lat-nen:
+    - "lát nền"
+    - "lát sàn"
+    - "lát phòng"
+    - "gạch sàn"
+    - "sàn nhà"
+  op-tuong:
+    - "ốp tường"
+    - "ốp vách"
+    - "vách tivi"
+    - "vách tv"
+    - "ốp kịch trần"
+
+vein:
+  van-da-marble:
+    - "vân đá marble"
+    - "đá marble"
+    - "cẩm thạch"
+    - "calacatta"
+    - "statuario"
+    - "emperador"
+    - "vân mây"
+    - "vân đá sáng"
+    - "vân đá"
+  van-da-tu-nhien:
+    - "vân đá tự nhiên"
+    - "đá tự nhiên"
+    - "limestone"
+    - "đá chẻ"
+    - "pietra"
+  van-da-travertine:
+    - "travertine"
+  van-da-onyx:
+    - "onyx"
+    - "xuyên sáng"
+  van-da-bazan:
+    - "bazan"
+    - "basalt"
+  gia-go:
+    - "giả gỗ"
+    - "vân gỗ"
+    - "gỗ sồi"
+    - "gỗ óc chó"
+    - "thanh gỗ"
+    - "sàn gỗ"
+  terrazzo:
+    - "terrazzo"
+    - "đá mài"
+    - "hạt đá"
+  van-xi-mang:
+    - "vân xi măng"
+    - "xi măng"
+    - "bê tông"
+    - "concrete"
+  mosaic:
+    - "mosaic"
+    - "gạch vỉ"
+  don-sac:
+    - "đơn sắc"
+    - "màu trơn"
+  van-vai:
+    - "vân vải"
+    - "sợi vải"
+  hoa-van-co-dien:
+    - "gạch thảm"
+    - "hoa văn cổ điển"
+
+material:
+  porcelain:
+    - "porcelain"
+    - "xương đá"
+  da-nung-ket:
+    - "đá nung kết"
+    - "nung kết"
+    - "big slab"
+    - "sintered stone"
+    - "gạch tấm lớn"
+  granite:
+    - "granite"
+  dong-chat:
+    - "đồng chất"
+    - "full body"
+  ban-su:
+    - "bán sứ"
+    - "semi-porcelain"
+  ceramic:
+    - "ceramic"
+    - "xương men"
+    - "xương đất"
+
+surface:
+  bong-kieng:
+    - "bóng kiếng"
+    - "siêu bóng"
+    - "bóng gương"
+    - "men bóng"
+    - "polished"
+  mo:
+    - "mờ mịn"
+    - "men mờ"
+    - "men matt"
+    - "bề mặt mờ"
+    - "đá mờ"
+    - "matt"
+    - "matte"
+  ban-bong:
+    - "bán bóng"
+    - "lappato"
+  nham:
+    - "nhám sần"
+    - "bề mặt nhám"
+    - "gạch nhám"
+    - "nhám chống trượt"
+    - "structured"
+  carving:
+    - "carving"
+    - "khắc vân"
+    - "rãnh khắc"
+  sugar:
+    - "hiệu ứng sugar"
+    - "men sugar"
+  baby-skin:
+    - "baby skin"
+  satin:
+    - "men satin"
+
+color:
+  trang:
+    - "trắng khói"
+    - "trắng sứ"
+    - "trắng vân mây"
+    - "trắng sáng"
+    - "màu trắng"
+    - "tông trắng"
+    - "tông sáng"
+    - "màu sáng"
+  kem:
+    - "kem ấm"
+    - "kem sáng"
+    - "kem ngà"
+    - "màu kem"
+    - "tông kem"
+    - "ivory"
+  be:
+    - "màu be"
+    - "tông be"
+    - "beige"
+  ghi-sang:
+    - "màu ghi sáng"
+    - "ghi sáng"
+    - "xám nhạt"
+  xam-dam:
+    - "màu xám đậm"
+    - "xám đậm"
+    - "than chì"
+    - "xám đen"
+    - "tông tối"
+    - "tông đậm"
+  xam:
+    - "xám trung tính"
+    - "xám xi măng"
+    - "xi măng xám"
+    - "xám bê tông"
+    - "màu xám"
+    - "tông xám"
+    - "màu ghi"
+    - "xám"
+  vang:
+    - "vàng kem"
+    - "vàng cát"
+    - "màu vàng"
+  nau:
+    - "nâu gỗ"
+    - "gỗ nâu"
+    - "nâu trầm"
+    - "màu nâu"
+    - "tông ấm"
+    - "màu ấm"
+  den:
+    - "màu đen"
+    - "đen tuyền"
+  xanh-la:
+    - "xanh rêu"
+    - "xanh ngọc"
+    - "xanh lá"
+  xanh-duong:
+    - "xanh dương"
+    - "xanh biển"
+  hong:
+    - "màu hồng"
+    - "hồng phấn"
+  da-sac:
+    - "đa sắc"
+    - "nhiều màu"
+
+style:
+  hien-dai:
+    - "hiện đại"
+  sang-trong:
+    - "sang trọng"
+    - "luxury"
+  toi-gian:
+    - "tối giản"
+    - "minimal"
+    - "minimalism"
+  wabi-sabi:
+    - "wabi-sabi"
+    - "wabi sabi"
+  japandi:
+    - "japandi"
+  bac-au:
+    - "bắc âu"
+    - "scandinavian"
+    - "nordic"
+  indochine:
+    - "indochine"
+    - "đông dương"
+  tan-co-dien:
+    - "tân cổ điển"
+  cong-nghiep:
+    - "công nghiệp"
+    - "industrial"
+    - "urban loft"
+  moc-mac:
+    - "mộc mạc"
+    - "rustic"
+
+special:
+  nguoi-gia:
+    - "người già"
+    - "người lớn tuổi"
+    - "người cao tuổi"
+    - "ông bà"
+    - "bố mẹ lớn tuổi"
+  tre-nho:
+    - "trẻ nhỏ"
+    - "trẻ em"
+    - "em bé"
+    - "con nhỏ"
+  am-uot:
+    - "chống trơn"
+    - "chống trượt"
+    - "không trơn"
+    - "ẩm ướt"
+    - "sàn ướt"
+    - "nồm ẩm"
+    - "tắm đứng"
+  doc-nuoc:
+    - "dốc thoát nước"
+    - "dốc nước"
+    - "sàn dốc"

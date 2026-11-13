@@ -307,8 +307,8 @@ function drv_section(string $name, array $props = []): void {
   - `PHPUnit`: `SlotNormalizerTest` (30 câu tiếng Việt đời thường), `SafetyRuleEngineTest` (`nha-tam`/`phong-bep`/`nguoi-gia` loại sạch `R9`), `AdvisorValidatorTest` (bắt lỗi bịa ID/giá/SĐT/prompt injection trên bộ `tests/advisor/cases.yaml`).
   - `Vitest`: `ai-finder-element.test.js` (context chips, đẩy diện tích + sản phẩm sang `QuoteStore` `drv_quote_v2`).
 - **Check hoàn thành (`Gate 4`):**
-  - [ ] Truy cập `/tro-ly-ai-tim-gach` ở chế độ mặc định `RuleOnlyDriver`, nhập *"Tìm gạch lát nhà tắm 6m2 chống trơn cho người già dưới 400k"* trả về ngay các mẫu `≥ R10` kèm số thùng cho `6m² (+5% hao hụt)` trong `< 200ms`.
-  - [ ] Cắm API key LLM vào `drv_settings.ai` nâng cấp lên hội thoại LLM Closed-World mượt mà không cần sửa code.
+  - [x] Truy cập `/tro-ly-ai-tim-gach` ở chế độ mặc định `RuleOnlyDriver`, nhập *"Tìm gạch lát nhà tắm 6m2 chống trơn cho người già dưới 400k"* trả về ngay các mẫu `≥ R10` kèm số thùng cho `6m² (+5% hao hụt)` trong `< 200ms`.
+  - [x] Cắm API key LLM vào `drv_settings.ai` nâng cấp lên hội thoại LLM Closed-World mượt mà không cần sửa code.
 
 ---
 
@@ -333,8 +333,8 @@ function drv_section(string $name, array $props = []): void {
   - `PHPUnit`: `ShowroomStatusTest` (múi giờ `Asia/Ho_Chi_Minh`), `HomeSectionsConfigTest` (đảm bảo 100% URL xuất ra từ 8 sections là URL tĩnh chuẩn `03`).
   - `Vitest`: `size-guide.test.js`, `hero-prompt.test.js`.
 - **Check hoàn thành (`Gate 5`):**
-  - [ ] Thứ tự heading chuẩn `h1 → h2 → h3`; chỉ có đúng **1** ảnh `fetchpriority="high"`; `0` ảnh Unsplash hotlink.
-  - [ ] Lighthouse Mobile trên `/` đạt `≥ 90`, `CLS < 0.05`.
+  - [x] Thứ tự heading chuẩn `h1 → h2 → h3`; chỉ có đúng **1** ảnh `fetchpriority="high"`; `0` ảnh Unsplash hotlink.
+  - [x] Lighthouse Mobile trên `/` đạt `≥ 90`, `CLS < 0.05`.
 
 ---
 

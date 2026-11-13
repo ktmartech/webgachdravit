@@ -88,6 +88,9 @@ final class SearchIndex {
             if (str_contains($cm_slug, '-')) {
                 $chunks[] = str_replace('-', '.', $cm_slug);
             }
+            if ($max_mm >= 1000 || ($w_mm * $h_mm) >= 640000) {
+                $chunks[] = 'kho lon big slab';
+            }
         }
 
         $terms = isset($data['terms']) && is_array($data['terms']) ? $data['terms'] : [];
@@ -95,6 +98,9 @@ final class SearchIndex {
             $norm_t = SearchNormalizer::normalize((string) $t);
             if ($norm_t !== '') {
                 $chunks[] = $norm_t;
+                if (preg_match('/\b(r10|r11|r12|nham|matt|mo)\b/', $norm_t) === 1) {
+                    $chunks[] = 'chong truot chong tron';
+                }
             }
         }
 

@@ -6,22 +6,31 @@ export function revealElement(el, options = {}) {
     return null;
   }
   if (prefersReducedMotion()) {
-    el.style.opacity = '1';
-    el.style.transform = 'none';
+    el.style.opacity = '';
+    el.style.transform = '';
     el.classList.add('is-revealed');
     return null;
   }
 
-  return anime({
+  const mode = options.mode || el.getAttribute('data-drv-reveal') || 'fade-up';
+  const animProps = {
     targets: el,
     opacity: [0, 1],
-    translateY: [options.distance ?? 14, 0],
-    duration: options.duration ?? 420,
+    translateY: [options.distance ?? 16, 0],
+    duration: options.duration ?? 460,
     easing: options.easing ?? 'cubicBezier(0.16, 1, 0.3, 1)',
     complete: () => {
+      el.style.opacity = '';
+      el.style.transform = '';
       el.classList.add('is-revealed');
     },
-  });
+  };
+
+  if (mode === 'scale-up') {
+    animProps.scale = [0.97, 1];
+  }
+
+  return anime(animProps);
 }
 
 export function staggerReveal(container, itemSelector = ':scope > *', options = {}) {
@@ -35,13 +44,17 @@ export function staggerReveal(container, itemSelector = ':scope > *', options = 
 
   if (prefersReducedMotion()) {
     for (const item of items) {
-      item.style.opacity = '1';
-      item.style.transform = 'none';
+      item.style.opacity = '';
+      item.style.transform = '';
     }
     container.classList.add('is-revealed');
     return null;
   }
 
+  const attrDelay = Number.parseInt(container.getAttribute('data-drv-stagger') || '', 10);
+  const staggerMs = options.stagger ?? (Number.isFinite(attrDelay) && attrDelay > 0 ? attrDelay : 55);
+
+  anime.remove(items);
   for (const item of items) {
     item.style.opacity = '0';
   }
@@ -49,11 +62,15 @@ export function staggerReveal(container, itemSelector = ':scope > *', options = 
   return anime({
     targets: items,
     opacity: [0, 1],
-    translateY: [options.distance ?? 14, 0],
-    delay: anime.stagger(options.stagger ?? 55),
-    duration: options.duration ?? 420,
+    translateY: [options.distance ?? 16, 0],
+    delay: anime.stagger(staggerMs),
+    duration: options.duration ?? 440,
     easing: 'cubicBezier(0.16, 1, 0.3, 1)',
     complete: () => {
+      for (const item of items) {
+        item.style.opacity = '';
+        item.style.transform = '';
+      }
       container.classList.add('is-revealed');
     },
   });
@@ -109,8 +126,8 @@ export function pulseElement(el) {
 }
 
 export function observeReveals(root = document) {
-  const staggers = qsa('[data-drv-stagger]', root);
-  const singles = qsa('[data-drv-reveal]', root);
+  const staggers = qsa('[data-drv-stagger]', root).filter((el) => !el.classList.contains('is-revealed'));
+  const singles = qsa('[data-drv-reveal]', root).filter((el) => !el.classList.contains('is-revealed'));
   if (staggers.length === 0 && singles.length === 0) {
     return;
   }
@@ -123,6 +140,15 @@ export function observeReveals(root = document) {
       revealElement(el);
     }
     return;
+  }
+
+  for (const el of singles) {
+    el.style.opacity = '0';
+  }
+  for (const el of staggers) {
+    for (const child of qsa(':scope > *', el)) {
+      child.style.opacity = '0';
+    }
   }
 
   const io = new IntersectionObserver(
@@ -139,7 +165,7 @@ export function observeReveals(root = document) {
         }
       }
     },
-    { threshold: 0.12 },
+    { threshold: 0.1, rootMargin: '0px 0px -32px 0px' },
   );
 
   for (const el of [...staggers, ...singles]) {
@@ -162,4 +188,3 @@ if (typeof window !== 'undefined') {
 }
 
 export default motionApi;
-

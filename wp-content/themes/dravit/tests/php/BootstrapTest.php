@@ -5,12 +5,15 @@ namespace Dravit\Tests;
 
 use Brain\Monkey;
 use Brain\Monkey\Functions;
+use Dravit\Advisor\AdvisorController;
+use Dravit\Advisor\Log\CptAdvisorLogger;
 use Dravit\Catalog\SearchController;
 use Dravit\Catalog\SlugGuard;
 use Dravit\Core\Assets;
 use Dravit\Core\Cleanup;
 use Dravit\Core\Menu\MegaMenuRenderer;
 use Dravit\Core\Menu\MenuSetup;
+use Dravit\Core\NonceController;
 use Dravit\Core\RestSecurity;
 use Dravit\Core\SectionRegistry;
 use Dravit\Core\ServiceProviderInterface;
@@ -58,6 +61,7 @@ final class BootstrapTest extends TestCase {
             Settings::class,
             Setup::class,
             RestSecurity::class,
+            NonceController::class,
             SlugGuard::class,
             TrailingSlashRedirect::class,
             Canonical::class,
@@ -67,6 +71,8 @@ final class BootstrapTest extends TestCase {
             SchemaGraph::class,
             LlmsTxt::class,
             SearchController::class,
+            CptAdvisorLogger::class,
+            AdvisorController::class,
             MenuSetup::class,
             MegaMenuRenderer::class,
             Cleanup::class,

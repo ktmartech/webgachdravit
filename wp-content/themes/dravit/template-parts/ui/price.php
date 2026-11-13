@@ -6,7 +6,7 @@ use Dravit\Units\PriceState;
 defined('ABSPATH') || exit;
 
 /**
- * UI Primitive hiển thị giá m² chính + giá viên phụ hoặc trạng thái "Liên hệ báo giá" (docs/04 §2.2, Test U-15).
+ * UI Primitive hiển thị giá m² chính + giá viên phụ hoặc trạng thái "Liên hệ báo giá" (docs/04 §2.2, 01-home.html).
  *
  * @var array<string, mixed> $args
  */
@@ -27,7 +27,6 @@ $per_box      = max(1, (int) ($data['pieces_per_box'] ?? 3));
 $m2_box       = (float) ($data['m2_per_box'] ?? 1.44);
 $unit_label   = (string) ($data['unit_label'] ?? 'viên');
 $stock_boxes  = isset($data['stock_boxes']) ? (int) $data['stock_boxes'] : null;
-$in_stock     = array_key_exists('in_stock', $data) ? (bool) $data['in_stock'] : true;
 $state        = (string) ($data['price_state'] ?? '');
 
 $is_quote = ($state === PriceState::QUOTE_ONLY || $price_m2 <= 0);
@@ -41,14 +40,9 @@ $is_sale  = (!$is_quote && $old_price_m2 > $price_m2);
                 <span>Liên hệ báo giá</span>
             </span>
         </div>
-        <div class="drv-card__price-piece">
-            1 thùng = <?php echo esc_html(drv_format_decimal($m2_box)); ?> m² (<?php echo esc_html((string) $per_box . ' ' . $unit_label); ?>)
-            <?php if ($stock_boxes !== null && $stock_boxes > 0) : ?>
-                · Còn <?php echo esc_html((string) $stock_boxes); ?> thùng
-            <?php elseif ($in_stock) : ?>
-                · Có sẵn mẫu
-            <?php endif; ?>
-        </div>
+        <span class="drv-card__price-piece">
+            <?php echo esc_html(drv_format_decimal($m2_box) . ' m² ≈ 1 thùng (' . $per_box . ' ' . $unit_label . ')'); ?>
+        </span>
     <?php else : ?>
         <div class="drv-card__price-main">
             <span class="drv-card__price-m2<?php echo $is_sale ? ' drv-card__price-m2--sale' : ''; ?>">
@@ -58,11 +52,8 @@ $is_sale  = (!$is_quote && $old_price_m2 > $price_m2);
                 <del class="drv-card__price-old"><?php echo esc_html(drv_format_vnd($old_price_m2)); ?>/m²</del>
             <?php endif; ?>
         </div>
-        <div class="drv-card__price-piece">
-            ≈ <?php echo esc_html(drv_format_vnd($price_piece) . '/' . $unit_label); ?>
-            <?php if ($stock_boxes !== null && $stock_boxes > 0) : ?>
-                · Còn <?php echo esc_html((string) $stock_boxes); ?> thùng
-            <?php endif; ?>
-        </div>
+        <span class="drv-card__price-piece">
+            ≈ <?php echo esc_html(drv_format_vnd($price_piece) . '/' . $unit_label); ?><?php echo ($stock_boxes !== null && $stock_boxes > 0) ? esc_html(' · ' . $stock_boxes . ' thùng') : ''; ?>
+        </span>
     <?php endif; ?>
 </div>

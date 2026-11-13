@@ -5,7 +5,9 @@
 declare(strict_types=1);
 
 use Dravit\Catalog\ProductSeeder;
+use Dravit\Catalog\SearchController;
 use Dravit\Catalog\SearchIndex;
+use Dravit\Catalog\SearchTrending;
 use Dravit\Core\Config;
 use Dravit\Seo\Canonical;
 use Dravit\Seo\LlmsTxt;
@@ -210,6 +212,107 @@ $assert(
     'REST search SKU quote_only DRV-3612T phải trả price_state=quote_only.'
 );
 
+// 7. Kiểm chứng Hybrid 3 tầng "Sản phẩm tìm kiếm nhiều" (Phương án A) & Chip từ khóa phổ biến
+SearchController::purgeInitialCache();
+$init_payload = SearchController::getInitialPayload();
+$assert(($init_payload['mode'] ?? '') === 'trending', 'Initial payload phải có mode=trending.');
+$assert(count($init_payload['silos'] ?? []) === 6, 'Initial payload phải hiển thị đúng 6 Danh mục phổ biến.');
+$assert(count($init_payload['products'] ?? []) === 4, 'Initial payload phải hiển thị đúng 4 Sản phẩm tìm kiếm nhiều (Cold-start Tier 3).');
+foreach ($init_payload['products'] ?? [] as $tp) {
+    $assert(($tp['price_m2'] ?? 0) > 0 && ($tp['price_piece'] ?? 0) > 0, 'Cold-start Tier 3 phải ưu tiên SP có giá m² và giá viên minh bạch.');
+}
+
+foreach (['80x80', 'Vân đá Marble', 'Terrazzo', 'Khổ lớn 60x120', 'Chống trượt R10'] as $chip_kw) {
+    $req_chip = new \WP_REST_Request('GET', '/dravit/v1/search');
+    $req_chip->set_param('q', $chip_kw);
+    $t_chip    = microtime(true);
+    $resp_chip = $server->dispatch($req_chip);
+    $ms_chip   = (microtime(true) - $t_chip) * 1000.0;
+    $data_chip = $resp_chip->get_data();
+    $assert(
+        !empty($data_chip['products']) && $ms_chip < 150.0,
+        sprintf('Chip phổ biến "%s" phải trả sản phẩm khớp < 150ms (%.2fms).', $chip_kw, $ms_chip)
+    );
+}
+
+// Kiểm chứng Tier 2: Ghi nhận 3 lượt click khác IP + chống trùng lặp cùng IP + flush lên Top 1
+$promo_pid = (int) wc_get_product_id_by_sku('DRV-WD1590');
+if ($promo_pid <= 0) {
+    $promo_pid = $priced_id;
+}
+if ($promo_pid > 0) {
+    $prev_hits = get_post_meta($promo_pid, SearchTrending::META_HITS, true);
+    delete_post_meta($promo_pid, SearchTrending::META_HITS);
+    delete_transient(SearchTrending::BUFFER_TRANSIENT);
+    set_transient(SearchTrending::LAST_FLUSH_TRANSIENT, time(), DAY_IN_SECONDS);
+
+    $c1     = SearchTrending::recordProductClick($promo_pid, '198.51.100.11');
+    $c1_dup = SearchTrending::recordProductClick($promo_pid, '198.51.100.11');
+    $c2     = SearchTrending::recordProductClick($promo_pid, '198.51.100.12');
+    $c3     = SearchTrending::recordProductClick($promo_pid, '198.51.100.13');
+
+    $assert($c1['recorded'] === true && $c1_dup['recorded'] === false, 'SearchTrending phải chặn đếm trùng cùng IP trong 5 phút.');
+    $assert($c2['recorded'] === true && $c3['recorded'] === true, 'SearchTrending phải ghi nhận lượt click từ IP khác nhau.');
+
+    $flushed_cnt = SearchTrending::flushBufferNow();
+    $assert($flushed_cnt >= 1, 'SearchTrending::flushBufferNow() phải ghi cộng dồn xuống postmeta.');
+
+    $promoted_payload = SearchController::getInitialPayload();
+    $assert(
+        (($promoted_payload['products'][0]['id'] ?? 0) === $promo_pid),
+        'Tier 2: SP đạt >= 3 click tìm kiếm phải tự động thăng hạng lên vị trí #1 trong Sản phẩm tìm kiếm nhiều.'
+    );
+
+    // Dọn sạch dữ liệu test để giữ nguyên trạng thái DB sạch
+    if ($prev_hits === '' || $prev_hits === false) {
+        delete_post_meta($promo_pid, SearchTrending::META_HITS);
+    } else {
+        update_post_meta($promo_pid, SearchTrending::META_HITS, (int) $prev_hits);
+    }
+    $wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_drv_srch_dedup_%' OR option_name LIKE '_transient_timeout_drv_srch_dedup_%'");
+    SearchController::purgeInitialCache();
+}
+
+// Kiểm chứng Tier 1 Pin Limit Guard: Ghim đủ 4/4 -> SP thứ 5 bị chặn `limit_reached` -> gỡ 1 SP -> ghim được SP thứ 5
+$pin_test_ids = array_values(array_map('intval', wc_get_products([
+    'limit'  => 5,
+    'status' => 'publish',
+    'return' => 'ids',
+])));
+$assert(count($pin_test_ids) >= 5, 'Cần ít nhất 5 sản phẩm publish trong DB để kiểm thử giới hạn ghim 4/4.');
+if (count($pin_test_ids) >= 5) {
+    $orig_pinned = SearchTrending::getPinnedIds();
+    foreach ($orig_pinned as $opid) {
+        SearchTrending::setProductPinned($opid, false);
+    }
+
+    for ($k = 0; $k < 4; $k++) {
+        $res_pin = SearchTrending::setProductPinned($pin_test_ids[$k], true);
+        $assert($res_pin['ok'] === true && $res_pin['status'] === 'pinned', "Ghim SP #" . ($k + 1) . " phải thành công.");
+    }
+
+    $res_overflow = SearchTrending::setProductPinned($pin_test_ids[4], true);
+    $assert(
+        $res_overflow['ok'] === false && $res_overflow['status'] === 'limit_reached' && count($res_overflow['pinned_ids']) === 4,
+        'Khi đã ghim đủ 4/4 SP, ghim thêm SP thứ 5 phải bị chặn với status=limit_reached.'
+    );
+
+    $res_unpin = SearchTrending::setProductPinned($pin_test_ids[1], false);
+    $res_slot4 = SearchTrending::setProductPinned($pin_test_ids[4], true);
+    $assert(
+        $res_unpin['status'] === 'unpinned' && $res_slot4['ok'] === true && $res_slot4['status'] === 'pinned',
+        'Sau khi gỡ bớt 1 SP (còn 3/4), phải cho phép ghim SP mới vào vị trí thứ 4.'
+    );
+
+    // Khôi phục danh sách ghim gốc
+    foreach (SearchTrending::getPinnedIds() as $cpid) {
+        SearchTrending::setProductPinned($cpid, false);
+    }
+    foreach ($orig_pinned as $opid) {
+        SearchTrending::setProductPinned($opid, true);
+    }
+}
+
 echo sprintf(
     "Latency cold search: ?q=8801 => %.2fms (%d SP), ?q=da+mo+800x800 => %.2fms (%d SP, %d silos), ?q=van+da+800x800 => %.2fms (%d SP)\n",
     $ms_sku,
@@ -226,4 +329,4 @@ if ($errors !== []) {
     exit(1);
 }
 
-echo "PASSED Gate 3 Verification (R-1..R-10, M-1..M-16, /llms.txt, SchemaGraph, Live Search < 150ms).\n";
+echo "PASSED Gate 3 Verification (R-1..R-10, M-1..M-16, /llms.txt, SchemaGraph, Hybrid 3-Tier Trending Search < 150ms).\n";

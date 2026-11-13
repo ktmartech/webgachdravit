@@ -69,6 +69,8 @@ final class TemplateRenderTest extends TestCase {
                 'price_piece'      => 246400,
                 'pieces_per_box'   => 3,
                 'stock_boxes'      => 46,
+                'img_primary'      => 'https://gachdravit.vn/wp-content/themes/dravit/assets/images/placeholders/tile-marble-calacatta.svg',
+                'img_hover'        => 'https://gachdravit.vn/wp-content/themes/dravit/assets/images/rooms/room-living-calacatta.jpg',
                 'tags'             => ['80x80', 'Bóng kiếng'],
             ],
         ]);
@@ -78,6 +80,9 @@ final class TemplateRenderTest extends TestCase {
         self::assertStringContainsString('385.000đ/m²', $saleCard);
         self::assertStringContainsString('246.400đ/viên', $saleCard);
         self::assertStringContainsString('href="https://gachdravit.vn/san-pham/drv-8801m"', $saleCard);
+        self::assertStringContainsString('drv-card__img--primary', $saleCard);
+        self::assertStringContainsString('drv-card__img--hover', $saleCard);
+        self::assertStringContainsString('room-living-calacatta.jpg', $saleCard);
         self::assertStringNotContainsString('drv-card__wish', $saleCard);
 
         $quoteCard = drv_ui_html('product-card', [
@@ -93,6 +98,45 @@ final class TemplateRenderTest extends TestCase {
         self::assertStringContainsString('Liên hệ báo giá', $quoteCard);
         self::assertStringNotContainsString('0đ/m²', $quoteCard);
         self::assertStringNotContainsString('drv-card__wish', $quoteCard);
+
+        $advisorCard = drv_ui_html('product-card', [
+            'product'      => [
+                'id'             => 102,
+                'sku'            => 'DRV-3605S',
+                'title'          => 'Gạch Nhà Tắm 30x60 Nhám R10',
+                'url'            => 'https://gachdravit.vn/san-pham/drv-3605s/',
+                'price_state'    => 'priced',
+                'price_m2'       => 295000,
+                'pieces_per_box' => 8,
+                'm2_per_box'     => 1.44,
+            ],
+            'context'      => 'advisor',
+            'advisor_meta' => [
+                'match_score'   => 95,
+                'dcof_level'    => 10,
+                'stock_label'   => 'Sẵn kho',
+                'water_label'   => 'Hút nước ≤ 0,5%',
+                'size_label'    => '30×60 cm',
+                'surface_label' => 'Nhám sần',
+                'why'           => 'Đạt chuẩn chống trượt R10 cho nhà tắm 6 m².',
+                'calc'          => [
+                    'boxes'         => 5,
+                    'pieces'        => 40,
+                    'actual_m2'     => 7.2,
+                    'est_total_vnd' => 2124000,
+                ],
+                'quote_json'    => '{"product_id":102,"boxes":5}',
+                'spec_json'     => '{"product_id":102,"sku":"DRV-3605S"}',
+            ],
+        ]);
+
+        self::assertStringContainsString('class="drv-aif-card"', $advisorCard);
+        self::assertStringContainsString('95% khớp', $advisorCard);
+        self::assertStringContainsString('DCOF R10', $advisorCard);
+        self::assertStringContainsString('5 thùng', $advisorCard);
+        self::assertStringContainsString('data-aif-open-spec=', $advisorCard);
+        self::assertStringContainsString('data-drv-ai-add-quote=', $advisorCard);
+        self::assertStringNotContainsString('drv-aif-rec-item', $advisorCard);
     }
 
     public function test_chip_copy_inline_and_steps_primitives(): void {

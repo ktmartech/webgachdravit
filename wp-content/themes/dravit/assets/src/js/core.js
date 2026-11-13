@@ -283,17 +283,42 @@ function registerBuiltInActions() {
 
   registerAction('search-toggle', (trigger, event) => {
     event?.preventDefault();
-    const searchWrap = qs('[data-drv-search]');
+    const headerEl = trigger.closest('.drv-header') || qs('.drv-header');
+    const searchWrap = qs('[data-drv-search]', headerEl || document) || qs('[data-drv-search]');
     if (!searchWrap) {
       return;
     }
-    const nextOpen = !searchWrap.classList.contains('is-mobile-open');
-    searchWrap.classList.toggle('is-mobile-open', nextOpen);
-    trigger.setAttribute('aria-expanded', nextOpen ? 'true' : 'false');
-    if (nextOpen) {
-      import('./search.js').then((m) => m.initLiveSearch());
-      qs('input[type="search"]', searchWrap)?.focus();
+    const isOpen = searchWrap.classList.contains('is-open');
+    if (isOpen) {
+      if (typeof searchWrap._drvCloseSearch === 'function') {
+        searchWrap._drvCloseSearch();
+      } else {
+        searchWrap.classList.remove('is-open');
+        headerEl?.classList.remove('has-search-open');
+        trigger.setAttribute('aria-expanded', 'false');
+        const icon = qs('i', trigger);
+        if (icon) {
+          icon.className = 'ph ph-magnifying-glass drv-icon drv-icon--sm';
+        }
+      }
+      return;
     }
+
+    searchWrap.classList.add('is-open');
+    headerEl?.classList.add('has-search-open');
+    trigger.setAttribute('aria-expanded', 'true');
+    const icon = qs('i', trigger);
+    if (icon) {
+      icon.className = 'ph ph-x drv-icon drv-icon--sm';
+    }
+    import('./search.js').then((m) => {
+      m.initLiveSearch();
+      const input = qs('input[type="search"]', searchWrap);
+      if (input) {
+        input.focus();
+        input.click();
+      }
+    });
   });
 
   registerAction('tab-switch', (trigger, event) => {
@@ -327,6 +352,14 @@ function registerBuiltInActions() {
     }
     const val = trigger.dataset.drvChipValue || trigger.textContent.trim();
     input.value = val;
+    if (input.closest('[data-drv-search]')) {
+      import('./search.js').then((m) => {
+        m.initLiveSearch();
+        input.focus();
+        input.dispatchEvent(new CustomEvent('drv:search-immediate'));
+      });
+      return;
+    }
     input.dispatchEvent(new Event('input', { bubbles: true }));
     input.focus();
   });
@@ -413,6 +446,23 @@ function registerBuiltInActions() {
     }
     const nextVal = Number(trigger.dataset.drvValue || '18960000');
     motion.animateNumber(target, nextVal, formatVnd);
+  });
+
+  registerAction('ai-finder-open', (trigger, event) => {
+    event?.preventDefault();
+    const finderEl = qs('drv-ai-finder');
+    const prompt = (trigger.dataset.drvPrompt || '').trim();
+    if (finderEl) {
+      const input = qs('[data-aif-input]', finderEl);
+      if (input && prompt) {
+        input.value = prompt;
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+      input?.focus();
+      return;
+    }
+    const baseUrl = window.DRV_CONFIG?.aiFinderUrl || '/tro-ly-ai-tim-gach';
+    window.location.href = prompt ? `${baseUrl}?prompt=${encodeURIComponent(prompt)}` : baseUrl;
   });
 }
 
@@ -607,7 +657,7 @@ function setupHeaderAndMenus() {
 
   // Lazy-load Live Search chunk on first focus inside `[data-drv-search]`
   let searchLoaded = false;
-  document.addEventListener('focusin', (event) => {
+  const ensureSearchLoaded = (event) => {
     if (searchLoaded) {
       return;
     }
@@ -615,7 +665,10 @@ function setupHeaderAndMenus() {
       searchLoaded = true;
       import('./search.js').then((m) => m.initLiveSearch());
     }
-  });
+  };
+
+  document.addEventListener('focusin', ensureSearchLoaded);
+  document.addEventListener('pointerover', ensureSearchLoaded);
 
   // Page-cache-safe current URL indicator
   const currentPath = (window.location.pathname || '/').replace(/\/+$/, '') || '/';
@@ -644,6 +697,108 @@ export const Dravit = Object.freeze({
   formatDecimalVn,
 });
 
+/**
+ * Hiệu ứng "gương quét" (glass shine) khi hover vào ảnh nội dung — không cần markup riêng ở từng template.
+ * Chèn `<span class="drv-shine">` vào phần tử cha của ảnh; CSS ở `components/motion.css`.
+ */
+function setupImageShine() {
+  if (typeof window.matchMedia !== 'function' || !window.matchMedia('(hover: hover)').matches || prefersReducedMotion()) {
+    return;
+  }
+
+  const SKIP = '.drv-logo, .drv-footer__logo-img, .drv-qr-img, .drv-author-box__avatar, .drv-checkout-topbar__brand, .drv-sr__stage, [data-no-shine]';
+  const MIN_SIZE = 56;
+  const eligible = (img) => !img.closest(SKIP) && img.offsetWidth >= MIN_SIZE && img.offsetHeight >= MIN_SIZE;
+
+  /**
+   * Gom ảnh theo khung (phần tử cha): ảnh chồng nhau trong cùng khung (vd. product card primary + hover swap)
+   * tính là 1 khung. Trả về ảnh đại diện (ảnh đầu tiên) của từng khung.
+   * @param {Element} root
+   * @returns {HTMLImageElement[]}
+   */
+  const imageSlots = (root) => {
+    const imgs = root.tagName === 'IMG' ? [root] : [...root.querySelectorAll('img')];
+    const slots = new Map();
+    for (const img of imgs) {
+      if (img.parentElement && !slots.has(img.parentElement) && eligible(img)) {
+        slots.set(img.parentElement, img);
+      }
+    }
+    return [...slots.values()];
+  };
+
+  /** @type {WeakSet<Element>} host đang hover — chỉ quét 1 lần mỗi lượt vào. */
+  const activeHosts = new WeakSet();
+
+  const shine = (img, host) => {
+    const parent = img.parentElement;
+    if (!parent) {
+      return;
+    }
+    const parentStyle = getComputedStyle(parent);
+    if (parentStyle.display === 'inline') {
+      return;
+    }
+    if (parentStyle.position === 'static') {
+      parent.style.position = 'relative';
+    }
+
+    let beam = parent.querySelector(':scope > .drv-shine');
+    if (!beam) {
+      beam = document.createElement('span');
+      beam.className = 'drv-shine';
+      beam.setAttribute('aria-hidden', 'true');
+      parent.appendChild(beam);
+    }
+    beam.style.cssText = `left:${img.offsetLeft}px;top:${img.offsetTop}px;width:${img.offsetWidth}px;height:${img.offsetHeight}px;border-radius:${getComputedStyle(img).borderRadius}`;
+
+    // Reset về vị trí đầu rồi reflow để mỗi lượt hover đều quét lại từ trái.
+    parent.classList.remove('is-shining');
+    void beam.offsetWidth;
+    parent.classList.add('is-shining');
+
+    activeHosts.add(host);
+    host.addEventListener(
+      'mouseleave',
+      () => {
+        activeHosts.delete(host);
+        parent.classList.remove('is-shining');
+      },
+      { once: true },
+    );
+  };
+
+  document.addEventListener('mouseover', (event) => {
+    // Tìm phần tử gần nhất chứa ĐÚNG 1 ảnh hợp lệ (card / khung ảnh). Gặp vùng chứa nhiều ảnh (lưới) thì dừng.
+    let node = event.target instanceof Element ? event.target : null;
+    for (let depth = 0; node && depth < 6 && !/^(MAIN|SECTION|BODY)$/.test(node.tagName); depth += 1, node = node.parentElement) {
+      const imgs = imageSlots(node);
+      if (!imgs.length) {
+        continue;
+      }
+      if (imgs.length > 1) {
+        return;
+      }
+      // Mở rộng host lên tới card ngoài cùng vẫn chỉ chứa ảnh này → di chuột trong card không quét lại.
+      let host = node;
+      for (let up = 0; up < 6; up += 1) {
+        const next = host.parentElement;
+        if (!next || /^(MAIN|SECTION|BODY)$/.test(next.tagName)) {
+          break;
+        }
+        if (imageSlots(next).length !== 1) {
+          break;
+        }
+        host = next;
+      }
+      if (!activeHosts.has(host)) {
+        shine(imgs[0], host);
+      }
+      return;
+    }
+  });
+}
+
 export function initCore() {
   if (coreBooted || typeof document === 'undefined') {
     return;
@@ -656,6 +811,17 @@ export function initCore() {
     domListenersBound = true;
 
     document.addEventListener('click', (event) => {
+      if (event.target instanceof Element) {
+        const srchCardLink = event.target.closest('[data-drv-search-results] [data-product-id] a[href]');
+        if (srchCardLink) {
+          const cardEl = srchCardLink.closest('[data-product-id]');
+          const pid = cardEl?.getAttribute('data-product-id');
+          if (pid) {
+            import('./search.js').then((m) => m.sendSearchProductHit(pid));
+          }
+        }
+      }
+
       const trigger = event.target instanceof Element ? event.target.closest('[data-drv-action]') : null;
       if (!trigger) {
         return;
@@ -699,10 +865,15 @@ export function initCore() {
 
     setupHeaderAndMenus();
     hydrateQuoteAndCartBadges();
+    setupImageShine();
   }
 
   if (qs('drv-unit-calc, drv-qty-input')) {
     import('./chunks/calc-elements.js');
+  }
+
+  if (qs('drv-ai-finder')) {
+    import('./chunks/ai-finder.js');
   }
 
   if (qs('[data-drv-stagger], [data-drv-reveal]') && !prefersReducedMotion()) {

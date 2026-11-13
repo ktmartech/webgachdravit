@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 final class SectionRegistryTest extends TestCase {
     private string $tempSectionFile = '';
+    private ?string $originalHeroContent = null;
 
     protected function setUp(): void {
         parent::setUp();
@@ -26,6 +27,10 @@ final class SectionRegistryTest extends TestCase {
             mkdir($dir, 0775, true);
         }
         $this->tempSectionFile = $dir . '/hero-advisor.php';
+        $this->originalHeroContent = is_file($this->tempSectionFile)
+            ? (string) file_get_contents($this->tempSectionFile)
+            : null;
+
         file_put_contents(
             $this->tempSectionFile,
             "<?php\ndeclare(strict_types=1);\n/** @var array<string, mixed> \$args */\necho '<section data-test-hero=\"' . esc_html((string) (\$args['variant'] ?? '')) . '\">' . esc_html((string) (\$args['eyebrow'] ?? '')) . '</section>';\n"
@@ -33,8 +38,12 @@ final class SectionRegistryTest extends TestCase {
     }
 
     protected function tearDown(): void {
-        if ($this->tempSectionFile !== '' && is_file($this->tempSectionFile)) {
-            @unlink($this->tempSectionFile);
+        if ($this->tempSectionFile !== '') {
+            if ($this->originalHeroContent !== null) {
+                file_put_contents($this->tempSectionFile, $this->originalHeroContent);
+            } elseif (is_file($this->tempSectionFile)) {
+                @unlink($this->tempSectionFile);
+            }
         }
         Monkey\tearDown();
         parent::tearDown();

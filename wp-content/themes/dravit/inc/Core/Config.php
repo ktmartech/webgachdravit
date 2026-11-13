@@ -16,8 +16,8 @@ final class Config {
      * @return array<string, mixed>
      */
     public static function get(string $name): array {
-        $safe = (string) preg_replace('/[^a-z0-9_-]/i', '', $name);
-        if ($safe === '') {
+        $safe = trim((string) preg_replace('/[^a-z0-9_\/-]/i', '', $name), '/');
+        if ($safe === '' || str_contains($safe, '..') || str_contains($safe, '//')) {
             return [];
         }
 

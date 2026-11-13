@@ -174,6 +174,10 @@
     --_bg: var(--c-white);
   }
 
+  .l-section--champagne {
+    --_bg: var(--c-champagne);
+  }
+
   .l-section--tight {
     --_pad-y: var(--s-6);
   }

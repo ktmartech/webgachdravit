@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Dravit\Admin;
 
+use Dravit\Catalog\SearchTrending;
+use Dravit\Core\Config;
 use Dravit\Core\ServiceProviderInterface;
 use Dravit\Core\Settings;
 
@@ -29,6 +31,15 @@ final class SettingsPage implements ServiceProviderInterface {
         }
         wp_enqueue_media();
         wp_add_inline_script('media-editor', $this->get_media_picker_script());
+
+        if (drv_is_woo_active()) {
+            wp_enqueue_style('woocommerce_admin_styles');
+            wp_enqueue_script('jquery-ui-sortable');
+            wp_enqueue_script('wc-enhanced-select');
+            wp_add_inline_script('wc-enhanced-select', $this->get_search_pin_guard_script());
+        } else {
+            wp_add_inline_script('media-editor', $this->get_search_pin_guard_script());
+        }
     }
 
     public function register_menu(): void {
@@ -60,6 +71,41 @@ final class SettingsPage implements ServiceProviderInterface {
      */
     public function sanitize_callback(mixed $raw): array {
         $input = is_array($raw) ? $raw : [];
+
+        if (isset($input['search']['pinned_product_ids']) && is_array($input['search']['pinned_product_ids']) && function_exists('add_settings_error')) {
+            $submitted_pinned = [];
+            foreach ($input['search']['pinned_product_ids'] as $raw_pid) {
+                $pid = max(0, (int) $raw_pid);
+                if ($pid > 0 && !in_array($pid, $submitted_pinned, true)) {
+                    $submitted_pinned[] = $pid;
+                }
+            }
+            if (count($submitted_pinned) > SearchTrending::MAX_PINNED) {
+                add_settings_error(
+                    Settings::OPTION_KEY,
+                    'drv_pinned_overflow',
+                    sprintf(
+                        'Chỉ cho phép ghim tối đa %d sản phẩm lên gợi ý tìm kiếm. Hệ thống đã giữ %d sản phẩm đầu tiên và bỏ qua phần vượt quá.',
+                        SearchTrending::MAX_PINNED,
+                        SearchTrending::MAX_PINNED
+                    ),
+                    'warning'
+                );
+            }
+        }
+
+        if (isset($input['search']['featured_silos']) && is_array($input['search']['featured_silos']) && function_exists('add_settings_error')) {
+            $submitted_silos = array_values(array_unique(array_filter(array_map('strval', $input['search']['featured_silos']))));
+            if (count($submitted_silos) > 6) {
+                add_settings_error(
+                    Settings::OPTION_KEY,
+                    'drv_silos_overflow',
+                    'Cột Danh mục phổ biến chỉ hiển thị tối đa 6 danh mục. Hệ thống đã giữ 6 danh mục đầu tiên.',
+                    'warning'
+                );
+            }
+        }
+
         $clean = Settings::sanitize($input);
         $clean = $this->handle_logo_uploads($clean);
 
@@ -151,6 +197,7 @@ final class SettingsPage implements ServiceProviderInterface {
             'seo'     => '7. SEO & GEO (/llms.txt)',
             'forms'   => '8. Fluent Forms Slots',
             'ai'      => '9. Trợ lý AI Tìm gạch',
+            'search'  => '10. Tìm kiếm & Gợi ý',
         ];
 
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only tab switcher
@@ -355,7 +402,13 @@ final class SettingsPage implements ServiceProviderInterface {
                             <th scope="row"><label for="drv-ai-key">API Key (chỉ cần khi chọn Gemini/Anthropic)</label></th>
                             <td><input id="drv-ai-key" type="password" class="regular-text" autocomplete="off" name="drv_settings[ai][api_key]" value="<?php echo esc_attr((string) $s['ai']['api_key']); ?>"></td>
                         </tr>
+                        <tr>
+                            <th scope="row"><label for="drv-ai-model">Tên Model tùy chọn (để trống dùng mặc định)</label></th>
+                            <td><input id="drv-ai-model" type="text" class="regular-text" placeholder="gemini-2.5-flash / claude-haiku-4-5-20251001" name="drv_settings[ai][model]" value="<?php echo esc_attr((string) ($s['ai']['model'] ?? '')); ?>"></td>
+                        </tr>
                     </table>
+                <?php elseif ($active_tab === 'search') : ?>
+                    <?php $this->render_search_tab($s); ?>
                 <?php endif; ?>
 
                 <?php submit_button('Lưu cấu hình Dravit'); ?>
@@ -480,6 +533,202 @@ document.addEventListener('change', (event) => {
         preview.src = URL.createObjectURL(fileInput.files[0]);
     }
 });
+JS;
+    }
+
+    /**
+     * @param array<string, mixed> $s
+     */
+    private function render_search_tab(array $s): void {
+        $max_pinned   = SearchTrending::MAX_PINNED;
+        $pinned_ids   = SearchTrending::getPinnedIds();
+        $pinned_items = SearchTrending::describePinnedProducts($pinned_ids);
+        $pinned_count = count($pinned_items);
+        $is_full      = $pinned_count >= $max_pinned;
+
+        $popular_kws = isset($s['search']['popular_keywords']) && is_array($s['search']['popular_keywords'])
+            ? implode(', ', array_map('strval', $s['search']['popular_keywords']))
+            : '80x80, Vân đá Marble, Terrazzo, Khổ lớn 60x120, Chống trượt R10';
+
+        $selected_silos = isset($s['search']['featured_silos']) && is_array($s['search']['featured_silos'])
+            ? array_values(array_map('strval', $s['search']['featured_silos']))
+            : [];
+        $collections = Config::get('collections');
+        ?>
+        <p class="description">
+            Cấu hình cơ chế <strong>Hybrid 3 tầng</strong> cho khung tìm kiếm tức thì:
+            <strong>Tầng 1 (Ghim tay bên dưới, tối đa <?php echo esc_html((string) $max_pinned); ?> SP)</strong> &rarr;
+            <strong>Tầng 2 (Tự học theo lượt click tìm kiếm &ge; <?php echo esc_html((string) SearchTrending::MIN_LEARNED_HITS); ?> lượt)</strong> &rarr;
+            <strong>Tầng 3 (Tự động bù bằng SP Nổi bật / Bán chạy khi website mới hoặc ghim chưa đủ <?php echo esc_html((string) $max_pinned); ?> SP)</strong>.
+        </p>
+
+        <table class="form-table" role="presentation">
+            <tr>
+                <th scope="row">
+                    <label for="drv-pinned-products">Sản phẩm ghim cố định</label>
+                    <p class="description" style="font-weight:400;margin-top:4px;">
+                        <strong id="drv-pin-counter" data-max="<?php echo esc_attr((string) $max_pinned); ?>">
+                            Đã ghim: <?php echo esc_html($pinned_count . '/' . $max_pinned); ?> sản phẩm
+                        </strong>
+                    </p>
+                </th>
+                <td>
+                    <input type="hidden" name="drv_settings[search][pinned_product_ids][]" value="0">
+                    <select id="drv-pinned-products"
+                            class="wc-product-search"
+                            multiple="multiple"
+                            style="width:100%;max-width:640px;"
+                            name="drv_settings[search][pinned_product_ids][]"
+                            data-placeholder="Gõ tên gạch hoặc mã SKU (VD: DRV-8801)..."
+                            data-action="woocommerce_json_search_products"
+                            data-minimum_input_length="2"
+                            data-sortable="true"
+                            data-maximum-selection-length="<?php echo esc_attr((string) $max_pinned); ?>">
+                        <?php foreach ($pinned_items as $item) :
+                            $opt_label = $item['title'] . ' (' . $item['sku'] . ')' . ($item['in_stock'] ? '' : ' — [Tạm hết hàng]');
+                            ?>
+                            <option value="<?php echo esc_attr((string) $item['id']); ?>" selected="selected">
+                                <?php echo esc_html($opt_label); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+
+                    <div id="drv-pin-full-alert"
+                         class="notice notice-warning inline"
+                         style="max-width:640px;margin:8px 0 0;padding:8px 12px;"
+                         <?php echo $is_full ? '' : 'hidden'; ?>>
+                        <p style="margin:0;">
+                            <strong>Đã đạt tối đa <?php echo esc_html($max_pinned . '/' . $max_pinned); ?> sản phẩm ghim.</strong>
+                            Hệ thống đã khóa chọn thêm — hãy bấm dấu <strong>&times;</strong> gỡ bớt ít nhất 1 sản phẩm trước khi ghim mẫu mới.
+                        </p>
+                    </div>
+
+                    <p class="description">
+                        Kéo-thả các thẻ đã chọn để đổi thứ tự hiển thị #1 &rarr; #<?php echo esc_html((string) $max_pinned); ?>. Bạn cũng có thể tích ghim nhanh ngay ở cột phải trong trang sửa từng Sản phẩm.
+                    </p>
+                </td>
+            </tr>
+
+            <tr>
+                <th scope="row"><label for="drv-popular-kws">Từ khóa phổ biến (tối đa 8 chip)</label></th>
+                <td>
+                    <input id="drv-popular-kws"
+                           type="text"
+                           class="large-text"
+                           name="drv_settings[search][popular_keywords]"
+                           value="<?php echo esc_attr($popular_kws); ?>">
+                    <p class="description">Ngăn cách bằng dấu phẩy. Khi khách bấm vào chip sẽ kích hoạt lọc kết quả tức thì.</p>
+                </td>
+            </tr>
+
+            <tr>
+                <th scope="row">
+                    Danh mục phổ biến cột trái
+                    <p class="description" style="font-weight:400;margin-top:4px;">
+                        <strong id="drv-silo-counter" data-max="6">
+                            Đã chọn: <?php echo esc_html(count($selected_silos) . '/6'); ?> danh mục
+                        </strong>
+                    </p>
+                </th>
+                <td>
+                    <div id="drv-silo-full-alert"
+                         class="notice notice-info inline"
+                         style="max-width:640px;margin:0 0 8px;padding:6px 12px;"
+                         <?php echo count($selected_silos) >= 6 ? '' : 'hidden'; ?>>
+                        <p style="margin:0;">Đã chọn đủ <strong>6/6</strong> danh mục phổ biến. Bỏ tích 1 mục nếu muốn đổi sang danh mục khác.</p>
+                    </div>
+                    <fieldset style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:6px 16px;max-width:760px;">
+                        <?php foreach ($collections as $slug => $cfg) :
+                            $slug_str = (string) $slug;
+                            if ($slug_str === 'gach') {
+                                continue;
+                            }
+                            $checked  = in_array($slug_str, $selected_silos, true);
+                            $disabled = !$checked && count($selected_silos) >= 6;
+                            ?>
+                            <label>
+                                <input type="checkbox"
+                                       name="drv_settings[search][featured_silos][]"
+                                       value="<?php echo esc_attr($slug_str); ?>"
+                                       data-drv-silo-checkbox
+                                       <?php checked($checked); ?>
+                                       <?php disabled($disabled); ?>>
+                                <?php echo esc_html((string) ($cfg['name'] ?? $slug_str)); ?>
+                            </label>
+                        <?php endforeach; ?>
+                    </fieldset>
+                </td>
+            </tr>
+        </table>
+        <?php
+    }
+
+    private function get_search_pin_guard_script(): string {
+        return <<<'JS'
+(function ($) {
+    if (typeof $ !== 'function') return;
+
+    $(function () {
+        var $pinSelect = $('#drv-pinned-products');
+        var $pinCounter = $('#drv-pin-counter');
+        var $pinAlert = $('#drv-pin-full-alert');
+        var maxPinned = parseInt($pinCounter.attr('data-max') || '4', 10) || 4;
+
+        function getSelectedPinCount() {
+            var val = $pinSelect.val();
+            if (!Array.isArray(val)) return 0;
+            return val.filter(function (v) { return parseInt(v, 10) > 0; }).length;
+        }
+
+        function syncPinLimitUi() {
+            if (!$pinSelect.length) return;
+            var count = getSelectedPinCount();
+            var isFull = count >= maxPinned;
+            $pinCounter.text('Đã ghim: ' + count + '/' + maxPinned + ' sản phẩm');
+            $pinAlert.prop('hidden', !isFull);
+        }
+
+        if ($pinSelect.length) {
+            $pinSelect.on('change', syncPinLimitUi);
+            $pinSelect.on('select2:selecting', function (e) {
+                if (getSelectedPinCount() >= maxPinned) {
+                    e.preventDefault();
+                    $pinAlert.prop('hidden', false);
+                }
+            });
+            $pinSelect.on('select2:opening', function (e) {
+                if (getSelectedPinCount() >= maxPinned) {
+                    e.preventDefault();
+                    $pinAlert.prop('hidden', false);
+                }
+            });
+            syncPinLimitUi();
+        }
+
+        var $siloBoxes = $('[data-drv-silo-checkbox]');
+        var $siloCounter = $('#drv-silo-counter');
+        var $siloAlert = $('#drv-silo-full-alert');
+        var maxSilos = parseInt($siloCounter.attr('data-max') || '6', 10) || 6;
+
+        function syncSiloLimitUi() {
+            if (!$siloBoxes.length) return;
+            var checkedCount = $siloBoxes.filter(':checked').length;
+            var full = checkedCount >= maxSilos;
+            $siloCounter.text('Đã chọn: ' + checkedCount + '/' + maxSilos + ' danh mục');
+            $siloAlert.prop('hidden', !full);
+            $siloBoxes.each(function () {
+                if (!this.checked) {
+                    this.disabled = full;
+                }
+            });
+        }
+
+        if ($siloBoxes.length) {
+            $siloBoxes.on('change', syncSiloLimitUi);
+            syncSiloLimitUi();
+        }
+    });
+})(window.jQuery);
 JS;
     }
 }

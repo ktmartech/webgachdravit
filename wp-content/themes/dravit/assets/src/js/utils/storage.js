@@ -59,3 +59,42 @@ export function upsertQuoteItem(entry) {
   return state;
 }
 
+export function removeQuoteItem(identifier) {
+  const state = getQuoteState();
+  const target = String(identifier || '');
+  state.items = state.items.filter((it) => {
+    const byId = it.product_id ? `id:${it.product_id}` : '';
+    const bySku = it.sku ? `sku:${it.sku}` : '';
+    return byId !== target && bySku !== target && String(it.product_id) !== target && String(it.sku) !== target;
+  });
+
+  state.updated_at = Date.now();
+  writeJsonStorage(QUOTE_STORAGE_KEY, state);
+
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(
+      new CustomEvent('drv:quote-updated', {
+        detail: { count: state.items.length, state },
+      }),
+    );
+  }
+
+  return state;
+}
+
+export function clearQuoteItems() {
+  const state = { version: 2, updated_at: Date.now(), items: [] };
+  writeJsonStorage(QUOTE_STORAGE_KEY, state);
+
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(
+      new CustomEvent('drv:quote-updated', {
+        detail: { count: 0, state },
+      }),
+    );
+  }
+
+  return state;
+}
+
+

@@ -1,4 +1,29 @@
 @layer components {
+
+  /* Glass shine sweep khi hover ảnh (span.drv-shine do core.js chèn) */
+  .drv-shine {
+    position: absolute;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .drv-shine::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 42%), transparent);
+    transform: skewX(-20deg);
+  }
+
+  /* Chỉ chạy transition khi vào; khi rời thì nhảy về vị trí đầu ngay (không quét ngược) */
+  .is-shining > .drv-shine::before {
+    left: 160%;
+    transition: left 0.7s ease;
+  }
 /* 4.22 Motion System, GPU Micro-interactions & Anime.js Showcase ---------- */
 
   .drv-chip {

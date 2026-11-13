@@ -7,6 +7,7 @@ use Brain\Monkey;
 use Brain\Monkey\Functions;
 use Dravit\Catalog\SearchIndex;
 use Dravit\Catalog\SearchNormalizer;
+use Dravit\Catalog\SearchTrending;
 use Dravit\Core\Config;
 use Dravit\Core\Settings;
 use Dravit\Seo\LlmsTxt;
@@ -87,5 +88,55 @@ final class SearchNormalizerTest extends TestCase {
             self::assertStringContainsString('(https://gachdravit.vn/' . $slug . ')', $md, "Thiếu URL sạch /{$slug} trong /llms.txt");
             self::assertStringNotContainsString('(https://gachdravit.vn/' . $slug . '/)', $md, "Phát hiện dấu / cuối trên /{$slug} trong /llms.txt");
         }
+    }
+
+    public function test_hybrid_trending_merges_pinned_learned_and_fallback_tiers_without_duplicates(): void {
+        // Cold-start website mới: chưa ghim tay, chưa có lượt click tìm kiếm -> lấy đủ 4 SP từ Tầng 3 Fallback
+        self::assertSame(
+            [101, 102, 103, 104],
+            SearchTrending::mergeTierIds([], [], [101, 102, 103, 104, 105], 4)
+        );
+
+        // Khi có dữ liệu Tầng 2 (_drv_search_hits >= 3) -> ưu tiên Tầng 2 trước rồi bù Tầng 3 không trùng
+        self::assertSame(
+            [108, 103, 101, 102],
+            SearchTrending::mergeTierIds([], [108, 103], [101, 102, 103, 104], 4)
+        );
+
+        // Khi Admin ghim tay Tầng 1 -> luôn đứng đầu, tiếp theo Tầng 2, cuối cùng bù Tầng 3
+        self::assertSame(
+            [205, 108, 103, 101],
+            SearchTrending::mergeTierIds([205], [205, 108, 103], [101, 102, 103], 4)
+        );
+
+        // Kiểm tra từ khóa mở rộng ngữ nghĩa cho chip "Khổ lớn 60x120" & "Chống trượt R10"
+        $slab_idx = SearchIndex::buildIndexString([
+            'sku'   => 'DRV-61209',
+            'name'  => 'Gạch Vân Xi Măng 60x120',
+            'w_mm'  => 600,
+            'h_mm'  => 1200,
+            'terms' => ['R10', 'Mờ'],
+        ]);
+        self::assertStringContainsString('kho', $slab_idx);
+        self::assertStringContainsString('lon', $slab_idx);
+        self::assertStringContainsString('chong', $slab_idx);
+        self::assertStringContainsString('truot', $slab_idx);
+
+        // Kiểm tra sanitize pinned_product_ids trong Settings: giới hạn cứng tối đa 4 SP (MAX_PINNED) & xóa sạch khi gửi ['0']
+        $sanitized = Settings::sanitize([
+            'search' => [
+                'pinned_product_ids' => ['105', -4, '105', '208', '301', '402', '509', '610', 0],
+                'popular_keywords'   => '80x80, Terrazzo, 80x80, Khổ lớn 60x120',
+            ],
+        ]);
+        self::assertSame([105, 208, 301, 402], $sanitized['search']['pinned_product_ids']);
+        self::assertSame(['80x80', 'Terrazzo', 'Khổ lớn 60x120'], $sanitized['search']['popular_keywords']);
+
+        $cleared = Settings::sanitize([
+            'search' => [
+                'pinned_product_ids' => ['0'],
+            ],
+        ]);
+        self::assertSame([], $cleared['search']['pinned_product_ids']);
     }
 }

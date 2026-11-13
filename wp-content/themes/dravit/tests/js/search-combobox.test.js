@@ -27,9 +27,10 @@ function renderSearchMarkup() {
           <button type="submit">Tìm</button>
         </form>
         <div id="drv-search-panel" class="drv-search-drop" role="listbox" data-search-panel hidden>
+          <span data-search-silo-heading></span>
           <ul data-search-silos></ul>
           <span data-search-prod-heading></span>
-          <a href="/gach" data-search-view-all>Xem tất cả</a>
+          <a href="/gach" data-search-view-all>Xem toàn bộ kho</a>
           <ul data-search-products></ul>
           <p aria-live="polite" data-search-status></p>
         </div>
@@ -223,6 +224,77 @@ describe('Step 3 Live Search Combobox (Debounce, AbortController, ARIA Keyboard 
     highlightSafeText(span, 'Gạch Đá Mờ 80x80', 'da mo');
     const marks = Array.from(span.querySelectorAll('mark.drv-search-hl')).map((m) => m.textContent);
     expect(marks).toEqual(['Đá', 'Mờ']);
+  });
+
+  it('hydrates 0ms trending products & popular silos matching mockup UI and records click hits', () => {
+    const beaconSpy = vi.fn().mockReturnValue(true);
+    Object.defineProperty(navigator, 'sendBeacon', {
+      value: beaconSpy,
+      configurable: true,
+    });
+
+    window.DRV_CONFIG = {
+      searchEndpoint: '/wp-json/dravit/v1/search',
+      searchHitEndpoint: '/wp-json/dravit/v1/search/hit',
+      gachUrl: '/gach',
+      searchInitial: {
+        query: '',
+        mode: 'trending',
+        silos: [
+          { slug: 'gach-phong-khach', name: 'Gạch Phòng Khách', url: '/gach-phong-khach', count: 22 },
+        ],
+        products: [
+          {
+            id: 101,
+            sku: 'DRV-8801M',
+            name: 'Gạch Vân Đá Calacatta Gold 80x80 Bóng Kiếng',
+            url: '/san-pham/drv-8801m',
+            thumb: '/img/8801.webp',
+            size: '80x80 cm',
+            surface_label: 'Bóng kiếng',
+            price_state: 'priced',
+            price_m2: 385000,
+            regular_price_m2: 385000,
+            price_piece: 246400,
+            unit_label: 'viên',
+          },
+        ],
+        total: 1,
+        view_all: '/gach',
+      },
+    };
+
+    globalThis.fetch = vi.fn();
+    initLiveSearch();
+
+    const input = document.getElementById('global-search-input');
+    const panel = document.getElementById('drv-search-panel');
+
+    // Focus mở tức thì 0ms từ searchInitial mà không tốn 1 request fetch nào
+    input.dispatchEvent(new Event('focus'));
+    expect(globalThis.fetch).toHaveBeenCalledTimes(0);
+    expect(panel.hidden).toBe(false);
+
+    expect(panel.querySelector('[data-search-silo-heading]').textContent).toBe('Danh mục phổ biến');
+    expect(panel.querySelector('[data-search-prod-heading]').textContent).toBe('Sản phẩm tìm kiếm nhiều');
+    expect(panel.querySelector('[data-search-view-all]').textContent).toBe('Xem toàn bộ kho');
+    expect(panel.querySelector('[data-search-silos] .drv-badge--outline').textContent).toBe('22 mẫu');
+
+    const prodItem = panel.querySelector('.drv-search-item');
+    expect(prodItem.querySelector('.drv-search-item__meta .drv-badge--outline').textContent).toBe('80x80');
+    expect(prodItem.querySelector('.drv-search-item__meta').textContent).toContain('Mã: DRV-8801M');
+    expect(prodItem.querySelector('.drv-search-item__meta').textContent).toContain('· Bóng kiếng');
+    expect(prodItem.querySelector('.drv-search-item__price').textContent).toContain('385.000');
+    expect(prodItem.querySelector('.drv-search-item__price').textContent).toContain('246.400');
+    expect(prodItem.querySelector('.drv-search-item__price').textContent).toContain('/viên');
+
+    // Click vào sản phẩm bắn beacon ghi nhận lượt click cho Tầng 2 (_drv_search_hits)
+    prodItem.addEventListener('click', (e) => e.preventDefault());
+    prodItem.click();
+    expect(beaconSpy).toHaveBeenCalledTimes(1);
+    expect(beaconSpy.mock.calls[0][0]).toBe('/wp-json/dravit/v1/search/hit');
+
+    delete window.DRV_CONFIG;
   });
 });
 

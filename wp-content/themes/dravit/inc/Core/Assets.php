@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Dravit\Core;
 
+use Dravit\Catalog\SearchController;
+
 defined('ABSPATH') || exit;
 
 final class Assets implements ServiceProviderInterface {
@@ -19,11 +21,19 @@ final class Assets implements ServiceProviderInterface {
 
     public function print_runtime_config(): void {
         $config = [
-            'restUrl'        => untrailingslashit(rest_url('dravit/v1')),
-            'searchEndpoint' => untrailingslashit(rest_url('dravit/v1/search')),
-            'homeUrl'        => untrailingslashit(home_url('/')),
-            'gachUrl'        => untrailingslashit(home_url('/gach')),
-            'zaloPhone'      => drv_clean_phone((string) drv_setting('contact.zalo', '0909888777')),
+            'restUrl'                 => untrailingslashit(rest_url('dravit/v1')),
+            'nonceEndpoint'           => untrailingslashit(rest_url('dravit/v1/nonce')),
+            'searchEndpoint'          => untrailingslashit(rest_url('dravit/v1/search')),
+            'searchHitEndpoint'       => untrailingslashit(rest_url('dravit/v1/search/hit')),
+            'advisorEndpoint'         => untrailingslashit(rest_url('dravit/v1/advisor')),
+            'advisorFeedbackEndpoint' => untrailingslashit(rest_url('dravit/v1/advisor/feedback')),
+            'aiEnabled'               => (bool) drv_setting('features.ai_enabled', true),
+            'searchInitial'           => SearchController::getInitialPayload(),
+            'homeUrl'                 => untrailingslashit(home_url('/')),
+            'gachUrl'                 => untrailingslashit(home_url('/gach')),
+            'boqUrl'                  => untrailingslashit(home_url('/danh-sach-bao-gia')),
+            'aiFinderUrl'             => untrailingslashit(home_url('/tro-ly-ai-tim-gach')),
+            'zaloPhone'               => drv_clean_phone((string) drv_setting('contact.zalo', '0909888777')),
         ];
         $json = wp_json_encode($config, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         if (is_string($json) && $json !== '') {
@@ -37,6 +47,17 @@ final class Assets implements ServiceProviderInterface {
 
         if (function_exists('is_page_template') && is_page_template('page-templates/template-ui-kit.php')) {
             self::enqueue_style('drv-page-ui-kit', 'assets/src/css/pages/ui-kit.css');
+        }
+
+        if (
+            (bool) drv_setting('features.ai_enabled', true)
+            && (
+                (function_exists('is_page_template') && is_page_template('page-templates/template-ai-finder.php'))
+                || (function_exists('is_page') && is_page('tro-ly-ai-tim-gach'))
+            )
+        ) {
+            self::enqueue_section_style('assets/src/css/pages/ai-finder.css');
+            self::enqueue_section_script('assets/src/js/chunks/ai-finder.js');
         }
     }
 
@@ -53,8 +74,12 @@ final class Assets implements ServiceProviderInterface {
     }
 
     public static function enqueue_style(string $handle, string $entry): void {
+        if (isset(self::$enqueued_entries[$entry])) {
+            return;
+        }
+
         $url = Vite::asset_url($entry);
-        if ($url === null) {
+        if ($url === null || !function_exists('wp_enqueue_style')) {
             return;
         }
 
@@ -63,6 +88,10 @@ final class Assets implements ServiceProviderInterface {
     }
 
     public static function enqueue_module(string $handle, string $entry): void {
+        if (isset(self::$enqueued_entries[$entry])) {
+            return;
+        }
+
         $url = Vite::asset_url($entry);
         if ($url === null) {
             return;
@@ -75,7 +104,9 @@ final class Assets implements ServiceProviderInterface {
             return;
         }
 
-        wp_enqueue_script($handle, $url, [], null, ['strategy' => 'defer', 'in_footer' => true]);
+        if (function_exists('wp_enqueue_script')) {
+            wp_enqueue_script($handle, $url, [], null, ['strategy' => 'defer', 'in_footer' => true]);
+        }
     }
 
     /**

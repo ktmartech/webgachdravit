@@ -3,8 +3,11 @@ import { defineConfig } from 'vite';
 
 const entries = {
   global: resolve(__dirname, 'assets/src/css/global.css'),
+  'pages/home': resolve(__dirname, 'assets/src/css/pages/home.css'),
   'pages/ui-kit': resolve(__dirname, 'assets/src/css/pages/ui-kit.css'),
+  'pages/ai-finder': resolve(__dirname, 'assets/src/css/pages/ai-finder.css'),
   core: resolve(__dirname, 'assets/src/js/core.js'),
+  home: resolve(__dirname, 'assets/src/js/home.js'),
   search: resolve(__dirname, 'assets/src/js/search.js'),
   'chunks/motion': resolve(__dirname, 'assets/src/js/chunks/motion.js'),
   'chunks/quote': resolve(__dirname, 'assets/src/js/chunks/quote.js'),

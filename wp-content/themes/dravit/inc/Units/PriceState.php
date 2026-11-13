@@ -186,6 +186,12 @@ final class PriceState {
             ? (string) wp_get_attachment_image_url($hover_id, 'woocommerce_thumbnail')
             : '';
 
+        if ($img_primary === '' && $img_hover === '') {
+            $fallback_media = self::resolveFallbackImages($id);
+            $img_primary    = $fallback_media['primary'];
+            $img_hover      = $fallback_media['hover'];
+        }
+
         $tags = [];
         foreach (['pa_kich-thuoc', 'pa_be-mat', 'pa_dcof'] as $tax) {
             $label = self::firstTermShortLabel($id, $tax);
@@ -253,6 +259,82 @@ final class PriceState {
             }
         }
         return $term->name;
+    }
+
+    /**
+     * Khớp cặp ảnh mặc định (`tile-*.svg` + phối cảnh phòng `room-*.jpg`) theo thuộc tính sản phẩm
+     * khi SKU chưa tải ảnh Featured/Gallery trong WP Media (chuẩn `01-home.html`).
+     *
+     * @return array{primary: string, hover: string}
+     */
+    private static function resolveFallbackImages(int $product_id): array {
+        $base = defined('DRV_URI') ? rtrim((string) DRV_URI, '/') : '';
+
+        $van_slugs  = self::termSlugs($product_id, 'pa_van-gach');
+        $mat_slugs  = self::termSlugs($product_id, 'pa_chat-lieu');
+        $func_slugs = self::termSlugs($product_id, 'pa_cong-nang');
+        $surf_slugs = self::termSlugs($product_id, 'pa_be-mat');
+        $col_slugs  = self::termSlugs($product_id, 'pa_mau-sac');
+        $room_slugs = self::termSlugs($product_id, 'pa_khong-gian');
+
+        $tile = 'tile-marble-calacatta.svg';
+        if (in_array('gia-go', $van_slugs, true)) {
+            $tile = 'tile-wood-oak.svg';
+        } elseif (in_array('terrazzo', $van_slugs, true)) {
+            $tile = 'tile-terrazzo-ivory.svg';
+        } elseif (in_array('van-xi-mang', $van_slugs, true)) {
+            $tile = in_array('den', $col_slugs, true) ? 'tile-cement-dark.svg' : 'tile-cement-grey.svg';
+        } elseif (in_array('da-nung-ket', $mat_slugs, true) && in_array('nau', $col_slugs, true)) {
+            $tile = 'tile-sintered-emperador.svg';
+        } elseif (in_array('nham', $surf_slugs, true) || in_array('san-vuon', $room_slugs, true)) {
+            $tile = 'tile-structured-outdoor.svg';
+        } elseif (in_array('gach-the', $func_slugs, true) || in_array('trang-tri', $func_slugs, true)) {
+            $tile = 'tile-decor-fluted.svg';
+        }
+
+        $room = 'room-living-calacatta.jpg';
+        if (in_array('gia-go', $van_slugs, true) || in_array('phong-ngu', $room_slugs, true) && !in_array('phong-khach', $room_slugs, true)) {
+            $room = 'room-bedroom-wood.jpg';
+        } elseif (in_array('san-vuon', $room_slugs, true)) {
+            $room = 'room-outdoor-patio.jpg';
+        } elseif (in_array('ho-boi', $room_slugs, true)) {
+            $room = 'room-pool-mosaic.jpg';
+        } elseif (in_array('da-nung-ket', $mat_slugs, true) && in_array('nau', $col_slugs, true)) {
+            $room = 'room-facade-stone.jpg';
+        } elseif (in_array('van-xi-mang', $van_slugs, true) || in_array('gach-the', $func_slugs, true)) {
+            $room = 'room-kitchen-cement.jpg';
+        } elseif (in_array('terrazzo', $van_slugs, true) || in_array('nha-tam', $room_slugs, true)) {
+            $room = 'room-bathroom-terrazzo.jpg';
+        } elseif (in_array('ngoai-troi', $room_slugs, true)) {
+            $room = 'room-balcony-terrace.jpg';
+        } elseif (in_array('mat-tien', $room_slugs, true) && !in_array('phong-khach', $room_slugs, true)) {
+            $room = 'room-facade-stone.jpg';
+        }
+
+        return [
+            'primary' => $base . '/assets/images/placeholders/' . $tile,
+            'hover'   => $base . '/assets/images/rooms/' . $room,
+        ];
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private static function termSlugs(int $product_id, string $taxonomy): array {
+        if ($product_id <= 0 || !function_exists('get_the_terms')) {
+            return [];
+        }
+        $terms = get_the_terms($product_id, $taxonomy);
+        if (!is_array($terms) || $terms === []) {
+            return [];
+        }
+        $slugs = [];
+        foreach ($terms as $term) {
+            if ($term instanceof \WP_Term && $term->slug !== '') {
+                $slugs[] = $term->slug;
+            }
+        }
+        return $slugs;
     }
 }
 

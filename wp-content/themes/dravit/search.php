@@ -51,7 +51,7 @@ $matched_silos = $raw_query !== ''
                     ?>
                 <?php endif; ?>
 
-                <div class="l-grout-grid" data-cols="4">
+                <div class="l-grout-grid" data-cols="4" data-drv-search-results>
                     <?php
                     $card_idx = 0;
                     while (have_posts()) :

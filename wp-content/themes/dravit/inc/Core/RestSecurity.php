@@ -62,6 +62,47 @@ final class RestSecurity implements ServiceProviderInterface {
     }
 
     /**
+     * Xác thực header Origin / Referer cùng tên miền với site (chống CSRF từ site bên thứ 3).
+     */
+    public static function verifyOrigin(\WP_REST_Request $request): ?\WP_Error {
+        if (!function_exists('home_url') || !function_exists('wp_parse_url')) {
+            return null;
+        }
+
+        $expected_host = strtolower((string) wp_parse_url(home_url('/'), PHP_URL_HOST));
+        if ($expected_host === '') {
+            return null;
+        }
+
+        $origin = trim((string) $request->get_header('origin'));
+        if ($origin !== '') {
+            $origin_host = strtolower((string) wp_parse_url($origin, PHP_URL_HOST));
+            if ($origin_host === '' || $origin_host !== $expected_host) {
+                return new \WP_Error(
+                    'drv_bad_origin',
+                    'Nguồn yêu cầu không hợp lệ.',
+                    ['status' => 403]
+                );
+            }
+            return null;
+        }
+
+        $referer = trim((string) $request->get_header('referer'));
+        if ($referer !== '') {
+            $ref_host = strtolower((string) wp_parse_url($referer, PHP_URL_HOST));
+            if ($ref_host !== '' && $ref_host !== $expected_host) {
+                return new \WP_Error(
+                    'drv_bad_origin',
+                    'Nguồn tham chiếu không hợp lệ.',
+                    ['status' => 403]
+                );
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Kiểm tra giới hạn tần suất gọi API theo IP.
      */
     public static function checkRateLimit(string $bucket, int $max_requests, int $window_seconds): ?\WP_Error {

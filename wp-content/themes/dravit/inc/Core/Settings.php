@@ -67,8 +67,8 @@ final class Settings implements ServiceProviderInterface {
                     'phone'       => '0909 888 777',
                     'hours'       => '08:00 - 21:00 (T2 - CN)',
                     'maps_url'    => 'https://maps.google.com',
-                    'cool_img_id' => 0,
-                    'warm_img_id' => 0,
+                    'after_img_id' => 0,
+                    'before_img_id' => 0,
                 ],
             ],
             'bank'     => [
@@ -104,8 +104,16 @@ final class Settings implements ServiceProviderInterface {
                 '404_silos' => ['gach-lat-nen', 'gach-phong-khach', 'gach-van-da', 'gach-80x80'],
             ],
             'search'   => [
-                'popular_keywords' => ['80x80', 'Vân đá Marble', 'Terrazzo', 'Khổ lớn 60x120', 'Chống trượt R10'],
-                'featured_silos'   => ['gach-lat-nen', 'gach-phong-khach', 'gach-80x80', 'da-nung-ket'],
+                'popular_keywords'   => ['80x80', 'Vân đá Marble', 'Terrazzo', 'Khổ lớn 60x120', 'Chống trượt R10'],
+                'featured_silos'     => [
+                    'gach-phong-khach',
+                    'gach-nha-tam',
+                    'gach-phong-bep',
+                    'gach-san-vuon',
+                    'gach-mat-tien',
+                    'gach-80x80',
+                ],
+                'pinned_product_ids' => [],
             ],
             'seo'      => [
                 'llms_enabled'      => true,
@@ -207,8 +215,8 @@ final class Settings implements ServiceProviderInterface {
                     'phone'       => $text($sr['phone'] ?? ''),
                     'hours'       => $text($sr['hours'] ?? ''),
                     'maps_url'    => $url($sr['maps_url'] ?? ''),
-                    'cool_img_id' => max(0, (int) ($sr['cool_img_id'] ?? 0)),
-                    'warm_img_id' => max(0, (int) ($sr['warm_img_id'] ?? 0)),
+                    'after_img_id' => max(0, (int) ($sr['after_img_id'] ?? 0)),
+                    'before_img_id' => max(0, (int) ($sr['before_img_id'] ?? 0)),
                 ];
             }
             if ($clean_rooms !== []) {
@@ -272,16 +280,22 @@ final class Settings implements ServiceProviderInterface {
         }
 
         if (isset($input['search']) && is_array($input['search'])) {
-            if (isset($input['search']['popular_keywords']) && is_array($input['search']['popular_keywords'])) {
-                $keywords = [];
-                foreach ($input['search']['popular_keywords'] as $kw) {
-                    $clean_kw = $text($kw);
-                    if ($clean_kw !== '') {
-                        $keywords[] = $clean_kw;
-                    }
+            if (array_key_exists('popular_keywords', $input['search'])) {
+                $raw_kws = $input['search']['popular_keywords'];
+                if (is_string($raw_kws)) {
+                    $raw_kws = preg_split('/[\r\n,]+/', $raw_kws) ?: [];
                 }
-                if ($keywords !== []) {
-                    $base['search']['popular_keywords'] = array_slice($keywords, 0, 10);
+                if (is_array($raw_kws)) {
+                    $keywords = [];
+                    foreach ($raw_kws as $kw) {
+                        $clean_kw = $text($kw);
+                        if ($clean_kw !== '' && !in_array($clean_kw, $keywords, true)) {
+                            $keywords[] = $clean_kw;
+                        }
+                    }
+                    $base['search']['popular_keywords'] = $keywords !== []
+                        ? array_slice($keywords, 0, 8)
+                        : self::defaults()['search']['popular_keywords'];
                 }
             }
             if (isset($input['search']['featured_silos']) && is_array($input['search']['featured_silos'])) {
@@ -290,13 +304,23 @@ final class Settings implements ServiceProviderInterface {
                     $clean_silo = function_exists('sanitize_key')
                         ? sanitize_key((string) $silo)
                         : (string) preg_replace('/[^a-z0-9_\-]/', '', strtolower((string) $silo));
-                    if ($clean_silo !== '') {
+                    if ($clean_silo !== '' && !in_array($clean_silo, $f_silos, true)) {
                         $f_silos[] = $clean_silo;
                     }
                 }
-                if ($f_silos !== []) {
-                    $base['search']['featured_silos'] = array_slice($f_silos, 0, 8);
+                $base['search']['featured_silos'] = $f_silos !== []
+                    ? array_slice($f_silos, 0, 6)
+                    : self::defaults()['search']['featured_silos'];
+            }
+            if (isset($input['search']['pinned_product_ids']) && is_array($input['search']['pinned_product_ids'])) {
+                $pinned = [];
+                foreach ($input['search']['pinned_product_ids'] as $raw_pid) {
+                    $pid = max(0, (int) $raw_pid);
+                    if ($pid > 0 && !in_array($pid, $pinned, true)) {
+                        $pinned[] = $pid;
+                    }
                 }
+                $base['search']['pinned_product_ids'] = array_slice($pinned, 0, \Dravit\Catalog\SearchTrending::MAX_PINNED);
             }
         }
 
@@ -340,10 +364,39 @@ final class Settings implements ServiceProviderInterface {
         if (self::$cache === null) {
             $stored      = function_exists('get_option') ? get_option(self::OPTION_KEY, []) : [];
             $stored      = is_array($stored) ? $stored : [];
-            self::$cache = array_replace_recursive(self::defaults(), $stored);
+            self::$cache = self::mergeDefaults(self::defaults(), $stored);
         }
 
         return self::$cache;
+    }
+
+    /**
+     * Hợp nhất đệ quy mảng kết hợp nhưng thay thế nguyên vẹn mảng tuần tự (`array_is_list`)
+     * để tránh rò rỉ phần tử mặc định khi Admin lưu danh sách ngắn hơn.
+     *
+     * @param array<string, mixed> $defaults
+     * @param array<string, mixed> $stored
+     * @return array<string, mixed>
+     */
+    private static function mergeDefaults(array $defaults, array $stored): array {
+        foreach ($stored as $key => $val) {
+            if (!is_string($key)) {
+                continue;
+            }
+            if (
+                isset($defaults[$key])
+                && is_array($defaults[$key])
+                && is_array($val)
+                && !array_is_list($defaults[$key])
+                && !array_is_list($val)
+            ) {
+                $defaults[$key] = self::mergeDefaults($defaults[$key], $val);
+            } else {
+                $defaults[$key] = $val;
+            }
+        }
+
+        return $defaults;
     }
 
     public static function get(string $path, mixed $default = null): mixed {

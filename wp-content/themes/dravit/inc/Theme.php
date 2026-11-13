@@ -9,6 +9,9 @@ use Dravit\Admin\ProductFields;
 use Dravit\Admin\SettingsPage;
 use Dravit\Admin\TermFields;
 use Dravit\Admin\ToolsResync;
+use Dravit\Advisor\AdvisorController;
+use Dravit\Advisor\Catalog\SnapshotBuilder;
+use Dravit\Advisor\Log\CptAdvisorLogger;
 use Dravit\Catalog\CliCommand;
 use Dravit\Catalog\CollectionSync;
 use Dravit\Catalog\SaleSync;
@@ -23,6 +26,7 @@ use Dravit\Core\Integrations\RankMathCompat;
 use Dravit\Core\Integrations\WooCompat;
 use Dravit\Core\Menu\MegaMenuRenderer;
 use Dravit\Core\Menu\MenuSetup;
+use Dravit\Core\NonceController;
 use Dravit\Core\RestSecurity;
 use Dravit\Core\ServiceProviderInterface;
 use Dravit\Core\Settings;
@@ -77,6 +81,7 @@ final class Theme {
             Settings::class,
             Setup::class,
             RestSecurity::class,
+            NonceController::class,
             SlugGuard::class,
             TrailingSlashRedirect::class,
             Canonical::class,
@@ -86,6 +91,8 @@ final class Theme {
             SchemaGraph::class,
             LlmsTxt::class,
             SearchController::class,
+            CptAdvisorLogger::class,
+            AdvisorController::class,
             MenuSetup::class,
             MegaMenuRenderer::class,
             Cleanup::class,
@@ -105,6 +112,7 @@ final class Theme {
             $providers[] = WooProductHooks::class;
             $providers[] = CollectionSync::class;
             $providers[] = SaleSync::class;
+            $providers[] = SnapshotBuilder::class;
 
             if ($is_admin) {
                 $providers[] = ProductFields::class;

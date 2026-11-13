@@ -13,6 +13,12 @@ final class Cleanup implements ServiceProviderInterface {
         add_action('wp_enqueue_scripts', [$this, 'prevent_unregistered_variation_notice'], 0);
         add_action('wp_enqueue_scripts', [$this, 'optimize_frontend_core_assets'], 20);
         add_filter('heartbeat_settings', [$this, 'throttle_admin_heartbeat']);
+
+        // Classic Editor (TinyMCE) thay Gutenberg cho toàn bộ post type + widgets.
+        add_filter('use_block_editor_for_post', '__return_false', 100);
+        add_filter('use_block_editor_for_post_type', '__return_false', 100);
+        add_filter('gutenberg_can_edit_post_type', '__return_false', 100);
+        add_filter('use_widgets_block_editor', '__return_false');
     }
 
     public function clean_head(): void {

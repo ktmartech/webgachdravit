@@ -16,7 +16,8 @@ defined('ABSPATH') || exit;
  * (docs/15 §2.2, docs/19 §3.3–3.5, docs/21 Step 3.3).
  */
 class SearchController implements ServiceProviderInterface {
-    private const CACHE_TTL = 600;
+    private const CACHE_TTL      = 600;
+    private const INIT_CACHE_KEY = 'drv_srch_init_';
 
     /** @var array<int, int>|null Bộ nhớ đệm danh sách ID khớp cho SSR search query */
     private ?array $ssr_matched_ids = null;
@@ -26,6 +27,17 @@ class SearchController implements ServiceProviderInterface {
         add_action('pre_get_posts', [$this, 'configure_ssr_search_query'], 20);
         add_filter('posts_search', [$this, 'override_ssr_posts_search'], 20, 2);
         add_filter('posts_orderby', [$this, 'override_ssr_posts_orderby'], 20, 2);
+        add_action('update_option_drv_settings', [self::class, 'purgeInitialCache']);
+        add_action('add_option_drv_settings', [self::class, 'purgeInitialCache']);
+        add_action('wp_trash_post', [$this, 'release_pinned_on_delete']);
+        add_action('before_delete_post', [$this, 'release_pinned_on_delete']);
+        add_action('shutdown', [$this, 'maybe_flush_trending_buffer']);
+    }
+
+    public function release_pinned_on_delete(int $post_id): void {
+        if ($post_id > 0) {
+            SearchTrending::setProductPinned($post_id, false);
+        }
     }
 
     public function register_routes(): void {
@@ -46,6 +58,126 @@ class SearchController implements ServiceProviderInterface {
                 ],
             ],
         ]);
+
+        register_rest_route('dravit/v1', '/search/hit', [
+            'methods'             => \WP_REST_Server::CREATABLE,
+            'callback'            => [$this, 'handle_search_hit'],
+            'permission_callback' => '__return_true',
+            'args'                => [
+                'product_id' => [
+                    'type'              => 'integer',
+                    'required'          => true,
+                    'sanitize_callback' => static fn (mixed $v): int => max(0, (int) $v),
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * Trả về payload mặc định khi mở ô tìm kiếm (`q === ''`):
+     * 5 từ khóa phổ biến + 6 danh mục phổ biến + 4 sản phẩm tìm kiếm nhiều (Hybrid 3 tầng).
+     *
+     * @return array<string, mixed>
+     */
+    public static function getInitialPayload(): array {
+        $cache_ver = function_exists('get_option') ? (int) get_option('drv_cache_ver', 1) : 1;
+        $cache_key = self::INIT_CACHE_KEY . $cache_ver;
+
+        if (function_exists('get_transient')) {
+            $cached = get_transient($cache_key);
+            if (is_array($cached)) {
+                return $cached;
+            }
+        }
+
+        $popular = drv_setting('search.popular_keywords', ['80x80', 'Vân đá Marble', 'Terrazzo', 'Khổ lớn 60x120', 'Chống trượt R10']);
+        $popular = is_array($popular) ? array_values(array_map('strval', $popular)) : [];
+
+        $default_silos  = ['gach-phong-khach', 'gach-nha-tam', 'gach-phong-bep', 'gach-san-vuon', 'gach-mat-tien', 'gach-80x80'];
+        $featured_slugs = drv_setting('search.featured_silos', $default_silos);
+        $featured_slugs = is_array($featured_slugs) && $featured_slugs !== []
+            ? array_slice(array_values(array_map('strval', $featured_slugs)), 0, 6)
+            : $default_silos;
+
+        $trending_ids      = SearchTrending::resolveTrendingIds(SearchTrending::DEFAULT_LIMIT);
+        $trending_products = [];
+
+        if (function_exists('wc_get_product')) {
+            foreach ($trending_ids as $pid) {
+                $product = wc_get_product($pid);
+                if (!$product instanceof \WC_Product || $product->get_status() !== 'publish') {
+                    continue;
+                }
+                $trending_products[] = self::formatSearchProduct($product);
+            }
+        }
+
+        $payload = [
+            'query'            => '',
+            'mode'             => 'trending',
+            'popular_keywords' => $popular,
+            'silos'            => self::hydrateSilos($featured_slugs),
+            'products'         => $trending_products,
+            'total'            => count($trending_products),
+            'view_all'         => function_exists('home_url')
+                ? UrlNormalizer::untrailingslashUrl(home_url('/gach'))
+                : '/gach',
+        ];
+
+        if (function_exists('set_transient')) {
+            set_transient($cache_key, $payload, self::CACHE_TTL);
+        }
+
+        return $payload;
+    }
+
+    public static function purgeInitialCache(): void {
+        if (!function_exists('delete_transient') || !function_exists('get_option')) {
+            return;
+        }
+        $cache_ver = (int) get_option('drv_cache_ver', 1);
+        delete_transient(self::INIT_CACHE_KEY . $cache_ver);
+    }
+
+    public function maybe_flush_trending_buffer(): void {
+        if (!function_exists('get_transient')) {
+            return;
+        }
+        $buf = get_transient(SearchTrending::BUFFER_TRANSIENT);
+        if (!is_array($buf) || $buf === []) {
+            return;
+        }
+        $last = (int) get_transient(SearchTrending::LAST_FLUSH_TRANSIENT);
+        if ((time() - $last) >= SearchTrending::FLUSH_INTERVAL) {
+            SearchTrending::flushBufferNow();
+        }
+    }
+
+    public function handle_search_hit(\WP_REST_Request $request): \WP_REST_Response {
+        $rate_err = RestSecurity::checkRateLimit('search_hit', 30, 60);
+        if ($rate_err instanceof \WP_Error) {
+            $err_data    = $rate_err->get_error_data();
+            $retry_after = is_array($err_data) && isset($err_data['retry_after']) ? (int) $err_data['retry_after'] : 60;
+            $resp        = new \WP_REST_Response([
+                'code'    => $rate_err->get_error_code(),
+                'message' => $rate_err->get_error_message(),
+                'data'    => ['status' => 429],
+            ], 429);
+            $resp->header('Retry-After', (string) $retry_after);
+            return $resp;
+        }
+
+        $product_id = max(0, (int) $request->get_param('product_id'));
+        $result     = SearchTrending::recordProductClick($product_id, RestSecurity::getClientIp());
+
+        $resp = new \WP_REST_Response([
+            'ok'       => true,
+            'recorded' => $result['recorded'],
+        ], 200);
+        $resp->header('Cache-Control', 'no-store, private');
+        $resp->header('X-Robots-Tag', 'noindex, nofollow');
+
+        return $resp;
     }
 
     public function handle_search(\WP_REST_Request $request): \WP_REST_Response|\WP_Error {
@@ -68,19 +200,10 @@ class SearchController implements ServiceProviderInterface {
         $popular = drv_setting('search.popular_keywords', ['80x80', 'Vân đá Marble', 'Terrazzo', 'Khổ lớn 60x120', 'Chống trượt R10']);
         $popular = is_array($popular) ? array_values(array_map('strval', $popular)) : [];
 
-        // Truy vấn rỗng hoặc < 2 ký tự: trả tức thì từ khóa phổ biến & Silo nổi bật mà không đụng bảng sản phẩm.
+        // Truy vấn rỗng hoặc < 2 ký tự: trả tức thì 6 danh mục phổ biến + 4 sản phẩm tìm kiếm nhiều (Hybrid 3 tầng).
         if (mb_strlen($raw_q) < 2) {
-            $featured_slugs = drv_setting('search.featured_silos', ['gach-lat-nen', 'gach-phong-khach', 'gach-80x80', 'da-nung-ket']);
-            $featured_slugs = is_array($featured_slugs) ? array_map('strval', $featured_slugs) : [];
-
-            $empty_payload = [
-                'query'            => $raw_q,
-                'popular_keywords' => $popular,
-                'silos'            => $this->hydrate_silos($featured_slugs),
-                'products'         => [],
-                'total'            => 0,
-                'view_all'         => UrlNormalizer::untrailingslashUrl(home_url('/gach')),
-            ];
+            $empty_payload          = self::getInitialPayload();
+            $empty_payload['query'] = $raw_q;
 
             return $this->make_cached_response($empty_payload);
         }
@@ -96,7 +219,7 @@ class SearchController implements ServiceProviderInterface {
         }
 
         $collections_cfg = Config::get('collections');
-        $matched_silos   = SearchNormalizer::matchCollectionSlugs($raw_q, $collections_cfg, 4);
+        $matched_silos   = SearchNormalizer::matchCollectionSlugs($raw_q, $collections_cfg, 6);
 
         $db_result = self::queryRankedProducts($raw_q, $limit);
         $products  = [];
@@ -118,8 +241,9 @@ class SearchController implements ServiceProviderInterface {
 
         $payload = [
             'query'            => $raw_q,
+            'mode'             => 'results',
             'popular_keywords' => $popular,
-            'silos'            => $this->hydrate_silos($matched_silos),
+            'silos'            => self::hydrateSilos($matched_silos),
             'products'         => $products,
             'total'            => $db_result['total'],
             'view_all'         => $view_all,
@@ -361,7 +485,7 @@ class SearchController implements ServiceProviderInterface {
      * @param array<int, string> $slugs
      * @return array<int, array<string, mixed>>
      */
-    private function hydrate_silos(array $slugs): array {
+    public static function hydrateSilos(array $slugs): array {
         $collections  = Config::get('collections');
         $group_labels = [
             'root'     => 'Danh mục gốc',
@@ -371,12 +495,14 @@ class SearchController implements ServiceProviderInterface {
             'size'     => 'Kích thước',
         ];
 
-        $items = [];
+        $items      = [];
+        $seen_slugs = [];
         foreach ($slugs as $slug) {
             $clean_slug = strtolower(trim($slug));
-            if ($clean_slug === '' || !isset($collections[$clean_slug])) {
+            if ($clean_slug === '' || isset($seen_slugs[$clean_slug]) || !isset($collections[$clean_slug])) {
                 continue;
             }
+            $seen_slugs[$clean_slug] = true;
             $cfg   = $collections[$clean_slug];
             $id    = 0;
             $count = 0;

@@ -1,0 +1,63 @@
+id: kb-quy-trinh-tu-van
+topic: quy-trinh
+version: "1.0.0"
+reviewed_by: "Ban Kỹ Thuật DRAVIT"
+reviewed_at: "2026-11-13"
+
+slot_priority:
+  - space
+  - area_m2
+  - special
+  - vein
+  - color
+  - budget_max_vnd
+
+clarifications:
+  space:
+    question: "Bạn đang tìm gạch cho khu vực nào để mình khóa đúng chuẩn chống trượt R?"
+    chips:
+      - "Phòng khách"
+      - "Nhà tắm"
+      - "Phòng bếp"
+      - "Phòng ngủ"
+      - "Sân vườn ngoài trời"
+  area_m2:
+    question: "Diện tích khu vực cần lát khoảng bao nhiêu m² để mình tính sẵn số thùng chẵn (đã cộng hao hụt)?"
+    chips:
+      - "Khoảng 6 m²"
+      - "Khoảng 15 m²"
+      - "Khoảng 28 m²"
+      - "Khoảng 45 m²"
+  special:
+    question: "Gia đình có người lớn tuổi, trẻ nhỏ hay khu vực thường xuyên ướt nước không?"
+    chips:
+      - "Có người lớn tuổi / trẻ nhỏ"
+      - "Khu vực khô ráo trong nhà"
+      - "Thường xuyên tiếp xúc nước"
+  vein:
+    question: "Bạn ưu tiên họa tiết vân đá, vân xi măng tối giản, Terrazzo hay giả gỗ?"
+    chips:
+      - "Vân đá Marble sang trọng"
+      - "Vân xi măng tối giản"
+      - "Giả gỗ ấm chân"
+      - "Hạt đá Terrazzo"
+  color:
+    question: "Bạn thích tông màu sáng rộng phòng hay tông xám / kem trung tính?"
+    chips:
+      - "Trắng sáng"
+      - "Kem ấm"
+      - "Xám trung tính"
+      - "Nâu gỗ"
+  budget_max_vnd:
+    question: "Ngân sách dự kiến mỗi m² của bạn nằm trong khoảng nào?"
+    chips:
+      - "Dưới 300.000đ/m²"
+      - "Dưới 400.000đ/m²"
+      - "Dưới 550.000đ/m²"
+      - "Dòng cao cấp / Big Slab"
+
+handoff_triggers:
+  - "khối lượng trên 200 m² cần giữ lô đồng màu (Shade)"
+  - "yêu cầu cắt CNC bậc cầu thang, len tường hoặc mặt bàn bếp theo bản vẽ"
+  - "cần gửi mẫu viên thực tế tới công trình"
+

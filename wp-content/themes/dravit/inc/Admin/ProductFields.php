@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Dravit\Admin;
 
+use Dravit\Catalog\SearchTrending;
 use Dravit\Core\Config;
 use Dravit\Core\ServiceProviderInterface;
 use Dravit\Units\Calc;
@@ -19,6 +20,7 @@ final class ProductFields implements ServiceProviderInterface {
         add_filter('woocommerce_product_data_tabs', [$this, 'add_product_tab'], 15);
         add_action('woocommerce_product_data_panels', [$this, 'render_product_panel']);
         add_action('woocommerce_admin_process_product_object', [$this, 'save_product_fields'], 10, 1);
+        add_action('woocommerce_process_product_meta', [$this, 'save_search_pin_meta'], 20, 1);
         add_action('add_meta_boxes', [$this, 'cleanup_meta_boxes'], 40);
         add_action('admin_notices', [$this, 'render_primary_reassigned_notice']);
         add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_style']);
@@ -50,6 +52,86 @@ final class ProductFields implements ServiceProviderInterface {
 
     public function cleanup_meta_boxes(): void {
         remove_meta_box('postcustom', 'product', 'normal');
+        add_meta_box(
+            'drv_search_pin_box',
+            'Gợi ý Tìm kiếm Dravit',
+            [$this, 'render_search_pin_metabox'],
+            'product',
+            'side',
+            'default'
+        );
+    }
+
+    public function render_search_pin_metabox(\WP_Post $post): void {
+        $post_id      = (int) $post->ID;
+        $max_pinned   = SearchTrending::MAX_PINNED;
+        $pinned_ids   = SearchTrending::getPinnedIds();
+        $pinned_items = SearchTrending::describePinnedProducts($pinned_ids);
+        $pinned_count = count($pinned_ids);
+        $pos_idx      = $post_id > 0 ? array_search($post_id, $pinned_ids, true) : false;
+        $is_pinned    = $pos_idx !== false;
+        $is_locked    = !$is_pinned && $pinned_count >= $max_pinned;
+        $hits_count   = $post_id > 0 ? max(0, (int) get_post_meta($post_id, SearchTrending::META_HITS, true)) : 0;
+        $settings_url = admin_url('themes.php?page=' . SettingsPage::MENU_SLUG . '&tab=search');
+
+        wp_nonce_field('drv_save_search_pin', 'drv_search_pin_nonce');
+        ?>
+        <input type="hidden" name="drv_search_pin_present" value="1">
+        <p style="margin-top:4px;">
+            <label for="drv_pin_in_search">
+                <input type="checkbox"
+                       id="drv_pin_in_search"
+                       name="drv_pin_in_search"
+                       value="1"
+                       <?php checked($is_pinned); ?>
+                       <?php disabled($is_locked); ?>>
+                <strong>Ghim lên &ldquo;Sản phẩm tìm kiếm nhiều&rdquo;</strong>
+            </label>
+        </p>
+
+        <p class="description" style="margin:6px 0;">
+            Đang ghim toàn hệ thống: <strong><?php echo esc_html($pinned_count . '/' . $max_pinned); ?></strong> sản phẩm
+            <?php if ($is_pinned && is_int($pos_idx)) : ?>
+                &middot; <strong>Vị trí #<?php echo esc_html((string) ($pos_idx + 1)); ?></strong>
+            <?php elseif (!$is_locked) : ?>
+                &middot; Còn trống <?php echo esc_html((string) ($max_pinned - $pinned_count)); ?> vị trí
+            <?php endif; ?>
+            <br>
+            Lượt click từ tìm kiếm: <strong><?php echo esc_html((string) $hits_count); ?></strong> lượt
+        </p>
+
+        <?php if ($is_locked) : ?>
+            <div class="notice notice-warning inline" style="margin:8px 0 4px;padding:6px 10px;">
+                <p style="margin:0 0 4px;">
+                    <strong>Đã đầy tối đa <?php echo esc_html($max_pinned . '/' . $max_pinned); ?> vị trí ghim.</strong>
+                    Không thể ghim thêm sản phẩm này.
+                </p>
+                <?php if ($pinned_items !== []) : ?>
+                    <p style="margin:0 0 4px;font-size:12px;">
+                        Đang chiếm chỗ:
+                        <?php
+                        $links = [];
+                        foreach ($pinned_items as $p_item) {
+                            if ($p_item['edit_url'] !== '') {
+                                $links[] = '<a href="' . esc_url($p_item['edit_url']) . '">' . esc_html($p_item['sku']) . '</a>';
+                            } else {
+                                $links[] = esc_html($p_item['sku']);
+                            }
+                        }
+                        echo implode(', ', $links); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Each link escaped via esc_url & esc_html right above
+                        ?>
+                    </p>
+                <?php endif; ?>
+                <p style="margin:0;font-size:12px;">
+                    <a href="<?php echo esc_url($settings_url); ?>">Mở Cài đặt Tìm kiếm để gỡ bớt &rarr;</a>
+                </p>
+            </div>
+        <?php else : ?>
+            <p style="margin:4px 0 0;font-size:12px;">
+                <a href="<?php echo esc_url($settings_url); ?>">Sắp xếp thứ tự ghim (1&rarr;<?php echo esc_html((string) $max_pinned); ?>) &rarr;</a>
+            </p>
+        <?php endif; ?>
+        <?php
     }
 
     public function render_product_panel(): void {
@@ -595,6 +677,54 @@ final class ProductFields implements ServiceProviderInterface {
         }
     }
 
+    public function save_search_pin_meta(int $post_id): void {
+        if ($post_id <= 0 || !current_user_can('edit_products')) {
+            return;
+        }
+
+        $nonce = isset($_POST['drv_search_pin_nonce'])
+            ? sanitize_text_field(wp_unslash((string) $_POST['drv_search_pin_nonce']))
+            : '';
+        if ($nonce === '' || !wp_verify_nonce($nonce, 'drv_save_search_pin')) {
+            return;
+        }
+
+        if (!isset($_POST['drv_search_pin_present'])) {
+            return;
+        }
+
+        $wants_pin = !empty($_POST['drv_pin_in_search']);
+        $result    = SearchTrending::setProductPinned($post_id, $wants_pin);
+        $count     = count($result['pinned_ids']);
+        $max       = SearchTrending::MAX_PINNED;
+
+        if ($result['status'] === 'limit_reached') {
+            $skus = array_map(
+                static fn (array $it): string => $it['sku'],
+                SearchTrending::describePinnedProducts($result['pinned_ids'])
+            );
+            set_transient('drv_pin_notice_' . $post_id, [
+                'type' => 'error',
+                'msg'  => sprintf(
+                    'Không thể ghim sản phẩm này: Danh sách "Sản phẩm tìm kiếm nhiều" đã đầy tối đa %d/%d mẫu (%s). Vui lòng gỡ bớt 1 mẫu trước khi ghim thêm.',
+                    $max,
+                    $max,
+                    implode(', ', $skus)
+                ),
+            ], 60);
+        } elseif ($result['status'] === 'pinned') {
+            set_transient('drv_pin_notice_' . $post_id, [
+                'type' => 'success',
+                'msg'  => sprintf('Đã ghim sản phẩm lên mục "Sản phẩm tìm kiếm nhiều" (%d/%d).', $count, $max),
+            ], 60);
+        } elseif ($result['status'] === 'unpinned') {
+            set_transient('drv_pin_notice_' . $post_id, [
+                'type' => 'info',
+                'msg'  => sprintf('Đã gỡ sản phẩm khỏi danh sách ghim tìm kiếm (còn %d/%d).', $count, $max),
+            ], 60);
+        }
+    }
+
     public function render_primary_reassigned_notice(): void {
         if (!function_exists('get_current_screen')) {
             return;
@@ -611,11 +741,25 @@ final class ProductFields implements ServiceProviderInterface {
         }
 
         $msg = get_transient('drv_primary_reassigned_' . $post_id);
-        if (!is_string($msg) || $msg === '') {
-            return;
+        if (is_string($msg) && $msg !== '') {
+            delete_transient('drv_primary_reassigned_' . $post_id);
+            echo '<div class="notice notice-info is-dismissible"><p>' . esc_html($msg) . '</p></div>';
         }
 
-        delete_transient('drv_primary_reassigned_' . $post_id);
-        echo '<div class="notice notice-info is-dismissible"><p>' . esc_html($msg) . '</p></div>';
+        $pin_notice = get_transient('drv_pin_notice_' . $post_id);
+        if (is_array($pin_notice) && isset($pin_notice['msg']) && is_string($pin_notice['msg']) && $pin_notice['msg'] !== '') {
+            delete_transient('drv_pin_notice_' . $post_id);
+            $type         = in_array($pin_notice['type'] ?? '', ['error', 'warning', 'success', 'info'], true)
+                ? (string) $pin_notice['type']
+                : 'info';
+            $settings_url = admin_url('themes.php?page=' . SettingsPage::MENU_SLUG . '&tab=search');
+            printf(
+                '<div class="notice notice-%s is-dismissible"><p>%s <a href="%s">%s</a></p></div>',
+                esc_attr($type),
+                esc_html($pin_notice['msg']),
+                esc_url($settings_url),
+                esc_html('Quản lý danh sách ghim →')
+            );
+        }
     }
 }

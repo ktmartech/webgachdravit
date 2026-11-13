@@ -74,14 +74,14 @@ $popular_kws   = is_array($popular_kws) ? $popular_kws : [];
         <div class="drv-search-drop__grid">
             <div class="drv-search-drop__col drv-search-drop__col--silo">
                 <div class="drv-search-drop__col-head">
-                    <span class="drv-mega__heading" data-search-silo-heading>Danh mục &amp; Kích thước</span>
+                    <span class="drv-mega__heading" data-search-silo-heading>Danh mục phổ biến</span>
                 </div>
                 <ul class="drv-search-silo-list" role="presentation" data-search-silos></ul>
             </div>
             <div class="drv-search-drop__col">
                 <div class="drv-search-drop__col-head">
-                    <span class="drv-mega__heading" data-search-prod-heading>Sản phẩm khớp mã SKU / tên</span>
-                    <a href="<?php echo esc_url($all_gach_url); ?>" class="drv-link u-text-xs" data-search-view-all>Xem tất cả danh mục</a>
+                    <span class="drv-mega__heading" data-search-prod-heading>Sản phẩm tìm kiếm nhiều</span>
+                    <a href="<?php echo esc_url($all_gach_url); ?>" class="drv-link u-text-xs" data-search-view-all>Xem toàn bộ kho</a>
                 </div>
                 <ul class="drv-search-prod-list" role="presentation" data-search-products></ul>
             </div>
