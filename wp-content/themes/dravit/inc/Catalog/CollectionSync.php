@@ -185,9 +185,10 @@ final class CollectionSync implements ServiceProviderInterface {
 
         $cat_changed = $this->set_terms_if_changed($product_id, $final_tids, 'product_cat');
 
-        // 4. Đồng bộ Danh mục chính (`PrimaryCategory`, ADR D-27).
+        // 4. Đồng bộ Danh mục chính (`PrimaryCategory`, ADR D-27) & chỉ mục tìm kiếm không dấu `_drv_search_index`.
         $all_assigned_slugs = array_values(array_unique(array_merge($matched_slugs, $manual_slugs)));
         PrimaryCategory::syncForProduct($product_id, $all_assigned_slugs, $slug_to_tid, $collections_cfg);
+        SearchIndex::syncProduct($product);
 
         // 5. Invalidate cache & bắn action mở rộng.
         $this->invalidate_caches($product_id, $cat_changed);

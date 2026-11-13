@@ -23,6 +23,7 @@ final class CliCommand implements ServiceProviderInterface {
         \WP_CLI::add_command('dravit seed-catalog', [$this, 'seed_catalog']);
         \WP_CLI::add_command('dravit seed-products', [$this, 'seed_products']);
         \WP_CLI::add_command('dravit resync-catalog', [$this, 'resync_catalog']);
+        \WP_CLI::add_command('dravit reindex-search', [$this, 'reindex_search']);
         \WP_CLI::add_command('dravit import-master', [$this, 'import_master']);
     }
 
@@ -74,6 +75,35 @@ final class CliCommand implements ServiceProviderInterface {
 
         if (class_exists('\WP_CLI')) {
             \WP_CLI::success(sprintf('Đã đồng bộ lại %d sản phẩm.', $total));
+        }
+    }
+
+    public function reindex_search(): void {
+        if (!function_exists('wc_get_products')) {
+            return;
+        }
+
+        $page  = 1;
+        $total = 0;
+
+        do {
+            /** @var array<int, \WC_Product> $batch */
+            $batch = wc_get_products([
+                'limit'  => 50,
+                'page'   => $page,
+                'status' => ['publish', 'draft', 'private'],
+                'return' => 'objects',
+            ]);
+
+            foreach ($batch as $product) {
+                SearchIndex::syncProduct($product);
+                $total++;
+            }
+            $page++;
+        } while ($batch !== []);
+
+        if (class_exists('\WP_CLI')) {
+            \WP_CLI::success(sprintf('Đã tái lập chỉ mục _drv_search_index cho %d sản phẩm.', $total));
         }
     }
 

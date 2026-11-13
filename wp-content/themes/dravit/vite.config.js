@@ -5,6 +5,7 @@ const entries = {
   global: resolve(__dirname, 'assets/src/css/global.css'),
   'pages/ui-kit': resolve(__dirname, 'assets/src/css/pages/ui-kit.css'),
   core: resolve(__dirname, 'assets/src/js/core.js'),
+  search: resolve(__dirname, 'assets/src/js/search.js'),
   'chunks/motion': resolve(__dirname, 'assets/src/js/chunks/motion.js'),
   'chunks/quote': resolve(__dirname, 'assets/src/js/chunks/quote.js'),
   'chunks/ai-finder': resolve(__dirname, 'assets/src/js/chunks/ai-finder.js'),

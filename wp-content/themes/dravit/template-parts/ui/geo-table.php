@@ -5,6 +5,7 @@ defined('ABSPATH') || exit;
 
 /** @var array<string, mixed> $args */
 $title   = trim((string) ($args['title'] ?? ''));
+$caption = trim((string) ($args['caption'] ?? $title));
 $headers = isset($args['headers']) && is_array($args['headers']) ? $args['headers'] : [];
 $rows    = isset($args['rows']) && is_array($args['rows']) ? $args['rows'] : [];
 $bullets = isset($args['bullets']) && is_array($args['bullets']) ? $args['bullets'] : [];
@@ -36,6 +37,9 @@ if ($rows === [] && $bullets === []) {
     <?php if ($rows !== []) : ?>
         <div class="drv-geo-table-wrap">
             <table class="drv-spec-table drv-geo-table">
+                <?php if ($caption !== '') : ?>
+                    <caption class="u-sr-only"><?php echo esc_html($caption); ?></caption>
+                <?php endif; ?>
                 <?php if ($headers !== []) : ?>
                     <thead>
                         <tr>
@@ -71,4 +75,3 @@ if ($rows === [] && $bullets === []) {
         <p class="u-text-xs u-text-muted"><?php echo esc_html($note); ?></p>
     <?php endif; ?>
 </aside>
-

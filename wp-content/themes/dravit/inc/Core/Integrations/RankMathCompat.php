@@ -7,36 +7,22 @@ use Dravit\Core\ServiceProviderInterface;
 
 defined('ABSPATH') || exit;
 
+/**
+ * Cầu nối tinh chỉnh các hành vi riêng của Rank Math Free (docs/06 §2–5, ADR D-21, D-31):
+ * Các bộ lọc Canonical, RobotsMatrix, Breadcrumbs, MetaTags, SchemaGraph và LlmsTxt đã được đăng ký
+ * độc lập trong `Dravit\Seo\*` để hoạt động xuyên suốt cả khi bật và tắt Rank Math.
+ */
 final class RankMathCompat implements ServiceProviderInterface {
     public function register(): void {
-        // Loại bỏ trang `/san-pham` khỏi breadcrumb sản phẩm (06 §2).
-        add_filter('rank_math/frontend/breadcrumb/is_using_shop_base', '__return_false');
-
-        // Khử triệt để dấu `/` cuối trên canonical URL xuất từ Rank Math (D-21).
-        add_filter('rank_math/frontend/canonical', [$this, 'strip_trailing_slash'], 20);
-        add_filter('user_trailingslashit', [$this, 'untrailingslash_non_root'], 20, 2);
+        // Loại bỏ quảng cáo comment HTML của Rank Math trên frontend và tắt OpenGraph price 0đ cho SP báo giá.
+        add_filter('rank_math/frontend/remove_credit_notice', '__return_true');
+        add_filter('rank_math/opengraph/facebook/product_price_amount', [$this, 'guard_og_product_price'], 20, 1);
     }
 
-    public function strip_trailing_slash(string $canonical): string {
-        if ($canonical === '') {
-            return $canonical;
+    public function guard_og_product_price(mixed $price): mixed {
+        if (is_numeric($price) && (float) $price <= 0.0) {
+            return '';
         }
-
-        $home = untrailingslashit(home_url());
-        if (untrailingslashit($canonical) === $home) {
-            return $home;
-        }
-
-        return untrailingslashit($canonical);
-    }
-
-    public function untrailingslash_non_root(string $url, string $type): string {
-        unset($type);
-        if ($url === '/') {
-            return '/';
-        }
-
-        return untrailingslashit($url);
+        return $price;
     }
 }
-

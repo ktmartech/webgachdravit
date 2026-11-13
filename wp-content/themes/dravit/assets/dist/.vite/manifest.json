@@ -3,6 +3,10 @@
     "file": "js/chunks/dom-sfpH5BVj.js",
     "name": "dom"
   },
+  "_format-nKLQMfZu.js": {
+    "file": "js/chunks/format-nKLQMfZu.js",
+    "name": "format"
+  },
   "assets/fonts/anton-vi.woff2": {
     "file": "fonts/anton-vi.woff2",
     "src": "assets/fonts/anton-vi.woff2"
@@ -16,7 +20,7 @@
     "src": "assets/fonts/quicksand-vf-vi.woff2"
   },
   "assets/src/css/global.css": {
-    "file": "css/global-CczTBtCj.css",
+    "file": "css/global-C2zfIFEB.css",
     "src": "assets/src/css/global.css",
     "isEntry": true
   },
@@ -32,12 +36,12 @@
     "isEntry": true
   },
   "assets/src/js/chunks/calc-elements.js": {
-    "file": "js/chunks/calc-elements-bn-3QwtF.js",
+    "file": "js/chunks/calc-elements-CbB4CI2g.js",
     "name": "calc-elements",
     "src": "assets/src/js/chunks/calc-elements.js",
     "isDynamicEntry": true,
     "imports": [
-      "assets/src/js/core.js",
+      "_format-nKLQMfZu.js",
       "_dom-sfpH5BVj.js"
     ]
   },
@@ -58,20 +62,34 @@
     "isEntry": true
   },
   "assets/src/js/core.js": {
-    "file": "js/core-bouc6Efi.js",
+    "file": "js/core-Dqpwwl1a.js",
     "name": "core",
     "src": "assets/src/js/core.js",
     "isEntry": true,
     "imports": [
-      "_dom-sfpH5BVj.js"
+      "_dom-sfpH5BVj.js",
+      "_format-nKLQMfZu.js"
     ],
     "dynamicImports": [
+      "assets/src/js/search.js",
       "assets/src/js/chunks/motion.js",
       "assets/src/js/chunks/motion.js",
       "assets/src/js/chunks/motion.js",
       "assets/src/js/chunks/motion.js",
+      "assets/src/js/search.js",
       "assets/src/js/chunks/calc-elements.js",
       "assets/src/js/chunks/motion.js"
+    ]
+  },
+  "assets/src/js/search.js": {
+    "file": "js/search-hMhSSM6r.js",
+    "name": "search",
+    "src": "assets/src/js/search.js",
+    "isEntry": true,
+    "isDynamicEntry": true,
+    "imports": [
+      "_dom-sfpH5BVj.js",
+      "_format-nKLQMfZu.js"
     ]
   }
 }

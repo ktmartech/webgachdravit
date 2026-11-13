@@ -1,10 +1,15 @@
 <?php
 declare(strict_types=1);
 
+use Dravit\Seo\Breadcrumbs;
+
 defined('ABSPATH') || exit;
 
 /** @var array<string, mixed> $args */
-$items = isset($args['items']) && is_array($args['items']) ? $args['items'] : [];
+$items = isset($args['items']) && is_array($args['items']) && $args['items'] !== []
+    ? $args['items']
+    : Breadcrumbs::getCurrentTrail();
+
 if ($items === []) {
     return;
 }
@@ -34,4 +39,3 @@ $last_idx = count($items) - 1;
         <?php endforeach; ?>
     </ol>
 </nav>
-

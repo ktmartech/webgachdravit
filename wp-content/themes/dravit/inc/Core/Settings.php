@@ -103,6 +103,10 @@ final class Settings implements ServiceProviderInterface {
                 'new_days'  => 45,
                 '404_silos' => ['gach-lat-nen', 'gach-phong-khach', 'gach-van-da', 'gach-80x80'],
             ],
+            'search'   => [
+                'popular_keywords' => ['80x80', 'Vân đá Marble', 'Terrazzo', 'Khổ lớn 60x120', 'Chống trượt R10'],
+                'featured_silos'   => ['gach-lat-nen', 'gach-phong-khach', 'gach-80x80', 'da-nung-ket'],
+            ],
             'seo'      => [
                 'llms_enabled'      => true,
                 'geo_brand_summary' => 'DRAVIT là hệ thống phân phối gạch ốp lát kiến trúc và đá nung kết chính hãng tại Việt Nam, niêm yết giá minh bạch theo m² và giao dịch theo số nguyên viên/thùng.',
@@ -263,6 +267,35 @@ final class Settings implements ServiceProviderInterface {
                 }
                 if ($silos !== []) {
                     $base['catalog']['404_silos'] = $silos;
+                }
+            }
+        }
+
+        if (isset($input['search']) && is_array($input['search'])) {
+            if (isset($input['search']['popular_keywords']) && is_array($input['search']['popular_keywords'])) {
+                $keywords = [];
+                foreach ($input['search']['popular_keywords'] as $kw) {
+                    $clean_kw = $text($kw);
+                    if ($clean_kw !== '') {
+                        $keywords[] = $clean_kw;
+                    }
+                }
+                if ($keywords !== []) {
+                    $base['search']['popular_keywords'] = array_slice($keywords, 0, 10);
+                }
+            }
+            if (isset($input['search']['featured_silos']) && is_array($input['search']['featured_silos'])) {
+                $f_silos = [];
+                foreach ($input['search']['featured_silos'] as $silo) {
+                    $clean_silo = function_exists('sanitize_key')
+                        ? sanitize_key((string) $silo)
+                        : (string) preg_replace('/[^a-z0-9_\-]/', '', strtolower((string) $silo));
+                    if ($clean_silo !== '') {
+                        $f_silos[] = $clean_silo;
+                    }
+                }
+                if ($f_silos !== []) {
+                    $base['search']['featured_silos'] = array_slice($f_silos, 0, 8);
                 }
             }
         }

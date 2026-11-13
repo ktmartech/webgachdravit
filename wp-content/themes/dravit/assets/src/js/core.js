@@ -291,6 +291,7 @@ function registerBuiltInActions() {
     searchWrap.classList.toggle('is-mobile-open', nextOpen);
     trigger.setAttribute('aria-expanded', nextOpen ? 'true' : 'false');
     if (nextOpen) {
+      import('./search.js').then((m) => m.initLiveSearch());
       qs('input[type="search"]', searchWrap)?.focus();
     }
   });
@@ -603,6 +604,18 @@ function setupHeaderAndMenus() {
     },
     true,
   );
+
+  // Lazy-load Live Search chunk on first focus inside `[data-drv-search]`
+  let searchLoaded = false;
+  document.addEventListener('focusin', (event) => {
+    if (searchLoaded) {
+      return;
+    }
+    if (event.target instanceof Element && event.target.closest('[data-drv-search]')) {
+      searchLoaded = true;
+      import('./search.js').then((m) => m.initLiveSearch());
+    }
+  });
 
   // Page-cache-safe current URL indicator
   const currentPath = (window.location.pathname || '/').replace(/\/+$/, '') || '/';

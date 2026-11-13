@@ -5,16 +5,25 @@ namespace Dravit\Tests;
 
 use Brain\Monkey;
 use Brain\Monkey\Functions;
+use Dravit\Catalog\SearchController;
 use Dravit\Catalog\SlugGuard;
 use Dravit\Core\Assets;
 use Dravit\Core\Cleanup;
 use Dravit\Core\Menu\MegaMenuRenderer;
 use Dravit\Core\Menu\MenuSetup;
+use Dravit\Core\RestSecurity;
 use Dravit\Core\SectionRegistry;
 use Dravit\Core\ServiceProviderInterface;
 use Dravit\Core\Settings;
 use Dravit\Core\Setup;
 use Dravit\Core\Vite;
+use Dravit\Seo\Breadcrumbs;
+use Dravit\Seo\Canonical;
+use Dravit\Seo\LlmsTxt;
+use Dravit\Seo\MetaTags;
+use Dravit\Seo\RobotsMatrix;
+use Dravit\Seo\SchemaGraph;
+use Dravit\Seo\TrailingSlashRedirect;
 use Dravit\Theme;
 use PHPUnit\Framework\TestCase;
 
@@ -45,19 +54,31 @@ final class BootstrapTest extends TestCase {
         // Khi chưa có WooCommerce, Rank Math, Fluent Forms hay LiteSpeed Cache trong runtime test:
         Theme::boot();
 
+        $expected = [
+            Settings::class,
+            Setup::class,
+            RestSecurity::class,
+            SlugGuard::class,
+            TrailingSlashRedirect::class,
+            Canonical::class,
+            RobotsMatrix::class,
+            Breadcrumbs::class,
+            MetaTags::class,
+            SchemaGraph::class,
+            LlmsTxt::class,
+            SearchController::class,
+            MenuSetup::class,
+            MegaMenuRenderer::class,
+            Cleanup::class,
+            Assets::class,
+        ];
+
         $providers = Theme::registered_providers();
-        self::assertCount(7, $providers);
-        self::assertInstanceOf(Settings::class, $providers[0]);
-        self::assertInstanceOf(Setup::class, $providers[1]);
-        self::assertInstanceOf(SlugGuard::class, $providers[2]);
-        self::assertInstanceOf(MenuSetup::class, $providers[3]);
-        self::assertInstanceOf(MegaMenuRenderer::class, $providers[4]);
-        self::assertInstanceOf(Cleanup::class, $providers[5]);
-        self::assertInstanceOf(Assets::class, $providers[6]);
+        self::assertSame($expected, array_map(static fn (object $p): string => $p::class, $providers));
 
         // Gọi boot() lần 2 phải đảm bảo idempotent (không nhân đôi đăng ký hook).
         Theme::boot();
-        self::assertCount(7, Theme::registered_providers());
+        self::assertCount(count($expected), Theme::registered_providers());
     }
 
     public function test_settings_merges_nested_options_over_defaults(): void {

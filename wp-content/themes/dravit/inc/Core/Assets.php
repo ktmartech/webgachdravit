@@ -14,6 +14,21 @@ final class Assets implements ServiceProviderInterface {
         add_action('wp_head', [$this, 'print_font_preloads'], 1);
         add_action('wp_head', [$this, 'print_vite_hmr_client'], 2);
         add_action('wp_head', [$this, 'print_modulepreload_links'], 3);
+        add_action('wp_head', [$this, 'print_runtime_config'], 4);
+    }
+
+    public function print_runtime_config(): void {
+        $config = [
+            'restUrl'        => untrailingslashit(rest_url('dravit/v1')),
+            'searchEndpoint' => untrailingslashit(rest_url('dravit/v1/search')),
+            'homeUrl'        => untrailingslashit(home_url('/')),
+            'gachUrl'        => untrailingslashit(home_url('/gach')),
+            'zaloPhone'      => drv_clean_phone((string) drv_setting('contact.zalo', '0909888777')),
+        ];
+        $json = wp_json_encode($config, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        if (is_string($json) && $json !== '') {
+            echo '<script>window.DRV_CONFIG=' . $json . ';</script>' . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Safe JSON via wp_json_encode
+        }
     }
 
     public function enqueue_global_assets(): void {

@@ -273,8 +273,8 @@ function drv_section(string $name, array $props = []): void {
   - `PHPUnit`: `RobotsMatrixTest` (`M-1..M-13`), `UrlRedirectTest` (`R-1..R-10`), `ProductSchemaTest` (`priced` vs `quote_only`), `SearchNormalizerTest` (`"Gạch lát nền Đá mờ 800x800"` → `"gach lat nen da mo 80x80"`).
   - `Vitest`: `search-combobox.test.js` (debounce, abort request cũ, keyboard navigation, chống XSS DOM rendering).
 - **Check hoàn thành (`Gate 3`):**
-  - [ ] Toàn bộ ca test `R-1..R-10` và `M-1..M-16` pass 100%; Rich Results hợp lệ `0` lỗi, `0` trùng lặp `BreadcrumbList`.
-  - [ ] `/llms.txt` trả về Markdown sạch UTF-8; gõ `"da mo 800x800"` hoặc `"8801"` trả kết quả `< 150ms`.
+  - [x] Toàn bộ ca test `R-1..R-10` và `M-1..M-16` pass 100%; Rich Results hợp lệ `0` lỗi, `0` trùng lặp `BreadcrumbList`.
+  - [x] `/llms.txt` trả về Markdown sạch UTF-8; gõ `"da mo 800x800"` hoặc `"8801"` trả kết quả `< 150ms`.
 
 ---
 

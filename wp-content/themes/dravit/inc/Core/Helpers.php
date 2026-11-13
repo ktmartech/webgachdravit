@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 defined('ABSPATH') || exit;
 
+use Dravit\Catalog\SearchNormalizer;
 use Dravit\Core\SectionRegistry;
 use Dravit\Core\Settings;
 use Dravit\Core\Template;
@@ -67,6 +68,13 @@ function drv_format_decimal(int|float $value, int $decimals = 2): string {
  */
 function drv_clean_phone(string $phone): string {
     return (string) preg_replace('/[^0-9+]/', '', $phone);
+}
+
+/**
+ * Khử dấu tiếng Việt và chuẩn hóa chuỗi tìm kiếm (kể cả quy đổi kích thước mm -> cm).
+ */
+function drv_ascii_fold(string $text): string {
+    return SearchNormalizer::normalize($text);
 }
 
 function drv_is_woo_active(): bool {
