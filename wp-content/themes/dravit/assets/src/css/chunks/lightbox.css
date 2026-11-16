@@ -1,0 +1,277 @@
+/* ==========================================================================
+   LIGHTBOX SKIN (`assets/src/css/chunks/lightbox.css`) — tải động cùng chunk `lightbox.js`
+   PhotoSwipe 5 (ADR D-28) khoác giao diện modal mockup 03 (`#drv-lightbox-dialog`).
+   Vị trí khung/stage do JS tính (`computeLightboxLayout`) và cấp qua biến `--lb-*`.
+   ========================================================================== */
+
+@import "photoswipe/style.css" layer(plugins);
+
+@layer plugins {
+  .drv-pswp {
+    --pswp-bg: var(--c-navy-950);
+    --pswp-placeholder-bg: var(--c-ivory);
+
+    font-family: var(--f-body);
+  }
+
+  .drv-pswp .pswp__bg {
+    background-color: var(--c-backdrop);
+    backdrop-filter: blur(2px);
+  }
+
+  /* Ảnh chỉ hiển thị trong stage (kể cả khi zoom/kéo) — giống khung `.drv-lightbox-stage` của mockup */
+  .drv-pswp .pswp__scroll-wrap {
+    clip-path: inset(
+      var(--lb-stage-t)
+      calc(100% - var(--lb-stage-l) - var(--lb-stage-w))
+      calc(100% - var(--lb-stage-t) - var(--lb-stage-h))
+      var(--lb-stage-l)
+      round var(--r-sm)
+    );
+  }
+
+  /* Khung trắng modal + nền stage */
+  .drv-pswp__panel {
+    position: absolute;
+    top: var(--lb-panel-t);
+    left: var(--lb-panel-l);
+    width: var(--lb-panel-w);
+    height: var(--lb-panel-h);
+    background-color: var(--c-white);
+    border: var(--bw-strong);
+    border-radius: var(--r-md);
+    box-shadow: 0 24px 64px rgb(8 58 79 / 24%);
+    pointer-events: none;
+  }
+
+  /* PhotoSwipe gắn `.pswp__hide-on-close` (z-index 10) cho mọi UI element → khung phải hạ về 0 để nằm DƯỚI ảnh */
+  .drv-pswp .drv-pswp__panel.pswp__hide-on-close {
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .drv-pswp__stage-bg {
+    position: absolute;
+    top: calc(var(--lb-stage-t) - var(--lb-panel-t));
+    left: calc(var(--lb-stage-l) - var(--lb-panel-l));
+    width: var(--lb-stage-w);
+    height: var(--lb-stage-h);
+    background-color: var(--c-ivory);
+    border: var(--bw);
+    border-radius: var(--r-sm);
+  }
+
+  /* Header: dùng lại `.drv-dialog__head/__title/__actions` của theme */
+  .drv-pswp__head.drv-dialog__head {
+    position: absolute;
+    top: var(--lb-panel-t);
+    left: var(--lb-panel-l);
+    box-sizing: border-box;
+    width: var(--lb-panel-w);
+    height: var(--lb-head-h);
+    border-radius: var(--r-md) var(--r-md) 0 0;
+  }
+
+  .drv-pswp__head .drv-dialog__title {
+    margin: 0;
+  }
+
+  .drv-pswp__head .drv-dialog__title > span {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .drv-pswp__head .drv-dialog__title > i {
+    flex-shrink: 0;
+  }
+
+  .drv-pswp__head .drv-btn--icon {
+    width: 36px;
+    height: 36px;
+    min-height: 36px;
+    padding: 0;
+  }
+
+  /* Nút tròn trước/sau trong stage */
+  .drv-pswp .pswp__button.drv-pswp__nav {
+    position: absolute;
+    top: calc(var(--lb-stage-t) + var(--lb-stage-h) / 2 - 20px);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    margin: 0;
+    padding: 0;
+    font-size: var(--fs-md);
+    color: var(--c-navy-900);
+    background-color: rgb(255 255 255 / 94%);
+    border: var(--bw);
+    border-radius: 50%;
+    box-shadow: var(--shadow-hover);
+    opacity: 1;
+    transition:
+      background-color var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out),
+      transform var(--dur-fast) var(--ease-out);
+  }
+
+  .drv-pswp .pswp__button.drv-pswp__nav[hidden] {
+    display: none;
+  }
+
+  .drv-pswp .drv-pswp__nav--prev {
+    left: calc(var(--lb-stage-l) + 12px);
+  }
+
+  .drv-pswp .drv-pswp__nav--next {
+    left: calc(var(--lb-stage-l) + var(--lb-stage-w) - 52px);
+  }
+
+  @media (hover: hover) {
+    .drv-pswp .pswp__button.drv-pswp__nav:hover {
+      color: var(--c-white);
+      background-color: var(--c-navy-900);
+      border-color: var(--c-navy-900);
+    }
+  }
+
+  .drv-pswp .pswp__button.drv-pswp__nav:active {
+    transform: scale(0.94);
+  }
+
+  .drv-pswp .pswp__button.drv-pswp__nav:focus-visible,
+  .drv-pswp__thumb:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: 2px;
+  }
+
+  /* Pill đếm "3 / 6" góc dưới phải stage */
+  .drv-pswp__counter {
+    position: absolute;
+    top: calc(var(--lb-stage-t) + var(--lb-stage-h) - 34px);
+    left: calc(var(--lb-stage-l) + var(--lb-stage-w) - 10px);
+    padding: 3px 10px;
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    color: var(--c-white);
+    background-color: rgb(8 58 79 / 88%);
+    white-space: nowrap;
+    border-radius: var(--r-pill);
+    transform: translateX(-100%);
+    pointer-events: none;
+  }
+
+  .drv-pswp__counter[hidden] {
+    display: none;
+  }
+
+  /* Chú thích 2 dòng dưới stage */
+  .drv-pswp__caption {
+    position: absolute;
+    top: calc(var(--lb-stage-t) + var(--lb-stage-h) + 8px);
+    left: var(--lb-stage-l);
+    display: -webkit-box;
+    width: var(--lb-stage-w);
+    overflow: hidden;
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--c-navy-900);
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  /* Dải thumbnail 6 cột */
+  .drv-pswp__thumbs {
+    position: absolute;
+    top: calc(var(--lb-stage-t) + var(--lb-stage-h) + var(--lb-caption-h));
+    left: var(--lb-stage-l);
+    display: grid;
+    grid-auto-columns: calc((var(--lb-stage-w) - 5 * var(--lb-gap)) / 6);
+    grid-auto-flow: column;
+    gap: var(--lb-gap);
+    width: var(--lb-stage-w);
+    height: var(--lb-thumb-h);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .drv-pswp__thumb {
+    height: var(--lb-thumb-h);
+    padding: 0;
+    overflow: hidden;
+    cursor: pointer;
+    background-color: var(--c-champagne);
+    border: var(--bw);
+    border-radius: var(--r-sm);
+    opacity: 0.7;
+    transition:
+      opacity var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out);
+  }
+
+  .drv-pswp__thumb:hover,
+  .drv-pswp__thumb.is-active {
+    border-color: var(--c-navy-900);
+    box-shadow: 0 0 0 1px var(--c-navy-900);
+    opacity: 1;
+  }
+
+  .drv-pswp__thumb img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  @media (width < 640px) {
+    .drv-pswp__panel,
+    .drv-pswp__head.drv-dialog__head {
+      border-radius: 0;
+    }
+
+    .drv-pswp__head.drv-dialog__head {
+      gap: 8px;
+      padding: 10px 12px;
+    }
+
+    .drv-pswp__head .drv-dialog__title {
+      font-size: 0.8125rem;
+      line-height: 1.3;
+    }
+
+    .drv-pswp__head .drv-btn--sm {
+      height: 32px;
+      min-height: 32px;
+      padding: 0 8px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .drv-pswp__head .drv-btn--icon {
+      width: 32px;
+      height: 32px;
+      min-height: 32px;
+    }
+
+    .drv-pswp .pswp__button.drv-pswp__nav {
+      top: calc(var(--lb-stage-t) + var(--lb-stage-h) / 2 - 18px);
+      width: 36px;
+      height: 36px;
+      font-size: 0.9375rem;
+    }
+
+    .drv-pswp .drv-pswp__nav--prev {
+      left: calc(var(--lb-stage-l) + 8px);
+    }
+
+    .drv-pswp .drv-pswp__nav--next {
+      left: calc(var(--lb-stage-l) + var(--lb-stage-w) - 44px);
+    }
+  }
+}

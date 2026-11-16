@@ -37,7 +37,12 @@
 
   .drv-spec-table a {
     color: var(--c-moss-700);
+    text-decoration: none;
+  }
+
+  .drv-spec-table a:not(.drv-link) {
     text-decoration: underline;
+    text-decoration-thickness: 2px;
     text-underline-offset: 3px;
   }
 

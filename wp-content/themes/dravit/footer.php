@@ -27,8 +27,12 @@ if (!$is_distraction_free_checkout) {
     </div>
 </footer>
 <?php
+$is_pdp_view = drv_is_woo_active() && function_exists('is_product') && is_product();
+
 if (!$is_distraction_free_checkout) {
-    Template::render_part('template-parts/footer/mobile-action-bar');
+    if (!$is_pdp_view) {
+        Template::render_part('template-parts/footer/mobile-action-bar');
+    }
     Template::render_part('template-parts/header/mobile-drawer');
     Template::render_part('template-parts/footer/quote-modal');
     Template::render_part('template-parts/footer/minicart-drawer');

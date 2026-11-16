@@ -14,6 +14,7 @@ use Dravit\Advisor\Catalog\SnapshotBuilder;
 use Dravit\Advisor\Log\CptAdvisorLogger;
 use Dravit\Catalog\CliCommand;
 use Dravit\Catalog\CollectionSync;
+use Dravit\Catalog\ProductsController;
 use Dravit\Catalog\SaleSync;
 use Dravit\Catalog\SearchController;
 use Dravit\Catalog\SlugGuard;
@@ -118,6 +119,7 @@ final class Theme {
             $providers[] = QueryBuilder::class;
             $providers[] = FacetCounter::class;
             $providers[] = CatalogController::class;
+            $providers[] = ProductsController::class;
             $providers[] = SnapshotBuilder::class;
 
             if ($is_admin) {

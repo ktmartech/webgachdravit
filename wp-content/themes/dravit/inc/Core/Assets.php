@@ -24,6 +24,9 @@ final class Assets implements ServiceProviderInterface {
             'restUrl'                 => untrailingslashit(rest_url('dravit/v1')),
             'nonceEndpoint'           => untrailingslashit(rest_url('dravit/v1/nonce')),
             'catalogEndpoint'         => untrailingslashit(rest_url('dravit/v1/catalog')),
+            'productsEndpoint'        => untrailingslashit(rest_url('dravit/v1/products')),
+            'wcStoreCartUrl'          => untrailingslashit(rest_url('wc/store/v1/cart')),
+            'wcStoreAddUrl'           => untrailingslashit(rest_url('wc/store/v1/cart/add-item')),
             'searchEndpoint'          => untrailingslashit(rest_url('dravit/v1/search')),
             'searchHitEndpoint'       => untrailingslashit(rest_url('dravit/v1/search/hit')),
             'advisorEndpoint'         => untrailingslashit(rest_url('dravit/v1/advisor')),
@@ -63,6 +66,15 @@ final class Assets implements ServiceProviderInterface {
         }
 
         if (
+            drv_is_woo_active()
+            && function_exists('is_product')
+            && is_product()
+        ) {
+            self::enqueue_style('drv-page-product', 'assets/src/css/pages/product.css');
+            self::enqueue_module('drv-product', 'assets/src/js/product.js');
+        }
+
+        if (
             (bool) drv_setting('features.ai_enabled', true)
             && (
                 (function_exists('is_page_template') && is_page_template('page-templates/template-ai-finder.php'))
@@ -79,16 +91,36 @@ final class Assets implements ServiceProviderInterface {
             return;
         }
 
-        $fonts = [
-            DRV_URI . '/assets/dist/fonts/quicksand-vf-vi.woff2',
-            DRV_URI . '/assets/dist/fonts/phosphor-subset.woff2',
-        ];
+        $fonts = array_filter([
+            self::dist_font_url('quicksand-vf-vi'),
+            self::dist_font_url('phosphor-subset'),
+        ]);
         foreach ($fonts as $font_url) {
             printf(
                 '<link rel="preload" href="%s" as="font" type="font/woff2" crossorigin>' . "\n",
                 esc_url($font_url)
             );
         }
+    }
+
+    /**
+     * URL font đã build (`assets/dist/fonts/{name}-{hash}.woff2`) để preload trùng khớp URL mà CSS tham chiếu.
+     * Vite xóa sạch `dist/` mỗi lần build nên chỉ còn 1 bản hash; fallback tên không hash cho bản build cũ.
+     */
+    public static function dist_font_url(string $basename): string {
+        static $cache = [];
+        if (isset($cache[$basename])) {
+            return $cache[$basename];
+        }
+
+        $dir   = DRV_DIR . '/assets/dist/fonts/';
+        $found = glob($dir . $basename . '-*.woff2') ?: [];
+        if ($found === [] && is_file($dir . $basename . '.woff2')) {
+            $found = [$dir . $basename . '.woff2'];
+        }
+
+        $cache[$basename] = $found !== [] ? DRV_URI . '/assets/dist/fonts/' . basename((string) $found[0]) : '';
+        return $cache[$basename];
     }
 
     public static function enqueue_style(string $handle, string $entry): void {

@@ -30,7 +30,10 @@ final class SectionRegistry {
         $definitions = self::definitions();
         $meta        = $definitions[$safe_name] ?? [];
 
-        if (!empty($meta['style']) && is_string($meta['style'])) {
+        $skip_style = !empty($props['skip_section_style'])
+            || ($safe_name === 'product-grid-block' && !empty($props['framed']));
+
+        if (!$skip_style && !empty($meta['style']) && is_string($meta['style'])) {
             Assets::enqueue_section_style($meta['style']);
         }
 

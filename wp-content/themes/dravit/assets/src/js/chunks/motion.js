@@ -182,9 +182,9 @@ const motionApi = {
   observeReveals,
 };
 
-if (typeof window !== 'undefined') {
-  window.Dravit = window.Dravit || {};
-  window.Dravit.motion = motionApi;
+// `window.Dravit` bị Object.freeze trong core.js → không gán thêm thuộc tính (sẽ throw TypeError và làm hỏng chunk).
+if (typeof window !== 'undefined' && !window.Dravit) {
+  window.Dravit = { motion: motionApi };
 }
 
 export default motionApi;

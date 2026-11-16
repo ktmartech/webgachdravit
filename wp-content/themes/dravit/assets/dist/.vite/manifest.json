@@ -7,8 +7,8 @@
     "file": "js/chunks/format-C6F-Ty1S.js",
     "name": "format"
   },
-  "_storage-EVK1Hd-i.js": {
-    "file": "js/chunks/storage-EVK1Hd-i.js",
+  "_storage-Be0piK89.js": {
+    "file": "js/chunks/storage-Be0piK89.js",
     "name": "storage"
   },
   "_toast-KqNPVw1v.js": {
@@ -16,19 +16,19 @@
     "name": "toast"
   },
   "assets/fonts/anton-vi.woff2": {
-    "file": "fonts/anton-vi.woff2",
+    "file": "fonts/anton-vi-WM4NwKR-.woff2",
     "src": "assets/fonts/anton-vi.woff2"
   },
   "assets/fonts/phosphor-subset.woff2": {
-    "file": "fonts/phosphor-subset.woff2",
+    "file": "fonts/phosphor-subset-_kAIRXjy.woff2",
     "src": "assets/fonts/phosphor-subset.woff2"
   },
   "assets/fonts/quicksand-vf-vi.woff2": {
-    "file": "fonts/quicksand-vf-vi.woff2",
+    "file": "fonts/quicksand-vf-vi-CoIsZNV-.woff2",
     "src": "assets/fonts/quicksand-vf-vi.woff2"
   },
   "assets/src/css/global.css": {
-    "file": "css/global-CKcynXj-.css",
+    "file": "css/global-Cjujxem_.css",
     "src": "assets/src/css/global.css",
     "isEntry": true
   },
@@ -47,13 +47,18 @@
     "src": "assets/src/css/pages/home.css",
     "isEntry": true
   },
+  "assets/src/css/pages/product.css": {
+    "file": "css/pages/product-0nOsVHzW.css",
+    "src": "assets/src/css/pages/product.css",
+    "isEntry": true
+  },
   "assets/src/css/pages/ui-kit.css": {
     "file": "css/pages/ui-kit-BXPlnwA_.css",
     "src": "assets/src/css/pages/ui-kit.css",
     "isEntry": true
   },
   "assets/src/js/catalog.js": {
-    "file": "js/catalog-D7QXdJEQ.js",
+    "file": "js/catalog-SwaoSQuw.js",
     "name": "catalog",
     "src": "assets/src/js/catalog.js",
     "isEntry": true,
@@ -62,30 +67,34 @@
       "assets/src/js/core.js",
       "_dom-B0H8ceLe.js",
       "_format-C6F-Ty1S.js",
-      "_storage-EVK1Hd-i.js"
+      "_storage-Be0piK89.js"
     ],
     "dynamicImports": [
       "assets/src/js/chunks/motion.js"
     ]
   },
   "assets/src/js/chunks/ai-finder.js": {
-    "file": "js/chunks/ai-finder-WIhJA4Iw.js",
+    "file": "js/chunks/ai-finder-CtRWpiVw.js",
     "name": "chunks/ai-finder",
     "src": "assets/src/js/chunks/ai-finder.js",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
-      "_storage-EVK1Hd-i.js"
+      "_storage-Be0piK89.js"
     ]
   },
   "assets/src/js/chunks/calc-elements.js": {
-    "file": "js/chunks/calc-elements-B9ed7X10.js",
+    "file": "js/chunks/calc-elements-Byjae9UJ.js",
     "name": "calc-elements",
     "src": "assets/src/js/chunks/calc-elements.js",
     "isDynamicEntry": true,
     "imports": [
+      "_toast-KqNPVw1v.js",
       "_format-C6F-Ty1S.js",
       "_dom-B0H8ceLe.js"
+    ],
+    "dynamicImports": [
+      "assets/src/js/chunks/motion.js"
     ]
   },
   "assets/src/js/chunks/hero-canvas.js": {
@@ -94,8 +103,20 @@
     "src": "assets/src/js/chunks/hero-canvas.js",
     "isDynamicEntry": true
   },
+  "assets/src/js/chunks/lightbox.js": {
+    "file": "js/chunks/lightbox-C_y39b-0.js",
+    "name": "lightbox",
+    "src": "assets/src/js/chunks/lightbox.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_dom-B0H8ceLe.js"
+    ],
+    "css": [
+      "css/lightbox-B2KvlVY7.css"
+    ]
+  },
   "assets/src/js/chunks/motion.js": {
-    "file": "js/chunks/motion-BfftLj8j.js",
+    "file": "js/chunks/motion-C1fdlqs9.js",
     "name": "chunks/motion",
     "src": "assets/src/js/chunks/motion.js",
     "isEntry": true,
@@ -112,7 +133,7 @@
     "isEntry": true
   },
   "assets/src/js/core.js": {
-    "file": "js/core-CC9lhEF_.js",
+    "file": "js/core-BEn6kUaS.js",
     "name": "core",
     "src": "assets/src/js/core.js",
     "isEntry": true,
@@ -120,7 +141,7 @@
       "_toast-KqNPVw1v.js",
       "_dom-B0H8ceLe.js",
       "_format-C6F-Ty1S.js",
-      "_storage-EVK1Hd-i.js"
+      "_storage-Be0piK89.js"
     ],
     "dynamicImports": [
       "assets/src/js/search.js",
@@ -137,7 +158,7 @@
     ]
   },
   "assets/src/js/home.js": {
-    "file": "js/home-_y3Jwgw9.js",
+    "file": "js/home-Cbue7JC9.js",
     "name": "home",
     "src": "assets/src/js/home.js",
     "isEntry": true,
@@ -155,6 +176,24 @@
       "node_modules/animejs/lib/anime.es.js",
       "assets/src/js/chunks/motion.js",
       "assets/src/js/chunks/hero-canvas.js"
+    ]
+  },
+  "assets/src/js/product.js": {
+    "file": "js/product-BfNX8IHY.js",
+    "name": "product",
+    "src": "assets/src/js/product.js",
+    "isEntry": true,
+    "imports": [
+      "_toast-KqNPVw1v.js",
+      "assets/src/js/core.js",
+      "assets/src/js/chunks/calc-elements.js",
+      "_dom-B0H8ceLe.js",
+      "_storage-Be0piK89.js",
+      "_format-C6F-Ty1S.js"
+    ],
+    "dynamicImports": [
+      "assets/src/js/chunks/motion.js",
+      "assets/src/js/chunks/lightbox.js"
     ]
   },
   "assets/src/js/search.js": {

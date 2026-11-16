@@ -60,7 +60,7 @@ final class SchemaGraph implements ServiceProviderInterface {
         $w_mm         = max(0, (int) $product->get_meta('drv_piece_w_mm', true));
         $h_mm         = max(0, (int) $product->get_meta('drv_piece_h_mm', true));
         $thickness_mm = max(0.0, (float) $product->get_meta('drv_thickness_mm', true));
-        $kg_per_box   = max(0.0, (float) $product->get_meta('drv_weight_kg_per_box', true));
+        $kg_per_box   = max(0.0, (float) ($product->get_meta('drv_kg_per_box', true) ?: $product->get_meta('drv_weight_kg_per_box', true)));
         $ppb          = $unit_cfg['pieces_per_box'];
         $area_piece   = Calc::pieceAreaM2($w_mm, $h_mm);
         $m2_box       = (float) $product->get_meta('drv_m2_per_box', true);
@@ -124,7 +124,7 @@ final class SchemaGraph implements ServiceProviderInterface {
             'surface'          => self::joinedTermNames($id, 'pa_be-mat'),
             'dcof'             => self::joinedTermNames($id, 'pa_dcof'),
             'water_absorption' => trim((string) $product->get_meta('drv_water_absorption', true)) ?: self::joinedTermNames($id, 'pa_do-hut-nuoc'),
-            'pei_rating'       => trim((string) $product->get_meta('drv_pei_rating', true)),
+            'pei_rating'       => trim((string) ($product->get_meta('drv_pei', true) ?: $product->get_meta('drv_pei_rating', true))),
         ], $site_origin);
     }
 

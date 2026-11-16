@@ -805,7 +805,7 @@ final class MasterListingParser {
 
         $post_title = trim($norm['post_title'] ?? '');
         if ($post_title === '') {
-            $title_parts = array_filter([
+            $post_title = self::joinTitleParts([
                 $primary_raw !== '' ? $primary_raw : 'Gạch ốp lát',
                 'Dravit',
                 trim($norm['attr_van_gach'] ?? ''),
@@ -813,8 +813,7 @@ final class MasterListingParser {
                 $size_display,
                 $surface_short,
                 $factory_code,
-            ], static fn(string $p): bool => $p !== '');
-            $post_title = implode(' ', $title_parts);
+            ]);
         }
 
         $post_name = self::normalizeProductSlug($norm['post_name'] ?? '');
@@ -1330,6 +1329,33 @@ final class MasterListingParser {
             return function_exists('mb_substr') ? mb_substr($color, 0, 60) : substr($color, 0, 60);
         }
         return '';
+    }
+
+    /**
+     * Ghép tên SP SEO, bỏ qua phần đã xuất hiện nguyên cụm trong chuỗi trước đó
+     * (VD `drv_color_name` = "Xám Xi Măng Mờ 80x80" thì không ghép lại "80x80" và "Mờ").
+     *
+     * @param array<int, string> $parts
+     */
+    public static function joinTitleParts(array $parts): string {
+        $title = '';
+        foreach ($parts as $part) {
+            $part = trim((string) preg_replace('/\s+/u', ' ', $part));
+            if ($part === '') {
+                continue;
+            }
+            $haystack = ' ' . self::titleCompareKey($title) . ' ';
+            if ($title !== '' && str_contains($haystack, ' ' . self::titleCompareKey($part) . ' ')) {
+                continue;
+            }
+            $title = $title === '' ? $part : $title . ' ' . $part;
+        }
+        return $title;
+    }
+
+    private static function titleCompareKey(string $text): string {
+        $lower = function_exists('mb_strtolower') ? mb_strtolower($text, 'UTF-8') : strtolower($text);
+        return trim((string) preg_replace('/\s+/u', ' ', str_replace(['×', '*'], 'x', $lower)));
     }
 
     private static function deriveSeriesSlug(string $factory_code): string {

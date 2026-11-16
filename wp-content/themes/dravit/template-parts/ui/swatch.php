@@ -3,19 +3,36 @@ declare(strict_types=1);
 
 defined('ABSPATH') || exit;
 
-/** @var array<string, mixed> $args */
-$items       = isset($args['items']) && is_array($args['items']) ? $args['items'] : [];
-$axis        = (string) ($args['axis'] ?? 'size');
-$group_label = trim((string) ($args['group_label'] ?? ''));
+/**
+ * UI Primitive Swatch SSR 3 trục (`color` | `size` | `surface`) liên kết trực tiếp qua `drv_series` (`D-26`, Test P-3).
+ * Tuyệt đối không dùng `<button>` đổi SKU/giá giả phía client.
+ *
+ * @var array<string, mixed> $args
+ */
+$items               = isset($args['items']) && is_array($args['items']) ? $args['items'] : [];
+$axis                = (string) ($args['axis'] ?? 'size');
+$group_label         = trim((string) ($args['group_label'] ?? ''));
+$current_value_label = trim((string) ($args['current_value_label'] ?? ''));
+
 if ($items === []) {
     return;
 }
+
+$is_color = ($axis === 'color');
+$wrap_cls = $is_color ? 'drv-pdp-variant-group' : 'drv-pdp-variant-row';
+$list_cls = $is_color ? 'drv-pdp-color-list' : 'drv-pdp-pill-list';
 ?>
-<div class="l-stack l-stack--xs" role="group" <?php echo $group_label !== '' ? 'aria-label="' . esc_attr($group_label) . '"' : ''; ?>>
+<div class="<?php echo esc_attr($wrap_cls); ?>" role="group" <?php echo $group_label !== '' ? 'aria-label="' . esc_attr($group_label) . '"' : ''; ?>>
     <?php if ($group_label !== '') : ?>
-        <span class="u-text-xs u-bold u-text-muted"><?php echo esc_html($group_label); ?></span>
+        <span class="drv-pdp-variant-label">
+            <?php echo esc_html($group_label . ':'); ?>
+            <?php if ($is_color && $current_value_label !== '') : ?>
+                <strong><?php echo esc_html($current_value_label); ?></strong>
+            <?php endif; ?>
+        </span>
     <?php endif; ?>
-    <div class="l-cluster l-cluster--xs">
+
+    <div class="<?php echo esc_attr($list_cls); ?>">
         <?php foreach ($items as $item) :
             if (!is_array($item)) {
                 continue;
@@ -29,17 +46,20 @@ if ($items === []) {
                 continue;
             }
 
-            $base_cls = ($axis === 'color') ? 'drv-color-swatch' : 'drv-swatch-pill';
+            $base_cls = $is_color ? 'drv-color-swatch' : 'drv-swatch-pill';
             $cls      = $active ? $base_cls . ' is-active' : $base_cls;
 
             ob_start();
-            if ($axis === 'color' && $thumb_url !== '') {
+            if ($is_color && $thumb_url !== '') {
                 printf(
                     '<img src="%s" width="28" height="28" loading="lazy" decoding="async" alt="" class="drv-color-swatch__thumb">',
                     esc_url($thumb_url)
                 );
-            } elseif ($axis === 'color' && $hex !== '') {
-                printf('<span class="drv-color-swatch__dot" style="background-color:%s"></span>', esc_attr($hex));
+            } elseif ($is_color && $hex !== '') {
+                printf(
+                    '<span class="drv-color-swatch__dot" style="--_swatch-hex: %s;" aria-hidden="true"></span>',
+                    esc_attr($hex)
+                );
             }
             echo '<span>' . esc_html($label) . '</span>';
             $inner = (string) ob_get_clean();
@@ -49,17 +69,16 @@ if ($items === []) {
                     '<span class="%s" %s>%s</span>',
                     esc_attr($cls),
                     $active ? 'aria-current="page"' : '',
-                    $inner // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                    $inner // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped above
                 );
             } else {
                 printf(
                     '<a href="%s" class="%s">%s</a>',
                     esc_url(untrailingslashit($url)),
                     esc_attr($cls),
-                    $inner // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                    $inner // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped above
                 );
             }
         endforeach; ?>
     </div>
 </div>
-

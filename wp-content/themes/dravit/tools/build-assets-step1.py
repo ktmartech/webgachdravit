@@ -318,6 +318,15 @@ def build_phosphor_subset() -> tuple[int, int]:
     base_font.setGlyphOrder(new_glyph_order)
     base_glyf.glyphs = new_glyf_glyphs
     base_glyf.glyphOrder = new_glyph_order
+
+    # Phosphor *.ttf ship hmtx LSB = 0 while outlines start at xMin (≈128/1024) → browsers place every glyph
+    # ~12.5% em to the LEFT (icons off-center in round/square badges). Re-sync LSB = xMin like the official *.woff2.
+    for gname in new_glyph_order:
+        glyph = base_glyf[gname]
+        glyph.recalcBounds(base_glyf)
+        advance = new_hmtx[gname][0]
+        new_hmtx[gname] = (advance, int(getattr(glyph, "xMin", 0)) if glyph.numberOfContours != 0 else 0)
+
     base_font["hmtx"].metrics = new_hmtx
     base_font["maxp"].numGlyphs = len(new_glyph_order)
 

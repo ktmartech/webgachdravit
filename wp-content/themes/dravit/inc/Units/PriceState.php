@@ -263,11 +263,11 @@ final class PriceState {
 
     /**
      * Khớp cặp ảnh mặc định (`tile-*.svg` + phối cảnh phòng `room-*.jpg`) theo thuộc tính sản phẩm
-     * khi SKU chưa tải ảnh Featured/Gallery trong WP Media (chuẩn `01-home.html`).
+     * khi SKU chưa tải ảnh Featured/Gallery trong WP Media (chuẩn `01-home.html` & `03-product-single.html`).
      *
      * @return array{primary: string, hover: string}
      */
-    private static function resolveFallbackImages(int $product_id): array {
+    public static function resolveFallbackImages(int $product_id): array {
         $base = defined('DRV_URI') ? rtrim((string) DRV_URI, '/') : '';
 
         $van_slugs  = self::termSlugs($product_id, 'pa_van-gach');

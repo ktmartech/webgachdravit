@@ -312,11 +312,11 @@ if ($is_out) {
                 <?php echo esc_html($avail_override); ?>
             <?php elseif ($context === 'deals' && !$is_out && $stock_boxes !== null && $stock_boxes > 0) : ?>
                 <?php $fmt_stock_m2 = rtrim(rtrim(number_format($stock_boxes * $m2_box, 2, ',', '.'), '0'), ','); ?>
-                Còn <strong><?php echo esc_html($stock_boxes . ' thùng'); ?></strong> (<?php echo esc_html($fmt_stock_m2 . ' m²'); ?>)<?php echo $shelf !== '' ? esc_html(' · Kệ ' . $shelf) : ''; ?>
+                Còn <strong><?php echo esc_html($stock_boxes . ' thùng'); ?></strong> (<?php echo esc_html($fmt_stock_m2 . ' m²'); ?>)<?php echo $shelf !== '' ? esc_html(' · ' . drv_shelf_label($shelf)) : ''; ?>
             <?php elseif ($is_out) : ?>
                 Đặt trước theo lô sản xuất
             <?php elseif ($shelf !== '') : ?>
-                Sẵn mẫu thật tại <strong><?php echo esc_html('Kệ ' . $shelf); ?></strong>
+                Sẵn mẫu thật tại <strong><?php echo esc_html(drv_shelf_label($shelf)); ?></strong>
             <?php else : ?>
                 Sẵn hàng tại <strong>Kho TP.HCM</strong>
             <?php endif; ?>
@@ -352,7 +352,7 @@ if ($is_out) {
                         data-drv-m2="<?php echo esc_attr((string) $default_m2); ?>"
                         aria-label="<?php echo esc_attr('Thêm ' . ($sku !== '' ? $sku : $title) . ' vào danh sách báo giá'); ?>">
                     <?php drv_ui('icon', ['name' => 'plus', 'weight' => 'bold', 'size' => 'xs']); ?>
-                    <span><?php echo esc_html($is_out ? 'Báo giá lô mới' : 'Thêm báo giá'); ?></span>
+                    <span>Báo giá</span>
                 </button>
             <?php else : ?>
                 <button type="button"

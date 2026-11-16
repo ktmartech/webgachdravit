@@ -6,26 +6,79 @@ use Dravit\Home\HomeData;
 defined('ABSPATH') || exit;
 
 /**
- * Section: Product Grid Block (`01-home.html` Section Deals, `S-3`, `docs/07 §3.6`).
- * Module lưới sản phẩm tái sử dụng: chế độ `deals` (Ưu đãi lẻ lô tồn kho thùng/m²), `collection`, `custom`, `latest`.
+ * Section: Product Grid Block (`01-home.html` Section Deals, `03-product-single.html` Similar & Viewed, `S-3`).
+ * Module lưới sản phẩm tái sử dụng: chế độ `deals`, `collection`, `custom`, `latest`, `viewed` (`drv_viewed` localStorage).
  *
  * @var array<string, mixed> $args
  */
-
 $mode          = (string) ($args['mode'] ?? 'deals');
-$eyebrow       = trim((string) ($args['eyebrow'] ?? ($mode === 'deals' ? 'Khuyến mãi đặc biệt' : 'Sản phẩm chọn lọc')));
-$title         = trim((string) ($args['title'] ?? ($mode === 'deals' ? 'Chương Trình Khuyến Mãi & Giảm Giá' : 'Danh sách sản phẩm')));
+$is_viewed     = ($mode === 'viewed');
+$framed        = !empty($args['framed']);
+$section_id    = trim((string) ($args['section_id'] ?? ($is_viewed ? 'sec-recently-viewed' : ('home-' . $mode))));
+$eyebrow       = trim((string) ($args['eyebrow'] ?? ($mode === 'deals' ? 'Khuyến mãi đặc biệt' : ($is_viewed ? '' : 'Sản phẩm chọn lọc'))));
+$title         = trim((string) ($args['title'] ?? ($mode === 'deals' ? 'Chương Trình Khuyến Mãi & Giảm Giá' : ($is_viewed ? 'Sản phẩm vừa xem' : 'Danh sách sản phẩm'))));
 $desc          = trim((string) ($args['description'] ?? ''));
-$cta_label     = trim((string) ($args['cta_label'] ?? ($mode === 'deals' ? 'Xem tất cả khuyến mãi' : 'Xem toàn bộ')));
+$has_cta       = array_key_exists('cta_label', $args);
+$cta_label     = $has_cta ? trim((string) $args['cta_label']) : ($mode === 'deals' ? 'Xem tất cả khuyến mãi' : ($is_viewed ? '' : 'Xem toàn bộ'));
 $cta_path      = trim((string) ($args['cta_path'] ?? ($mode === 'deals' ? '/gach-uu-dai' : '/gach')));
 $limit         = max(1, min(16, (int) ($args['limit'] ?? 4)));
 $columns       = max(2, min(4, (int) ($args['columns'] ?? 4)));
 $surface       = (string) ($args['surface'] ?? 'white');
 $show_notice   = (bool) ($args['show_notice'] ?? ($mode === 'deals'));
 $category_slug = trim((string) ($args['category_slug'] ?? ''));
+$current_pid   = max(0, (int) ($args['current_product_id'] ?? 0));
 $product_ids   = isset($args['product_ids']) && is_array($args['product_ids'])
     ? array_map('intval', $args['product_ids'])
     : [];
+
+$products = $is_viewed ? [] : HomeData::getGridProducts($mode, $limit, $product_ids, $category_slug);
+if (!$is_viewed && $products === []) {
+    return;
+}
+
+$card_context = ($mode === 'deals') ? 'deals' : ($framed ? 'related' : 'catalog');
+
+if ($framed) :
+    ?>
+    <section class="drv-pdp-panel"
+             id="<?php echo esc_attr($section_id); ?>"
+             aria-label="<?php echo esc_attr($title); ?>"
+             <?php echo $is_viewed ? 'data-drv-viewed-section data-current-product-id="' . esc_attr((string) $current_pid) . '" hidden' : ''; ?>>
+        <div class="drv-pdp-panel__head">
+            <h2 class="drv-pdp-panel__title"><?php echo esc_html($title); ?></h2>
+
+            <?php if ($is_viewed) : ?>
+                <button type="button" class="drv-pdp-clear-viewed u-text-xs u-text-muted" data-drv-clear-viewed>
+                    Xóa lịch sử
+                </button>
+            <?php elseif ($desc !== '') : ?>
+                <span class="u-text-xs u-text-muted"><?php echo esc_html($desc); ?></span>
+            <?php endif; ?>
+        </div>
+
+        <div class="<?php echo esc_attr($is_viewed ? 'drv-pdp-viewed-grid' : 'drv-pdp-mini-grid'); ?>"
+             <?php echo $is_viewed ? 'data-drv-viewed-grid' : 'data-drv-stagger="55"'; ?>>
+            <?php foreach ($products as $item) : ?>
+                <?php
+                drv_ui('product-card', [
+                    'product'     => $item,
+                    'context'     => $card_context,
+                    'heading_tag' => 'h3',
+                ]);
+                ?>
+            <?php endforeach; ?>
+        </div>
+
+        <?php if (!$is_viewed && $cta_label !== '' && $cta_path !== '') : ?>
+            <a href="<?php echo esc_url(HomeData::siteUrl($cta_path)); ?>" class="drv-more-btn">
+                <span><?php echo esc_html($cta_label); ?></span>
+                <i class="ph-bold ph-caret-right drv-icon--xs" aria-hidden="true"></i>
+            </a>
+        <?php endif; ?>
+    </section>
+    <?php
+    return;
+endif;
 
 $sec_cls = 'l-section';
 if ($surface === 'white') {
@@ -33,15 +86,10 @@ if ($surface === 'white') {
 } elseif ($surface === 'champagne') {
     $sec_cls .= ' l-section--champagne';
 }
-
-$products = HomeData::getGridProducts($mode, $limit, $product_ids, $category_slug);
-if ($products === []) {
-    return;
-}
-
-$card_context = ($mode === 'deals') ? 'deals' : 'catalog';
 ?>
-<section class="<?php echo esc_attr($sec_cls); ?>" id="home-<?php echo esc_attr($mode); ?>">
+<section class="<?php echo esc_attr($sec_cls); ?>"
+         id="<?php echo esc_attr($section_id); ?>"
+         <?php echo $is_viewed ? 'data-drv-viewed-section data-current-product-id="' . esc_attr((string) $current_pid) . '" hidden' : ''; ?>>
     <div class="l-container">
         <?php
         drv_ui('section-head', [
@@ -49,14 +97,15 @@ $card_context = ($mode === 'deals') ? 'deals' : 'catalog';
             'title'        => $title,
             'desc'         => $desc,
             'heading_tag'  => 'h2',
-            'action_label' => $cta_label,
-            'action_url'   => HomeData::siteUrl($cta_path),
+            'action_label' => $cta_label !== '' ? $cta_label : null,
+            'action_url'   => $cta_label !== '' ? HomeData::siteUrl($cta_path) : null,
             'action_style' => 'more-btn',
             'reveal'       => 'fade-up',
         ]);
         ?>
 
-        <div class="l-grid l-grid--<?php echo (int) $columns; ?> drv-snap-row" data-drv-stagger="65">
+        <div class="l-grid l-grid--<?php echo (int) $columns; ?> drv-snap-row"
+             <?php echo $is_viewed ? 'data-drv-viewed-grid' : 'data-drv-stagger="65"'; ?>>
             <?php foreach ($products as $item) : ?>
                 <?php
                 drv_ui('product-card', [

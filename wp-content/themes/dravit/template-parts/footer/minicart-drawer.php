@@ -13,10 +13,8 @@ $checkout_url = (drv_is_woo_active() && function_exists('wc_get_checkout_url'))
     : MegaMenuRenderer::internal_url('/thanh-toan');
 $catalog_url  = MegaMenuRenderer::collection_url('gach');
 
+// P-4: Luôn xuất 0 trong HTML tĩnh để bảo toàn LiteSpeed Page Cache; core.js hydrate qua Store API.
 $cart_count = 0;
-if (drv_is_woo_active() && function_exists('WC') && WC()->cart !== null) {
-    $cart_count = count(WC()->cart->get_cart());
-}
 ?>
 <dialog id="drv-minicart-drawer" class="drv-dialog drv-dialog--drawer-right" aria-labelledby="minicart-title">
     <div class="drv-dialog__head">

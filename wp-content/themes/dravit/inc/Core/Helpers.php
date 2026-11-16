@@ -64,6 +64,21 @@ function drv_format_decimal(int|float $value, int $decimals = 2): string {
 }
 
 /**
+ * Nhãn vị trí mẫu trưng bày từ `drv_showroom_shelf`.
+ * Mã kệ thật luôn chứa chữ số (`A-08`, `B-04`); giá trị chung như `Showroom` (importer gán khi chỉ biết "có mẫu")
+ * không phải mã kệ → trả về "Showroom" để tránh nhãn lặp "Kệ Showroom Showroom".
+ *
+ * @return string '' nếu không có mẫu; `Kệ A-08` nếu có mã kệ; `Showroom` nếu chỉ biết có mẫu.
+ */
+function drv_shelf_label(string $shelf): string {
+    $shelf = trim($shelf);
+    if ($shelf === '') {
+        return '';
+    }
+    return preg_match('/\d/', $shelf) === 1 ? 'Kệ ' . $shelf : 'Showroom';
+}
+
+/**
  * Chuẩn hóa số điện thoại để gắn vào `tel:` hoặc `https://zalo.me/`.
  */
 function drv_clean_phone(string $phone): string {

@@ -381,7 +381,40 @@ function drv_section(string $name, array $props = []): void {
   - `Vitest`: `unit-calc-dom.test.js` (`U-4..U-7`, `U-11..U-16`, `input[name="quantity"]` là số nguyên `viên`, truyền đúng `target_m2` sang `QuoteStore`, không fallback `DRV-8801M`).
   - `PHPUnit`: `SeriesSwatchResolverTest`, `BuyNowRedirectTest`, `SpecInternalLinkTest`.
 - **Check hoàn thành (`Gate 7`):**
-  - [ ] Toàn bộ test cases `P-1`..`P-9` trong `09 §3.6` pass 100%; tắt JS vẫn bấm *Thêm vào giỏ* và *Mua ngay* thành công.
+  - [ ] Toàn bộ test cases `P-1`..`P-9` trong `09 §3.6` pass 100% — **7/9 đạt**, còn `P-3` (chờ dữ liệu `drv_series`) và một phần `P-4`/`P-5` (xem bảng dưới).
+  - [x] Tắt JS vẫn bấm *Thêm vào giỏ* (POST form, thêm đúng `18` viên) và *Mua ngay* (`drv_buy_now=1` → `/thanh-toan`) thành công.
+  - [x] `PHPUnit` `130/130`, `Vitest` `46/46`, `ESLint` + `Stylelint` sạch, `PHPStan` sạch trên các file Step 7; `debug.log` và console trình duyệt `0` lỗi.
+
+- **Kết quả thực thi (`2026-11-16`, chưa commit — nhánh `feat/theme-step-0-to-2-catalog-engine`):**
+  - **Template & dữ liệu:** `woocommerce/{single-product,content-single-product}.php`, `template-parts/product/{gallery,buy-box,series-swatches,spec-panel,faces-grid,notes,sticky-bar}.php`; `Catalog\{ProductViewData,SeriesSwatchResolver,ProductsController}` (REST `GET /dravit/v1/products` cho *Đã xem gần đây*).
+  - **Asset:** `pages/product.css` (port `pages.css §3` mockup + phần mở rộng theme), `chunks/lightbox.{js,css}`, `product.js`; Vite entry `product` tải riêng trên PDP.
+  - **Đối soát `P-1..P-9` (kiểm trên local `VA8080-M17`, `VA6060-M18` quote, `TH7530` piece):**
+
+    | Case | Kết quả | Ghi chú |
+    |---|---|---|
+    | `P-1` Breadcrumb | ✅ | Theo primary `Gạch → Gạch Lát Nền`, đúng 1 `BreadcrumbList`. |
+    | `P-2` Bảng thông số | ✅ | 8 link `IL-03` tĩnh, `0` link có `?` hoặc `/` cuối (`SpecInternalLinkTest`). |
+    | `P-3` Swatch `drv_series` | ⏳ | Code + `SeriesSwatchResolverTest` đạt; **dữ liệu hiện 28 series / 28 SKU (mỗi series 1 SKU)** nên chưa có biến thể để hiển thị → cần điền cột `drv_series` trong Master Listing. |
+    | `P-4` Thêm vào giỏ | ✅ / ⏳ | Store API `cart/add-item` gửi số nguyên viên + `drv_cart_data`, mở mini-cart, badge cập nhật; fallback POST khi lỗi mạng. **Chưa kiểm** "page cache không lộ giỏ" (LiteSpeed không bật ở local → kiểm tại Step 11). |
+    | `P-5` Schema | ✅ / ⏳ | `brand = DRAVIT`, Offer giá/viên + `UnitPriceSpecification` m², ẩn Offer `0đ` khi `quote`. **Chưa chạy Rich Results Test** (cần URL public). |
+    | `P-6` Gallery | ✅ | `0` request lightbox trước khi click; đúng 1 ảnh `fetchpriority="high"`, không lazy. |
+    | `P-7` Mua ngay | ✅ | Chạy cả khi tắt JS (`BuyNowRedirectTest`). |
+    | `P-8` Sticky bar | ✅ | `priced`: giá/m² + Mua ngay/Thêm vào giỏ; `quote`: Liên hệ báo giá + Nhận báo giá. |
+    | `P-9` SKU & init JS | ✅ | Nút copy ngoài `<h1>`; thiếu kích thước → khoá máy tính & nút mua, `0` fallback `DRV-8801M`. |
+
+  - **Quyết định khi đối chiếu mockup (giữ theo docs, không theo mockup):**
+    - Không có nút ♡ Wishlist cạnh *Chia sẻ* (`D-26`, `STRIP-14`); nhãn *Chia sẻ* tiếng Việt thay *Share* (`D-01`).
+    - Giữ tab `Mua theo: m² · Thùng · Viên` + hao hụt `0/5/10%` cùng hàng stepper (`D-24`, `07 §5.1`); bỏ nút preset `15/25/40m²`.
+    - Lightbox giữ **PhotoSwipe 5** (`D-28`) nhưng khoác skin modal của mockup (header + *Tải Map 3D/CAD*, nút tròn, pill `3 / 6`, caption, 6 thumbnail); CSS PhotoSwipe đưa vào `@layer plugins`.
+    - Cụm 3 link phụ dưới CTA gộp thành **thẻ B2B** "Mua cho công trình ≥ 30m²? → [Nhận báo giá]" + chip *[+ Thêm vào DS báo giá · N thùng]* / *[Hỏi Trợ lý AI]*.
+  - **Lỗi phát sinh đã sửa ngoài phạm vi PDP:** action `add-to-cart` trong `core.js` trước đó chỉ là stub toast; chunk `motion.js` lỗi `TypeError` do gán vào `window.Dravit` đã `Object.freeze` (làm chết reveal/odometer toàn site); font `phosphor-subset.woff2` có `lsb = 0` làm **mọi icon lệch trái ~12% em** → sửa `tools/build-assets-step1.py` + gắn hash tên font (`Assets::dist_font_url()`); nhãn kệ "Kệ Showroom Showroom" → `drv_shelf_label()`; importer ghép trùng kích thước trong tên SP → `MasterListingParser::joinTitleParts()`; thẻ `quote` bị nút đè chữ *Liên hệ báo giá*.
+  - **Việc còn mở trước khi đóng Gate 7:**
+    1. Điền `drv_series` cho các SKU cùng dòng rồi kiểm lại `P-3`.
+    2. **Import lại Master Listing** để 28 SP nhận tên mới (hiện vẫn còn dạng "80x80 80x80 Mờ").
+    3. Kiểm `P-4` (cache không lộ giỏ) và `P-5` (Rich Results) trên staging có LiteSpeed + URL public.
+    4. Thông báo WooCommerce còn tiếng Anh (*"have been added to your cart"*) → cài gói ngôn ngữ `vi` cho WooCommerce (ngoài Step 7).
+    5. Tên SP trong JSON-LD còn entity `&#215;` thay vì ký tự `×` (do `wptexturize`) → sửa trong `SchemaGraph` ở Step 11.
+    6. Khi deploy: purge LiteSpeed Cache để nhận URL font/asset có hash mới.
 
 ---
 

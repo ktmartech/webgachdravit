@@ -62,7 +62,6 @@ $ui_groups = isset($args['ui_groups']) && is_array($args['ui_groups']) ? $args['
                     <i class="ph-fill ph-seal-check drv-icon--xs" aria-hidden="true"></i>
                     <span>Có mẫu tại Showroom</span>
                 </span>
-                <span class="drv-filter-showroom-card__sub">Xem trực tiếp bề mặt</span>
             </span>
             <span class="drv-filter-showroom-card__count u-tabular"><?php echo esc_html((string) $sr_count); ?></span>
         </label>

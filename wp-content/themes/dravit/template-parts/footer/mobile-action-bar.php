@@ -7,10 +7,8 @@ $hotline_raw = (string) drv_setting('contact.hotline', '0909 888 777');
 $hotline_tel = drv_clean_phone($hotline_raw);
 $zalo_clean  = drv_clean_phone((string) drv_setting('contact.zalo', $hotline_raw));
 
+// P-4: Không in số lượng giỏ hàng động trong HTML được cache của LiteSpeed; core.js tự hydrate từ cookie/Store API.
 $cart_count = 0;
-if (drv_is_woo_active() && function_exists('WC') && WC()->cart !== null) {
-    $cart_count = count(WC()->cart->get_cart());
-}
 ?>
 <nav class="drv-mobile-bar" aria-label="Thanh công cụ nhanh trên di động">
     <button type="button" class="drv-mobile-bar__btn" data-drv-action="dialog-open" data-drv-target="#drv-mobile-menu-drawer">

@@ -196,7 +196,7 @@ final class Renderer {
                 rtrim(rtrim(number_format($areaBox > 0 ? $areaBox : 1.44, 2, ',', '.'), '0'), ','),
                 $kgPerBox > 0 ? ' · ' . rtrim(rtrim(number_format($kgPerBox, 1, ',', '.'), '0'), ',') . ' kg' : ''
             ),
-            'origin_label'   => $originLabel !== '' ? $originLabel : ($shelf !== '' ? 'Kệ mẫu ' . $shelf : 'Kho trung tâm DRAVIT'),
+            'origin_label'   => $originLabel !== '' ? $originLabel : ($shelf !== '' ? 'Mẫu tại ' . drv_shelf_label($shelf) : 'Kho trung tâm DRAVIT'),
             'stock_label'    => $stockLabel,
             'why'            => $whyText,
             'quote'          => $quotePayload,

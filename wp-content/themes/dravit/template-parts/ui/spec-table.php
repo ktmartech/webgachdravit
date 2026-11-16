@@ -16,8 +16,10 @@ if ($rows === [] && $sku === '') {
 }
 
 $visible_rows = ($limit > 0 && count($rows) > $limit) ? array_slice($rows, 0, $limit) : $rows;
+$variant      = sanitize_key((string) ($args['variant'] ?? ''));
+$table_cls    = 'drv-spec-table' . ($variant === 'clean' ? ' drv-spec-table--clean' : '');
 ?>
-<table class="drv-spec-table">
+<table class="<?php echo esc_attr($table_cls); ?>">
     <?php if ($caption !== '') : ?>
         <caption class="u-sr-only"><?php echo esc_html($caption); ?></caption>
     <?php endif; ?>

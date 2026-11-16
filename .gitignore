@@ -29,6 +29,8 @@ wp-content/themes/dravit/tools/.font-cache/
 .DS_Store
 Thumbs.db
 node_modules/
+__pycache__/
+*.pyc
 
 # Agent skills old & temp
 .agents/skills-old/
