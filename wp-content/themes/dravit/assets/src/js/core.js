@@ -1,6 +1,7 @@
 import { debounce, prefersReducedMotion, qs, qsa } from './utils/dom.js';
 import { formatDecimalVn, formatVnd } from './utils/format.js';
-import { countQuoteItems, upsertQuoteItem } from './utils/storage.js';
+import { captureUtm } from './utils/lead-client.js';
+import { countQuoteItems } from './utils/storage.js';
 import { showToast } from './utils/toast.js';
 
 const actionHandlers = new Map();
@@ -534,18 +535,23 @@ function registerBuiltInActions() {
 
   registerAction('quote-add', async (trigger, event) => {
     event?.preventDefault();
-    const sku = trigger.dataset.drvSku || 'DRV-SKU';
-    const productId = Number.parseInt(trigger.dataset.drvProductId || '0', 10) || 0;
-    const title = trigger.dataset.drvTitle || sku;
-    const m2 = Number.parseFloat(trigger.dataset.drvM2 || '20') || 20;
-
-    upsertQuoteItem({ product_id: productId, sku, title, area_m2: m2 });
-    showToast(`Đã thêm ${title} vào Danh sách báo giá`, 'success');
-
+    const mod = await import('./chunks/quote-add.js');
+    const added = await mod.quoteAdd(trigger);
     const badge = qs('[data-drv-quote-count], [data-quote-badge-count]');
-    if (badge && !prefersReducedMotion()) {
+    if (added && badge && !prefersReducedMotion()) {
       const motion = await import('./chunks/motion.js');
       motion.bounceCartBadge(badge);
+    }
+  });
+
+  registerAction('cart-to-quote', async (trigger, event) => {
+    event?.preventDefault();
+    trigger.setAttribute('aria-busy', 'true');
+    try {
+      const mod = await import('./chunks/quote-add.js');
+      await mod.cartToQuote(trigger);
+    } finally {
+      trigger.removeAttribute('aria-busy');
     }
   });
 
@@ -683,6 +689,50 @@ function registerBuiltInActions() {
     }
     const baseUrl = window.DRV_CONFIG?.aiFinderUrl || '/tro-ly-ai-tim-gach';
     window.location.href = prompt ? `${baseUrl}?prompt=${encodeURIComponent(prompt)}` : baseUrl;
+  });
+}
+
+/**
+ * Nạp lười chunk `lead-form.js` khi khách chạm vào form tư vấn đầu tiên (không tốn byte trên trang chỉ xem).
+ * Form vẫn hoạt động khi tắt JS nhờ `action="admin-post.php"`.
+ */
+function setupLeadForms() {
+  let loader = null;
+  const load = () => {
+    loader ??= import('./chunks/lead-form.js');
+    return loader;
+  };
+  const bindFrom = (target) => {
+    const form = target instanceof Element ? target.closest('form[data-drv-lead-form]') : null;
+    if (!form) {
+      return null;
+    }
+    return load().then((mod) => {
+      mod.bindLeadForm(form);
+      return mod;
+    });
+  };
+
+  document.addEventListener('focusin', (event) => {
+    bindFrom(event.target);
+  });
+  document.addEventListener(
+    'submit',
+    (event) => {
+      const form = event.target;
+      if (!(form instanceof HTMLFormElement) || !form.matches('[data-drv-lead-form]') || form.dataset.drvLeadBound) {
+        return;
+      }
+      // Submit trước khi chunk kịp nạp (autofill + Enter): chặn POST thuần, nạp chunk rồi gửi lại bằng AJAX.
+      event.preventDefault();
+      form.dataset.drvLeadBound = '1';
+      bindFrom(form)?.then(() => form.requestSubmit());
+    },
+    true,
+  );
+  document.addEventListener('drv:lead-context', (event) => {
+    const root = event.target instanceof Element ? event.target : document;
+    load().then((mod) => mod.applyLeadContext(root, event.detail || {}));
   });
 }
 
@@ -1086,6 +1136,8 @@ export function initCore() {
     setupHeaderAndMenus();
     hydrateQuoteAndCartBadges();
     setupImageShine();
+    setupLeadForms();
+    captureUtm();
   }
 
   if (qs('drv-unit-calc, drv-qty-input')) {

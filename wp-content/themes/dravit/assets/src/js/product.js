@@ -106,19 +106,19 @@ function registerPdpActions() {
     const boxesText = String(trigger.dataset.drvBoxesText || '').trim();
     const rawM2 = Number.parseFloat(trigger.dataset.drvM2 || '0') || 0;
 
-    const areaInput = qs('#modal-quote-area, [name="estimated_m2"]', modal);
-    if (areaInput instanceof HTMLInputElement && rawM2 > 0) {
-      areaInput.value = String(Number(rawM2.toFixed(2)));
-    }
-
-    const itemInput = qs('[data-quote-modal-sku], #modal-quote-product, [name="interested_items"]', modal);
-    if (itemInput instanceof HTMLInputElement) {
-      const parts = [sku, title].filter(Boolean).join(' - ');
-      const suffix = boxesText ? ` (Dự tính: ${boxesText}${rawM2 > 0 ? ` ~ ${rawM2} m²` : ''})` : '';
-      if (parts) {
-        itemInput.value = `${parts}${suffix}`;
-      }
-    }
+    // Bơm ngữ cảnh SP + m² vừa tính vào form native lẫn Hidden field Fluent Forms (D-31).
+    modal.dispatchEvent(
+      new CustomEvent('drv:lead-context', {
+        bubbles: true,
+        detail: {
+          product_id: Number.parseInt(trigger.dataset.productId || trigger.dataset.drvProductId || '0', 10) || 0,
+          sku,
+          title,
+          area_m2: rawM2,
+          boxes_text: boxesText,
+        },
+      }),
+    );
 
     openDialog(modal, trigger);
   });

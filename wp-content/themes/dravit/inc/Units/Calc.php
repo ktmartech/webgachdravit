@@ -327,6 +327,65 @@ final class Calc {
     }
 
     /**
+     * 5b. Tính 1 dòng slot BOQ đa phòng theo `input_mode` khách nhập và `round_mode` của SP (docs/17 §3.1).
+     * - `m2`: cộng hao hụt toàn phiếu rồi quy đổi theo `round_mode` (`box` chẵn thùng | `piece` lẻ viên).
+     * - `thung`: giữ số thùng khách chỉ định (`round(pieces / ppb)`), không phụ thuộc hao hụt.
+     * - `vien`: giữ số viên, làm tròn lên bội số thùng nếu SP bắt buộc `box`.
+     *
+     * @param array<string, mixed> $product {areaPiece, piecesPerBox, kgPerBox, priceM2, pricePiece?, roundMode, qtyMin, unitLabel}
+     * @param array<string, mixed> $slot    {inputMode, targetM2, pieces}
+     * @return array{pieces: int, fullBoxes: int, loosePieces: int, boxText: string, needM2: float, actualM2: float, totalKg: float, pricePiece: int, totalVnd: int, isQuote: bool, inputMode: string, targetM2: float, surplusM2: float}
+     */
+    public static function computeSlot(array $product, array $slot, int|float $waste_pct): array {
+        $area_piece = max(0.0, (float) ($product['areaPiece'] ?? 0.0));
+        $ppb        = max(1, (int) ($product['piecesPerBox'] ?? 1));
+        $round_mode = ($product['roundMode'] ?? 'box') === 'piece' ? 'piece' : 'box';
+        $qty_min    = max(1, (int) ($product['qtyMin'] ?? 1));
+        $mode_raw   = (string) ($slot['inputMode'] ?? 'm2');
+        $mode       = in_array($mode_raw, ['m2', 'thung', 'vien'], true) ? $mode_raw : 'm2';
+        $target_m2  = max(0.0, round((float) ($slot['targetM2'] ?? 0.0), 2));
+        $raw_pieces = max(0, (int) round((float) ($slot['pieces'] ?? 0)));
+
+        $common = [
+            'areaPiece'    => $area_piece,
+            'piecesPerBox' => $ppb,
+            'kgPerBox'     => $product['kgPerBox'] ?? 0.0,
+            'priceM2'      => $product['priceM2'] ?? 0.0,
+            'pricePiece'   => $product['pricePiece'] ?? null,
+            'qtyMin'       => $qty_min,
+            'unitLabel'    => $product['unitLabel'] ?? 'viên',
+        ];
+
+        if ($mode === 'm2') {
+            if ($target_m2 <= 0.0 || $area_piece <= 0.0) {
+                $res = self::buildCalcResult(['pieces' => 0] + $common);
+            } else {
+                $res = self::calcFromM2($common + [
+                    'areaM2'    => $target_m2,
+                    'wastePct'  => max(0.0, (float) $waste_pct),
+                    'roundMode' => $round_mode,
+                ]);
+            }
+        } elseif ($mode === 'thung') {
+            $boxes = max(1, (int) round(max(1, $raw_pieces) / $ppb));
+            $res   = self::calcFromBoxes($common + ['boxes' => $boxes]);
+        } else {
+            $res = self::calcFromPieces($common + [
+                'pieces'    => max(1, $raw_pieces),
+                'roundMode' => $round_mode,
+            ]);
+        }
+
+        $res['actualM2']  = round($res['actualM2'], 2);
+        $effective_target = $mode === 'm2' ? $target_m2 : ($target_m2 > 0.0 ? $target_m2 : $res['actualM2']);
+        $res['inputMode'] = $mode;
+        $res['targetM2']  = $effective_target;
+        $res['surplusM2'] = max(0.0, round($res['actualM2'] - $effective_target, 2));
+
+        return $res;
+    }
+
+    /**
      * 6. Tính chiết khấu khối lượng dự kiến trên bảng BOQ (ADR D-23).
      *
      * @param array<int, array<string, mixed>> $tiers

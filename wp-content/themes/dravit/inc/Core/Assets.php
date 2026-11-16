@@ -38,6 +38,7 @@ final class Assets implements ServiceProviderInterface {
             'boqUrl'                  => untrailingslashit(home_url('/danh-sach-bao-gia')),
             'aiFinderUrl'             => untrailingslashit(home_url('/tro-ly-ai-tim-gach')),
             'zaloPhone'               => drv_clean_phone((string) drv_setting('contact.zalo', '0909888777')),
+            'quoteRoles'              => array_values(array_map('strval', (array) drv_setting('quote.roles', []))),
         ];
         $json = wp_json_encode($config, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         if (is_string($json) && $json !== '') {
@@ -72,6 +73,15 @@ final class Assets implements ServiceProviderInterface {
         ) {
             self::enqueue_style('drv-page-product', 'assets/src/css/pages/product.css');
             self::enqueue_module('drv-product', 'assets/src/js/product.js');
+        }
+
+        // Nạp CSS/JS trong <head> (tránh FOUC) cho 2 trang Step 8; SectionRegistry vẫn tự dedupe.
+        if (function_exists('is_page_template') && is_page_template('page-templates/template-quote.php')) {
+            self::enqueue_section_style('assets/src/css/pages/quote.css');
+            self::enqueue_section_script('assets/src/js/quote.js');
+        }
+        if (function_exists('is_page_template') && is_page_template('page-templates/template-contact.php')) {
+            self::enqueue_section_style('assets/src/css/pages/contact.css');
         }
 
         if (

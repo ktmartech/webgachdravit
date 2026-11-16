@@ -48,7 +48,10 @@ return [
     ],
     'geo-spec-section'      => ['defaults' => ['rows' => []]],
     'faq-section'           => ['defaults' => ['items' => []]],
-    'lead-capture-section'  => ['defaults' => ['form_slot' => 'contact_page', 'lead_type' => 'contact']],
+    'lead-capture-section'  => [
+        'defaults' => ['form_slot' => 'contact_page', 'lead_type' => 'contact', 'surface' => 'ivory'],
+        'style'    => 'assets/src/css/pages/contact.css',
+    ],
     'editorial-guides'      => [
         'defaults' => ['limit' => 3, 'surface' => 'ivory'],
         'style'    => 'assets/src/css/pages/home.css',
@@ -58,7 +61,14 @@ return [
         'style'    => 'assets/src/css/pages/ai-finder.css',
         'script'   => 'assets/src/js/chunks/ai-finder.js',
     ],
-    'boq-workspace'         => ['defaults' => [], 'script' => 'assets/src/js/chunks/quote.js'],
-    'contact-hub'           => ['defaults' => []],
+    'boq-workspace'         => [
+        'defaults' => [],
+        'style'    => 'assets/src/css/pages/quote.css',
+        'script'   => 'assets/src/js/quote.js',
+    ],
+    'contact-hub'           => [
+        'defaults' => [],
+        'style'    => 'assets/src/css/pages/contact.css',
+    ],
     'error-404-recovery'    => ['defaults' => []],
 ];

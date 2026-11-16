@@ -391,7 +391,7 @@ function drv_section(string $name, array $props = []): void {
   - **Đối soát `P-1..P-9` (kiểm trên local `VA8080-M17`, `VA6060-M18` quote, `TH7530` piece):**
 
     | Case | Kết quả | Ghi chú |
-    |---|---|---|
+    | --- | --- | --- |
     | `P-1` Breadcrumb | ✅ | Theo primary `Gạch → Gạch Lát Nền`, đúng 1 `BreadcrumbList`. |
     | `P-2` Bảng thông số | ✅ | 8 link `IL-03` tĩnh, `0` link có `?` hoặc `/` cuối (`SpecInternalLinkTest`). |
     | `P-3` Swatch `drv_series` | ⏳ | Code + `SeriesSwatchResolverTest` đạt; **dữ liệu hiện 28 series / 28 SKU (mỗi series 1 SKU)** nên chưa có biến thể để hiển thị → cần điền cột `drv_series` trong Master Listing. |
@@ -442,7 +442,19 @@ function drv_section(string $name, array $props = []): void {
   - `Vitest`: `quote-store.test.js` (đa phòng, migrate v1 → v2, Base64URL XSS guard, trộn `priced` + `quote_only`).
   - `PHPUnit`: `BoqServiceTest` (server recompute 100%), `AntiSpamGuardTest`, `FluentFormsBridgeTest` (inject hidden context + sync submission → `drv_lead`), `OrderConverterTest` (tạo `WC_Order` HPOS chuẩn xác).
 - **Check hoàn thành (`Gate 8`):**
-  - [ ] Toàn bộ kịch bản `Q-1`..`Q-6` (`09 §3.7B`) và luồng Dual-Mode Fluent Forms ↔ `drv_lead` ↔ `OrderConverter` HPOS hoạt động trơn tru 100%.
+  - [ ] Toàn bộ kịch bản `Q-1`..`Q-6` (`09 §3.7B`) và luồng Dual-Mode Fluent Forms ↔ `drv_lead` ↔ `OrderConverter` HPOS hoạt động trơn tru 100% — **code + unit test đạt; còn mở 3 mục ghi bên dưới**.
+  - [x] `PHPUnit` `151/151`, `Vitest` `63/63`, `ESLint` + `Stylelint` sạch, `PHPStan` sạch toàn theme; `debug.log` `0` lỗi mới.
+
+- **Kết quả thực thi (`2026-11-16`, chưa commit — nhánh `feat/theme-step-0-to-2-catalog-engine`):**
+  - **PHP:** `Leads\{LeadValidator,AntiSpamGuard,LeadRepository,LeadNotifier,LeadController,LeadPostType,LeadAdmin}`, `Quote\{BoqService,QuoteController,OrderConverter}`, `Units\Calc::computeSlot()` (song sinh `computeSlot()` JS, tôn trọng `input_mode` + `round_mode`); mở rộng `ProductsController` (`skus`, `search`, `size`, `space`, `page`, `per_page` + trường BOQ), `NonceController` (`ts` + `sig` HMAC), `FluentFormsBridge` (bơm ngữ cảnh Hidden field, entry FF → `drv_lead`, nhân bản BOQ sang Entries qua `forms.boq_mirror`), `drv_settings.quote` (`roles`, `default_rooms`, `rate_limit_15m`, `notify_emails`, `retention_days`, `valid_days`).
+  - **Template:** `sections/{boq-workspace,contact-hub,lead-capture-section}.php`, `leads/native-form.php` (dùng chung 5 slot, POST `admin-post.php` khi tắt JS), `footer/quote-modal.php` Dual-Mode.
+  - **Asset:** entry `quote.js`, `utils/{quote-store,lead-client,storage-core}.js`, chunk `lead-form.js` / `quote-add.js` (nạp lười), `pages/{quote,contact}.css`; `utils/storage.js` giữ API phẳng cũ làm adapter cho AI Finder.
+  - **Đối soát trên local (`localhost:10029`):** Q-01 (Card/PDP → `room-general`, badge) ✅ · Q-02 (`noindex, follow`, không `Set-Cookie`, không nonce trong HTML) ✅ · Q-03/Q-04 (trộn `priced` + `quote_only`, chiết khấu 5% / 8%) ✅ · Q-05 (link `?quote=` ẩn danh, XSS bị vô hiệu) ✅ · Q-07 (giá ảo bị bỏ qua, thiếu consent → `422`) ✅ · Q-08 (time-trap `403`, nonce sai `403`, lần 6 → `429` + `Retry-After`) ✅ · Q-09 (AJAX + tắt JS redirect `303`) ✅.
+  - **Quyết định khi đối chiếu mockup:** ẩn khối vật tư phụ `.drv-pack-item` (`D-26`); bỏ 4 phòng mẫu dựng sẵn, thay bằng empty state + chip phòng gợi ý (`17 §2.3`); thêm chọn chế độ nhập `m² / Thùng / Viên` theo `drv_buy_units` từng dòng; "Bản nháp" thay mã phiếu giả cho tới khi server cấp `BG-…`.
+  - **Việc còn mở trước khi đóng Gate 8:**
+    1. Kiểm `Q-10` (Admin "Tạo đơn hàng từ báo giá" → `WC_Order` HPOS) trên WP Admin thật; trạng thái `wc-cho-xac-nhan` chưa đăng ký (Step 9) nên đơn chưa có phí ship tạm rơi về `pending`.
+    2. Rank Math tự bỏ thẻ canonical trên mọi trang `noindex` (kể cả `/danh-sach-bao-gia`, `Q-02` yêu cầu canonical sạch) → xử lý tập trung ở `Seo\Canonical` (Step 11).
+    3. Drawer `<drv-quote-panel>` (`15 §5.6`) chưa cắt: hiện toast "Mở bảng dự toán" dẫn thẳng `/danh-sach-bao-gia`; nút `cart-to-quote` đã có action, chờ gắn vào giỏ hàng ở Step 9.
 
 ---
 

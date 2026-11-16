@@ -341,11 +341,15 @@ describe('Step 4 <drv-ai-finder> Workspace UI/UX (2-Col/Stream, Quick Spec Modal
     expect(quoteAllBtn.hidden).toBe(false);
     quoteAllBtn.click();
 
-    const fullQuote = JSON.parse(window.localStorage.getItem(QUOTE_STORAGE_KEY));
+    // Step 8: storage là schema đa phòng; đọc qua adapter phẳng `getQuoteState()`.
+    const raw = JSON.parse(window.localStorage.getItem(QUOTE_STORAGE_KEY));
+    expect(raw.rooms[0].slots.length).toBe(2);
+    const fullQuote = getQuoteState();
     expect(fullQuote.items.length).toBe(2);
     expect(fullQuote.items[1].product_id).toBe(109);
     expect(fullQuote.items[1].price_state).toBe('quote_only');
-    expect(fullQuote.items[1].price_m2).toBeNull();
+    // Không lưu giá vào localStorage (docs/17 §2.2) và không có số 0đ giả.
+    expect(fullQuote.items[1].price_m2 ?? null).toBeNull();
     expect(document.querySelector('[data-drv-quote-count]').textContent).toBe('2');
   });
 

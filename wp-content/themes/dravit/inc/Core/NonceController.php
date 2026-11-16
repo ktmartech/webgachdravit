@@ -3,6 +3,10 @@ declare(strict_types=1);
 
 namespace Dravit\Core;
 
+use Dravit\Leads\AntiSpamGuard;
+use Dravit\Leads\LeadController;
+use Dravit\Quote\QuoteController;
+
 defined('ABSPATH') || exit;
 
 /**
@@ -35,14 +39,17 @@ final class NonceController implements ServiceProviderInterface {
             }
         }
 
-        $payload = [
+        // `ts` + `sig` (HMAC) phục vụ Time-trap lớp 4: server tự xác thực mốc thời gian, client không giả được (D-30).
+        $time_token = AntiSpamGuard::issueTimeToken();
+        $payload    = [
             'nonces' => [
-                'lead'         => wp_create_nonce('drv_lead_submit'),
-                'quote'        => wp_create_nonce('drv_quote_submit'),
+                'lead'         => wp_create_nonce(LeadController::NONCE_ACTION),
+                'quote'        => wp_create_nonce(QuoteController::NONCE_ACTION),
                 'advisor'      => wp_create_nonce('drv_advisor_submit'),
                 'wc_store_api' => wp_create_nonce('wc_store_api'),
             ],
-            'ts'     => time(),
+            'ts'     => $time_token['ts'],
+            'sig'    => $time_token['sig'],
             'ttl'    => 600,
         ];
 

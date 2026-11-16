@@ -326,6 +326,61 @@ export function calcBoqSlot({
 }
 
 /**
+ * 5b. Tính 1 dòng slot BOQ đa phòng theo `inputMode` và `roundMode` của SP (docs/17 §3.1).
+ * Bản song sinh của `Dravit\Units\Calc::computeSlot()`.
+ * @param {{areaPiece:number, piecesPerBox:number, kgPerBox?:number, priceM2?:number, pricePiece?:number|null, roundMode?:string, qtyMin?:number, unitLabel?:string}} product
+ * @param {{inputMode?:string, targetM2?:number, pieces?:number}} slot
+ * @param {number} wastePct
+ */
+export function computeSlot(product, slot, wastePct) {
+  const areaPiece = Math.max(0, Number(product?.areaPiece) || 0);
+  const ppb = Math.max(1, Math.trunc(Number(product?.piecesPerBox) || 1));
+  const roundMode = product?.roundMode === 'piece' ? 'piece' : 'box';
+  const qtyMin = Math.max(1, Math.trunc(Number(product?.qtyMin) || 1));
+  const mode = ['m2', 'thung', 'vien'].includes(slot?.inputMode) ? slot.inputMode : 'm2';
+  const targetM2 = Math.max(0, roundTo(Number(slot?.targetM2) || 0, 2));
+  const rawPieces = Math.max(0, Math.round(Number(slot?.pieces) || 0));
+
+  const common = {
+    areaPiece,
+    piecesPerBox: ppb,
+    kgPerBox: Number(product?.kgPerBox) || 0,
+    priceM2: Number(product?.priceM2) || 0,
+    pricePiece: product?.pricePiece ?? null,
+    qtyMin,
+    unitLabel: product?.unitLabel || 'viên',
+  };
+
+  let res;
+  if (mode === 'm2') {
+    res =
+      targetM2 <= 0 || areaPiece <= 0
+        ? buildCalcResult({ pieces: 0, needM2: 0, ...common })
+        : calcFromM2({ ...common, areaM2: targetM2, wastePct: Math.max(0, Number(wastePct) || 0), roundMode });
+  } else if (mode === 'thung') {
+    const boxes = Math.max(1, Math.round(Math.max(1, rawPieces) / ppb));
+    res = calcFromBoxes({ ...common, boxes });
+  } else {
+    res = calcFromPieces({ ...common, pieces: Math.max(1, rawPieces), roundMode });
+  }
+
+  const actualM2 = roundTo(res.actualM2, 2);
+  const effectiveTarget = mode === 'm2' ? targetM2 : targetM2 > 0 ? targetM2 : actualM2;
+  return {
+    ...res,
+    actualM2,
+    inputMode: mode,
+    targetM2: effectiveTarget,
+    surplusM2: Math.max(0, roundTo(actualM2 - effectiveTarget, 2)),
+  };
+}
+
+function roundTo(value, decimals) {
+  const f = 10 ** decimals;
+  return Math.round((Number(value) || 0) * f) / f;
+}
+
+/**
  * 6. Tính chiết khấu khối lượng dự kiến trên bảng BOQ (ADR D-23).
  */
 export function calcVolumeDiscount(subtotalVnd, totalM2, tiers = DEFAULT_VOLUME_TIERS) {

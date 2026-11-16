@@ -236,15 +236,20 @@ describe('Step 7 <drv-unit-calc> DOM (D-24)', () => {
     expect(qtyHidden().value).toBe('51');
   });
 
-  it('truyền đúng target_m2 vừa tính sang QuoteStore (drv_quote_v2) khi bấm Thêm vào DS Báo giá', () => {
+  it('truyền đúng target_m2 vừa tính sang QuoteStore (drv_quote_v2) khi bấm Thêm vào DS Báo giá', async () => {
     mountPdp({ m2: 10 });
     $('#preset-25').click();
     expect($('#quote-add').dataset.drvM2).toBe('25');
 
     $('#quote-add').click();
+    // Step 8: schema đa phòng `rooms[].slots[]` (docs/17 §2.2), PDP giữ đúng m² khách nhập (Q-01).
+    await vi.waitFor(() => {
+      const state = JSON.parse(localStorage.getItem(QUOTE_STORAGE_KEY) || 'null');
+      expect(state?.rooms?.[0]?.slots).toHaveLength(1);
+    });
     const state = JSON.parse(localStorage.getItem(QUOTE_STORAGE_KEY));
-    expect(state.items).toHaveLength(1);
-    expect(state.items[0]).toMatchObject({ product_id: 101, sku: 'DRV-TEST80', area_m2: 25 });
+    expect(state.rooms[0].id).toBe('room-general');
+    expect(state.rooms[0].slots[0]).toMatchObject({ product_id: 101, sku: 'DRV-TEST80', input_mode: 'm2', target_m2: 25 });
   });
 
   it('đổi tab m² → Thùng → m² (không sửa gì) giữ nguyên ô m² và số viên, không cộng hao hụt 2 lần', () => {

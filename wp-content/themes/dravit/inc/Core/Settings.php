@@ -86,11 +86,29 @@ final class Settings implements ServiceProviderInterface {
                 'sla_text'          => 'Phản hồi trong 30 phút giờ làm việc (08:00 - 21:00)',
             ],
             'quote'    => [
-                'max_items'    => 30,
-                'volume_tiers' => [
+                'max_items'       => 30,
+                'max_rooms'       => 12,
+                'valid_days'      => 7,
+                'rate_limit_15m'  => 5,
+                'retention_days'  => 365,
+                'notify_emails'   => [],
+                'volume_tiers'    => [
                     ['min_m2' => 30, 'discount_pct' => 5],
                     ['min_m2' => 100, 'discount_pct' => 8],
                 ],
+                // Từ điển hạng mục chuẩn dùng chung PHP ⇄ JS (docs/17 §2.3); chỉ số 0..8 dùng trong link `?quote=`.
+                'roles'           => [
+                    'Lát nền chính',
+                    'Ốp tường',
+                    'Ốp vách Tivi',
+                    'Trang trí / Điểm nhấn',
+                    'Ốp tường bếp',
+                    'Khu vực tắm đứng',
+                    'Lát nền chống trượt',
+                    'Lát ban công / sân phơi',
+                    'Len chân tường',
+                ],
+                'default_rooms'   => ['Phòng khách', 'Phòng bếp', 'Nhà tắm / WC', 'Phòng ngủ Master', 'Sân vườn / Ban công'],
             ],
             'home'     => [
                 'hero_eyebrow' => 'Kho gạch kiến trúc kiểm soát đồng lô',
@@ -120,6 +138,7 @@ final class Settings implements ServiceProviderInterface {
                 'geo_brand_summary' => 'DRAVIT là hệ thống phân phối gạch ốp lát kiến trúc và đá nung kết chính hãng tại Việt Nam, niêm yết giá minh bạch theo m² và giao dịch theo số nguyên viên/thùng.',
             ],
             'forms'    => [
+                'boq_mirror'       => 0,
                 'quote_modal'      => 0,
                 'pdp_consult'      => 0,
                 'contact_page'     => 0,
@@ -242,7 +261,22 @@ final class Settings implements ServiceProviderInterface {
         }
 
         if (isset($input['quote']) && is_array($input['quote'])) {
-            $base['quote']['max_items'] = max(5, min(50, (int) ($input['quote']['max_items'] ?? 30)));
+            $q = $input['quote'];
+            $base['quote']['max_items']      = max(5, min(50, (int) ($q['max_items'] ?? 30)));
+            $base['quote']['rate_limit_15m'] = max(1, min(50, (int) ($q['rate_limit_15m'] ?? $base['quote']['rate_limit_15m'])));
+            $base['quote']['retention_days'] = max(30, min(3650, (int) ($q['retention_days'] ?? $base['quote']['retention_days'])));
+            $base['quote']['valid_days']     = max(1, min(60, (int) ($q['valid_days'] ?? $base['quote']['valid_days'])));
+            if (array_key_exists('notify_emails', $q)) {
+                $raw_list = is_array($q['notify_emails']) ? $q['notify_emails'] : preg_split('/[\s,;]+/', (string) $q['notify_emails']);
+                $emails   = [];
+                foreach ((array) $raw_list as $candidate) {
+                    $clean = $email($candidate);
+                    if ($clean !== '' && !in_array($clean, $emails, true)) {
+                        $emails[] = $clean;
+                    }
+                }
+                $base['quote']['notify_emails'] = array_slice($emails, 0, 10);
+            }
         }
 
         if (isset($input['home']) && is_array($input['home'])) {
@@ -332,7 +366,7 @@ final class Settings implements ServiceProviderInterface {
         }
 
         if (isset($input['forms']) && is_array($input['forms'])) {
-            foreach (['quote_modal', 'pdp_consult', 'contact_page', 'showroom_booking', 'blog_inline'] as $slot) {
+            foreach (['boq_mirror', 'quote_modal', 'pdp_consult', 'contact_page', 'showroom_booking', 'blog_inline'] as $slot) {
                 if (array_key_exists($slot, $input['forms'])) {
                     $base['forms'][$slot] = max(0, (int) $input['forms'][$slot]);
                 }

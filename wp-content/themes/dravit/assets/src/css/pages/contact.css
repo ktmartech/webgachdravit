@@ -1,0 +1,142 @@
+/* ==========================================================================
+   LIÊN HỆ & SHOWROOM (`assets/src/css/pages/contact.css`)
+   Port từ docs/layout/09-contact.html (pages.css §9). Form dùng chung `template-parts/leads/native-form.php`.
+   ========================================================================== */
+
+@layer components {
+  .drv-page-title {
+    margin: 0;
+    font-family: var(--f-display);
+    font-size: clamp(1.5rem, 1.2rem + 1vw, 2.25rem);
+    line-height: 1.15;
+    letter-spacing: 0.02em;
+    color: var(--c-navy-900);
+  }
+
+  .drv-contact-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--s-5);
+    align-items: start;
+  }
+
+  @media (width >= 960px) {
+    .drv-contact-layout {
+      grid-template-columns: 5fr 7fr;
+      gap: var(--s-6);
+    }
+  }
+
+  .drv-contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-4);
+  }
+
+  .drv-contact-block,
+  .drv-contact-form-card {
+    overflow: hidden;
+    background-color: var(--c-white);
+    border: var(--bw);
+    border-radius: var(--r-md);
+  }
+
+  .drv-contact-block__head {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+    padding: var(--s-3) var(--s-4);
+    background-color: var(--c-champagne);
+    border-bottom: var(--bw);
+  }
+
+  .drv-contact-block__title {
+    margin: 0;
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--c-navy-900);
+  }
+
+  .drv-contact-block__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+    padding: var(--s-4);
+  }
+
+  .drv-contact-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2-5);
+    margin: 0;
+    font-size: var(--fs-sm);
+  }
+
+  .drv-contact-list__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--s-2);
+    padding-bottom: var(--s-2);
+    border-bottom: 1px dashed var(--c-navy-100);
+  }
+
+  .drv-contact-list__row:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  .drv-contact-list__row dt {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--c-text-muted);
+  }
+
+  .drv-contact-list__row dd {
+    margin: 0;
+    color: var(--c-navy-900);
+  }
+
+  .drv-contact-list__row a {
+    color: var(--c-navy-900);
+    text-decoration: none;
+  }
+
+  .drv-contact-list__row a:hover {
+    color: var(--c-teal-700);
+  }
+
+  .drv-contact-loc {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: var(--s-3);
+    background-color: var(--c-ivory);
+    border: var(--bw);
+    border-radius: var(--r-sm);
+  }
+
+  .drv-contact-loc p {
+    margin: 0;
+    line-height: 1.45;
+  }
+
+  .drv-contact-form-card__body {
+    padding: var(--s-5);
+  }
+
+  @media (width <= 640px) {
+    .drv-contact-form-card__body {
+      padding: var(--s-4);
+    }
+  }
+
+  .drv-lead-section__card {
+    max-width: 760px;
+    margin-inline: auto;
+  }
+}

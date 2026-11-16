@@ -456,4 +456,17 @@
     font-weight: 600;
     animation: drv-toast-in var(--dur-base) var(--ease-spring) both;
   }
+
+  .drv-toast > span {
+    flex: 1;
+  }
+
+  .drv-toast__action {
+    flex-shrink: 0;
+    color: var(--c-white);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    white-space: nowrap;
+  }
 }

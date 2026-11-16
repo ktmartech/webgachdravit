@@ -19,7 +19,13 @@ function ensureToastRegion() {
   return region;
 }
 
-export function showToast(message, variant = 'default', duration = 3200) {
+/**
+ * @param {string} message
+ * @param {string} [variant]
+ * @param {number} [duration]
+ * @param {{label: string, href: string}|null} [action] Link hành động phụ (vd "Mở bảng dự toán").
+ */
+export function showToast(message, variant = 'default', duration = 3200, action = null) {
   if (!message || typeof document === 'undefined') {
     return null;
   }
@@ -37,6 +43,14 @@ export function showToast(message, variant = 'default', duration = 3200) {
   text.textContent = String(message);
 
   toast.append(icon, text);
+
+  if (action && action.href && action.label) {
+    const link = document.createElement('a');
+    link.className = 'drv-toast__action';
+    link.href = String(action.href);
+    link.textContent = String(action.label);
+    toast.appendChild(link);
+  }
   region.appendChild(toast);
 
   if (duration > 0) {

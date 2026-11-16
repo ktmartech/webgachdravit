@@ -35,6 +35,10 @@ use Dravit\Core\Setup;
 use Dravit\Filters\CatalogController;
 use Dravit\Filters\FacetCounter;
 use Dravit\Filters\QueryBuilder;
+use Dravit\Leads\LeadAdmin;
+use Dravit\Leads\LeadController;
+use Dravit\Leads\LeadPostType;
+use Dravit\Quote\QuoteController;
 use Dravit\Seo\Breadcrumbs;
 use Dravit\Seo\Canonical;
 use Dravit\Seo\LlmsTxt;
@@ -121,8 +125,12 @@ final class Theme {
             $providers[] = CatalogController::class;
             $providers[] = ProductsController::class;
             $providers[] = SnapshotBuilder::class;
+            $providers[] = LeadPostType::class;
+            $providers[] = LeadController::class;
+            $providers[] = QuoteController::class;
 
             if ($is_admin) {
+                $providers[] = LeadAdmin::class;
                 $providers[] = ProductFields::class;
                 $providers[] = TermFields::class;
                 $providers[] = CsvProductMapping::class;

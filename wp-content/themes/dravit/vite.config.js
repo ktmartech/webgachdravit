@@ -8,13 +8,15 @@ const entries = {
   'pages/product': resolve(__dirname, 'assets/src/css/pages/product.css'),
   'pages/ui-kit': resolve(__dirname, 'assets/src/css/pages/ui-kit.css'),
   'pages/ai-finder': resolve(__dirname, 'assets/src/css/pages/ai-finder.css'),
+  'pages/quote': resolve(__dirname, 'assets/src/css/pages/quote.css'),
+  'pages/contact': resolve(__dirname, 'assets/src/css/pages/contact.css'),
   core: resolve(__dirname, 'assets/src/js/core.js'),
   home: resolve(__dirname, 'assets/src/js/home.js'),
   catalog: resolve(__dirname, 'assets/src/js/catalog.js'),
   product: resolve(__dirname, 'assets/src/js/product.js'),
   search: resolve(__dirname, 'assets/src/js/search.js'),
+  quote: resolve(__dirname, 'assets/src/js/quote.js'),
   'chunks/motion': resolve(__dirname, 'assets/src/js/chunks/motion.js'),
-  'chunks/quote': resolve(__dirname, 'assets/src/js/chunks/quote.js'),
   'chunks/ai-finder': resolve(__dirname, 'assets/src/js/chunks/ai-finder.js'),
 };
 

@@ -39,3 +39,24 @@ spl_autoload_register(static function (string $class): void {
 
 require_once DRV_DIR . '/inc/Core/Helpers.php';
 
+
+// Stub tối thiểu `WP_Error` cho unit test thuần (không nạp WordPress core).
+if (!class_exists('WP_Error')) {
+    // phpcs:ignore Generic.Files.OneObjectStructurePerFile.MultipleFound
+    class WP_Error {
+        /** @param mixed $data */
+        public function __construct(private string $code = '', private string $message = '', private mixed $data = '') {}
+
+        public function get_error_code(): string {
+            return $this->code;
+        }
+
+        public function get_error_message(): string {
+            return $this->message;
+        }
+
+        public function get_error_data(): mixed {
+            return $this->data;
+        }
+    }
+}

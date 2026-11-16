@@ -333,7 +333,7 @@ Cả PHP (`Dravit\Units\Calc::computeSlot()`) và JS (`computeSlot()` trong `ass
    - Nếu `price_state === 'quote_only'` (`drv_price_m2 <= 0`):
      - `line_total = 0`, gắn cờ `is_quote_only = true`.
      - **Vẫn cộng đầy đủ** `actual_m2`, `full_boxes` và `line_kg` vào tổng diện tích, tổng thùng và tổng khối lượng toàn công trình.
-     - Cột Đơn giá hiển thị **`Liên hệ báo giá`**, cột Thành tiền hiển thị **`Báo giá sau`**.
+     - Cột Đơn giá hiển thị **`Liên hệ báo giá`**, cột Thành tiền hiển thị **`Chờ báo giá`**.
 
 ### 3.2 Quy tắc Tổng hợp Toàn Phiếu, Chiết khấu Dự kiến & Gợi ý Xe Tải
 
@@ -940,7 +940,7 @@ Khi khách bấm **"Tải file CSV (Excel)"** trên `/danh-sach-bao-gia` hoặc 
    ```
 3. **Thứ tự cột CSV xuất cho khách hàng (`dravit-du-toan-{YYYYMMDD}.csv`):**
    `Khu vực / Phòng, Hạng mục, Mã SKU, Tên sản phẩm, Khổ gạch, Diện tích thuần (m²), Hao hụt (%), Số thùng, Viên/Tấm lẻ, Tổng số lượng (viên/tấm), Diện tích thực nhận (m²), Khối lượng (kg), Đơn giá (đ/m²), Thành tiền dự kiến (VND)`
-   (với dòng `quote_only`, cột Đơn giá xuất `"Liên hệ báo giá"`, cột Thành tiền xuất `"Báo giá sau"`).
+   (với dòng `quote_only`, cột Đơn giá xuất `"Liên hệ báo giá"`, cột Thành tiền xuất `"Chờ báo giá"`).
 
 ### 6.3 Mẫu Văn bản Copy Gửi Nhanh Qua Zalo (`boq-copy-zalo`)
 
@@ -987,7 +987,7 @@ Trước khi nghiệm thu Phase 1 (bổ sung cho `docs/09_Roadmap_QA_Testplan.md
 |---|---|---|
 | **Q-01** | Bấm `Thêm vào báo giá` trên Card ở `/gach-80x80`, sau đó sang PDP một mẫu khác nhập `32,5 m²` rồi bấm `Thêm vào bảng dự toán`, cuối cùng mở `/danh-sach-bao-gia`. | Cả 2 mẫu đều xuất hiện đầy đủ trong `/danh-sach-bao-gia` với đúng `32,5 m²` đã nhập trên PDP (không bị gán cứng `25 m²`); badge `[data-quote-badge-count]` trên Header cập nhật tức thời ở cả 2 tab trình duyệt. |
 | **Q-02** | Kiểm tra HTML nguồn (`View Source`) của trang `/gach` và `/danh-sach-bao-gia` khi chưa chạy JS dưới LiteSpeed Cache. | Không có `Set-Cookie` phiên PHP do tính năng báo giá sinh ra; `[data-quote-badge-count]` xuất tĩnh `0` (`hidden`); trang `/danh-sach-bao-gia` có `noindex, follow` và canonical sạch `/danh-sach-bao-gia`. |
-| **Q-03** | Trộn 1 SKU có giá (`priced`, `round_mode = box`) và 1 SKU không công bố giá (`quote_only`, `drv_price_m2 = 0`, `round_mode = piece`) trong cùng một phòng. | Dòng `quote_only` vẫn tính đúng số tấm/viên, m², kg và cộng vào Tổng diện tích + Gợi ý xe tải; cột giá hiện `"Liên hệ báo giá"` / `"Báo giá sau"`; tổng tiền không báo `0đ` sai lệch mà hiện rõ ghi chú chưa gồm 1 mẫu hàng dự án. |
+| **Q-03** | Trộn 1 SKU có giá (`priced`, `round_mode = box`) và 1 SKU không công bố giá (`quote_only`, `drv_price_m2 = 0`, `round_mode = piece`) trong cùng một phòng. | Dòng `quote_only` vẫn tính đúng số tấm/viên, m², kg và cộng vào Tổng diện tích + Gợi ý xe tải; cột giá hiện `"Liên hệ báo giá"` / `"Chờ báo giá"`; tổng tiền không báo `0đ` sai lệch mà hiện rõ ghi chú chưa gồm 1 mẫu hàng dự án. |
 | **Q-04** | Tăng tổng diện tích gạch trong BOQ vượt mốc `30 m²` và `100 m²`, sau đó bấm `Đặt mua ngay các mẫu có giá` sang `/gio-hang`. | Trên BOQ hiển thị đúng `Chiết khấu dự kiến (5% / 8% - chuyên viên xác nhận theo lô)`; khi sang `/gio-hang`, các mẫu có giá được thêm đúng tổng số nguyên viên nhưng **không tự động trừ chiết khấu bậc** vào giỏ bán lẻ (`D-23`). |
 | **Q-05** | Bấm `Sao chép link chia sẻ` (`?quote=...`) mở trong cửa sổ Ẩn danh (Incognito); thử sửa tay tham số `?quote=` chèn `<script>alert(1)</script>` vào tên phòng hoặc vượt 50 dòng. | Cửa sổ Ẩn danh khôi phục đúng các phòng và số lượng gạch, giá được hydrate tươi từ API; chuỗi độc hại chỉ hiển thị dạng text vô hại hoặc bị từ chối gọn, không thực thi XSS. |
 | **Q-06** | Sửa giá của một SKU trong Admin từ `385.000đ/m²` sang `410.000đ/m²` rồi tải lại trang `/danh-sach-bao-gia` đang lưu SKU đó trong `localStorage`. | Bảng BOQ tự động hiển thị và tính theo giá mới `410.000đ/m²`. |

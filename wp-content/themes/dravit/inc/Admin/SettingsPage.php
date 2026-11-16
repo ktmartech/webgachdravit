@@ -328,6 +328,25 @@ final class SettingsPage implements ServiceProviderInterface {
                             <th scope="row"><label for="drv-quote-max">Số hạng mục tối đa trên bảng BOQ</label></th>
                             <td><input id="drv-quote-max" type="number" min="5" max="50" name="drv_settings[quote][max_items]" value="<?php echo esc_attr((string) $s['quote']['max_items']); ?>"></td>
                         </tr>
+                        <tr>
+                            <th scope="row"><label for="drv-quote-emails">Email nhận thông báo Lead / BOQ</label></th>
+                            <td>
+                                <input id="drv-quote-emails" type="text" class="large-text" name="drv_settings[quote][notify_emails]" value="<?php echo esc_attr(implode(', ', (array) ($s['quote']['notify_emails'] ?? []))); ?>">
+                                <p class="description">Nhiều email cách nhau bằng dấu phẩy. Để trống sẽ gửi về email quản trị site.</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="drv-quote-rl">Giới hạn gửi / 15 phút / IP</label></th>
+                            <td><input id="drv-quote-rl" type="number" min="1" max="50" name="drv_settings[quote][rate_limit_15m]" value="<?php echo esc_attr((string) ($s['quote']['rate_limit_15m'] ?? 5)); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="drv-quote-valid">Hiệu lực báo giá (ngày)</label></th>
+                            <td><input id="drv-quote-valid" type="number" min="1" max="60" name="drv_settings[quote][valid_days]" value="<?php echo esc_attr((string) ($s['quote']['valid_days'] ?? 7)); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="drv-quote-ret">Lưu trữ Lead chưa chốt (ngày)</label></th>
+                            <td><input id="drv-quote-ret" type="number" min="30" max="3650" name="drv_settings[quote][retention_days]" value="<?php echo esc_attr((string) ($s['quote']['retention_days'] ?? 365)); ?>"></td>
+                        </tr>
                     </table>
                 <?php elseif ($active_tab === 'home') : ?>
                     <table class="form-table" role="presentation">
@@ -362,6 +381,7 @@ final class SettingsPage implements ServiceProviderInterface {
                     <table class="form-table" role="presentation">
                         <?php
                         $form_labels = [
+                            'boq_mirror'       => 'Đồng bộ phiếu BOQ sang Entries (Webhook / Zalo / Sheets)',
                             'quote_modal'      => 'Modal Báo giá công trình toàn trang',
                             'pdp_consult'      => 'Tư vấn kỹ thuật trên trang Sản phẩm',
                             'contact_page'     => 'Form trang Liên hệ (/lien-he)',

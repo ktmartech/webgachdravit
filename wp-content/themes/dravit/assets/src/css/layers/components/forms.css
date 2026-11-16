@@ -117,4 +117,77 @@
   }
 
   /* Color Swatch Filter Button */
+
+  /* Form Lead dùng chung 5 slot (Step 8, D-30/D-31) */
+  .drv-lead-form .drv-check {
+    align-items: flex-start;
+    font-weight: 500;
+  }
+
+  .drv-lead-form .drv-check input[type="checkbox"] {
+    margin-top: 2px;
+  }
+
+  .drv-lead-form__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-2) var(--s-3);
+  }
+
+  .drv-lead-form__status {
+    margin: 0;
+    padding: var(--s-2) var(--s-3);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    color: var(--c-sale);
+    background-color: var(--c-sale-bg);
+    border-radius: var(--r-sm);
+  }
+
+  /* Honeypot: đẩy ra ngoài màn hình (không dùng display:none để bot vẫn thấy). */
+  .drv-hp {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .drv-lead-success {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 2px var(--s-3);
+    align-items: start;
+    padding: var(--s-4);
+    background-color: var(--c-champagne);
+    border: 1px solid var(--c-moss-500);
+    border-radius: var(--r-sm);
+  }
+
+  .drv-lead-success.is-error {
+    background-color: var(--c-sale-bg);
+    border-color: var(--c-sale);
+  }
+
+  .drv-lead-success > i {
+    grid-row: span 2;
+    font-size: 1.75rem;
+    color: var(--c-moss-500);
+  }
+
+  .drv-lead-success.is-error > i {
+    color: var(--c-sale);
+  }
+
+  .drv-lead-success__title {
+    color: var(--c-navy-900);
+  }
+
+  .drv-lead-success__msg {
+    margin: 0;
+    font-size: var(--fs-sm);
+    color: var(--c-text-muted);
+  }
 }
