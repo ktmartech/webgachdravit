@@ -5,6 +5,7 @@
 
 > [!NOTE]
 > **4 Quyết định kiến trúc thực thi đã khóa (`D-31` → `D-34` trong [00_Project_Brief_Decisions.md](00_Project_Brief_Decisions.md)):**
+>
 > - **`D-31` (Phương án 1A — Fluent Forms & Plugin Hybrid Adapter):** Giữ lõi tính native cho dự toán đa phòng `/danh-sach-bao-gia` (`BoqService` + chuyển đơn HPOS 1-click) đồng thời bắn hook sang Fluent Forms; 5 điểm form báo giá còn lại hỗ trợ **Dual-Mode** (`[fluentform]` hoặc Native Form) qua `Core\Integrations\FluentFormsBridge` + tầng CSS `@layer plugins`.
 > - **`D-32` (Phương án 2A — Mở sẵn Full Pipeline Trợ lý AI & Bật ngay `RuleOnlyDriver`):** Dựng đầy đủ 100% Interfaces `Dravit\Advisor\*`, REST `/dravit/v1/advisor`, cắt hoàn chỉnh `01.1-ai-finder.html` và kích hoạt chạy thật ngay bằng `RuleOnlyDriver` (`< 200ms`, `0đ` phí API, lọc cứng chống trượt `R10/R11/R12`, nối thẳng BOQ); cắm API Key (`Claude` / `Gemini`) trong `drv_settings.ai` là tự nâng cấp lên LLM Closed-World.
 > - **`D-33` (Phương án 3A — Unit Test Tự động Mỗi Step):** Thiết lập **PHPUnit 10 + Vitest + Shared JSON Vectors (`tests/fixtures/calc-vectors.json`) + PHPStan + WP-CLI Verify** chạy dev-only ở cuối mỗi Step (loại khỏi file `.zip` deploy production).
@@ -50,7 +51,7 @@ flowchart LR
 Tuyệt đối **không cắt từng trang độc lập từ trên xuống**. Toàn bộ 12 file [01-home.html](layout/01-home.html) → [10-404.html](layout/10-404.html) được bóc tách từ hạt nhân nhỏ nhất lên thành 4 tầng độc lập:
 
 | Tầng | Nơi chứa trong `wp-content/themes/dravit/` | Quy tắc Bất biến giúp Tái Sử Dụng Vô Hạn |
-|---|---|---|
+| --- | --- | --- |
 | **Tầng 1: Khung Bố cục (`.l-*`) & Design Tokens** | `assets/src/tokens/tokens.json` → `layers/{tokens,layout}.css` | **Tách hoàn toàn vị trí khỏi phần tử:** `.l-container` (`1380px`), `.l-section`, `.l-grout-grid` (lưới đường ron `1px`), `.l-split`, `.l-stack`, `.l-cluster`. Component con **cấm tự đặt `margin` ngoài hoặc `width` cứng** → thả vào lưới 4 cột Catalog, cột 3/12 Sidebar hay Drawer AJAX đều tự động vừa khít. |
 | **Tầng 2: 22 Nguyên tử & Phân tử `drv_ui($name, $args)`** | `template-parts/ui/{name}.php` + `layers/components/*.css` | **1 Phần tử = 1 File PHP duy nhất toàn site:** Hợp nhất 3 bản `.drv-card` rời rạc (`01`, `01.1`, `02`), 4 hộp `.drv-summary-box` (`04`, `04.1`, `05`), 2 bảng `.drv-geo-table` (`02`, `08`), 2 lightbox (`03`, `08`), 3 form báo giá (`09`, modal, blog) về đúng 1 file nguồn ([16_Template_Component_Porting_Guide.md](16_Template_Component_Porting_Guide.md) §3.2). |
 | **Tầng 3: Scoped CSS (`--_*`) & JS Tự Sống (`<drv-*>`)** | `assets/src/js/components/*.js` + `core.js` | • **CSS:** Mọi biến thể chỉ đổi biến nội bộ `--_bg`, `--_fg`, `--_pad`, `--_cols` trong `@layer components` (`.drv-card--quote`, `.drv-btn--moss`); **cấm** viết selector đè theo trang (`.blog .drv-card`, `.home .drv-btn`).<br>• **JS:** Mọi tương tác đóng gói trong **Light DOM Custom Elements** (`<drv-unit-calc>`, `<drv-qty-input>`, `<drv-filter-form>`, `<drv-size-guide>`, `<drv-showroom>`, `<drv-quote-panel>`, `<drv-ai-finder>`, `<drv-toc>`) và **Event Delegation `data-drv-action`** trên `document` → chèn vào trang mới hay trả về qua REST AJAX đều **tự kích hoạt với `0` dòng JS nối thêm**. |
@@ -133,7 +134,7 @@ function drv_section(string $name, array $props = []): void {
 ### 2.3. Danh mục 16 Module `drv_section()` Gốc Cắt từ 12 File Prototype
 
 | Mã `drv_section()` | Cắt từ Prototype | Kết hợp các `drv_ui()` bên trong | Tái sử dụng ở các trang hiện tại & tương lai |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `hero-advisor` | `01-home` S1 | `btn`, `chip`, `icon`, `badge` | Trang chủ `/`, Landing Page chiến dịch, Trang B2B |
 | `trust-strip` | `07` Spec + `04` Cam kết | `icon` | Trang chủ `/`, Giỏ hàng (`04`), Trang Giới thiệu `/gioi-thieu`, Landing Page |
 | `space-bento` | `01-home` S2 | `section-head`, `badge`, `icon` | Trang chủ `/`, Trang Tổng quan `/gach`, Empty Search/404 mở rộng |
@@ -156,7 +157,7 @@ function drv_section(string $name, array $props = []): void {
 ## 3. Ma trận Tổng hợp 12 Steps × Layout Cắt × Rules × Skills × Unit Test
 
 | Step | Tên hạng mục trọng tâm | Nguồn cắt `docs/layout/` | Docs tham chiếu | Rules (`.agents/rules/`) | Skills bắt buộc (`.agents/skills/`) | Bộ Unit Test / Check (`D-33`) |
-|---|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- | --- |
 | **Step 0** | Môi trường WP, Cấu hình Plugin (Woo/RM/FF/LSC), Khung PSR-4, Vite 6 & Test Harness | — | `00`, `02`, `06 §1-2`, `09` | `dravit-architecture`, `dravit-coding-standards`, `dravit-security-testing` | `wordpress-router`, `wp-project-triage`, `wp-wpcli-and-ops`, `wp-phpstan`, `architecture` | `composer test` (smoke), `npm test` (smoke), `npm run build` |
 | **Step 1** | Design Tokens, CSS `@layer` (`+ plugins`), 22 `drv_ui()`, `SectionRegistry` (`S-3`) & Global Shell | `00-ui-kit.html`, `partials/header.html`, `partials/footer.html`, `assets/css/*` | `01`, `02 §8B`, `08`, `16 §2-4`, `19` | `dravit-frontend-ui`, `dravit-architecture`, `dravit-coding-standards` | `wordpress-theme-development`, `frontend-design`, `design-taste-frontend`, `baseline-ui`, `fixing-accessibility`, `web-performance-optimization` | `Vitest`: `core.test.js` · `PHPUnit`: `TemplateTest`, `SectionRegistryTest`, `MenuBuilderTest` |
 | **Step 2** | Catalog Engine: 14 `pa_*`, 28 Smart Collections, Lõi tính `Units\Calc` & Đơn vị mua từng SP (`D-24`) | — *(Data & Admin Tab)* | `03`, `04 §1-3`, `14 §2-4`, `15 §4` | `dravit-catalog-commerce`, `dravit-coding-standards`, `dravit-architecture` | `php-pro`, `clean-code`, `wp-plugin-development`, `javascript-pro` | `PHPUnit` ⇄ `Vitest` parity (`calc-vectors.json`), `CollectionSyncTest` (8 SKU seed) |
@@ -175,6 +176,7 @@ function drv_section(string $name, array $props = []): void {
 ## 4. Chi tiết Thực thi Từng Bước (Step-by-Step Execution Plan)
 
 ### STEP 0: Khởi tạo Môi trường, Hệ sinh thái Plugin, Khung Theme PSR-4 & Bộ khung Unit Test (`D-31`, `D-33`)
+
 - **Mục tiêu:** Thiết lập môi trường WordPress `7.1.x` chuẩn xác ngay từ đầu (URL không `/` cuối, HPOS 100%, Rank Math, Fluent Forms, LiteSpeed), dựng bộ khung PSR-4 `Dravit\`, Vite 6 và hệ thống chạy Unit Test tự động cho cả PHP & JS.
 - **Rules & Skills:**
   - Rules: [dravit-architecture.md](../.agents/rules/dravit-architecture.md), [dravit-coding-standards.md](../.agents/rules/dravit-coding-standards.md), [dravit-security-testing.md](../.agents/rules/dravit-security-testing.md).
@@ -195,6 +197,7 @@ function drv_section(string $name, array $props = []): void {
 ---
 
 ### STEP 1: Design Tokens, CSS `@layer` (`+ plugins`), 22 `drv_ui()`, `SectionRegistry` (`S-3`) & Global Shell
+
 - **Mục tiêu:** Xây dựng toàn bộ Tầng 1–2–3–4 của kiến trúc cắt Layout Bottom-Up (`D-17`, `D-34`): 22 UI primitives `drv_ui()`, bộ đăng ký `drv_section()` thuần code PHP (`S-3`), tầng CSS `@layer plugins` cho Fluent Forms/Rank Math, và cắt hoàn chỉnh Global Header 2 tầng + Mega Menu 4+1 + Footer.
 - **Nguồn cắt Layout:** `docs/layout/00-ui-kit.html`, `docs/layout/partials/header.html`, `docs/layout/partials/footer.html`, `docs/layout/assets/css/{tokens,fonts,main,pages}.css`, `docs/layout/assets/js/core.js`.
 - **Rules & Skills:**
@@ -226,6 +229,7 @@ function drv_section(string $name, array $props = []): void {
 ---
 
 ### STEP 2: Catalog Data Engine — 14 Thuộc tính, 28 Smart Collections, `Units\Calc` & Đơn vị mua từng SP (`D-24`)
+
 - **Mục tiêu:** Xây dựng nền móng dữ liệu ngành gạch chính xác tuyệt đối để khách tìm theo bất kỳ tiêu chí nào (kích thước, vân, bề mặt, chống trượt `R`, không gian) cũng ra đúng mẫu, và tính toán `m² ⇄ thùng ⇄ viên ⇄ kg` khớp 100% giữa Frontend và Backend.
 - **Rules & Skills:**
   - Rules: [dravit-catalog-commerce.md](../.agents/rules/dravit-catalog-commerce.md), [dravit-coding-standards.md](../.agents/rules/dravit-coding-standards.md).
@@ -251,6 +255,7 @@ function drv_section(string $name, array $props = []): void {
 ---
 
 ### STEP 3: Kiến trúc GEO-SEO, Rank Math `@graph`, `/llms.txt` & Tìm kiếm Thông minh Không dấu
+
 - **Mục tiêu:** Đảm bảo người mua gạch tìm trên Google, Google AI Overviews, ChatGPT/Perplexity hay gõ trực tiếp vào thanh tìm kiếm trên web (kể cả gõ không dấu, gõ mã SKU hay gõ `"gach nha tam chong tron 30 60"`) đều thấy ngay đúng sản phẩm & bảng dữ kiện kỹ thuật chuẩn.
 - **Nguồn cắt Layout:** Instant Search 2 cột trong `docs/layout/partials/header.html` + trang kết quả `search.php`.
 - **Rules & Skills:**
@@ -279,6 +284,7 @@ function drv_section(string $name, array $props = []): void {
 ---
 
 ### STEP 4: Mở Sẵn Full Pipeline Trợ Lý AI Tìm Gạch (`Dravit\Advisor\*`) & Bật Ngay `RuleOnlyDriver` (`D-32`)
+
 - **Mục tiêu:** Mở sẵn 100% Interfaces, REST API, Kho tri thức ngành gạch, cắt hoàn chỉnh `01.1-ai-finder.html` thành `drv_section('ai-finder-workspace')` và **kích hoạt chạy thật ngay bằng `RuleOnlyDriver` (`< 200ms`, `0đ` phí API)** theo [13_AI_Advisor_MVP_Spec.md](13_AI_Advisor_MVP_Spec.md); sẵn sàng nâng cấp lên LLM Closed-World chỉ bằng việc điền API Key trong `drv_settings.ai`.
 - **Nguồn cắt Layout:** `docs/layout/01.1-ai-finder.html`, `docs/layout/assets/js/ai-finder.js` (gỡ bỏ demo mode bar & backdrop giả theo `STRIP-05`).
 - **Rules & Skills:**
@@ -313,6 +319,7 @@ function drv_section(string $name, array $props = []): void {
 ---
 
 ### STEP 5: Cắt Trang Chủ (`01-home.html`) bằng Chuỗi `drv_section()` (`Phương án S-3`)
+
 - **Mục tiêu:** Cắt toàn bộ 8 khối của `01-home.html` thành các `drv_section()` độc lập (`hero-advisor`, `trust-strip`, `space-bento`, `product-explorer-tabs`, `size-r-guide`, `product-grid-block`, `showroom-showcase`, `editorial-guides`) và ghép lại trong `front-page.php` qua `SectionRegistry::render_stack()`, vừa đạt chuẩn tốc độ LCP vừa sẵn sàng tái sử dụng cho mọi trang chiến dịch về sau.
 - **Nguồn cắt Layout:** `docs/layout/01-home.html`, `docs/layout/assets/js/{hero-ai,size-guide,showroom}.js`.
 - **Rules & Skills:**
@@ -339,6 +346,7 @@ function drv_section(string $name, array $props = []): void {
 ---
 
 ### STEP 6: Cắt Danh mục Silo & Bộ lọc AJAX 14 Tiêu chí + Bảng GEO (`02-catalog-collection.html`)
+
 - **Mục tiêu:** Giúp người mua lọc hàng trăm mẫu gạch theo 14 chiều kỹ thuật & thẩm mỹ mượt tức thì (không tải lại trang, giữ Back/Forward, chia sẻ được URL), kết hợp tái sử dụng `drv_section('silo-tiles-bar')`, `drv_section('geo-spec-section')`, `drv_section('faq-section')`.
 - **Nguồn cắt Layout:** `docs/layout/02-catalog-collection.html`, `docs/layout/assets/js/catalog-mock.js`.
 - **Rules & Skills:**
@@ -362,6 +370,7 @@ function drv_section(string $name, array $props = []): void {
 ---
 
 ### STEP 7: Cắt Trang Chi Tiết Sản Phẩm — Máy Tính Đa Đơn Vị `D-24`, Swatch SSR & Chốt Báo Giá / Mua (`03-product-single.html`)
+
 - **Mục tiêu:** Giúp khách xem rõ từng đường vân/phối cảnh, chuyển đổi mượt giữa các kích thước/bề mặt cùng dòng gạch, nhập diện tích `m²` (hoặc số thùng/viên) để biết chính xác số thùng, khối lượng `kg`, thành tiền, và bấm 1 chạm để **Thêm vào DS Báo giá** hoặc **Mua ngay**.
 - **Nguồn cắt Layout:** `docs/layout/03-product-single.html`, `docs/layout/assets/js/{unit-calc,calc-core}.js`.
 - **Rules & Skills:**
@@ -419,6 +428,7 @@ function drv_section(string $name, array $props = []): void {
 ---
 
 ### STEP 8: Trọng tâm Báo Giá & Lead — Dự toán BOQ Đa Phòng, 6 Điểm Chạm Dual-Mode (`FluentFormsBridge` `D-31`) & `OrderConverter` (`04.1` + `09`)
+
 - **Mục tiêu:** Hoàn thiện trái tim chuyển đổi Báo giá của DRAVIT: khách lập dự toán nhiều phòng trên `/danh-sach-bao-gia`, xuất PDF/Zalo hoặc điền thông tin nhận báo giá chi tiết tại 6 điểm chạm (hỗ trợ song song Native Form siêu nhẹ và **Fluent Forms** qua `D-31`), đồng bộ 100% về Admin `drv_lead` để chuyển thành đơn HPOS trong 1 click.
 - **Nguồn cắt Layout:** `docs/layout/04.1-quote-cart.html`, `docs/layout/09-contact.html`, `docs/layout/partials/footer.html` (`#drv-quote-modal`), `docs/layout/assets/js/quote-sheet.js`.
 - **Rules & Skills:**
@@ -459,24 +469,50 @@ function drv_section(string $name, array $props = []): void {
 ---
 
 ### STEP 9: Cắt Giỏ hàng, Mini-Cart Store API, Checkout 2 Cột VN (VAT), Vận hành HPOS & VietQR (`04`, `05`, `06`)
+
 - **Mục tiêu:** Hoàn thiện luồng đặt mua trực tuyến chuẩn thị trường gạch Việt Nam: quy đổi thùng/`kg` minh bạch, gợi ý làm tròn thùng, địa chỉ 2 cấp mới, xuất hóa đơn VAT, báo cước ship sau khi xác nhận và VietQR chỉ hiển thị đúng trạng thái `on-hold`.
 - **Nguồn cắt Layout:** `docs/layout/04-cart.html`, `docs/layout/05-checkout.html`, `docs/layout/06-order-received.html`.
 - **Rules & Skills:**
   - Rules: [dravit-catalog-commerce.md](../.agents/rules/dravit-catalog-commerce.md), [dravit-architecture.md](../.agents/rules/dravit-architecture.md), [dravit-security-testing.md](../.agents/rules/dravit-security-testing.md).
-  - Skills: [wordpress](../.agents/skills/34_wordpress/SKILL.md), [form-cro](../.agents/skills/47_form-cro/SKILL.md), [php-pro](../.agents/skills/02_php-pro/SKILL.md), [backend-security-coder](../.agents/skills/10_backend-security-coder/SKILL.md), [wcag-audit-patterns](../.agents/skills/17_wcag-audit-patterns/SKILL.md).
+  - Skills: [wordpress](.  ./.agents/skills/34_wordpress/SKILL.md), [form-cro](../.agents/skills/47_form-cro/SKILL.md), [php-pro](../.agents/skills/02_php-pro/SKILL.md), [backend-security-coder](../.agents/skills/10_backend-security-coder/SKILL.md), [wcag-audit-patterns](../.agents/skills/17_wcag-audit-patterns/SKILL.md).
 - **Tài liệu đối chiếu:** [04_Pricing_Units_Commerce.md](04_Pricing_Units_Commerce.md) (§4–§9), [14_Data_Dictionary_And_Settings.md](14_Data_Dictionary_And_Settings.md) (§7), [15_REST_API_And_JS_Contract.md](15_REST_API_And_JS_Contract.md) (§3), [18_Order_Ops_And_Email_Spec.md](18_Order_Ops_And_Email_Spec.md).
 - **Hạng mục thực thi:**
   1. **Giỏ hàng & Mini-Cart Drawer (`Woo\StoreApiExtend`, `04-cart.html`):** Mở rộng `/wc/store/v1/cart` (0 `wc-cart-fragments`), cắt `woocommerce/cart/{cart,cart-empty}.php` (`@layer woo`) dùng chung `drv_ui('qty-input')`, `drv_ui('summary-box')`, `drv_section('trust-strip')` + nút chuyển giỏ `≥ 30m²` sang Phiếu báo giá BOQ.
   2. **Checkout 2 Cột VN + VAT (`Woo\CheckoutVN`, `05-checkout.html`):** `header-minimal.php` + `form-checkout.php` + tách riêng `review-order.php`; 34 Tỉnh/TP → Phường/Xã (`assets/data/wards/{code}.json`); SĐT VN `^0\d{9}$`; khối VAT `_drv_vat_*` (regex MST `^\d{10}(-\d{3})?$`); `QuoteShippingMethod` (*"Báo sau khi xác nhận đơn"*).
   3. **Order Received, HPOS Ops & VietQR (`06-order-received.html`, `18`):** Trạng thái `wc-cho-xac-nhan` (`15` ký tự `≤ 20`) → Admin Metabox nhập phí ship/xe/`_drv_lot_code` → xác nhận sang `wc-on-hold` (*Chờ chuyển khoản* + `BankQR` `img.vietqr.io` `DRV{id}`) hoặc `wc-processing` (COD); Action Scheduler auto-cancel đơn quá hạn; 7 mẫu Email `E1..E7`.
 - **Unit Tests (`Step 9`):**
-  - `PHPUnit`: `CartQuantityStepTest`, `CheckoutValidatorTest`, `OrderStatusSlugLengthTest` (`C-15`), `BankQrGuardTest` (`C-5`, `C-6`, `C-13`), `OrderSnapshotImmutabilityTest` (`U-8`).
+  - `PHPUnit`: `CartQuantityStepTest`, `CheckoutValidatorTest`, `OrderStatusSlugLengthTest` (`C-15`), `OrderReceivedStateTest` (`C-5`, `C-13` phía trang cảm ơn), `OrderSnapshotImmutabilityTest` (`U-8`) — ✅. `BankQrGuardTest` (`C-6`, URL `img.vietqr.io`) → **phase HPOS Ops & VietQR**.
 - **Check hoàn thành (`Gate 9`):**
-  - [ ] Toàn bộ ca test `C-1`..`C-15` trong `09 §3.7` pass 100% trên HPOS (`0` lệnh `get_post_meta` trên đơn hàng).
+  - [ ] Toàn bộ ca test `C-1`..`C-15` trong `09 §3.7` pass 100% trên HPOS (`0` lệnh `get_post_meta` trên đơn hàng) — **9A + 9B + Order Received xong; HPOS Ops & VietQR dời sang phase sau** (xem danh sách bên dưới).
+
+- **Kết quả thực thi 9A + 9B (`2026-11-16`, chưa commit — nhánh `feat/theme-step-0-to-2-catalog-engine`):**
+  - **PHP:** `Woo\{CartPresenter,StoreApiExtend,CartHooks,CheckoutVN,CheckoutValidator,Wards,QuoteShippingMethod,OrderSnapshot}`; `drv_settings.order` thêm `shipping_label`, `checkout_ship_notice`, `vehicle_thresholds`, `shipping_zone_hints`, `note_chips`; `WooCompat` gỡ `wc-cart-fragments` toàn site.
+  - **Template:** `woocommerce/cart/{cart,cart-empty}.php`, `woocommerce/checkout/{form-checkout,review-order,payment,payment-method,terms}.php`, `template-parts/cart/line-row.php`, `ui/qty-input.php` (hợp đồng `15 §5.2`), `page.php` (giỏ/checkout tự dựng layout).
+  - **Asset:** entry `cart.js`, `checkout.js`; `utils/cart-api.js`, `chunks/{qty-input,mini-cart}.js` (mini-cart có stepper + xóa dòng, nạp lười); `core.js` giảm còn `7,56KB` gzip; CSS `pages/{cart,checkout}.css` cắt bằng `tools/port-css-step9.py` (bỏ FBT `D-26`, thanh demo).
+  - **Phường/Xã:** `tools/build-wards.mjs` sinh `assets/data/wards/{KEY}.json` (34 tỉnh · 3.321 đơn vị, mã TCTK) từ bản chụp `tools/data/dvhc-2025-07-01.json` (nguồn `provinces.open-api.vn/api/v2`, NQ 202/2025/QH15) — **cần đối chiếu lại với nguồn chính thức `O-06` trước go-live**.
+  - **Setup:** `tools/setup-step9.php` (zone "Việt Nam" + `drv_quote_later`, terms = `/dieu-khoan`, chỉ bán VN, tên cổng BACS/COD).
+  - **Đối soát local:** Store API trả đủ `extensions.dravit`; cùng SP gộp 1 dòng; stepper → `update-item` cập nhật dòng + tổng; C-1 (không chọn sẵn phường) ✅ · C-2 ✅ · C-3 ✅ · C-9 (nhãn "Báo sau khi xác nhận đơn", terms không tick sẵn) ✅ · C-12 (unit test) ✅ · đơn COD #169: `_drv_ward_code`, `_drv_total_*`, `_drv_transfer_ref`, snapshot `_drv_*` đủ.
+  - **Test:** PHPUnit `183/183` (+`CartQuantityStepTest`, `CheckoutValidatorTest`, `OrderSnapshotImmutabilityTest`, `WardsDataTest`), Vitest `75/75` (+`qty-input`, `checkout-validate`), ESLint + PHPStan sạch.
+
+- **Kết quả thực thi Order Received (`2026-11-17`, chưa commit):**
+  - **PHP:** `Woo\OrderStatus` — đăng ký `wc-cho-xac-nhan` (15 ký tự) làm trạng thái khởi tạo COD + BACS (`woocommerce_{cod,bacs}_process_payment_order_status`), trừ tồn kho ngay (`woocommerce_order_status_cho-xac-nhan` → `wc_maybe_reduce_stock_levels`), khách được hủy đơn Chờ xác nhận, nhãn tiếng Việt (`on-hold` = *Chờ chuyển khoản*), mã đơn `DRV-{id}`, gỡ `thankyou_page` + `email_instructions` mặc định của BACS. `Woo\OrderView` — view-model thuần: ma trận A/B/C/D (`state()`), `paymentSlot()` (`qr` chỉ khi `bacs` + `on-hold`), timeline 4 bước, `fromOrder()` 100% WC CRUD.
+  - **Template:** `woocommerce/checkout/thankyou.php` + `template-parts/order/{status-banner,payment-box,items-ledger,summary}.php`; không thanh demo (STRIP-04), không watermark QR/câu "đối soát 3 phút" (STRIP-22); State A không xuất ảnh QR / số TK lên DOM; State B gọi hook `drv_order_payment_box` (chỗ gắn `BankQR`), chưa gắn thì hiện text nội dung CK `DRV{id}`.
+  - **Asset:** CSS `pages/order.css` (Vite entry `pages/order`) = `checkout-port` + `checkout-theme` + `cart-metrics` + `order-port` (cắt §4C bằng `tools/port-css-step9.py`) + `order-theme`; `pages/cart-metrics.css` cũng bổ sung cho Checkout (trước đó lưới 4 ô khối lượng ở checkout thiếu style). Không thêm JS (sao chép dùng action `copy-text` của `core.js`).
+  - **Đối soát local:** đơn BACS #170 đặt từ checkout → `wc_orders.status = wc-cho-xac-nhan`, `_order_stock_reduced = yes`, `_drv_transfer_ref = DRV170`; trang cảm ơn State A (0 `img.vietqr.io`, 0 khối TK BACS, 0 bảng chi tiết WC mặc định, `noindex, nofollow`); đổi sang `on-hold` → State B timeline bước 3, vẫn 0 QR; `cancelled` → State D. Mobile 390px không tràn ngang.
+  - **Test:** PHPUnit `204/204` (+`OrderStatusSlugLengthTest`, `OrderReceivedStateTest`), Vitest `75/75`, PHPStan + Stylelint sạch.
+
+- **Dời sang phase sau — HPOS Ops & VietQR (`18 §2–§5`, `04 §7–§8`):**
+  1. `Admin\OrderMetabox` "Điều vận & Xác nhận đơn": nhập phí ship (`WC_Order_Item_Shipping`), xe `_drv_ship_vehicle`, ghi chú, `_drv_lot_code` từng dòng (C-10); Order Action *"Xác nhận đơn & gửi email"* → `on-hold` (BACS) / `processing` (COD) (C-6, C-7); bản in Phiếu xuất kho A4.
+  2. `Woo\BankQR` (`18 §4.2`): `can_render()` + `build_qr_url()` `img.vietqr.io` gắn vào hook `drv_order_payment_box`; khối `.drv-vietqr-card` (CSS đã port trong `order-port.css`), fallback ảnh lỗi (`order.js`), validate `drv_settings.bank` (`bank_short_name`, `bank_full_name`, `qr_template`); `BankQrGuardTest`.
+  3. Action Scheduler: tự hủy `on-hold` quá `transfer_due_days` + hoàn kho (C-14), cảnh báo `cho-xac-nhan` quá SLA.
+  4. Email `E1..E7` (`Woo\Emails\*`, template brand, `Core\MailSmtp`); đơn không email.
+  5. Danh sách đơn HPOS: cột/bộ lọc nhanh, tìm `DRV-{id}` / `_drv_transfer_ref` / MST; đưa `cho-xac-nhan` vào báo cáo WC Analytics; `myaccount/view-order.php` dùng chung partial `template-parts/order/*`.
+  6. Đơn chuyển từ BOQ (`Quote\OrderConverter`) giờ đã tự nhận `cho-xac-nhan` vì trạng thái đã đăng ký — cần kiểm lại Q-10 trên WP Admin.
 
 ---
 
 ### STEP 10: Cắt Cẩm Nang Chọn Gạch (GEO Content Hub), Patterns/Shortcodes Bài Viết, Chính sách & 404 (`07`, `08`, `10`)
+
 - **Mục tiêu:** Hoàn thiện chuyên mục Cẩm nang (`home.php`, `category.php`, `single.php`) với 6 Block Patterns & 6 Shortcodes thương mại dành riêng cho biên tập bài viết (`D-34`), cùng trang Chính sách `3/9`, `/gioi-thieu` (dựng bằng `drv_section()` config `S-3`) và `404.php`.
 - **Nguồn cắt Layout:** `docs/layout/07-blog-archive.html`, `docs/layout/08-blog-single.html`, `docs/layout/10-404.html`.
 - **Rules & Skills:**
@@ -501,6 +537,7 @@ function drv_section(string $name, array $props = []): void {
 ---
 
 ### STEP 11: Tối ưu LiteSpeed Cache/ESI, Ngân sách Hiệu năng, Bảo mật OWASP & Đóng gói Go-Live
+
 - **Mục tiêu:** Khóa chặt hiệu năng Core Web Vitals (`Lighthouse Mobile ≥ 90`), kiểm toán bảo mật toàn diện, đối chiếu sạch danh sách gỡ bỏ `STRIP-01..26` và đóng gói bản phát hành sạch sẵn sàng đưa lên AZDIGI LiteSpeed.
 - **Rules & Skills:**
   - Rules: Toàn bộ 6 files trong `.agents/rules/dravit-*.md`.
@@ -521,7 +558,7 @@ function drv_section(string $name, array $props = []): void {
 ## 5. Kiến trúc Tương thích Hệ sinh thái Plugin (`inc/Core/Integrations/`)
 
 | Plugin / Hệ sinh thái | Class Tích hợp trong Theme | Cơ chế Thân thiện & Không Xung đột |
-|---|---|---|
+| --- | --- | --- |
 | **WooCommerce (11.2+ HPOS)** | `Woo\Setup`, `Woo\Hooks`, `Woo\StoreApiExtend` | Chỉ override tối thiểu 10 templates chuẩn `@version`; giữ nguyên action hooks chuẩn (`woocommerce_before_single_product`, `woocommerce_after_add_to_cart_button`, `woocommerce_review_order_before_submit`...) cho mọi plugin mở rộng. |
 | **Rank Math SEO** | `Core\Integrations\RankMathCompat`, `Seo\*` | Tương tác hoàn toàn qua filters chính thức (`rank_math/frontend/robots`, `canonical`, `json_ld`, `breadcrumb/items`) + `rank_math_primary_product_cat`; có fallback an toàn nếu tạm tắt plugin. |
 | **Fluent Forms (`D-31`)** | `Core\Integrations\FluentFormsBridge` + `layers/plugins.css` | Giữ nguyên script/style của Fluent Forms trên trang có form; đồng bộ giao diện qua `@layer plugins`; tự bơm ngữ cảnh gạch (`SKU`, `m²`, `BOQ`, `UTM`) vào hidden fields và đồng bộ `fluentform/submission_inserted` về CPT `drv_lead`. |
@@ -533,7 +570,7 @@ function drv_section(string $name, array $props = []): void {
 ## 6. Tổng kết Các Quyết Định Thực Thi Đã Chốt (`D-31` → `D-34`)
 
 | Mã ADR | Hạng mục | Phương án đã chốt |
-|---|---|---|
+| --- | --- | --- |
 | **`D-31`** | Tích hợp Fluent Forms & Plugin mở rộng | **Phương án 1A:** Hybrid Adapter (`FluentFormsBridge` + `@layer plugins`) — BOQ giữ lõi tính native + đồng bộ Fluent Forms; 5 điểm form báo giá còn lại hỗ trợ Dual-Mode (`[fluentform]` hoặc Native Form). |
 | **`D-32`** | Kiến trúc Trợ lý AI Tìm Gạch (`Dravit\Advisor\*`) | **Phương án 2A:** Mở sẵn 100% Interfaces + REST API + cắt hoàn chỉnh `/tro-ly-ai-tim-gach` và kích hoạt chạy thật ngay bằng `RuleOnlyDriver` (`< 200ms`, `0đ` phí API); cắm API Key (`Claude` / `Gemini`) nâng cấp tức thì lên LLM Closed-World. |
 | **`D-33`** | Khung Unit Test tự động mỗi Step | **Phương án 3A:** PHPUnit 10 + Vitest + Shared JSON Vectors (`tests/fixtures/calc-vectors.json`) + PHPStan + WP-CLI Verify (dev-only, loại khỏi file `.zip` deploy). |

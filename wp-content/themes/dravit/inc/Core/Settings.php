@@ -84,6 +84,28 @@ final class Settings implements ServiceProviderInterface {
                 'transfer_due_days' => 3,
                 'auto_cancel_hours' => 72,
                 'sla_text'          => 'Phản hồi trong 30 phút giờ làm việc (08:00 - 21:00)',
+                // docs/14 §8.2 TAB 4 — Giỏ hàng & Checkout VN (Step 9).
+                'shipping_label'       => 'Báo sau khi xác nhận đơn',
+                'checkout_ship_notice' => 'Nhân viên Dravit sẽ gọi xác nhận tồn kho cùng lô màu và báo phí vận chuyển tốt nhất trước khi giao.',
+                'vehicle_thresholds'   => [
+                    ['max_kg' => 1000, 'label' => 'Xe tải nhẹ 1 tấn'],
+                    ['max_kg' => 2500, 'label' => 'Xe tải 2,5 tấn'],
+                    ['max_kg' => 5000, 'label' => 'Xe tải 5 tấn'],
+                    ['max_kg' => 999999, 'label' => 'Xe tải 8 tấn / chia chuyến'],
+                ],
+                // Khóa tỉnh theo `config/provinces-vn.php` (giá trị `billing_state`).
+                'shipping_zone_hints'  => [
+                    'inner'   => ['provinces' => ['HCM'], 'text' => 'Nội thành TP. Hồ Chí Minh: xe tải nhẹ giao tận chân công trình (24h).'],
+                    'nearby'  => ['provinces' => ['DNA', 'TN', 'VL', 'DT', 'LD'], 'text' => 'Tuyến lân cận: xe tải nguyên chuyến hoặc ghép chuyến (24 - 48h).'],
+                    'default' => ['text' => 'Tuyến liên tỉnh: điều phối xe tải hoặc chành xe uy tín (2 - 4 ngày).'],
+                ],
+                'note_chips'           => [
+                    'Hẻm nhỏ, xe dưới 1,5 tấn',
+                    'Đường lớn, xe 5 tấn vào tận nơi',
+                    'Chung cư, cần đăng ký thang hàng',
+                    'Giao giờ hành chính (8:00 - 17:00)',
+                    'Gọi trước khi giao 60 phút',
+                ],
             ],
             'quote'    => [
                 'max_items'       => 30,

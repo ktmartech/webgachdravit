@@ -39,11 +39,13 @@ final class WooCompat implements ServiceProviderInterface {
         wp_dequeue_style('wc-blocks-style');
         wp_dequeue_style('wc-blocks-vendors-style');
 
+        // docs/15 §3.3: Mini-cart hydrate bằng Store API → gỡ `wc-cart-fragments` trên TOÀN site.
+        wp_dequeue_script('wc-cart-fragments');
+
         $is_transactional = function_exists('is_cart')
             && (is_cart() || is_checkout() || is_account_page());
 
         if (!$is_transactional) {
-            wp_dequeue_script('wc-cart-fragments');
             wp_dequeue_script('sourcebuster-js');
             wp_dequeue_script('wc-order-attribution');
         }

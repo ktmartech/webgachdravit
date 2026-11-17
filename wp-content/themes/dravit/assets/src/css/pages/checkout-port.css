@@ -1,0 +1,738 @@
+/* ==========================================================================
+   CHECKOUT VN (`assets/src/css/pages/checkout.css`) — port docs/layout/05-checkout.html (pages.css §4B)
+   Sinh bởi tools/port-css-step9.py · Topbar dùng header-mega.css. Phần mở rộng: `checkout-theme.css`.
+   ========================================================================== */
+
+@layer woo {
+  /* 2-Column Checkout Layout (7/12 Form | 5/12 Sticky Summary) */
+  .drv-checkout-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-6);
+    align-items: start;
+  }
+
+  @media (width >= 1024px) {
+    .drv-checkout-layout {
+      grid-template-columns: minmax(0, 7fr) minmax(380px, 5fr);
+    }
+  }
+
+  /* Architectural Form Section Card (.drv-checkout-block) */
+  .drv-checkout-block {
+    position: relative;
+    background-color: var(--c-white);
+    border: var(--bw);
+    border-radius: var(--r-md);
+  }
+
+  .drv-checkout-block:has(.drv-select-ui.is-open) {
+    z-index: var(--z-dropdown);
+  }
+
+  .drv-checkout-block__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-2) var(--s-3);
+    padding: var(--s-3) var(--s-5);
+    background-color: var(--c-ivory);
+    border-bottom: var(--bw);
+    border-top-left-radius: calc(var(--r-md) - 1px);
+    border-top-right-radius: calc(var(--r-md) - 1px);
+  }
+
+  .drv-checkout-block__title-wrap {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+  }
+
+  .drv-checkout-block__num {
+    font-family: var(--f-display);
+    font-size: 1.25rem;
+    line-height: 1;
+    color: var(--c-white);
+    background-color: var(--c-navy-900);
+    padding: 5px 9px;
+    border-radius: var(--r-sm);
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+  }
+
+  .drv-checkout-block__title {
+    font-size: var(--fs-base);
+    font-weight: 700;
+    color: var(--c-navy-900);
+    margin: 0;
+  }
+
+  .drv-checkout-block__body {
+    padding: var(--s-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-4);
+  }
+
+  @media (width >= 640px) {
+    .drv-checkout-block__body {
+      padding: var(--s-5);
+    }
+  }
+
+  .drv-checkout-grid-2 {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-4);
+  }
+
+  @media (width >= 640px) {
+    .drv-checkout-grid-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  /* Quick Delivery Note Chips */
+  .drv-note-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 2px;
+  }
+
+  .drv-note-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    border-radius: var(--r-sm);
+    border: var(--bw);
+    background-color: var(--c-ivory);
+    color: var(--c-navy-900);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    transition:
+      background-color var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out);
+  }
+
+  .drv-note-chip:hover {
+    background-color: var(--c-champagne);
+    border-color: var(--c-navy-600);
+  }
+
+  .drv-note-chip.is-active {
+    background-color: var(--c-navy-900);
+    border-color: var(--c-navy-900);
+    color: var(--c-white);
+  }
+
+  /* Collapsible VAT Invoice Box */
+  .drv-vat-box {
+    background-color: var(--c-ivory);
+    border: var(--bw);
+    border-radius: var(--r-sm);
+    padding: var(--s-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+  }
+
+  .drv-vat-box__fields {
+    padding-top: var(--s-3);
+    border-top: var(--bw);
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+  }
+
+  /* Shipping Quote Method Card (drv_quote_later) */
+  .drv-ship-method-card {
+    background-color: var(--c-ivory);
+    border: 1px solid var(--c-teal-500);
+    border-left: 4px solid var(--c-teal-500);
+    border-radius: var(--r-sm);
+    padding: var(--s-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+  }
+
+  .drv-ship-steps-mini {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1px;
+    background-color: var(--c-navy-200);
+    border: var(--bw);
+    border-radius: var(--r-sm);
+    overflow: hidden;
+    font-size: var(--fs-xs);
+  }
+
+  @media (width >= 640px) {
+    .drv-ship-steps-mini {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .drv-ship-steps-mini__item {
+    background-color: var(--c-white);
+    padding: var(--s-2) var(--s-3);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  /* Payment Method Radio Cards */
+  .drv-pay-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+  }
+
+  .drv-pay-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+    padding: var(--s-4);
+    background-color: var(--c-white);
+    border: var(--bw);
+    border-radius: var(--r-sm);
+    cursor: pointer;
+    transition:
+      border-color var(--dur-fast) var(--ease-out),
+      background-color var(--dur-fast) var(--ease-out),
+      box-shadow var(--dur-fast) var(--ease-out);
+  }
+
+  .drv-pay-card:hover {
+    border-color: var(--c-navy-600);
+  }
+
+  .drv-pay-card:has(input:checked) {
+    border-color: var(--c-moss-500);
+    background-color: var(--c-ivory);
+    box-shadow: inset 3px 0 0 var(--c-moss-500);
+  }
+
+  .drv-pay-card__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-2);
+  }
+
+  .drv-pay-card__radio-label {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+    font-size: var(--fs-base);
+    font-weight: 700;
+    color: var(--c-navy-900);
+  }
+
+  .drv-pay-card__radio-label input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--c-moss-500);
+    flex-shrink: 0;
+  }
+
+  .drv-pay-card__desc {
+    font-size: var(--fs-xs);
+    color: var(--c-text-muted);
+    padding-left: 26px;
+    line-height: 1.5;
+  }
+
+  .drv-pay-card__detail {
+    margin-top: var(--s-1);
+    margin-left: 26px;
+    padding: var(--s-3);
+    background-color: var(--c-white);
+    border: var(--bw);
+    border-radius: var(--r-sm);
+    font-size: var(--fs-xs);
+    color: var(--c-text-main);
+    display: none;
+    flex-direction: column;
+    gap: var(--s-2);
+  }
+
+  .drv-pay-card:has(input:checked) .drv-pay-card__detail {
+    display: flex;
+  }
+
+  /* Sticky Right Summary Column — Order Items & Guarantee Box */
+  .drv-checkout-items {
+    display: flex;
+    flex-direction: column;
+    border: var(--bw);
+    border-radius: var(--r-sm);
+    background-color: var(--c-white);
+    overflow: hidden;
+  }
+
+  .drv-checkout-item {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr);
+    gap: var(--s-3);
+    padding: var(--s-3);
+    border-bottom: var(--bw);
+    align-items: center;
+  }
+
+  .drv-checkout-item:last-child {
+    border-bottom: none;
+  }
+
+  .drv-checkout-item__thumb {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--r-sm);
+    border: var(--bw);
+    background-color: var(--c-champagne);
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  .drv-checkout-item__body {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+
+  .drv-checkout-item__header-row,
+  .drv-checkout-item__sub-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--s-2);
+  }
+
+  .drv-checkout-item__name {
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    color: var(--c-navy-900);
+    line-height: 1.35;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .drv-checkout-item__total {
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    color: var(--c-navy-900);
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+  }
+
+  .drv-checkout-item__spec {
+    font-size: 12px;
+    color: var(--c-text-muted);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .drv-checkout-item__unit {
+    font-size: 12px;
+    color: var(--c-text-muted);
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+  }
+
+  /* Pre-Submit Shade & Shipping Guarantee Box */
+  .drv-checkout-guarantee {
+    background-color: var(--c-ivory);
+    border: var(--bw);
+    border-radius: var(--r-sm);
+    padding: var(--s-3) var(--s-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+    font-size: var(--fs-xs);
+    color: var(--c-text-main);
+  }
+
+  .drv-checkout-guarantee__list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .drv-checkout-guarantee__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    line-height: 1.45;
+  }
+
+  .drv-order-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-2);
+    width: 100%;
+  }
+
+  /* 2-column mobile form grid variant (paired inputs: Name+Phone, State+City) */
+  .drv-checkout-grid-2--mobile {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  @media (width >= 640px) {
+    .drv-checkout-grid-2--mobile {
+      gap: var(--s-4);
+    }
+  }
+
+  @media (width >= 640px) {
+    .drv-checkout-mobile-summary,
+    .drv-checkout-sticky-cta {
+      display: none;
+    }
+  }
+
+  @media (width <= 639.98px) {
+    /* Hide standard multi-button dock on checkout to prevent conversion leaks */
+    body[data-page="checkout"] .drv-mobile-bar,
+    .drv-checkout-page .drv-mobile-bar {
+      display: none;
+    }
+
+    /* Page padding for sticky CTA */
+    body.drv-checkout-page {
+      padding-bottom: 76px;
+    }
+
+    .drv-summary-box {
+      padding: var(--s-4);
+      gap: var(--s-3);
+    }
+
+    .drv-summary-row {
+      font-size: 13px;
+    }
+
+    .drv-summary-row--total {
+      font-size: 1.125rem;
+      padding-top: var(--s-2);
+    }
+
+    /* 2. Page Intro & Breadcrumb */
+    .drv-checkout-page .drv-breadcrumb,
+    body[data-page="order-received"] .drv-breadcrumb {
+      display: none;
+    }
+
+    .drv-checkout-page .drv-sec-head__eyebrow {
+      display: none;
+    }
+
+    .drv-checkout-page .drv-checkout-hero-sec {
+      padding-block: 10px;
+    }
+
+    .drv-checkout-page h1 {
+      font-size: 1rem;
+      line-height: 1.25;
+      margin: 0;
+    }
+
+    /* 3. Sleek 1-Row Compact 3-Step Progress Bar */
+    .drv-cart-steps {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      border-radius: var(--r-sm);
+    }
+
+    .drv-cart-step {
+      padding: 7px 4px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 2px;
+    }
+
+    .drv-cart-step__num,
+    .drv-cart-step__sub {
+      display: none;
+    }
+
+    .drv-cart-step__text {
+      align-items: center;
+      text-align: center;
+    }
+
+    .drv-cart-step__title {
+      font-size: 12px;
+      line-height: 1.2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+    }
+
+    .drv-cart-step__mobile-label {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .drv-cart-step.is-active {
+      box-shadow: inset 0 -2px 0 var(--c-navy-900);
+    }
+
+    /* 4. Top Mobile Order Summary Dropdown Bar */
+    .drv-checkout-mobile-summary {
+      background-color: var(--c-ivory);
+      border: var(--bw);
+      border-radius: var(--r-sm);
+      overflow: hidden;
+      margin-bottom: var(--s-3);
+    }
+
+    .drv-checkout-mobile-summary__toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 12px;
+      cursor: pointer;
+      list-style: none;
+      user-select: none;
+    }
+
+    .drv-checkout-mobile-summary__toggle::-webkit-details-marker {
+      display: none;
+    }
+
+    .drv-checkout-mobile-summary__left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--c-navy-900);
+    }
+
+    .drv-checkout-mobile-summary__arrow {
+      font-size: 12px;
+      transition: transform var(--dur-fast) var(--ease-out);
+    }
+
+    .drv-checkout-mobile-summary[open] .drv-checkout-mobile-summary__arrow {
+      transform: rotate(180deg);
+    }
+
+    .drv-checkout-mobile-summary__total {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--c-brand-sale);
+    }
+
+    .drv-checkout-mobile-summary__content {
+      padding: 10px 12px;
+      background-color: var(--c-white);
+      border-top: var(--bw);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .drv-checkout-mobile-summary__breakdown {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding-top: 8px;
+      border-top: var(--bw);
+      font-size: 12px;
+    }
+
+    /* 5. Form Fields & Delivery Chips & VAT Box */
+    .drv-checkout-block__head {
+      padding: 10px 12px;
+    }
+
+    .drv-checkout-block__title {
+      font-size: 13px;
+      line-height: 1.3;
+    }
+
+    .drv-checkout-block__num {
+      font-size: 13px;
+      padding: 3px 6px;
+    }
+
+    .drv-checkout-block__body {
+      padding: 12px;
+      gap: 12px;
+    }
+
+    .drv-label {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
+    }
+
+    .drv-label__hint {
+      font-size: 12px;
+    }
+
+    .drv-checkout-grid-2--mobile {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .drv-checkout-grid-2--mobile .drv-label {
+      font-size: 12px;
+    }
+
+    .drv-checkout-grid-2--mobile .drv-input,
+    .drv-checkout-grid-2--mobile .drv-select {
+      padding: 8px 10px;
+      font-size: 13px;
+    }
+
+    /* Horizontal scroll-snap for delivery chips */
+    .drv-note-chips {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x mandatory;
+      padding-bottom: 4px;
+      margin-inline: -4px;
+      padding-inline: 4px;
+      scrollbar-width: none;
+    }
+
+    .drv-note-chips::-webkit-scrollbar {
+      display: none;
+    }
+
+    .drv-note-chip {
+      flex-shrink: 0;
+      scroll-snap-align: start;
+      white-space: nowrap;
+      padding: 6px 10px;
+      font-size: 12px;
+    }
+
+    .drv-vat-box {
+      padding: 10px 12px;
+    }
+
+    .drv-ship-method-card {
+      padding: 12px;
+      gap: 8px;
+    }
+
+    .drv-ship-steps-mini__item {
+      padding: 8px 10px;
+    }
+
+    /* 6. Clean Flat Payment Cards */
+    .drv-pay-card {
+      padding: 11px 12px;
+    }
+
+    .drv-pay-card__radio-label {
+      font-size: 13px;
+    }
+
+    .drv-pay-card__desc {
+      padding-left: 0;
+      margin-top: 4px;
+      font-size: 12px;
+    }
+
+    .drv-pay-card__detail {
+      margin-left: 0;
+      padding: 10px;
+    }
+
+    /* 7. Summary & Guarantees */
+    .drv-checkout-guarantee {
+      padding: 10px 12px;
+      gap: 6px;
+    }
+
+    .drv-checkout-guarantee p {
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .drv-checkout-guarantee__list {
+      gap: 4px;
+    }
+
+    .drv-checkout-guarantee__item {
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    /* 8. Fixed Bottom Sticky CTA Bar */
+    .drv-checkout-sticky-cta {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 99;
+      background-color: var(--c-white);
+      border-top: var(--bw);
+      box-shadow: 0 -4px 16px rgb(11 25 44 / 8%);
+      padding: 8px 14px;
+    }
+
+    .drv-checkout-sticky-cta__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      max-width: 480px;
+      margin-inline: auto;
+    }
+
+    .drv-checkout-sticky-cta__info {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      min-width: 0;
+    }
+
+    .drv-checkout-sticky-cta__label {
+      font-size: 12px;
+      color: var(--c-text-muted);
+      line-height: 1;
+    }
+
+    .drv-checkout-sticky-cta__price {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--c-brand-sale);
+      line-height: 1.2;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .drv-checkout-sticky-cta__sub {
+      font-size: 12px;
+      color: var(--c-text-muted);
+    }
+
+    .drv-checkout-sticky-cta__btn {
+      flex-shrink: 0;
+      padding: 11px 22px;
+      font-size: var(--fs-sm);
+      font-weight: 700;
+      border-radius: var(--r-sm);
+    }
+  }
+}

@@ -1444,13 +1444,19 @@
 
   .drv-calc__waste-select {
     height: 36px;
-    padding-inline: 8px 4px;
+    min-height: 36px;
+    min-width: 72px;
+    padding-inline: 8px;
     font-size: var(--fs-sm);
     font-weight: 600;
     color: var(--c-navy-900);
     background-color: var(--c-white);
     border: var(--bw-input);
     border-radius: var(--r-sm);
+  }
+
+  select.drv-calc__waste-select {
+    padding-inline-end: 26px;
   }
 
   .drv-calc__waste-select:focus-visible {

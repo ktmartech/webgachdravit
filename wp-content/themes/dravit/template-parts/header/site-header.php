@@ -78,7 +78,7 @@ if (drv_is_woo_active() && function_exists('WC') && WC()->cart !== null) {
                     aria-label="Mở giỏ hàng">
                 <span class="drv-header__cart-icon-wrap">
                     <i class="ph ph-shopping-bag drv-icon drv-icon--sm" aria-hidden="true"></i>
-                    <span class="drv-header__cart-badge u-tabular" data-drv-cart-count><?php echo esc_html((string) $cart_count); ?></span>
+                    <span class="drv-header__cart-badge u-tabular" data-drv-cart-count<?php echo $cart_count > 0 ? '' : ' hidden'; ?>><?php echo esc_html((string) $cart_count); ?></span>
                 </span>
                 <span class="drv-header__cart-text">Giỏ hàng</span>
             </button>

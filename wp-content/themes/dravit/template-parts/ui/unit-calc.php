@@ -224,7 +224,7 @@ $show_tabs = count($buy_units) > 1;
 
                 <div class="drv-calc__waste-field" data-calc-waste-wrap>
                     <label for="<?php echo esc_attr($uid . '-waste'); ?>" class="drv-calc__opt-label">Hao hụt</label>
-                    <select id="<?php echo esc_attr($uid . '-waste'); ?>" class="drv-calc__waste-select u-tabular" data-calc-waste>
+                    <select id="<?php echo esc_attr($uid . '-waste'); ?>" class="drv-select drv-calc__waste-select u-tabular" data-calc-waste>
                         <?php foreach ($waste_options as $w_opt) : ?>
                             <option value="<?php echo esc_attr((string) $w_opt); ?>" <?php selected($waste_def, $w_opt); ?>>
                                 <?php echo esc_html($w_opt . '%'); ?>

@@ -1,0 +1,73 @@
+/* ==========================================================================
+   CHECKOUT VN — phần mở rộng theme ngoài mockup (docs/04 §5, WooCommerce classic checkout JS)
+   ========================================================================== */
+@layer woo {
+  .drv-checkout-hero-sec {
+    padding-block: var(--s-5);
+  }
+
+  .drv-checkout-hero__title {
+    margin-top: 2px;
+    line-height: 1.25;
+    text-transform: uppercase;
+  }
+
+  .drv-checkout-main,
+  .drv-review {
+    min-width: 0;
+  }
+
+  .drv-review {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-4);
+  }
+
+  .drv-summary-box__head {
+    padding-bottom: var(--s-3);
+  }
+
+  /* WooCommerce `checkout.js` prepend notice vào đầu form → trải ngang 2 cột. */
+  .drv-checkout-layout > .woocommerce-NoticeGroup,
+  .drv-checkout-layout > .woocommerce-error,
+  .drv-checkout-layout > .woocommerce-message,
+  .drv-checkout-layout > .woocommerce-info {
+    grid-column: 1 / -1;
+  }
+
+  /* Trạng thái lỗi inline (checkout.js + lớp `woocommerce-invalid` của WC). */
+  .drv-field.is-invalid .drv-input,
+  .drv-field.is-invalid .drv-select,
+  .form-row.woocommerce-invalid .drv-input,
+  .form-row.woocommerce-invalid .drv-select {
+    border-color: var(--c-sale);
+    box-shadow: 0 0 0 3px var(--c-sale-bg);
+  }
+
+  .woocommerce-terms-and-conditions-wrapper .form-row {
+    margin: 0;
+  }
+
+  .drv-select:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+
+  .drv-select[aria-busy="true"] {
+    cursor: progress;
+  }
+
+  /* Fragment đang tải lại (WC blockUI) — giữ nền trắng thay vì overlay xám mặc định. */
+  .blockUI.blockOverlay {
+    background-color: var(--c-white);
+    opacity: 0.6;
+  }
+
+  .drv-pay-card input[type="radio"] {
+    accent-color: var(--c-navy-900);
+  }
+
+  .drv-checkout-mobile-summary__content .drv-checkout-items {
+    border: 0;
+  }
+}

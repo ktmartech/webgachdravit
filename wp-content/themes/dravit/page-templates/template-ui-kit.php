@@ -536,6 +536,7 @@ get_header();
                             'pieces_per_box' => 3,
                             'weight_piece'   => 14,
                             'round_mode'     => 'piece',
+                            'show_add_box'   => true,
                             'aria_label'     => 'Số viên DRV-8801M',
                         ]);
                         ?>

@@ -4,8 +4,30 @@ declare(strict_types=1);
 defined('ABSPATH') || exit;
 
 get_header();
-?>
-<div class="l-container l-section">
+
+// Giỏ hàng & Thanh toán (Classic Shortcode D-15): template WooCommerce trong theme tự dựng H1, steps và lưới 2 cột.
+// Tài khoản khi CHƯA đăng nhập (đăng nhập · đăng ký · quên/đặt lại mật khẩu): template `woocommerce/myaccount/*` tự dựng hero + lưới.
+$is_auth_flow = drv_is_woo_active() && function_exists('is_account_page') && is_account_page() && !is_user_logged_in();
+$is_woo_flow  = $is_auth_flow || (drv_is_woo_active()
+    && ((function_exists('is_cart') && is_cart()) || (function_exists('is_checkout') && is_checkout())));
+
+if ($is_woo_flow) :
+    $flow_class = $is_auth_flow
+        ? 'drv-page--account'
+        : ((function_exists('is_cart') && is_cart()) ? 'drv-page--cart' : 'drv-page--checkout');
+    ?>
+<main id="main-content" class="drv-page <?php echo esc_attr($flow_class); ?>">
+    <?php
+    while (have_posts()) :
+        the_post();
+        the_content();
+    endwhile;
+    ?>
+</main>
+    <?php
+else :
+    ?>
+<main id="main-content" class="l-container l-section">
     <?php while (have_posts()) : the_post(); ?>
         <article id="post-<?php the_ID(); ?>" <?php post_class('drv-page'); ?>>
             <h1 class="drv-page__title"><?php the_title(); ?></h1>
@@ -14,7 +36,8 @@ get_header();
             </div>
         </article>
     <?php endwhile; ?>
-</div>
-<?php
-get_footer();
+</main>
+    <?php
+endif;
 
+get_footer();

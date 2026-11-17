@@ -1,0 +1,434 @@
+/* ==========================================================================
+   ORDER RECEIVED (`assets/src/css/pages/order.css`) — port docs/layout/06-order-received.html (pages.css §4C)
+   Sinh bởi tools/port-css-step9.py · Bỏ watermark QR (STRIP-22). Phần mở rộng: `order-theme.css`.
+   ========================================================================== */
+
+@layer woo {
+  /* ========================================================================
+     4C. ORDER RECEIVED & VIETQR PAYMENT (06-order-received.html)
+     Clean Flat Design · Integrated 4-Step Timeline · Dynamic VietQR NAPAS 24/7
+     ======================================================================== */
+  .drv-order-banner {
+    background-color: var(--c-white);
+    border: var(--bw);
+    border-radius: var(--r-md);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .drv-order-banner__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-4);
+    padding: var(--s-5);
+  }
+
+  .drv-order-banner__main {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--s-3);
+    max-width: 640px;
+  }
+
+  .drv-order-banner__status-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-2);
+  }
+
+  .drv-order-banner__success-title {
+    font-size: var(--fs-sm);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--c-moss-700);
+    line-height: 1.2;
+  }
+
+  .drv-order-banner [data-order-status-badge] {
+    font-size: 12px;
+    padding: 2px 7px;
+    font-weight: 600;
+    line-height: 1.25;
+    border-radius: var(--r-xs);
+  }
+
+  .drv-order-banner__icon {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--r-sm);
+    background-color: var(--c-moss-100);
+    color: var(--c-moss-700);
+    font-size: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .drv-order-banner__id {
+    font-family: var(--font-sans);
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+    font-weight: 700;
+    color: var(--c-navy-900);
+    letter-spacing: -0.01em;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.25;
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .drv-order-banner__sub {
+    font-size: var(--fs-xs);
+    color: var(--c-text-muted);
+    line-height: 1.5;
+    margin: 2px 0 0;
+  }
+
+  /* Inline Meta Row (clean, borderless, zero visual noise) */
+  .drv-order-meta-inline {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-2);
+    margin-top: 4px;
+    font-size: var(--fs-xs);
+    color: var(--c-text-muted);
+  }
+
+  .drv-order-meta-inline span {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .drv-order-meta-inline__dot {
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: var(--c-navy-300);
+  }
+
+  /* 4-Step Connected Stepper Timeline */
+  .drv-timeline {
+    padding: var(--s-4) var(--s-5);
+    background-color: var(--c-ivory);
+    border-top: var(--bw);
+    width: 100%;
+  }
+
+  .drv-timeline__track {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    position: relative;
+    width: 100%;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .drv-timeline__track::before {
+    content: "";
+    position: absolute;
+    top: 15px;
+    left: 8%;
+    right: 8%;
+    height: 2px;
+    background: linear-gradient(to right,
+        var(--c-success) 0%,
+        var(--c-navy-900) 36%,
+        var(--c-navy-200) 36%,
+        var(--c-navy-200) 100%);
+    z-index: 0;
+  }
+
+  .drv-timeline__step {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 6px;
+    position: relative;
+    z-index: 1;
+    padding: 0 2px;
+  }
+
+  .drv-timeline__node {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    background-color: var(--c-white);
+    border: 2px solid var(--c-navy-300);
+    color: var(--c-navy-500);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 5%);
+    transition: all var(--dur-fast) var(--ease-out);
+  }
+
+  .drv-timeline__label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+  }
+
+  .drv-timeline__title {
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    color: var(--c-navy-800);
+    line-height: 1.25;
+    white-space: nowrap;
+  }
+
+  .drv-timeline__sub {
+    font-size: 12px;
+    color: var(--c-text-muted);
+    line-height: 1.2;
+  }
+
+  /* Step States */
+  .drv-timeline__step.is-done .drv-timeline__node {
+    background-color: var(--c-success);
+    border-color: var(--c-success);
+    color: var(--c-white);
+    box-shadow: 0 0 0 3px rgb(5 150 105 / 16%);
+  }
+
+  .drv-timeline__step.is-done .drv-timeline__title {
+    color: var(--c-success);
+    font-weight: 700;
+  }
+
+  .drv-timeline__step.is-active .drv-timeline__node {
+    background-color: var(--c-navy-900);
+    border-color: var(--c-navy-900);
+    color: var(--c-white);
+    box-shadow: 0 0 0 4px rgb(8 58 79 / 18%);
+  }
+
+  .drv-timeline__step.is-active .drv-timeline__title {
+    color: var(--c-navy-900);
+    font-weight: 800;
+  }
+
+  .drv-timeline__step.is-pending .drv-timeline__node {
+    background-color: var(--c-white);
+    border: 2px solid var(--c-navy-300);
+    color: var(--c-navy-500);
+  }
+
+  .drv-timeline__step.is-pending .drv-timeline__title {
+    color: var(--c-navy-500);
+    font-weight: 500;
+  }
+
+  /* Mobile Responsive Polish (<= 639px) */
+  @media (width <= 639px) {
+    .drv-order-banner__top {
+      padding: var(--s-4) var(--s-3);
+      gap: var(--s-3);
+    }
+
+    .drv-order-banner__main {
+      gap: var(--s-2);
+    }
+
+    .drv-order-banner__icon {
+      width: 36px;
+      height: 36px;
+      font-size: 20px;
+      margin-top: 1px;
+    }
+
+    .drv-order-banner__status-row {
+      gap: 6px;
+    }
+
+    .drv-order-banner__success-title {
+      font-size: 12px;
+    }
+
+    .drv-order-banner [data-order-status-badge] {
+      font-size: 12px;
+      padding: 1px 5px;
+    }
+
+    .drv-order-banner__id {
+      font-size: 1.125rem;
+      white-space: nowrap;
+    }
+
+    .drv-order-banner__sub {
+      font-size: 12px;
+    }
+
+    .drv-order-meta-inline {
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .drv-timeline {
+      padding: 12px 6px 10px;
+    }
+
+    .drv-timeline__track::before {
+      top: 14px;
+      left: 10%;
+      right: 10%;
+    }
+
+    .drv-timeline__step {
+      gap: 4px;
+      padding: 0 2px;
+    }
+
+    .drv-timeline__node {
+      width: 28px;
+      height: 28px;
+      font-size: 12px;
+    }
+
+    .drv-timeline__title {
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .drv-timeline__sub {
+      display: none;
+    }
+  }
+
+  /* Clean Flat VietQR Box */
+  .drv-vietqr-card {
+    background-color: var(--c-white);
+    border: var(--bw-strong);
+    border-radius: var(--r-md);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .drv-vietqr-card__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-3);
+    padding: var(--s-4) var(--s-5);
+    background-color: var(--c-ivory);
+    border-bottom: var(--bw);
+  }
+
+  .drv-vietqr-card__body {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--s-5);
+    padding: var(--s-5);
+    align-items: start;
+  }
+
+  @media (width >= 860px) {
+    .drv-vietqr-card__body {
+      grid-template-columns: 240px minmax(0, 1fr);
+      gap: var(--s-6);
+    }
+  }
+
+  .drv-qr-frame {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--s-3);
+    padding: var(--s-3);
+    background-color: var(--c-white);
+    border: var(--bw);
+    border-radius: var(--r-sm);
+    position: relative;
+    text-align: center;
+  }
+
+  .drv-qr-img {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+    border-radius: var(--r-xs);
+    display: block;
+  }
+
+  .drv-bank-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background-color: var(--c-navy-200);
+    border: var(--bw);
+    border-radius: var(--r-sm);
+    overflow: hidden;
+  }
+
+  .drv-bank-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-2);
+    padding: 10px var(--s-3);
+    background-color: var(--c-white);
+    font-size: var(--fs-xs);
+  }
+
+  .drv-bank-row__label {
+    color: var(--c-text-muted);
+    font-size: var(--fs-xs);
+    flex-shrink: 0;
+  }
+
+  .drv-bank-row__val {
+    font-weight: 700;
+    color: var(--c-navy-900);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .drv-bank-row__cell {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-1);
+    margin-left: auto;
+    text-align: right;
+  }
+
+  .drv-order-info-card {
+    background-color: var(--c-white);
+    border: var(--bw);
+    border-radius: var(--r-md);
+    padding: var(--s-4) var(--s-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+  }
+
+  .drv-order-info-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--s-4);
+  }
+
+  @media (width >= 640px) {
+    .drv-order-info-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+}

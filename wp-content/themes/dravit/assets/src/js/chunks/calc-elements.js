@@ -1,5 +1,4 @@
 import {
-  calcCartLine,
   calcFromBoxes,
   calcFromM2,
   calcFromPieces,
@@ -7,6 +6,7 @@ import {
 } from '../utils/calc.js';
 import { formatDecimalVn, formatVnd, parseNumberVn } from '../utils/format.js';
 import { prefersReducedMotion, qs, qsa } from '../utils/dom.js';
+import { DrvQtyInput, defineQtyInput } from './qty-input.js';
 
 function parseBuyUnitsAttr(raw) {
   const str = String(raw || '').trim();
@@ -560,103 +560,8 @@ export class DrvUnitCalcElement extends HTMLElement {
   }
 }
 
-export class DrvQtyInputElement extends HTMLElement {
-  connectedCallback() {
-    if (this._mounted) {
-      return;
-    }
-    this._mounted = true;
-    this._abort = new AbortController();
-    const { signal } = this._abort;
-
-    this.addEventListener(
-      'click',
-      (event) => {
-        const input = qs('input[type="number"]', this);
-        if (!(input instanceof HTMLInputElement)) {
-          return;
-        }
-        const target = event.target instanceof Element ? event.target : null;
-        if (!target) {
-          return;
-        }
-        const stepBtn = target.closest('[data-qty-step]');
-        if (stepBtn) {
-          const delta = Number.parseInt(stepBtn.getAttribute('data-qty-step') || '0', 10) || 0;
-          const min = Number.parseInt(input.min || '1', 10) || 1;
-          input.value = String(Math.max(min, (Number.parseInt(input.value || '1', 10) || 1) + delta));
-          this.syncRow(input);
-        }
-        const boxBtn = target.closest('[data-qty-add-box]');
-        if (boxBtn) {
-          const perBox = Math.max(1, Number.parseInt(this.dataset.piecesPerBox || '1', 10));
-          input.value = String((Number.parseInt(input.value || '0', 10) || 0) + perBox);
-          this.syncRow(input);
-        }
-      },
-      { signal },
-    );
-
-    this.addEventListener(
-      'change',
-      () => {
-        const input = qs('input[type="number"]', this);
-        if (input instanceof HTMLInputElement) {
-          this.syncRow(input);
-        }
-      },
-      { signal },
-    );
-  }
-
-  disconnectedCallback() {
-    this._abort?.abort();
-    this._abort = null;
-    this._mounted = false;
-  }
-
-  syncRow(input) {
-    const min = Math.max(1, Number.parseInt(input.min || '1', 10) || 1);
-    const step = Math.max(1, Number.parseInt(input.step || '1', 10) || 1);
-    let qty = Math.max(min, Number.parseInt(input.value || String(min), 10) || min);
-    if (step > 1 && qty % step !== 0) {
-      qty = Math.ceil(qty / step) * step;
-    }
-    input.value = String(qty);
-
-    const priceUnit = parseNumberVn(this.dataset.priceUnit || '0');
-    const areaPiece = parseNumberVn(this.dataset.areaPiece || '0');
-    const perBox = Math.max(1, Number.parseInt(this.dataset.piecesPerBox || '1', 10));
-    const kgPerBox = parseNumberVn(this.dataset.kgPerBox || '0');
-    const weightPiece = parseNumberVn(this.dataset.weightPiece || '0');
-    const unitLabel = this.dataset.unitLabel || 'viên';
-    const row = this.closest('[data-cart-row]');
-    if (!row) {
-      return;
-    }
-    const subtotalEl = qs('[data-row-subtotal]', row);
-    if (subtotalEl && priceUnit > 0) {
-      subtotalEl.textContent = formatVnd(qty * priceUnit);
-    }
-    const convEl = qs('[data-row-conversion]', row);
-    if (convEl) {
-      if (this.dataset.model === 'area_pack' && areaPiece > 0) {
-        const line = calcCartLine({
-          pieces: qty,
-          areaPiece,
-          piecesPerBox: perBox,
-          kgPerBox: kgPerBox > 0 ? kgPerBox : weightPiece * perBox,
-          unitLabel,
-        });
-        const m2 = formatDecimalVn(line.actualM2, 2);
-        const kg = line.totalKg > 0 ? ` · ${formatDecimalVn(line.totalKg, 0)} kg` : '';
-        convEl.textContent = `= ${line.boxText} · ${m2} m²${kg}`;
-      } else {
-        convEl.textContent = `= ${qty} ${unitLabel} · ${formatDecimalVn(qty * weightPiece, 1)} kg`;
-      }
-    }
-  }
-}
+// `<drv-qty-input>` canonical: ./qty-input.js (docs/15 §5.2) — giữ alias cho mã cũ.
+export const DrvQtyInputElement = DrvQtyInput;
 
 export function registerCalcElements() {
   if (typeof customElements === 'undefined') {
@@ -665,9 +570,7 @@ export function registerCalcElements() {
   if (!customElements.get('drv-unit-calc')) {
     customElements.define('drv-unit-calc', DrvUnitCalcElement);
   }
-  if (!customElements.get('drv-qty-input')) {
-    customElements.define('drv-qty-input', DrvQtyInputElement);
-  }
+  defineQtyInput();
 }
 
 registerCalcElements();

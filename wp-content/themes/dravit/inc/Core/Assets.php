@@ -75,6 +75,29 @@ final class Assets implements ServiceProviderInterface {
             self::enqueue_module('drv-product', 'assets/src/js/product.js');
         }
 
+        // Step 9: Giỏ hàng & Checkout VN (Classic Shortcode D-15) — CSS/JS riêng, không nạp trên trang khác.
+        if (drv_is_woo_active() && function_exists('is_cart') && is_cart()) {
+            self::enqueue_style('drv-page-cart', 'assets/src/css/pages/cart.css');
+            self::enqueue_module('drv-cart', 'assets/src/js/cart.js');
+        }
+        if (
+            drv_is_woo_active()
+            && function_exists('is_checkout') && is_checkout()
+            && (!function_exists('is_wc_endpoint_url') || !is_wc_endpoint_url('order-received'))
+        ) {
+            self::enqueue_style('drv-page-checkout', 'assets/src/css/pages/checkout.css');
+            self::enqueue_module('drv-checkout', 'assets/src/js/checkout.js');
+        }
+        // Đặt hàng thành công: chỉ CSS (nút sao chép dùng action `copy-text` của core.js), không nạp checkout.js.
+        if (drv_is_woo_active() && function_exists('is_wc_endpoint_url') && is_wc_endpoint_url('order-received')) {
+            self::enqueue_style('drv-page-order', 'assets/src/css/pages/order.css');
+        }
+        // Tài khoản khi chưa đăng nhập: đăng nhập · đăng ký · quên/đặt lại mật khẩu.
+        if (drv_is_woo_active() && function_exists('is_account_page') && is_account_page() && !is_user_logged_in()) {
+            self::enqueue_style('drv-page-account', 'assets/src/css/pages/account.css');
+            self::enqueue_module('drv-account', 'assets/src/js/account.js');
+        }
+
         // Nạp CSS/JS trong <head> (tránh FOUC) cho 2 trang Step 8; SectionRegistry vẫn tự dedupe.
         if (function_exists('is_page_template') && is_page_template('page-templates/template-quote.php')) {
             self::enqueue_section_style('assets/src/css/pages/quote.css');

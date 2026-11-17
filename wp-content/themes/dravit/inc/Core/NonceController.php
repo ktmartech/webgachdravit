@@ -46,7 +46,8 @@ final class NonceController implements ServiceProviderInterface {
                 'lead'         => wp_create_nonce(LeadController::NONCE_ACTION),
                 'quote'        => wp_create_nonce(QuoteController::NONCE_ACTION),
                 'advisor'      => wp_create_nonce('drv_advisor_submit'),
-                'wc_store_api' => wp_create_nonce('wc_store_api'),
+                // Không cấp `wc_store_api` ở đây: request REST không kèm `X-WP-Nonce` bị WP coi là khách (user 0)
+                // nên nonce lệch với Store API khi khách đã đăng nhập. JS lấy header `Nonce` của GET /wc/store/v1/cart.
             ],
             'ts'     => $time_token['ts'],
             'sig'    => $time_token['sig'],

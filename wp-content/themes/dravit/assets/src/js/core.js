@@ -1,3 +1,4 @@
+import { addItem, drvExt, errorText, fetchCart, getLastCart } from './utils/cart-api.js';
 import { debounce, prefersReducedMotion, qs, qsa } from './utils/dom.js';
 import { formatDecimalVn, formatVnd } from './utils/format.js';
 import { captureUtm } from './utils/lead-client.js';
@@ -6,161 +7,52 @@ import { showToast } from './utils/toast.js';
 
 const actionHandlers = new Map();
 const dialogReturnFocus = new WeakMap();
+const SELECT_SEL = 'select.drv-select, select.drv-calc__waste-select, .fluentform select.ff-el-form-control';
+const loadCustomSelects = (scope) => import('./chunks/custom-select.js').then((m) => m.initCustomSelects(scope));
 let coreBooted = false;
 let domListenersBound = false;
-let cachedStoreNonce = '';
-let cachedStoreNonceExp = 0;
 
-async function getStoreApiNonce(forceRefresh = false) {
-  const now = Date.now();
-  if (!forceRefresh && cachedStoreNonce && now < cachedStoreNonceExp) {
-    return cachedStoreNonce;
-  }
-  const endpoint = window.DRV_CONFIG?.nonceEndpoint || '/wp-json/dravit/v1/nonce';
-  try {
-    const res = await fetch(endpoint, {
-      method: 'GET',
-      credentials: 'same-origin',
-      cache: 'no-store',
-      headers: { Accept: 'application/json' },
-    });
-    if (!res.ok) {
-      return '';
-    }
-    const payload = await res.json();
-    const token = String(payload?.nonces?.wc_store_api || '').trim();
-    const ttlMs = Math.max(30, Number(payload?.ttl || 600) - 30) * 1000;
-    if (token) {
-      cachedStoreNonce = token;
-      cachedStoreNonceExp = now + ttlMs;
-    }
-    return token;
-  } catch {
-    return '';
-  }
+function minicartOpen() {
+  return Boolean(qs('#drv-minicart-drawer')?.open);
 }
 
-export function renderMiniCartState(cart) {
+/**
+ * Cập nhật badge + tổng Mini-cart từ response Store API (docs/15 §3.3).
+ * Dòng sản phẩm chỉ dựng khi drawer đang mở/vừa thêm hàng (`chunks/mini-cart.js`, nạp lười).
+ */
+export function renderMiniCartState(cart, { rows = minicartOpen() } = {}) {
   if (!cart || typeof cart !== 'object') {
     return;
   }
   const items = Array.isArray(cart.items) ? cart.items : [];
-  const lineCount = items.length;
   for (const el of qsa('[data-drv-cart-count]')) {
-    el.textContent = String(lineCount);
-    el.hidden = lineCount <= 0;
+    el.textContent = String(items.length);
+    el.hidden = items.length <= 0;
   }
 
-  const extDrv = cart.extensions?.dravit || cart.extensions?.drv || null;
-  let sumM2 = Number(extDrv?.total_m2 || 0);
-  let sumKg = Number(extDrv?.total_kg || 0);
-
-  if (!(sumM2 > 0) && items.length > 0) {
-    for (const item of items) {
-      const iExt = item.extensions?.dravit || item.extensions?.drv || {};
-      sumM2 += Number(iExt.m2_qty || 0);
-      sumKg += Number(iExt.kg || 0);
-    }
-  }
-
-  const rawTotalVnd = Number(cart.totals?.total_items || cart.totals?.total_price || 0);
-  for (const el of qsa('[data-cart-total-m2]')) {
-    el.textContent = `${formatDecimalVn(sumM2, 2)} m²`;
-  }
-  for (const el of qsa('[data-cart-total-kg]')) {
-    el.textContent = `${formatDecimalVn(sumKg, 0)} kg`;
-  }
-  for (const el of qsa('[data-cart-total-price]')) {
-    el.textContent = formatVnd(rawTotalVnd);
-  }
-
-  const body = qs('[data-minicart-body]');
-  if (!body) {
+  const drawer = qs('#drv-minicart-drawer');
+  if (!drawer) {
     return;
   }
-
-  const emptyEl = qs('[data-minicart-empty]', body);
-  for (const oldRow of qsa('[data-minicart-item]', body)) {
-    oldRow.remove();
+  const ext = drvExt(cart);
+  const minor = Number(cart.totals?.currency_minor_unit || 0);
+  const totalVnd = (Number(cart.totals?.total_items || 0) + Number(cart.totals?.total_items_tax || 0)) / 10 ** minor;
+  for (const el of qsa('[data-cart-total-m2]', drawer)) {
+    el.textContent = `${formatDecimalVn(Number(ext.total_m2) || 0, 2)} m²`;
   }
-
-  if (items.length === 0) {
-    if (emptyEl) {
-      emptyEl.hidden = false;
-    }
-    return;
+  for (const el of qsa('[data-cart-total-kg]', drawer)) {
+    el.textContent = `${formatDecimalVn(Number(ext.total_kg) || 0, 0)} kg`;
   }
-  if (emptyEl) {
-    emptyEl.hidden = true;
+  for (const el of qsa('[data-cart-vehicle-hint]', drawer)) {
+    el.textContent = String(ext.vehicle_hint || '');
+    el.closest('[data-minicart-vehicle]')?.toggleAttribute('hidden', !ext.vehicle_hint);
   }
-
-  const frag = document.createDocumentFragment();
-  for (const item of items) {
-    const row = document.createElement('div');
-    row.className = 'drv-minicart-item u-bd u-rounded-sm u-pad-3';
-    row.setAttribute('data-minicart-item', String(item.key || item.id || ''));
-    row.style.display = 'grid';
-    row.style.gridTemplateColumns = '56px minmax(0, 1fr)';
-    row.style.gap = '12px';
-
-    const thumb = document.createElement('img');
-    thumb.width = 56;
-    thumb.height = 56;
-    thumb.loading = 'lazy';
-    thumb.decoding = 'async';
-    thumb.src =
-      item.images?.[0]?.thumbnail ||
-      item.images?.[0]?.src ||
-      '/wp-content/themes/dravit/assets/images/placeholders/tile-marble-calacatta.svg';
-    thumb.alt = String(item.name || '');
-    thumb.style.borderRadius = 'var(--r-sm)';
-    thumb.style.objectFit = 'cover';
-
-    const info = document.createElement('div');
-    info.className = 'l-stack l-stack--2xs';
-
-    const skuMeta = document.createElement('div');
-    skuMeta.className = 'u-text-xs u-text-muted u-tabular';
-    skuMeta.textContent = item.sku ? `SKU: ${item.sku}` : '';
-
-    const nameLink = document.createElement('a');
-    nameLink.className = 'u-text-sm u-bold u-text-navy';
-    nameLink.href = String(item.permalink || '#');
-    nameLink.textContent = String(item.name || '');
-
-    const iExt = item.extensions?.dravit || item.extensions?.drv || {};
-    const qty = Math.max(1, Number(item.quantity || 1));
-    const uLabel = String(iExt.unit_label || 'viên');
-    const convLine = document.createElement('div');
-    convLine.className = 'u-text-xs u-text-moss u-bold u-tabular';
-    if (iExt.box_text && Number(iExt.m2_qty) > 0) {
-      const kgTxt = Number(iExt.kg) > 0 ? ` · ${formatDecimalVn(Number(iExt.kg), 0)} kg` : '';
-      convLine.textContent = `${qty} ${uLabel} (${iExt.box_text} = ${formatDecimalVn(Number(iExt.m2_qty), 2)} m²${kgTxt})`;
-    } else {
-      convLine.textContent = `Số lượng: ${qty} ${uLabel}`;
-    }
-
-    const priceLine = document.createElement('div');
-    priceLine.className = 'l-cluster l-cluster--between u-tabular';
-    const unitSpan = document.createElement('span');
-    unitSpan.className = 'u-text-xs u-text-muted';
-    const pricePiece = Number(iExt.price_piece || item.prices?.price || 0);
-    const priceM2 = Number(iExt.price_m2 || 0);
-    unitSpan.textContent =
-      priceM2 > 0
-        ? `${formatVnd(priceM2)}/m² (≈ ${formatVnd(pricePiece)}/${uLabel})`
-        : formatVnd(pricePiece);
-
-    const lineStrong = document.createElement('strong');
-    lineStrong.className = 'u-text-sm u-text-navy';
-    lineStrong.textContent = formatVnd(Number(item.totals?.line_total || qty * pricePiece));
-
-    priceLine.append(unitSpan, lineStrong);
-    info.append(skuMeta, nameLink, convLine, priceLine);
-    row.append(thumb, info);
-    frag.appendChild(row);
+  for (const el of qsa('[data-cart-total-price]', drawer)) {
+    el.textContent = formatVnd(totalVnd);
   }
-  body.appendChild(frag);
+  if (rows) {
+    import('./chunks/mini-cart.js').then((m) => m.renderRows(cart));
+  }
 }
 
 export function registerAction(name, handler) {
@@ -211,6 +103,10 @@ function bindDialogLifecycle(dialog) {
 
   dialog.addEventListener('cancel', (event) => {
     event.preventDefault();
+    if (qs('.drv-select-ui.is-open, .drv-picker-dropdown.is-open')) {
+      import('./chunks/custom-select.js').then((m) => m.closeOpenCustomSelect({ restoreFocus: true }));
+      return;
+    }
     closeDialog(dialog);
   });
 
@@ -246,11 +142,18 @@ export function openDialog(target, opener = null) {
   document.documentElement.style.overflow = 'hidden';
   syncDialogTriggers(dialog.id, true);
 
+  if (qs(SELECT_SEL, dialog)) {
+    loadCustomSelects(dialog);
+  }
+
   if (dialog.id === 'drv-minicart-drawer') {
     window.dispatchEvent(new CustomEvent('drv:minicart-open', { detail: { dialog } }));
   }
 
-  const autoFocusTarget = qs('[autofocus], input:not([type="hidden"]), button:not([data-drv-action="dialog-close"])', dialog);
+  const autoFocusTarget = qs(
+    '[autofocus], input:not([type="hidden"]):not(.drv-dropdown-popover__search-input), button:not([data-drv-action="dialog-close"]):not(.drv-dropdown-popover__item)',
+    dialog,
+  );
   if (autoFocusTarget instanceof HTMLElement) {
     autoFocusTarget.focus({ preventScroll: true });
   }
@@ -586,35 +489,18 @@ function registerBuiltInActions() {
 
     trigger.setAttribute('aria-busy', 'true');
     trigger.disabled = true;
-
-    const postAddItem = async (nonce) =>
-      fetch(window.DRV_CONFIG?.storeAddItemEndpoint || '/wp-json/wc/store/v1/cart/add-item', {
-        method: 'POST',
-        credentials: 'same-origin',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json', Nonce: nonce },
-        body: JSON.stringify({ id: productId, quantity, drv_cart_data: drvCartData }),
-      });
-
     try {
-      let res = await postAddItem(await getStoreApiNonce());
-      if (res.status === 401 || res.status === 403) {
-        res = await postAddItem(await getStoreApiNonce(true));
-      }
-      const payload = await res.json().catch(() => null);
-
-      if (!res.ok) {
-        const msg = String(payload?.message || '').replace(/<[^>]*>/g, '').trim();
-        showToast(msg || 'Không thêm được vào giỏ. Vui lòng thử lại.', 'error', 4200);
+      const result = await addItem(productId, quantity, drvCartData);
+      if (!result.ok) {
+        showToast(errorText(result, 'Không thêm được vào giỏ. Vui lòng thử lại.'), 'error', 4200);
         return;
       }
-
-      renderMiniCartState(payload);
+      const openDrawer = trigger.dataset.drvOpenDrawer === 'true';
+      renderMiniCartState(result.data, { rows: openDrawer || minicartOpen() });
       showToast(`Đã thêm ${quantity} viên ${title} vào giỏ hàng`, 'success');
-
-      if (trigger.dataset.drvOpenDrawer === 'true') {
+      if (openDrawer) {
         openDialog('#drv-minicart-drawer', trigger);
       }
-
       const badge = qs('[data-drv-cart-count]');
       if (badge && !prefersReducedMotion()) {
         const motion = await import('./chunks/motion.js');
@@ -757,24 +643,21 @@ function hydrateQuoteAndCartBadges() {
     }
   });
 
+  window.addEventListener('drv:cart-updated', (event) => renderMiniCartState(event.detail?.cart));
+  window.addEventListener('drv:minicart-open', () => {
+    const cached = getLastCart();
+    if (cached) {
+      renderMiniCartState(cached, { rows: true });
+    } else {
+      fetchCart();
+    }
+  });
+
   const hasCartCookie = /(?:^|;\s*)woocommerce_items_in_cart=([1-9]\d*)/.test(document.cookie || '');
   if (hasCartCookie) {
     const runIdle = window.requestIdleCallback || ((cb) => window.setTimeout(cb, 250));
-    runIdle(async () => {
-      try {
-        const res = await fetch('/wp-json/wc/store/v1/cart', { credentials: 'same-origin' });
-        if (!res.ok) {
-          return;
-        }
-        const cart = await res.json();
-        const count = Array.isArray(cart?.items) ? cart.items.length : 0;
-        for (const el of qsa('[data-drv-cart-count]')) {
-          el.textContent = String(count);
-          el.hidden = count <= 0;
-        }
-      } catch {
-        // Ignore network errors silently
-      }
+    runIdle(() => {
+      fetchCart();
     });
   }
 }
@@ -1138,10 +1021,24 @@ export function initCore() {
     setupImageShine();
     setupLeadForms();
     captureUtm();
+
+    const ensureSelects = (e) => {
+      if (e.target instanceof Element && e.target.closest(SELECT_SEL)) {
+        loadCustomSelects();
+      }
+    };
+    document.addEventListener('pointerdown', ensureSelects, { capture: true });
+    document.addEventListener('focusin', ensureSelects);
   }
 
-  if (qs('drv-unit-calc, drv-qty-input')) {
+  if (qsa(SELECT_SEL).some((s) => !s.closest('dialog:not([open])'))) {
+    loadCustomSelects();
+  }
+
+  if (qs('drv-unit-calc')) {
     import('./chunks/calc-elements.js');
+  } else if (qs('drv-qty-input')) {
+    import('./chunks/qty-input.js');
   }
 
   if (qs('drv-ai-finder')) {

@@ -48,12 +48,16 @@ $cart_count = 0;
             <span class="u-text-muted">Tổng trọng lượng ước tính:</span>
             <strong class="u-tabular" data-cart-total-kg>0 kg</strong>
         </div>
+        <div class="drv-summary-row" data-minicart-vehicle hidden>
+            <span class="u-text-muted">Xe giao dự kiến:</span>
+            <strong class="u-text-xs u-text-navy" data-cart-vehicle-hint></strong>
+        </div>
         <div class="drv-summary-row">
             <span class="u-text-muted">Phí vận chuyển:</span>
-            <span class="u-text-moss u-bold">Báo sau khi xác nhận đơn</span>
+            <span class="u-text-moss u-bold"><?php echo esc_html(\Dravit\Woo\CartPresenter::shippingLabel()); ?></span>
         </div>
         <div class="drv-summary-row drv-summary-row--total">
-            <span>Tổng tạm tính:</span>
+            <span>Tổng tạm tính (chưa gồm phí vận chuyển):</span>
             <span class="u-text-sale u-tabular" data-cart-total-price>0đ</span>
         </div>
         <div class="l-grid l-grid--2 l-grid--gap-sm">

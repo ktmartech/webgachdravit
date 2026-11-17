@@ -783,10 +783,15 @@
 
   .drv-cat-toolbar__sort-select {
     min-height: 36px;
+    min-width: 156px;
     padding-block: 4px;
-    padding-inline: 10px 28px;
+    padding-inline: 10px;
     font-size: var(--fs-xs);
     font-weight: 600;
+  }
+
+  select.drv-cat-toolbar__sort-select {
+    padding-inline-end: 28px;
   }
 
   .drv-cat-toolbar__bottom {
@@ -867,9 +872,14 @@
     }
 
     .drv-cat-toolbar__sort-select {
+      min-width: 0;
       max-width: 168px;
       min-height: 34px;
-      padding-inline: 8px 24px;
+      padding-inline: 8px;
+    }
+
+    select.drv-cat-toolbar__sort-select {
+      padding-inline-end: 24px;
     }
 
     .drv-cat-toolbar:not(.has-active-filters) .drv-cat-toolbar__bottom {

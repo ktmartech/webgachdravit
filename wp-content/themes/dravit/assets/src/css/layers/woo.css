@@ -1,4 +1,4 @@
-/* @layer woo - WooCommerce Classic Shortcode & Store Notice Foundations */
+/* @layer woo - WooCommerce Classic Shortcode, Store Notice & Mini-cart Drawer (toàn site) */
 @layer woo {
   .woocommerce-notices-wrapper {
     display: flex;
@@ -6,10 +6,16 @@
     gap: var(--s-2);
   }
 
+  .woocommerce-notices-wrapper:empty {
+    display: none;
+  }
+
   .woocommerce-message,
   .woocommerce-info,
   .woocommerce-error {
+    margin: 0;
     padding: var(--s-3) var(--s-4);
+    list-style: none;
     border: var(--bw);
     border-left: 3px solid var(--c-teal-500);
     border-radius: var(--r-sm);
@@ -19,8 +25,139 @@
     font-weight: 600;
   }
 
+  .woocommerce-message .button,
+  .woocommerce-info .button {
+    margin-inline-start: var(--s-2);
+    color: var(--c-teal-700);
+    text-decoration: underline;
+  }
+
   .woocommerce-error {
     border-left-color: var(--c-sale);
     background-color: var(--c-sale-bg);
+  }
+
+  .woocommerce-error li + li {
+    margin-top: var(--s-1);
+  }
+
+  /* Hàng tổng (Mini-cart, Giỏ hàng, Checkout) — port pages.css §4 */
+  .drv-summary-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--s-3);
+    font-size: var(--fs-sm);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .drv-summary-row--total {
+    padding-top: var(--s-3);
+    border-top: var(--bw-strong);
+    font-size: var(--fs-lg);
+    font-weight: 700;
+  }
+
+  /* Mini-cart Drawer rows (docs/04 §4: luôn hiện đơn giá m²/viên, stepper, quy đổi thùng · m² · kg) */
+  .drv-minicart-item {
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1fr);
+    gap: var(--s-3);
+    padding: var(--s-3);
+    border: var(--bw);
+    border-radius: var(--r-sm);
+    background-color: var(--c-white);
+    transition: opacity 0.2s var(--ease-out);
+
+    &[aria-busy="true"] {
+      opacity: 0.6;
+    }
+  }
+
+  .drv-minicart-item__thumb {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--r-sm);
+    object-fit: cover;
+    background-color: var(--c-ivory);
+  }
+
+  .drv-minicart-item__info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .drv-minicart-item__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-2);
+  }
+
+  .drv-minicart-item__sku {
+    font-size: var(--fs-xs);
+    color: var(--c-text-muted);
+    font-weight: 600;
+  }
+
+  .drv-minicart-item__remove {
+    display: inline-grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: var(--r-xs);
+    color: var(--c-text-muted);
+    transition: color 0.2s var(--ease-out), background-color 0.2s var(--ease-out);
+
+    &:hover,
+    &:focus-visible {
+      color: var(--c-sale);
+      background-color: var(--c-sale-bg);
+    }
+  }
+
+  .drv-minicart-item__name {
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    color: var(--c-navy-900);
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .drv-minicart-item__price {
+    font-size: var(--fs-xs);
+    color: var(--c-text-muted);
+  }
+
+  .drv-minicart-item__conv {
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    color: var(--c-teal-700);
+  }
+
+  .drv-minicart-item__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-2);
+    margin-top: var(--s-1);
+  }
+
+  .drv-minicart-item__total {
+    font-size: var(--fs-sm);
+    color: var(--c-navy-900);
+  }
+
+  .drv-minicart-item .drv-stepper--cart {
+    height: 34px;
+  }
+
+  .drv-minicart-item .drv-stepper__input {
+    width: 52px;
   }
 }

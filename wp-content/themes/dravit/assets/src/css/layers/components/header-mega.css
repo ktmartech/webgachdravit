@@ -57,8 +57,42 @@
     display: none;
   }
 
+  /* Badge số mã trong giỏ: nền đỏ, số trắng, neo góc trên phải nút Giỏ hàng (ẩn khi giỏ trống qua `[hidden]`). */
+  .drv-header__cart-btn {
+    position: relative;
+    overflow: visible;
+  }
+
   .drv-header__cart-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding-inline: 5px;
+    border-radius: var(--r-pill);
+    background-color: var(--c-sale);
+    color: var(--c-white);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    box-shadow: 0 0 0 2px var(--c-white);
+    pointer-events: none;
+  }
+
+  .drv-header__cart-badge[hidden] {
     display: none;
+  }
+
+  /* DS Báo giá: desktop đã hiện số trong nhãn "DS Báo giá (n)" → badge chỉ dùng ở mobile, màu navy. */
+  .drv-header__cart-badge[data-drv-quote-count] {
+    display: none;
+    background-color: var(--c-brand-primary);
   }
 
   /* Mobile (< 768px): Single-row 52px compact header per Spec 07 §2.1
@@ -144,23 +178,16 @@
       font-size: 22px;
     }
 
-    .drv-header__cart-badge {
+    .drv-header__cart-badge[data-drv-quote-count] {
       display: inline-flex;
-      position: absolute;
+    }
+
+    .drv-header__cart-badge {
       top: -6px;
       right: -8px;
       min-width: 18px;
       height: 18px;
       padding-inline: 4px;
-      border-radius: var(--r-pill);
-      background-color: var(--c-brand-primary);
-      color: var(--c-white);
-      font-size: 12px;
-      font-weight: 700;
-      line-height: 1;
-      align-items: center;
-      justify-content: center;
-      font-variant-numeric: tabular-nums;
       box-shadow: 0 0 0 1.5px var(--c-white);
     }
 

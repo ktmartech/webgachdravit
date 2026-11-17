@@ -1,0 +1,4 @@
+/* Entry CSS trang Thanh toán `/thanh-toan` (Vite `pages/checkout`). */
+@import "./checkout-port.css";
+@import "./checkout-theme.css";
+@import "./cart-metrics.css";

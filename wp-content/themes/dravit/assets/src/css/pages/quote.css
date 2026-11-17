@@ -61,7 +61,7 @@
     box-shadow: 0 1px 3px rgb(11 25 44 / 4%);
   }
 
-  .drv-room-card:has(.drv-move-popover) {
+  .drv-room-card:has(.drv-move-popover, .drv-select-ui.is-open) {
     z-index: 50;
   }
 
@@ -121,7 +121,7 @@
     border-bottom-right-radius: calc(var(--r-md) - 1px);
   }
 
-  .drv-slot-row:has(.drv-move-popover) {
+  .drv-slot-row:has(.drv-move-popover, .drv-select-ui.is-open) {
     position: relative;
     z-index: 60;
   }
@@ -149,7 +149,7 @@
     color: var(--c-navy-900);
     border-color: var(--c-navy-200);
     background-color: var(--c-champagne);
-    padding: 6px 22px 6px 8px;
+    padding: 5px 10px;
     border-radius: var(--r-sm);
     cursor: pointer;
   }
@@ -217,10 +217,9 @@
 
   .drv-slot-row__qty {
     display: flex;
-    flex-direction: row;
+    flex-flow: row wrap;
     align-items: center;
     gap: 8px;
-    flex-wrap: wrap;
   }
 
   /* Cụm input-group liền khối: [ Input ] [ m² | Thùng ] */
@@ -301,70 +300,7 @@
     color: var(--c-navy-900);
   }
 
-  /* Popover chọn phòng chuyển */
-  .drv-move-popover {
-    position: absolute;
-    right: 0;
-    top: calc(100% + 6px);
-    z-index: 60;
-    min-width: 170px;
-    padding: 6px;
-    background-color: var(--c-white);
-    border: var(--bw);
-    border-radius: var(--r-md);
-    box-shadow: 0 4px 18px rgb(11 25 44 / 14%);
-    animation: drv-popover-in 140ms var(--ease-out);
-  }
-
-  @keyframes drv-popover-in {
-    from {
-      opacity: 0;
-      transform: translateY(-4px) scale(0.98);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-  }
-
-  .drv-move-popover__title {
-    padding: 4px 8px 6px;
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--c-text-muted);
-    border-bottom: var(--bw);
-    margin-bottom: 4px;
-  }
-
-  .drv-move-popover__list {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .drv-move-popover__item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    width: 100%;
-    padding: 6px 8px;
-    border: none;
-    border-radius: var(--r-sm);
-    background: transparent;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--c-navy-900);
-    text-align: left;
-    cursor: pointer;
-    transition: background-color var(--dur-fast), color var(--dur-fast);
-  }
-
-  .drv-move-popover__item:hover {
-    background-color: var(--c-champagne);
-    color: var(--c-teal-700);
-  }
+  /* Popover chọn phòng chuyển kế thừa `.drv-move-popover` toàn cục từ `layers/components/forms.css` */
 
   /* Nút đổi mẫu khác: chip nhỏ không gạch chân */
   .drv-slot-row__change-btn {
@@ -378,7 +314,7 @@
     background-color: var(--c-champagne);
     border: 1px solid var(--c-navy-100);
     border-radius: var(--r-full);
-    text-decoration: none !important;
+    text-decoration: none;
     cursor: pointer;
     line-height: 1.2;
     transition: background-color var(--dur-fast), border-color var(--dur-fast), color var(--dur-fast), box-shadow var(--dur-fast);
@@ -389,7 +325,7 @@
     background-color: var(--c-white);
     border-color: var(--c-teal-500);
     color: var(--c-teal-800);
-    text-decoration: none !important;
+    text-decoration: none;
     box-shadow: 0 1px 3px rgb(11 25 44 / 8%);
   }
 
@@ -782,11 +718,11 @@
   }
 
   .drv-picker-dropdown__menu[hidden] {
-    display: none !important;
+    display: none;
   }
 
   .drv-picker-dropdown__menu:not([hidden]) {
-    display: block !important;
+    display: block;
   }
 
   .drv-picker-dropdown[data-picker-facet="pattern"] .drv-picker-dropdown__menu,
@@ -902,6 +838,7 @@
     0% {
       background-position: 200% 0;
     }
+
     100% {
       background-position: -200% 0;
     }
@@ -1231,8 +1168,7 @@
 
     .drv-slot-row__qty {
       display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
+      flex-flow: row wrap;
       align-items: center;
       gap: 8px;
       width: 100%;
@@ -1323,13 +1259,6 @@
     --_h: 30px;
     --_px: var(--s-2);
     --_fs: var(--fs-xs);
-  }
-
-  .drv-select--xs {
-    min-height: 32px;
-    height: 32px;
-    padding-block: 4px;
-    font-size: var(--fs-xs);
   }
 
   .drv-input-icon {
@@ -1549,7 +1478,7 @@
   .drv-no-print,
   dialog,
   #drv-toast-region {
-    display: none !important;
+    display: none;
   }
 
   body,
@@ -1561,7 +1490,7 @@
   }
 
   .drv-boq-print {
-    display: block !important;
+    display: block;
     font-size: 10pt;
     line-height: 1.45;
     -webkit-print-color-adjust: exact;

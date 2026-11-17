@@ -9,6 +9,7 @@ import { qs, qsa, debounce } from './utils/dom.js';
 import { formatDecimalVn, formatVnd } from './utils/format.js';
 import { calcVolumeDiscount, computeSlot, resolveVehicleHint } from './utils/calc.js';
 import { showToast } from './utils/toast.js';
+import { addItem } from './utils/cart-api.js';
 import { endpoint, errorMessage, postProtected, prefetchToken } from './utils/lead-client.js';
 import {
   DEFAULT_ROOM_ID,
@@ -1034,16 +1035,6 @@ async function copyShare() {
 // Đặt mua mẫu có giá (`boq-to-cart`, docs/17 §3.3) – không áp chiết khấu bậc vào giỏ (D-23)
 // ---------------------------------------------------------------------------
 
-async function storeNonce() {
-  try {
-    const res = await fetch(window.DRV_CONFIG?.nonceEndpoint || endpoint('nonce'), { credentials: 'same-origin', cache: 'no-store' });
-    const data = res.ok ? await res.json() : null;
-    return String(data?.nonces?.wc_store_api || '');
-  } catch {
-    return '';
-  }
-}
-
 export function aggregateForCart(calc, wastePct) {
   const byProduct = new Map();
   let skipped = 0;
@@ -1086,29 +1077,15 @@ async function boqToCart(trigger) {
   }
   trigger.setAttribute('aria-busy', 'true');
   trigger.disabled = true;
-  let nonce = await storeNonce();
   let added = 0;
   let lastCart = null;
   try {
+    // Dùng chung client Store API (nonce lấy từ header `Nonce` của GET /cart → đúng cả khách & tài khoản đã đăng nhập).
     for (const item of ready) {
-      let res = await fetch(window.DRV_CONFIG?.wcStoreAddUrl || '/wp-json/wc/store/v1/cart/add-item', {
-        method: 'POST',
-        credentials: 'same-origin',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json', Nonce: nonce },
-        body: JSON.stringify(item),
-      });
-      if (res.status === 401 || res.status === 403) {
-        nonce = await storeNonce();
-        res = await fetch(window.DRV_CONFIG?.wcStoreAddUrl || '/wp-json/wc/store/v1/cart/add-item', {
-          method: 'POST',
-          credentials: 'same-origin',
-          headers: { 'Content-Type': 'application/json', Accept: 'application/json', Nonce: nonce },
-          body: JSON.stringify(item),
-        });
-      }
+      const res = await addItem(item.id, item.quantity, item.drv_cart_data);
       if (res.ok) {
         added += 1;
-        lastCart = await res.json().catch(() => null);
+        lastCart = res.data;
       }
     }
   } finally {

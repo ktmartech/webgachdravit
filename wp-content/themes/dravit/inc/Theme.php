@@ -47,6 +47,11 @@ use Dravit\Seo\RobotsMatrix;
 use Dravit\Seo\SchemaGraph;
 use Dravit\Seo\TrailingSlashRedirect;
 use Dravit\Units\WooProductHooks;
+use Dravit\Woo\AccountAuth;
+use Dravit\Woo\CartHooks;
+use Dravit\Woo\CheckoutVN;
+use Dravit\Woo\OrderStatus;
+use Dravit\Woo\StoreApiExtend;
 
 defined('ABSPATH') || exit;
 
@@ -128,6 +133,11 @@ final class Theme {
             $providers[] = LeadPostType::class;
             $providers[] = LeadController::class;
             $providers[] = QuoteController::class;
+            $providers[] = StoreApiExtend::class;
+            $providers[] = CartHooks::class;
+            $providers[] = CheckoutVN::class;
+            $providers[] = OrderStatus::class;
+            $providers[] = AccountAuth::class;
 
             if ($is_admin) {
                 $providers[] = LeadAdmin::class;

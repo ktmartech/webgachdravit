@@ -1,0 +1,33 @@
+/* Lưới 4 ô tổng khối lượng `.drv-cart-metrics` dùng chung Checkout & Đặt hàng thành công (port pages.css §4). */
+@layer woo {
+  .drv-cart-metrics {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    overflow: hidden;
+    border: var(--bw);
+    border-radius: var(--r-sm);
+    background-color: var(--c-navy-200);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .drv-cart-metric {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: var(--s-2) var(--s-3);
+    background-color: var(--c-ivory);
+  }
+
+  .drv-cart-metric__label {
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    color: var(--c-text-muted);
+  }
+
+  .drv-cart-metric__val {
+    font-size: var(--fs-base);
+    font-weight: 700;
+    color: var(--c-navy-900);
+  }
+}

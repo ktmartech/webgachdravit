@@ -1,0 +1,6 @@
+/* Entry CSS trang Đặt hàng thành công `/thanh-toan/dat-hang-thanh-cong/{id}` (Vite `pages/order`). */
+@import "./checkout-port.css";
+@import "./checkout-theme.css";
+@import "./cart-metrics.css";
+@import "./order-port.css";
+@import "./order-theme.css";

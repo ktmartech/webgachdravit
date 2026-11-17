@@ -125,7 +125,10 @@ function pickRoom(state, opener) {
       resolve(result);
     });
     dialog.showModal();
-    roomSel.focus();
+    import('./custom-select.js').then((m) => {
+      m.initCustomSelects(dialog);
+      roomSel.focus();
+    });
   });
 }
 

@@ -1,0 +1,384 @@
+/* ==========================================================================
+   ORDER RECEIVED — phần mở rộng theme ngoài mockup (docs/18 §4.3 ma trận A/B/C/D)
+   ========================================================================== */
+@layer woo {
+  .drv-order-items {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .drv-order-info-card__head {
+    padding-bottom: var(--s-3);
+  }
+
+  .drv-order-info-card__vat {
+    padding-top: var(--s-3);
+  }
+
+  .drv-order-info-card h2,
+  .drv-order-info-card p,
+  .drv-summary-box__head h2 {
+    margin: 0;
+  }
+
+  /* ---------- Banner trạng thái: desktop 2 cột (thông điệp | dữ kiện), mobile xếp dọc ---------- */
+  .drv-order-banner__top {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-4);
+    align-items: center;
+  }
+
+  @media (width >= 960px) {
+    .drv-order-banner__top {
+      grid-template-columns: minmax(0, 1fr) minmax(360px, 440px);
+      gap: var(--s-6);
+      padding: var(--s-5) var(--s-6);
+    }
+  }
+
+  .drv-order-banner__main {
+    max-width: none;
+  }
+
+  .drv-order-banner__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+    min-width: 0;
+  }
+
+  .drv-order-banner__id {
+    gap: var(--s-2);
+  }
+
+  .drv-order-banner__sub {
+    max-width: 62ch;
+    margin: 0;
+    font-size: var(--fs-sm);
+    line-height: 1.6;
+  }
+
+  .drv-order-banner__sla {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+    align-self: flex-start;
+    margin: 0;
+    padding: 4px 10px;
+    border-radius: var(--r-pill);
+    background-color: var(--c-champagne);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    color: var(--c-navy-800);
+  }
+
+  .drv-order-banner__sla i {
+    font-size: 14px;
+    color: var(--c-moss-700);
+  }
+
+  /* Lưới 4 ô dữ kiện đơn — ron 1px như `.drv-cart-metrics`. */
+  .drv-order-facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    margin: 0;
+    overflow: hidden;
+    border: var(--bw);
+    border-radius: var(--r-sm);
+    background-color: var(--c-navy-200);
+  }
+
+  .drv-order-fact {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    padding: var(--s-3);
+    background-color: var(--c-ivory);
+  }
+
+  .drv-order-fact__label {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    color: var(--c-text-muted);
+  }
+
+  .drv-order-fact__label i {
+    font-size: 14px;
+    color: var(--c-navy-500);
+  }
+
+  .drv-order-fact__val {
+    margin: 0;
+    overflow-wrap: anywhere;
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--c-navy-900);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .drv-order-fact__val--strong {
+    font-size: var(--fs-base);
+    color: var(--c-sale);
+  }
+
+  .drv-order-fact__note {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.3;
+    color: var(--c-text-muted);
+  }
+
+  .drv-order-banner--cancelled .drv-order-fact__val--strong {
+    color: var(--c-navy-500);
+    text-decoration: line-through;
+  }
+
+  /* ---------- Timeline: đường tiến trình theo trạng thái thật (`--drv-progress` từ PHP) ---------- */
+  .drv-timeline__track::before {
+    right: 12.5%;
+    left: 12.5%;
+    background: linear-gradient(
+      to right,
+      var(--c-success) 0%,
+      var(--c-success) var(--drv-progress, 0%),
+      var(--c-navy-200) var(--drv-progress, 0%),
+      var(--c-navy-200) 100%
+    );
+  }
+
+  @media (width <= 639px) {
+    .drv-order-banner__top {
+      padding: var(--s-4);
+    }
+
+    /* Mobile: bỏ cột icon để nội dung dùng trọn bề ngang. */
+    .drv-order-banner__icon {
+      display: none;
+    }
+
+    .drv-order-banner__id {
+      white-space: normal;
+    }
+
+    .drv-order-banner__sub {
+      font-size: var(--fs-sm);
+    }
+
+    .drv-order-fact {
+      padding: var(--s-2) var(--s-3);
+    }
+
+    .drv-order-fact__val {
+      font-size: var(--fs-xs);
+    }
+
+    .drv-order-fact__val--strong {
+      font-size: var(--fs-sm);
+    }
+
+    .drv-timeline {
+      padding: var(--s-3) var(--s-2);
+    }
+
+    .drv-timeline__track::before {
+      top: 14px;
+      right: 12.5%;
+      left: 12.5%;
+    }
+  }
+
+  /* Timeline dùng <ol>/<li>: bỏ marker mặc định. */
+  .drv-timeline__track {
+    max-width: 880px;
+    margin-block: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .drv-timeline__step.is-cancelled .drv-timeline__node {
+    border-color: var(--c-sale);
+    color: var(--c-sale);
+  }
+
+  /* Banner theo trạng thái. */
+  .drv-order-banner--cancelled .drv-order-banner__icon {
+    background-color: var(--c-sale-bg);
+    color: var(--c-sale);
+  }
+
+  .drv-order-banner--cancelled .drv-order-banner__success-title {
+    color: var(--c-sale);
+  }
+
+  .drv-order-banner--transfer .drv-order-banner__icon {
+    background-color: var(--c-amber-100);
+    color: var(--c-amber-800);
+  }
+
+  /* Hộp thông báo thanh toán (A: champagne · C: success · D: sale). */
+  .drv-order-notice {
+    display: flex;
+    gap: var(--s-3);
+    align-items: flex-start;
+    padding: var(--s-4);
+    border: var(--bw);
+    border-radius: var(--r-md);
+    background-color: var(--c-champagne);
+  }
+
+  .drv-order-notice--fulfil {
+    border-color: var(--c-moss-100);
+    background-color: var(--c-success-bg);
+  }
+
+  .drv-order-notice--cancelled {
+    border-color: var(--c-sale-bg);
+    background-color: var(--c-white);
+  }
+
+  .drv-order-notice__icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--r-sm);
+    background-color: var(--c-white);
+    color: var(--c-moss-700);
+    font-size: 22px;
+  }
+
+  .drv-order-notice--transfer .drv-order-notice__icon {
+    color: var(--c-amber-800);
+  }
+
+  .drv-order-notice--cancelled .drv-order-notice__icon {
+    background-color: var(--c-sale-bg);
+    color: var(--c-sale);
+  }
+
+  .drv-order-notice__title {
+    margin: 0;
+    font-size: var(--fs-base);
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--c-navy-900);
+  }
+
+  .drv-order-notice__text {
+    margin: 0;
+    font-size: var(--fs-sm);
+    line-height: 1.6;
+    color: var(--c-text-muted);
+  }
+
+  .drv-order-notice__text .drv-btn-copy-inline {
+    vertical-align: middle;
+  }
+
+  /* ---------- Màn chặn xem đơn (cần đăng nhập / xác minh email) — order-received.php + form-verify-email.php ---------- */
+  .woocommerce:has(> .drv-order-gate__head) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-4);
+    width: min(100% - 2 * var(--container-pad, 16px), 560px);
+    margin-inline: auto;
+    padding-block: var(--s-6) var(--s-8, 3rem);
+  }
+
+  .drv-order-gate__form,
+  .woocommerce:has(> .drv-order-gate__head) .woocommerce-form-login {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+    margin: 0;
+    padding: var(--s-5);
+    border: var(--bw);
+    border-radius: var(--r-md);
+    background-color: var(--c-white);
+  }
+
+  .drv-order-gate__head .drv-order-notice__title {
+    font-family: var(--f-body);
+    font-size: var(--fs-lg, 1.125rem);
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .woocommerce:has(> .drv-order-gate__head) .woocommerce-form-login .required {
+    color: var(--c-sale);
+  }
+
+  .drv-order-gate__lead {
+    margin: 0;
+    font-size: var(--fs-sm);
+    line-height: 1.6;
+    color: var(--c-text-muted);
+  }
+
+  .woocommerce:has(> .drv-order-gate__head) .woocommerce-form-login .form-row,
+  .woocommerce:has(> .drv-order-gate__head) .woocommerce-form-login p {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 0;
+  }
+
+  .woocommerce:has(> .drv-order-gate__head) .woocommerce-form-login label {
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    color: var(--c-text-main);
+  }
+
+  .woocommerce:has(> .drv-order-gate__head) .woocommerce-form-login .input-text {
+    width: 100%;
+    min-height: 44px;
+    padding: 9px 14px;
+    border: 1px solid var(--c-navy-400);
+    border-radius: var(--r-sm);
+    background-color: var(--c-white);
+    font-family: var(--f-body);
+    font-size: var(--fs-sm);
+    color: var(--c-text-main);
+  }
+
+  .woocommerce:has(> .drv-order-gate__head) .woocommerce-form-login .woocommerce-form-login__rememberme {
+    flex-direction: row;
+    gap: var(--s-2);
+    align-items: center;
+    font-weight: 500;
+  }
+
+  .woocommerce:has(> .drv-order-gate__head) .woocommerce-form-login__submit {
+    min-height: 44px;
+    padding: 0 var(--s-5);
+    border: 0;
+    border-radius: var(--r-sm);
+    background-color: var(--c-navy-900);
+    font-weight: 700;
+    color: var(--c-white);
+    cursor: pointer;
+  }
+
+  .woocommerce:has(> .drv-order-gate__head) .woocommerce-LostPassword a {
+    font-size: var(--fs-sm);
+    color: var(--c-teal-700);
+  }
+
+  @media print {
+    .drv-order-actions-grid,
+    .drv-checkout-guarantee,
+    .drv-btn-copy-inline {
+      display: none;
+    }
+  }
+}

@@ -1,0 +1,439 @@
+/* ==========================================================================
+   TÀI KHOẢN — màn chưa đăng nhập `/tai-khoan` (đăng nhập · đăng ký · quên/đặt lại mật khẩu)
+   Template: woocommerce/myaccount/{form-login,form-lost-password,form-reset-password,lost-password-confirmation}.php
+   ========================================================================== */
+@layer woo {
+  .drv-auth-hero {
+    padding-block: var(--s-5);
+  }
+
+  .drv-auth-hero__title {
+    margin: 2px 0 0;
+    line-height: 1.25;
+    text-transform: uppercase;
+  }
+
+  .drv-auth-hero__lead {
+    max-width: 62ch;
+    margin: 0;
+    font-size: var(--fs-sm);
+    line-height: 1.6;
+    color: var(--c-text-muted);
+  }
+
+  .drv-auth-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-5);
+    align-items: start;
+  }
+
+  @media (width >= 960px) {
+    .drv-auth-layout {
+      grid-template-columns: minmax(0, 7fr) minmax(300px, 5fr);
+      gap: var(--s-6);
+    }
+
+    .drv-auth-aside {
+      position: sticky;
+      top: calc(var(--header-h-current, 118px) + var(--s-4));
+    }
+  }
+
+  .drv-auth-main {
+    min-width: 0;
+  }
+
+  /* ---------- Card form ---------- */
+  .drv-auth-card {
+    padding: var(--s-5);
+    border: var(--bw);
+    border-radius: var(--r-md);
+    background-color: var(--c-white);
+  }
+
+  .drv-auth-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4px;
+    margin-bottom: var(--s-5);
+    padding: 4px;
+    border: var(--bw);
+    border-radius: var(--r-sm);
+    background-color: var(--c-ivory);
+  }
+
+  .drv-auth-tabs[hidden] {
+    display: none;
+  }
+
+  .drv-auth-tab {
+    min-height: 44px;
+    padding: 0 var(--s-3);
+    border: 0;
+    border-radius: calc(var(--r-sm) - 2px);
+    background: transparent;
+    font-family: inherit;
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    color: var(--c-text-muted);
+    cursor: pointer;
+    transition:
+      background-color var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out);
+  }
+
+  .drv-auth-tab:hover {
+    color: var(--c-navy-900);
+  }
+
+  .drv-auth-tab[aria-selected="true"] {
+    background-color: var(--c-white);
+    color: var(--c-navy-900);
+    box-shadow: 0 1px 2px rgb(11 25 44 / 8%), 0 0 0 1px var(--c-navy-200);
+  }
+
+  .drv-auth-tab:focus-visible {
+    outline: 2px solid var(--c-teal-700);
+    outline-offset: 2px;
+  }
+
+  /* Không JS: 2 form xếp dọc, ngăn bằng đường ron. */
+  .drv-auth-panel + .drv-auth-panel {
+    margin-top: var(--s-6);
+    padding-top: var(--s-6);
+    border-top: var(--bw);
+  }
+
+  .drv-auth-card.is-enhanced .drv-auth-panel + .drv-auth-panel {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .drv-auth-panel__title {
+    margin: 0 0 var(--s-4);
+    font-size: var(--fs-lg, 1.125rem);
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--c-navy-900);
+  }
+
+  /* Có tab thì tiêu đề panel chỉ còn cho trình đọc màn hình. */
+  .drv-auth-card.is-enhanced .drv-auth-panel__title {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .drv-auth-notices {
+    margin-bottom: var(--s-4);
+  }
+
+  .drv-auth-notices:empty {
+    display: none;
+  }
+
+  .drv-auth-notices > :last-child {
+    margin-bottom: 0;
+  }
+
+  .drv-auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-4);
+    margin: 0;
+  }
+
+  .drv-auth-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-4);
+  }
+
+  @media (width >= 640px) {
+    .drv-auth-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--s-3);
+    }
+  }
+
+  /* `.drv-label` toàn cục căn `space-between` (dấu * ra mép phải) → đặt sát nhãn. */
+  .drv-auth-form .drv-label {
+    gap: 4px;
+    justify-content: flex-start;
+  }
+
+  .drv-auth-form .woocommerce-privacy-policy-text p {
+    margin: 0;
+    font-size: var(--fs-xs);
+    line-height: 1.55;
+    color: var(--c-text-muted);
+  }
+
+  .drv-auth-form .woocommerce-privacy-policy-text a {
+    font-weight: 700;
+    color: var(--c-teal-700);
+  }
+
+  .drv-auth-label-row {
+    display: flex;
+    gap: var(--s-2);
+    align-items: baseline;
+    justify-content: space-between;
+  }
+
+  .drv-auth-link,
+  .drv-auth-switch a {
+    font-weight: 700;
+    color: var(--c-teal-700);
+    text-decoration: none;
+  }
+
+  .drv-auth-link {
+    font-size: var(--fs-xs);
+  }
+
+  .drv-auth-link:hover,
+  .drv-auth-switch a:hover {
+    text-decoration: underline;
+  }
+
+  .drv-auth-hint {
+    font-size: var(--fs-xs);
+    line-height: 1.5;
+    color: var(--c-text-muted);
+  }
+
+  p.drv-auth-hint {
+    margin: 0;
+  }
+
+  .drv-auth-password {
+    position: relative;
+  }
+
+  .drv-auth-password .drv-input {
+    padding-right: 76px;
+  }
+
+  .drv-auth-password__toggle {
+    position: absolute;
+    top: 50%;
+    right: 6px;
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+    min-height: 32px;
+    padding: 0 var(--s-2);
+    border: 0;
+    border-radius: var(--r-xs, 4px);
+    background: transparent;
+    font-family: inherit;
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    color: var(--c-navy-800);
+    cursor: pointer;
+    transform: translateY(-50%);
+  }
+
+  .drv-auth-password__toggle[hidden] {
+    display: none;
+  }
+
+  .drv-auth-password__toggle:hover {
+    background-color: var(--c-champagne);
+  }
+
+  .drv-auth-password__toggle:focus-visible {
+    outline: 2px solid var(--c-teal-700);
+    outline-offset: 1px;
+  }
+
+  .drv-auth-password__toggle[aria-pressed="true"] {
+    color: var(--c-teal-700);
+  }
+
+  .drv-auth-remember {
+    font-size: var(--fs-sm);
+  }
+
+  .drv-auth-switch {
+    margin: var(--s-4) 0 0;
+    font-size: var(--fs-sm);
+    color: var(--c-text-muted);
+    text-align: center;
+  }
+
+  .drv-auth-switch a {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .drv-auth-done {
+    display: flex;
+    gap: var(--s-3);
+    align-items: flex-start;
+  }
+
+  .drv-auth-done .drv-auth-panel__title {
+    margin: 0;
+  }
+
+  .drv-auth-done__icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: var(--c-moss-100);
+    font-size: 22px;
+    color: var(--c-moss-700);
+  }
+
+  .drv-auth-done__text {
+    margin: 0;
+    font-size: var(--fs-sm);
+    line-height: 1.6;
+    color: var(--c-text-muted);
+  }
+
+  /* ---------- Cột phải ---------- */
+  .drv-auth-aside {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-4);
+  }
+
+  .drv-auth-aside__note {
+    display: flex;
+    gap: var(--s-2);
+    align-items: flex-start;
+    padding: var(--s-3) var(--s-4);
+    border-radius: var(--r-sm);
+    background-color: var(--c-champagne);
+    font-size: var(--fs-sm);
+    line-height: 1.55;
+    color: var(--c-navy-800);
+  }
+
+  .drv-auth-aside__note i {
+    flex-shrink: 0;
+    margin-top: 2px;
+    font-size: 18px;
+    color: var(--c-moss-700);
+  }
+
+  .drv-auth-aside__note p {
+    margin: 0;
+  }
+
+  .drv-auth-aside__note a {
+    font-weight: 700;
+    color: var(--c-teal-700);
+  }
+
+  .drv-auth-benefits {
+    padding: var(--s-4) var(--s-5);
+    border: var(--bw);
+    border-radius: var(--r-md);
+    background-color: var(--c-white);
+  }
+
+  .drv-auth-benefits__title {
+    margin: 0 0 var(--s-2);
+    font-size: var(--fs-base);
+    font-weight: 700;
+    color: var(--c-navy-900);
+  }
+
+  .drv-auth-benefits__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .drv-auth-benefit {
+    display: flex;
+    gap: var(--s-3);
+    align-items: flex-start;
+    padding-block: var(--s-3);
+  }
+
+  .drv-auth-benefit + .drv-auth-benefit {
+    border-top: var(--bw);
+  }
+
+  .drv-auth-benefit__icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--r-sm);
+    background-color: var(--c-moss-100);
+    font-size: 20px;
+    color: var(--c-moss-700);
+  }
+
+  .drv-auth-benefit__body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: var(--fs-xs);
+    line-height: 1.5;
+    color: var(--c-text-muted);
+  }
+
+  .drv-auth-benefit__body strong {
+    font-size: var(--fs-sm);
+    color: var(--c-navy-900);
+  }
+
+  .drv-auth-help {
+    padding: var(--s-4);
+    border: var(--bw);
+    border-radius: var(--r-md);
+    background-color: var(--c-ivory);
+  }
+
+  .drv-auth-help__title {
+    margin: 0;
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    color: var(--c-navy-900);
+  }
+
+  .drv-auth-help__hours {
+    margin: 2px 0 var(--s-3);
+    font-size: var(--fs-xs);
+    color: var(--c-text-muted);
+  }
+
+  .drv-auth-help__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+  }
+
+  @media (width <= 639px) {
+    .drv-auth-hero {
+      padding-block: var(--s-4);
+    }
+
+    .drv-auth-card {
+      padding: var(--s-4);
+    }
+
+    .drv-auth-benefits {
+      padding: var(--s-3) var(--s-4);
+    }
+  }
+}

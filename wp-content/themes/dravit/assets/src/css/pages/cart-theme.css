@@ -1,0 +1,78 @@
+/* ==========================================================================
+   CART — phần mở rộng theme ngoài mockup (docs/04 §4, D-24, D-26)
+   ========================================================================== */
+@layer woo {
+  .drv-cart-hero {
+    padding-block: var(--s-5);
+  }
+
+  .drv-cart-hero__title {
+    margin-top: 2px;
+    line-height: 1.25;
+    text-transform: uppercase;
+  }
+
+  .drv-summary-box__head {
+    padding-bottom: var(--s-3);
+  }
+
+  /* Ledger form không có nền riêng: giữ lưới 8/4 của `.drv-cart-layout`. */
+  .woocommerce-cart-form {
+    min-width: 0;
+  }
+
+  .drv-cart-item.is-removing {
+    opacity: 0.4;
+    pointer-events: none;
+    transition: opacity 0.2s var(--ease-out);
+  }
+
+  .drv-cart-item[aria-busy="true"] drv-qty-input,
+  drv-qty-input[aria-busy="true"] {
+    opacity: 0.7;
+  }
+
+  /* Dòng quy đổi luôn hiện (docs/04 §4) — bỏ animation trượt của khay mockup. */
+  .drv-cart-drawer[data-cart-row-drawer] {
+    animation: none;
+  }
+
+  .drv-cart-item__price-col del {
+    display: block;
+  }
+
+  .drv-cart-loose-warn {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-2);
+    margin-top: var(--s-2);
+
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  .drv-cart-project[hidden] {
+    display: none;
+  }
+
+  .drv-cart-empty-box__text {
+    max-width: 54ch;
+  }
+
+  .drv-cart-empty-box__actions {
+    justify-content: center;
+  }
+
+  .drv-cart-empty-box__silos {
+    width: 100%;
+    max-width: 960px;
+    text-align: left;
+  }
+
+  .cart-collaterals:empty {
+    display: none;
+  }
+}
