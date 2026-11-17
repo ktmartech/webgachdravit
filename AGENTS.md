@@ -9,7 +9,7 @@
 ## 1. Thứ Tự Ưu Tiên Tài Liệu (Document Hierarchy)
 
 Khi có mâu thuẫn thông tin, tuân thủ nghiêm ngặt thứ tự:
-1. `docs/00_Project_Brief_Decisions.md` (Các quyết định kiến trúc ADR D-01 → D-35 mới nhất).
+1. `docs/00_Project_Brief_Decisions.md` (Các quyết định kiến trúc ADR D-01 → D-37 mới nhất).
 2. Tài liệu chuyên đề & đặc tả hợp đồng hệ thống `docs/01_*.md` → `docs/21_*.md`.
 3. `docs/branding/Thiet_Ke_Silo_URL_Va_Bo_Loc_GachDravit.md` (Chuẩn URL không dấu `/` cuối, H1, Breadcrumb, 28 Collection, 14 Facet).
 4. `docs/branding/DRAVIT_Brand Guidelines_Xanh Navy + Rêu.pdf` (Lưu ý: Bảng màu thực tế tuân theo D-11 trong `docs/00_Project_Brief_Decisions.md`).

@@ -341,7 +341,7 @@ Cấp phát bộ token tươi vượt qua LiteSpeed Page Cache (`D-30`). Trong c
   "nonces": {
     "lead": "9f82c41a0b",
     "quote": "3d71e902ca",
-    "wc_store_api": "74b1a09f2e"
+    "advisor": "5be0c1d7a4"
   },
   "ts": 1762854000,
   "ttl": 600
@@ -349,7 +349,7 @@ Cấp phát bộ token tươi vượt qua LiteSpeed Page Cache (`D-30`). Trong c
 ```
 - `lead`: verify bằng `wp_verify_nonce($token, 'drv_submit_lead')`.
 - `quote`: verify bằng `wp_verify_nonce($token, 'drv_submit_quote')`.
-- `wc_store_api`: sinh bằng `wp_create_nonce('wc_store_api')` để gửi kèm header `Nonce` khi gọi `POST /wp-json/wc/store/v1/cart/*` từ các trang HTML đang được cache.
+- **Không cấp `wc_store_api` ở endpoint này** (sửa `2026-11-17`): request REST không kèm `X-WP-Nonce` bị WordPress coi là khách (user `0`), nên nonce sinh ra lệch với Store API khi khách **đã đăng nhập** → `403 woocommerce_rest_invalid_nonce`. Nonce Store API lấy từ header `Nonce` của `GET /wp-json/wc/store/v1/cart` (`utils/cart-api.js#getStoreNonce`), luôn khớp danh tính Store API nhận diện (WC session của khách hoặc user đã đăng nhập).
 
 ---
 
@@ -526,7 +526,7 @@ Sinh từ nguồn dữ liệu hành chính chính thức (`O-06`) qua script `to
 ### 3.1 Thêm vào Giỏ (`add-to-cart`) & Nút "Mua ngay" (`D-30`)
 
 1. **Giao thức Thêm vào Giỏ bằng AJAX (Card & PDP):**
-   - Gọi `POST /wp-json/wc/store/v1/cart/add-item` kèm header `Nonce: {nonces.wc_store_api}` và `Content-Type: application/json`:
+   - Gọi `POST /wp-json/wc/store/v1/cart/add-item` kèm header `Nonce` (lấy từ header response của `GET /wc/store/v1/cart`, xem §2.4) và `Content-Type: application/json`:
    ```json
    {
      "id": 101,
@@ -951,6 +951,23 @@ Chunk nạp: `import('./components/quote-panel.js')` động ngay lần đầu n
 Chunk nạp: `assets/src/js/blog.js` (tổng ngân sách JS trang Blog `≤ 10KB` gzip theo `D-28`).
 - PHP (`Content\TableOfContents`) gắn `id` không dấu cho các thẻ `<h2>`, `<h3>` trong `the_content` và render sẵn danh sách `<a class="drv-toc__link" href="#{id}">` vào HTML SSR.
 - `<drv-toc>` chỉ gắn `IntersectionObserver` (`rootMargin: '-15% 0px -70% 0px'`) để tô sáng mục đang đọc (`.is-active`) và cập nhật thanh tiến độ đọc `[data-toc-progress]` bằng `transform: scaleX(...)` (compositor-only, không gây reflow).
+
+---
+
+### 5.8 Global Custom Select & Popover Dropdown (`chunks/custom-select.js` - `D-37`)
+
+Chunk nạp lười từ `core.js`: tự động tải ngay khi trang có `<select>` hiển thị ngoài `<dialog>` đóng, hoặc khi mở `<dialog>` / `pointerdown` / `focusin` lần đầu (bảo toàn ngân sách `core.js ≤ 8KB gzip` và `0KB` thừa trên trang Blog).
+
+1. **Phạm vi áp dụng toàn cục (`CUSTOM_SELECT_SELECTOR`):**
+   - Khớp tự động `select.drv-select, select.drv-calc__waste-select, .fluentform select.ff-el-form-control` (bao gồm cả phần tử sinh động qua JS nhờ `MutationObserver` trên `document.body`).
+   - Bỏ qua `<select multiple>`, `size > 1` hoặc phần tử gắn cờ `[data-drv-native-select]`.
+2. **Bảo toàn 100% Hợp đồng Form, Validation & No-JS:**
+   - Bọc `<select>` gốc trong `.drv-select-ui`, ẩn trực quan qua `.drv-select-ui__native` (`@layer utilities`, `tabindex="-1"`, `aria-hidden="true"`), giữ nguyên `id`, `name`, `form`, `required` và danh sách `<option>` để `FormData`, `checkout.js`, `catalog.js`, `quote.js` và trình duyệt tắt JS hoạt động không đổi.
+   - Đồng bộ 2 chiều tức thì qua property descriptor (`value`, `selectedIndex`, `disabled` trên `HTMLSelectElement`) kết hợp `MutationObserver` (`childList` khi nạp Phường/Xã động qua `fillWardSelect()` và các thuộc tính `disabled`, `aria-invalid`, `aria-busy`, `aria-describedby`).
+3. **Giao diện Popover Chuẩn BOQ & Tương tác WAI-ARIA (`WCAG 2.2 AA`):**
+   - Render `.drv-dropdown-popover` đồng nhất 100% với `.drv-move-popover` của trang Danh sách báo giá BOQ, ưu tiên mở trên HTML5 Top Layer (`popover="manual"`) kèm định vị tự động lật lên/căn phải theo viewport để không bao giờ bị cắt bởi `overflow: hidden` hoặc `<dialog>`.
+   - Khi danh sách có `≥ 10` lựa chọn thực (như 34 Tỉnh/TP hoặc Phường/Xã), tự động bật thanh tìm nhanh không dấu tiếng Việt (`asciiFold`) ngay đầu popover.
+   - Hỗ trợ đầy đủ phím `ArrowDown`, `ArrowUp`, `Home`, `End`, `Enter`, `Space`, `Tab` và `Escape` (chặn lan truyền `Escape` để không đóng nhầm `<dialog>` cha đang mở).
 
 ---
 
