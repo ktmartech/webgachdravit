@@ -90,8 +90,8 @@ final class RobotsMatrix implements ServiceProviderInterface {
             return ['index' => 'noindex', 'follow' => 'follow'];
         }
 
-        // 6. Danh mục sản phẩm / thuộc tính public / chuyên mục blog (M-1, M-2, M-8, M-10, R-9).
-        if (in_array($view, ['collection', 'attribute_public', 'category'], true)) {
+        // 6. Danh mục sản phẩm / thuộc tính public / trang chỉ mục & chuyên mục blog (M-1, M-2, M-8, M-10, R-9).
+        if (in_array($view, ['collection', 'attribute_public', 'category', 'blog_index'], true)) {
             if ($paged >= 2 && $max_pages !== null && ($paged > max(1, $max_pages) || $max_pages === 0)) {
                 return ['index' => 'noindex', 'follow' => 'nofollow'];
             }
@@ -156,6 +156,10 @@ final class RobotsMatrix implements ServiceProviderInterface {
             $view = 'home';
         } elseif (is_home()) {
             $view = 'blog_index';
+            if ($wp_query instanceof \WP_Query) {
+                $post_count = (int) $wp_query->found_posts;
+                $max_pages  = (int) $wp_query->max_num_pages;
+            }
         } elseif (drv_is_woo_active() && is_shop()) {
             $view = 'collection';
             if ($wp_query instanceof \WP_Query) {

@@ -61,7 +61,8 @@ final class Cleanup implements ServiceProviderInterface {
             wp_dequeue_style('block-style-variation-styles');
         }
 
-        $needs_block_styles = is_singular('post') || (is_page() && !self::is_commerce_or_app_page());
+        // Theo ADR D-36 + Phương án A1: Classic Editor toàn site, bài Cẩm nang & Chính sách dùng `.drv-prose` riêng nên gỡ luôn `wp-block-library`.
+        $needs_block_styles = is_page() && !self::is_commerce_or_app_page();
         if (!$needs_block_styles) {
             wp_dequeue_style('wp-block-library');
             wp_dequeue_style('wp-block-library-theme');
@@ -87,10 +88,16 @@ final class Cleanup implements ServiceProviderInterface {
             return true;
         }
 
+        if (is_page(['gioi-thieu', 'dieu-khoan', 'chinh-sach-van-chuyen', 'chinh-sach-doi-tra', 'chinh-sach-thanh-toan', 'chinh-sach-bao-mat'])) {
+            return true;
+        }
+
         return is_page_template([
             'page-templates/template-contact.php',
             'page-templates/template-quote.php',
             'page-templates/template-ai-finder.php',
+            'page-templates/template-policy.php',
+            'page-templates/template-about.php',
         ]);
     }
 }

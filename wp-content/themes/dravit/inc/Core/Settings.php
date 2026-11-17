@@ -167,8 +167,12 @@ final class Settings implements ServiceProviderInterface {
                 'showroom_booking' => 0,
                 'blog_inline'      => 0,
             ],
+            'blog'     => [
+                'popular_post_ids' => [],
+            ],
             'features' => [
-                'ai_enabled' => true,
+                'ai_enabled'           => true,
+                'sample_order_enabled' => true,
             ],
             'ai'       => [
                 'provider' => 'rule_only',
@@ -395,8 +399,30 @@ final class Settings implements ServiceProviderInterface {
             }
         }
 
+        if (isset($input['blog']) && is_array($input['blog']) && array_key_exists('popular_post_ids', $input['blog'])) {
+            $raw_posts = $input['blog']['popular_post_ids'];
+            if (is_string($raw_posts)) {
+                $raw_posts = preg_split('/[\s,;]+/', $raw_posts) ?: [];
+            }
+            if (is_array($raw_posts)) {
+                $post_ids = [];
+                foreach ($raw_posts as $raw_pid) {
+                    $pid = max(0, (int) $raw_pid);
+                    if ($pid > 0 && !in_array($pid, $post_ids, true)) {
+                        $post_ids[] = $pid;
+                    }
+                }
+                $base['blog']['popular_post_ids'] = array_slice($post_ids, 0, 5);
+            }
+        }
+
         if (isset($input['features']) && is_array($input['features'])) {
-            $base['features']['ai_enabled'] = !empty($input['features']['ai_enabled']);
+            if (array_key_exists('ai_enabled', $input['features'])) {
+                $base['features']['ai_enabled'] = !empty($input['features']['ai_enabled']);
+            }
+            if (array_key_exists('sample_order_enabled', $input['features'])) {
+                $base['features']['sample_order_enabled'] = !empty($input['features']['sample_order_enabled']);
+            }
         }
 
         if (isset($input['ai']) && is_array($input['ai'])) {

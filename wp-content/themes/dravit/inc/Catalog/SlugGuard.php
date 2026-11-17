@@ -18,6 +18,7 @@ final class SlugGuard implements ServiceProviderInterface {
         'san-pham',
         'cam-nang',
         'chu-de',
+        'the',
         'bo-suu-tap',
         'xuat-xu',
         'gio-hang',
@@ -30,6 +31,12 @@ final class SlugGuard implements ServiceProviderInterface {
         'showroom',
         'gioi-thieu',
         'dieu-khoan',
+        'chinh-sach-van-chuyen',
+        'chinh-sach-doi-tra',
+        'chinh-sach-thanh-toan',
+        'chinh-sach-bao-mat',
+        'huong-dan-mua-hang',
+        'hop-tac-kts-nha-thau',
         'tim-kiem',
     ];
 
@@ -200,7 +207,23 @@ final class SlugGuard implements ServiceProviderInterface {
             }
         }
 
-        return in_array($slug, ['gio-hang', 'thanh-toan', 'tai-khoan', 'danh-sach-bao-gia', 'tro-ly-ai-tim-gach', 'lien-he', 'showroom', 'gioi-thieu', 'dieu-khoan'], true)
+        return in_array($slug, [
+            'gio-hang',
+            'thanh-toan',
+            'tai-khoan',
+            'danh-sach-bao-gia',
+            'tro-ly-ai-tim-gach',
+            'lien-he',
+            'showroom',
+            'gioi-thieu',
+            'dieu-khoan',
+            'chinh-sach-van-chuyen',
+            'chinh-sach-doi-tra',
+            'chinh-sach-thanh-toan',
+            'chinh-sach-bao-mat',
+            'huong-dan-mua-hang',
+            'hop-tac-kts-nha-thau',
+        ], true)
             && !isset(Config::get('collections')[$slug]);
     }
 }

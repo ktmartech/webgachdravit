@@ -357,13 +357,13 @@ final class DropdownWalker extends WalkerNavMenuBase {
             ];
         }
         $defaults[] = [
-            'label'     => 'Cẩm nang kỹ thuật',
+            'label'     => 'Cẩm nang',
             'url'       => MegaMenuRenderer::internal_url('/cam-nang'),
             'icon'      => 'ph-book-open',
             'highlight' => '',
         ];
         $defaults[] = [
-            'label'     => 'Liên hệ & Showroom',
+            'label'     => 'Liên hệ',
             'url'       => MegaMenuRenderer::internal_url('/lien-he'),
             'icon'      => 'ph-map-pin',
             'highlight' => '',
@@ -376,6 +376,10 @@ final class DropdownWalker extends WalkerNavMenuBase {
         $entries = self::get_utility_entries();
         ob_start();
         foreach ($entries as $entry) :
+            // Nút "Trợ lý AI" đã có ở thanh header desktop: không lặp lại trong thanh điều hướng.
+            if (str_contains((string) $entry['url'], 'tro-ly-ai-tim-gach')) {
+                continue;
+            }
             $cls = 'drv-nav__link';
             if ($entry['highlight'] === 'teal') {
                 $cls .= ' u-text-moss u-bold';

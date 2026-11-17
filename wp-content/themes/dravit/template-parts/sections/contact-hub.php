@@ -1,6 +1,6 @@
 <?php
 /**
- * Section: Trung tâm Liên hệ & Showroom (`09-contact.html`): thông tin pháp nhân + hệ thống showroom (cột trái)
+ * Section: Trung tâm Liên hệ (`09-contact.html`): thông tin pháp nhân + hệ thống showroom (cột trái)
  * và form Lead slot `contact_page` Dual-Mode Fluent Forms / Native (cột phải, D-31).
  *
  * @var array<string, mixed> $args
@@ -23,11 +23,15 @@ $hours       = (string) drv_setting('contact.working_hours', '');
 $showrooms   = array_values(array_filter((array) drv_setting('showrooms', []), 'is_array'));
 $maps_url    = (string) ($showrooms[0]['maps_url'] ?? '');
 ?>
-<section class="l-section l-section--white u-bd-b" style="padding-block: var(--s-5)">
-    <div class="l-container l-stack l-stack--xs">
-        <?php drv_ui('breadcrumb'); ?>
-        <h1 class="drv-page-title"><?php echo esc_html(mb_strtoupper($title)); ?></h1>
-        <p class="u-text-sm u-text-muted">Trải nghiệm mẫu gạch thực tế tại Showroom hoặc gửi yêu cầu nhận mẫu &amp; báo giá công trình.</p>
+<section class="drv-page-head" aria-labelledby="contact-page-title">
+    <div class="l-container">
+        <div class="drv-page-head__top">
+            <?php drv_ui('breadcrumb'); ?>
+        </div>
+        <div class="drv-page-head__content">
+            <h1 id="contact-page-title" class="drv-page-head__title"><?php echo esc_html(mb_strtoupper($title)); ?></h1>
+            <p class="drv-page-head__desc">Trải nghiệm mẫu gạch thực tế tại Showroom hoặc gửi yêu cầu nhận mẫu &amp; báo giá công trình.</p>
+        </div>
     </div>
 </section>
 
@@ -125,7 +129,7 @@ $maps_url    = (string) ($showrooms[0]['maps_url'] ?? '');
                         get_template_part('template-parts/leads/native-form', null, [
                             'source'        => 'contact',
                             'id_prefix'     => 'contact',
-                            'fields'        => ['email', 'role', 'province', 'area', 'message', 'sample_box'],
+                            'fields'        => ['email', 'role', 'message'],
                             'message_label' => 'Nội dung chi tiết (mã gạch, diện tích m² hoặc khu vực giao hàng)',
                             'submit_label'  => 'Gửi thông tin liên hệ',
                             'show_feedback' => true,

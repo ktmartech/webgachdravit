@@ -189,7 +189,7 @@ final class SettingsPage implements ServiceProviderInterface {
 
         $tabs = [
             'company' => '1. Công ty & Pháp lý',
-            'contact' => '2. Liên hệ & Showroom',
+            'contact' => '2. Liên hệ',
             'bank'    => '3. Ngân hàng VietQR',
             'order'   => '4. Đơn hàng & Vận chuyển',
             'quote'   => '5. Báo giá BOQ',
@@ -198,6 +198,7 @@ final class SettingsPage implements ServiceProviderInterface {
             'forms'   => '8. Fluent Forms Slots',
             'ai'      => '9. Trợ lý AI Tìm gạch',
             'search'  => '10. Tìm kiếm & Gợi ý',
+            'blog'    => '11. Cẩm nang GEO',
         ];
 
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only tab switcher
@@ -429,6 +430,31 @@ final class SettingsPage implements ServiceProviderInterface {
                     </table>
                 <?php elseif ($active_tab === 'search') : ?>
                     <?php $this->render_search_tab($s); ?>
+                <?php elseif ($active_tab === 'blog') : ?>
+                    <table class="form-table" role="presentation">
+                        <tr>
+                            <th scope="row"><label for="drv-blog-popular">Danh sách ID bài Đọc nhiều (tối đa 5 ID)</label></th>
+                            <td>
+                                <input id="drv-blog-popular"
+                                       type="text"
+                                       class="regular-text"
+                                       placeholder="Ví dụ: 120, 145, 168"
+                                       name="drv_settings[blog][popular_post_ids]"
+                                       value="<?php echo esc_attr(implode(', ', array_map('intval', (array) ($s['blog']['popular_post_ids'] ?? [])))); ?>">
+                                <p class="description">Ngăn cách bằng dấu phẩy. Để trống sẽ tự động ưu tiên bài Pillar rồi đến các bài mới cập nhật trên Bento <code>/cam-nang</code>.</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Cho phép đặt hộp mẫu gạch thật</th>
+                            <td>
+                                <label>
+                                    <input type="hidden" name="drv_settings[features][sample_order_enabled]" value="0">
+                                    <input type="checkbox" name="drv_settings[features][sample_order_enabled]" value="1" <?php checked(!empty($s['features']['sample_order_enabled'])); ?>>
+                                    Hiển thị tùy chọn gửi mẫu thật tại công trình trong form Cẩm nang &amp; PDP
+                                </label>
+                            </td>
+                        </tr>
+                    </table>
                 <?php endif; ?>
 
                 <?php submit_button('Lưu cấu hình Dravit'); ?>

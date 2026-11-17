@@ -9,6 +9,12 @@ use Dravit\Advisor\AdvisorController;
 use Dravit\Advisor\Log\CptAdvisorLogger;
 use Dravit\Catalog\SearchController;
 use Dravit\Catalog\SlugGuard;
+use Dravit\Content\AuthorProfile;
+use Dravit\Content\BlogSetup;
+use Dravit\Content\ContentFilters;
+use Dravit\Content\PostMeta;
+use Dravit\Content\Shortcodes;
+use Dravit\Content\Toc;
 use Dravit\Core\Assets;
 use Dravit\Core\Cleanup;
 use Dravit\Core\Menu\MegaMenuRenderer;
@@ -71,6 +77,12 @@ final class BootstrapTest extends TestCase {
             SchemaGraph::class,
             LlmsTxt::class,
             SearchController::class,
+            AuthorProfile::class,
+            PostMeta::class,
+            BlogSetup::class,
+            Shortcodes::class,
+            Toc::class,
+            ContentFilters::class,
             CptAdvisorLogger::class,
             AdvisorController::class,
             MenuSetup::class,

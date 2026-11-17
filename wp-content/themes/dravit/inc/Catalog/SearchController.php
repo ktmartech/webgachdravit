@@ -435,6 +435,14 @@ class SearchController implements ServiceProviderInterface {
             return;
         }
 
+        if (self::isBlogPostSearch($query)) {
+            $this->ssr_matched_ids = null;
+            $query->set('post_type', 'post');
+            $query->set('post_status', 'publish');
+            $query->set('posts_per_page', 12);
+            return;
+        }
+
         $query->set('post_type', 'product');
         $query->set('post_status', 'publish');
         $query->set('posts_per_page', max(12, (int) drv_setting('catalog.per_page', 24)));
@@ -443,7 +451,13 @@ class SearchController implements ServiceProviderInterface {
     public function override_ssr_posts_search(string $search_sql, \WP_Query $query): string {
         global $wpdb;
 
-        if (is_admin() || !$query->is_main_query() || !$query->is_search() || !$wpdb instanceof \wpdb) {
+        if (
+            is_admin()
+            || !$query->is_main_query()
+            || !$query->is_search()
+            || self::isBlogPostSearch($query)
+            || !$wpdb instanceof \wpdb
+        ) {
             return $search_sql;
         }
 
@@ -470,6 +484,7 @@ class SearchController implements ServiceProviderInterface {
             is_admin()
             || !$query->is_main_query()
             || !$query->is_search()
+            || self::isBlogPostSearch($query)
             || !is_array($this->ssr_matched_ids)
             || $this->ssr_matched_ids === []
             || !$wpdb instanceof \wpdb
@@ -479,6 +494,21 @@ class SearchController implements ServiceProviderInterface {
 
         $id_list = implode(',', array_map('intval', $this->ssr_matched_ids));
         return "FIELD({$wpdb->posts}.ID, {$id_list}) ASC";
+    }
+
+    private static function isBlogPostSearch(\WP_Query $query): bool {
+        $pt = $query->get('post_type');
+        if ($pt === 'post' || (is_array($pt) && $pt === ['post'])) {
+            return true;
+        }
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only GET search type check
+        $req_pt = isset($_GET['post_type']) && is_scalar($_GET['post_type'])
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            ? sanitize_key((string) wp_unslash($_GET['post_type']))
+            : '';
+
+        return $req_pt === 'post';
     }
 
     /**

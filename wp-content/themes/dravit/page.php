@@ -3,6 +3,11 @@ declare(strict_types=1);
 
 defined('ABSPATH') || exit;
 
+if (function_exists('is_page') && is_page('gioi-thieu')) {
+    require DRV_DIR . '/page-templates/template-about.php';
+    return;
+}
+
 get_header();
 
 // Giỏ hàng & Thanh toán (Classic Shortcode D-15): template WooCommerce trong theme tự dựng H1, steps và lưới 2 cột.

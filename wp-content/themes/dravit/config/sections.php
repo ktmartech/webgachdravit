@@ -70,5 +70,8 @@ return [
         'defaults' => [],
         'style'    => 'assets/src/css/pages/contact.css',
     ],
-    'error-404-recovery'    => ['defaults' => []],
+    'error-404-recovery'    => [
+        'defaults' => [],
+        'style'    => 'assets/src/css/pages/contact.css',
+    ],
 ];

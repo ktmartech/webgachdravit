@@ -5,10 +5,12 @@ namespace Dravit;
 
 use Dravit\Admin\AttachmentFields;
 use Dravit\Admin\CsvProductMapping;
+use Dravit\Admin\PostFields;
 use Dravit\Admin\ProductFields;
 use Dravit\Admin\SettingsPage;
 use Dravit\Admin\TermFields;
 use Dravit\Admin\ToolsResync;
+use Dravit\Admin\UserFields;
 use Dravit\Advisor\AdvisorController;
 use Dravit\Advisor\Catalog\SnapshotBuilder;
 use Dravit\Advisor\Log\CptAdvisorLogger;
@@ -19,6 +21,12 @@ use Dravit\Catalog\SaleSync;
 use Dravit\Catalog\SearchController;
 use Dravit\Catalog\SlugGuard;
 use Dravit\Catalog\Taxonomies;
+use Dravit\Content\AuthorProfile;
+use Dravit\Content\BlogSetup;
+use Dravit\Content\ContentFilters;
+use Dravit\Content\PostMeta;
+use Dravit\Content\Shortcodes;
+use Dravit\Content\Toc;
 use Dravit\Core\Assets;
 use Dravit\Core\Cleanup;
 use Dravit\Core\Integrations\FluentFormsBridge;
@@ -104,6 +112,12 @@ final class Theme {
             SchemaGraph::class,
             LlmsTxt::class,
             SearchController::class,
+            AuthorProfile::class,
+            PostMeta::class,
+            BlogSetup::class,
+            Shortcodes::class,
+            Toc::class,
+            ContentFilters::class,
             CptAdvisorLogger::class,
             AdvisorController::class,
             MenuSetup::class,
@@ -117,6 +131,8 @@ final class Theme {
         if ($is_admin) {
             $providers[] = SettingsPage::class;
             $providers[] = AttachmentFields::class;
+            $providers[] = PostFields::class;
+            $providers[] = UserFields::class;
         }
 
         if (drv_is_woo_active()) {

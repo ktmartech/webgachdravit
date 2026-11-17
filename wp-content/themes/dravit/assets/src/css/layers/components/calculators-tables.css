@@ -434,4 +434,144 @@
     font-weight: 700;
     color: var(--c-navy-900);
   }
+
+  /* ==========================================================================
+     BẢNG DỮ KIỆN KỸ THUẬT GEO (`drv_ui('geo-table')`): thẻ trắng · thanh tiêu đề · bảng thẳng hàng · ghi chú
+     ========================================================================== */
+  .drv-geo-box {
+    gap: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: var(--c-white);
+    border: var(--bw);
+    border-left: 4px solid var(--c-moss-500);
+    border-radius: var(--r-md);
+  }
+
+  .drv-geo-box__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-2) var(--s-3);
+    padding: var(--s-3) var(--s-5);
+    background-color: var(--c-champagne);
+    border-bottom: var(--bw);
+  }
+
+  .drv-geo-box__title {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--c-navy-900);
+  }
+
+  .drv-geo-box__title i {
+    color: var(--c-moss-700);
+  }
+
+  .drv-geo-box__list {
+    padding: var(--s-4) var(--s-5) var(--s-4) calc(var(--s-5) + var(--s-5));
+  }
+
+  .drv-geo-box .drv-geo-table-wrap {
+    margin: 0;
+    overflow-x: auto;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    scrollbar-width: thin;
+  }
+
+  .drv-geo-box .drv-geo-table-wrap:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: -2px;
+  }
+
+  .drv-geo-box .drv-geo-table {
+    min-width: 640px;
+    border: 0;
+    border-radius: 0;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+
+  .drv-geo-box .drv-geo-table thead th {
+    padding: var(--s-2-5) var(--s-5);
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-align: left;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--c-navy-600);
+    background-color: var(--c-ivory);
+    border-bottom: var(--bw);
+  }
+
+  .drv-geo-box .drv-geo-table tbody th[scope="row"] {
+    width: 24%;
+    padding: var(--s-3-5, 14px) var(--s-5);
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    color: var(--c-navy-900);
+    background-color: var(--c-white);
+    border-right: 0;
+  }
+
+  .drv-geo-box .drv-geo-table tbody td {
+    padding: var(--s-3-5, 14px) var(--s-4);
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    line-height: 1.45;
+    vertical-align: top;
+  }
+
+  .drv-geo-box .drv-geo-table tbody tr {
+    transition: background-color var(--dur-fast) var(--ease-out);
+  }
+
+  .drv-geo-box .drv-geo-table tbody tr:hover,
+  .drv-geo-box .drv-geo-table tbody tr:hover th[scope="row"] {
+    background-color: var(--c-ivory);
+  }
+
+  .drv-geo-box__note {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--s-2);
+    margin: 0;
+    padding: var(--s-3) var(--s-5);
+    font-size: var(--fs-xs);
+    line-height: 1.5;
+    color: var(--c-text-muted);
+    background-color: var(--c-ivory);
+    border-top: var(--bw);
+  }
+
+  .drv-geo-box__note i {
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: var(--c-teal-700);
+  }
+
+  @media (width < 640px) {
+    .drv-geo-box__head,
+    .drv-geo-box__note {
+      padding-inline: var(--s-4);
+    }
+  }
+
+  .drv-geo-box .drv-geo-table thead th:not(:first-child) {
+    padding-inline: var(--s-4);
+  }
+
+  .drv-geo-box .drv-geo-box__note {
+    max-width: none;
+    width: 100%;
+  }
 }

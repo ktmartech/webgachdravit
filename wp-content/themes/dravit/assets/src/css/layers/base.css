@@ -97,3 +97,59 @@
     scroll-margin-top: calc(var(--header-h-current) + var(--s-4));
   }
 }
+
+/* ==========================================================================
+   SCROLLBAR — thanh cuộn mảnh theo tông navy/ivory của DRAVIT
+   Trang chính: rộng vừa đủ để kéo; vùng cuộn con (mục lục, bảng, drawer): mảnh hơn.
+   ========================================================================== */
+@layer base {
+  :root {
+    --scroll-thumb: var(--c-navy-400);
+    --scroll-thumb-hover: var(--c-teal-700);
+    --scroll-track: var(--c-ivory);
+  }
+
+  html {
+    scrollbar-color: var(--scroll-thumb) var(--scroll-track);
+  }
+
+  /* Mọi vùng cuộn con dùng thanh mảnh, nền trong suốt để hòa vào thẻ chứa. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scroll-thumb) transparent;
+  }
+
+  html {
+    scrollbar-width: auto;
+    scrollbar-color: var(--scroll-thumb) var(--scroll-track);
+  }
+
+  /* Trình duyệt chưa hỗ trợ `scrollbar-color` (Safari cũ): dựng bằng pseudo-element WebKit. */
+  @supports not (scrollbar-color: auto) {
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--scroll-track);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background-color: var(--scroll-thumb);
+      border: 2px solid var(--scroll-track);
+      border-radius: 999px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: var(--scroll-thumb-hover);
+    }
+  }
+
+  /* Vùng cuộn ngang/dọc tự thân: không kéo cuộn trang khi chạm tới đầu/cuối. */
+  .drv-toc__nav,
+  .drv-dropdown-popover__list,
+  .drv-move-popover__list {
+    overscroll-behavior: contain;
+  }
+}

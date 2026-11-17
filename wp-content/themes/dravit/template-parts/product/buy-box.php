@@ -215,7 +215,7 @@ $contact_url = untrailingslashit(home_url('/lien-he'));
                         data-drv-m2="<?php echo esc_attr((string) $default_m2); ?>"
                         data-drv-boxes-text="<?php echo esc_attr($init_boxes); ?>">
                     <i class="ph-bold ph-paper-plane-tilt drv-icon" aria-hidden="true"></i>
-                    <span><?php echo esc_html($is_out ? 'Nhận báo giá lô mới' : 'Nhận báo giá chi tiết mẫu này'); ?></span>
+                    <span><?php echo esc_html($is_out ? 'Báo giá lô mới' : 'Nhận báo giá'); ?></span>
                 </button>
 
                 <button type="button"
@@ -229,7 +229,7 @@ $contact_url = untrailingslashit(home_url('/lien-he'));
                         data-drv-pieces="<?php echo esc_attr((string) $init_pieces); ?>"
                         data-drv-m2="<?php echo esc_attr((string) $default_m2); ?>">
                     <i class="ph-bold ph-plus drv-icon" aria-hidden="true"></i>
-                    <span>Thêm vào DS Báo giá công trình</span>
+                    <span>+ Báo giá công trình</span>
                 </button>
             </div>
 

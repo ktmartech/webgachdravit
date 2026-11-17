@@ -1262,4 +1262,15 @@
   .drv-checkout-topbar__support:hover {
     color: var(--c-teal-700);
   }
+
+  /* Thanh điều hướng desktop: danh mục + mục phụ (Cẩm nang, Liên hệ) nối liền một hàng, không để khoảng trống giữa. */
+  @media (width >= 1024px) {
+    .drv-nav {
+      justify-content: flex-start;
+    }
+
+    .drv-nav__list + .drv-nav__list .drv-nav__item:first-child {
+      border-left: 0;
+    }
+  }
 }

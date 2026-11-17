@@ -1,9 +1,46 @@
-/* ==========================================================================
-   LIÊN HỆ & SHOWROOM (`assets/src/css/pages/contact.css`)
+﻿/* ==========================================================================
+   LIÊN HỆ (`assets/src/css/pages/contact.css`)
    Port từ docs/layout/09-contact.html (pages.css §9). Form dùng chung `template-parts/leads/native-form.php`.
    ========================================================================== */
 
 @layer components {
+
+  /* Đầu trang nội dung (Liên hệ…): cùng nhịp với hero danh mục `.drv-silo-hero`; breadcrumb tách hàng riêng, H1 cách breadcrumb. */
+  .drv-page-head {
+    padding-block: var(--s-4) var(--s-6);
+    background-color: var(--c-ivory);
+    border-bottom: var(--bw);
+  }
+
+  .drv-page-head__top {
+    min-width: 0;
+    margin-bottom: var(--s-5);
+  }
+
+  .drv-page-head__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+    min-width: 0;
+  }
+
+  .drv-page-head__title {
+    font-family: var(--f-display);
+    font-size: clamp(1.5rem, 2.2vw, 2rem);
+    font-weight: 400;
+    line-height: 1.22;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--c-navy-900);
+  }
+
+  .drv-page-head__desc {
+    max-width: 72ch;
+    font-size: var(--fs-sm);
+    line-height: 1.55;
+    color: var(--c-text-muted);
+  }
+
   .drv-page-title {
     margin: 0;
     font-family: var(--f-display);
@@ -138,5 +175,56 @@
   .drv-lead-section__card {
     max-width: 760px;
     margin-inline: auto;
+  }
+
+  /* 404 & Empty Search Recovery (`template-parts/sections/error-404-recovery.php`) */
+  .drv-recovery__hero {
+    max-width: 760px;
+  }
+
+  .drv-recovery__search {
+    width: 100%;
+    max-width: 620px;
+  }
+
+  .drv-recovery__search-box {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+    padding: 6px 6px 6px var(--s-3-5);
+    background-color: var(--c-white);
+    border: var(--bw-input);
+    border-radius: var(--r-sm);
+    transition: border-color var(--t-fast);
+  }
+
+  .drv-recovery__search-box:focus-within {
+    border-color: var(--c-teal-600);
+    outline: var(--focus-ring);
+    outline-offset: 1px;
+  }
+
+  .drv-recovery__search-input {
+    flex: 1;
+    min-width: 0;
+    padding: var(--s-2) 0;
+    font: inherit;
+    font-size: var(--fs-sm);
+    color: var(--c-text-main);
+    background: transparent;
+    border: 0;
+    outline: none;
+  }
+
+  @media (width < 480px) {
+    .drv-recovery__search-box {
+      flex-wrap: wrap;
+      padding: var(--s-2);
+    }
+
+    .drv-recovery__search-box .drv-btn {
+      width: 100%;
+      justify-content: center;
+    }
   }
 }

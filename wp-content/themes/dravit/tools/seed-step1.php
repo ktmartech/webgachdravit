@@ -161,8 +161,8 @@ $add_custom_item($silo_id, 'Gạch ưu đãi', '/gach-uu-dai', 0, $p++, ['_drv_h
 // 4. Seed Primary Utility Nav
 $util_id = $ensure_clean_menu('DRAVIT - Tiện Ích Tầng 2');
 $add_custom_item($util_id, 'Trợ lý AI Tìm gạch', '/tro-ly-ai-tim-gach', 0, 1, ['_drv_icon' => 'ph-fill ph-robot', '_drv_highlight' => 'teal']);
-$add_custom_item($util_id, 'Cẩm nang kỹ thuật', '/cam-nang', 0, 2, ['_drv_icon' => 'ph-book-open']);
-$add_custom_item($util_id, 'Liên hệ & Showroom', '/lien-he', 0, 3, ['_drv_icon' => 'ph-map-pin']);
+$add_custom_item($util_id, 'Cẩm nang', '/cam-nang', 0, 2, ['_drv_icon' => 'ph-book-open']);
+$add_custom_item($util_id, 'Liên hệ', '/lien-he', 0, 3, ['_drv_icon' => 'ph-map-pin']);
 
 // 5. Seed 3 cột Footer có thể sửa trong WP Admin
 $f2_id = $ensure_clean_menu('Hướng dẫn');
@@ -180,7 +180,7 @@ $add_custom_item($f3_id, 'Chính sách bảo mật thông tin', '/chinh-sach-bao
 $f4_id = $ensure_clean_menu('Đối tác & Doanh nghiệp');
 $add_custom_item($f4_id, 'Giới thiệu thương hiệu DRAVIT', '/gioi-thieu', 0, 1);
 $add_custom_item($f4_id, 'Hệ thống Showroom trưng bày', '/lien-he', 0, 2);
-$add_custom_item($f4_id, 'Hợp tác Kiến trúc sư & Nhà thầu', '/lien-he', 0, 3);
+$add_custom_item($f4_id, 'Hợp tác Kiến trúc sư & Nhà thầu', '/hop-tac-kts-nha-thau', 0, 3);
 $add_custom_item($f4_id, 'Kho 28 danh mục gạch chính hãng', '/gach', 0, 4);
 
 // 6. Gán cả 6 Menu vào theme_mod `nav_menu_locations`

@@ -189,11 +189,93 @@ final class FaqResolver {
         if (function_exists('is_singular') && is_singular()) {
             $post_id = get_queried_object_id();
             if ($post_id > 0) {
-                return self::parseFaqItems(get_post_meta($post_id, 'drv_faq', true));
+                $meta_items = self::parseFaqItems(get_post_meta($post_id, 'drv_faq', true));
+                if ($meta_items !== []) {
+                    return $meta_items;
+                }
+                if (function_exists('is_singular') && is_singular('post') && function_exists('get_post')) {
+                    $post = get_post($post_id);
+                    if ($post instanceof \WP_Post && trim((string) $post->post_content) !== '') {
+                        return self::extractFromPostContent((string) $post->post_content);
+                    }
+                }
             }
         }
 
         return [];
+    }
+
+    /**
+     * Bóc tách danh sách câu hỏi FAQ từ nội dung bài viết Cẩm nang (`[drv_faq]` / `[drv_faq_item]` / `.drv-faq-group`)
+     * ngay trong pha `wp_head` trước khi `the_content` chạy, đảm bảo `FAQPage` JSON-LD khớp 100% DOM hiển thị (docs/20 §3.1.B).
+     *
+     * @return array<int, array{q: string, a: string}>
+     */
+    public static function extractFromPostContent(string $raw_content): array {
+        if (trim($raw_content) === '') {
+            return [];
+        }
+
+        $collected = [];
+        $seen_q    = [];
+        $strip     = static fn (string $s): string => function_exists('wp_strip_all_tags')
+            ? trim(wp_strip_all_tags($s))
+            : trim(strip_tags($s));
+
+        $push = static function (string $q, string $a) use (&$collected, &$seen_q, $strip): void {
+            $clean_q = $strip(html_entity_decode($q, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+            $clean_a = trim($a);
+            if ($clean_q === '' || $strip($clean_a) === '') {
+                return;
+            }
+            $norm_key = mb_strtolower($clean_q, 'UTF-8');
+            if (isset($seen_q[$norm_key])) {
+                return;
+            }
+            $seen_q[$norm_key] = true;
+            $collected[]       = ['q' => $clean_q, 'a' => $clean_a];
+        };
+
+        // 1. Shortcode `[drv_faq items="..."]` chứa mảng JSON.
+        if (preg_match_all('/\[drv_faq\b([^\]]*)\]/iu', $raw_content, $faq_tags, PREG_SET_ORDER)) {
+            foreach ($faq_tags as $tag_match) {
+                $attr_str = $tag_match[1];
+                if (preg_match('/\bitems\s*=\s*(["\'])(.*?)\1/isu', $attr_str, $im)) {
+                    $json_str = html_entity_decode($im[2], ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                    foreach (self::parseFaqItems($json_str) as $item) {
+                        $push($item['q'], $item['a']);
+                    }
+                }
+            }
+        }
+
+        // 2. Shortcode lồng nhau `[drv_faq_item q="..." / question="..."]...[/drv_faq_item]`.
+        if (preg_match_all('/\[drv_faq_item\b([^\]]*)\](.*?)\[\/drv_faq_item\]/isu', $raw_content, $item_matches, PREG_SET_ORDER)) {
+            foreach ($item_matches as $im) {
+                $attr_str = $im[1];
+                $body     = trim($im[2]);
+                $question = '';
+                if (preg_match('/\b(?:q|question)\s*=\s*(["\'])(.*?)\1/isu', $attr_str, $qm)) {
+                    $question = $qm[2];
+                }
+                if ($question !== '' && $body !== '') {
+                    $push($question, $body);
+                }
+            }
+        }
+
+        // 3. HTML trực tiếp `<div class="...drv-faq-group...">...<details>...<summary>Q</summary>A</details>...</div>`.
+        if (preg_match_all('/<div\b[^>]*class=(["\'])[^"\']*\bdrv-faq-group\b[^"\']*\1[^>]*>(.*?)<\/div>/isu', $raw_content, $group_matches)) {
+            foreach ($group_matches[2] as $group_html) {
+                if (preg_match_all('/<details\b[^>]*>\s*<summary\b[^>]*>(.*?)<\/summary>(.*?)<\/details>/isu', $group_html, $det_matches, PREG_SET_ORDER)) {
+                    foreach ($det_matches as $dm) {
+                        $push($dm[1], $dm[2]);
+                    }
+                }
+            }
+        }
+
+        return $collected;
     }
 }
 

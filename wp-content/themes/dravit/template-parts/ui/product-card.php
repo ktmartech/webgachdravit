@@ -290,11 +290,13 @@ if ($is_out) {
 
     <div class="drv-card__body">
         <div class="drv-card__head">
-            <div class="drv-card__tags">
-                <?php foreach (array_slice($tags, 0, 2) as $t) : ?>
-                    <span class="drv-card__tag"><?php echo esc_html((string) $t); ?></span>
-                <?php endforeach; ?>
-            </div>
+            <?php if ($tags !== []) : ?>
+                <div class="drv-card__tags">
+                    <?php foreach (array_slice($tags, 0, 2) as $t) : ?>
+                        <span class="drv-card__tag"><?php echo esc_html((string) $t); ?></span>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
             <?php if ($sku !== '') : ?>
                 <span class="drv-card__sku u-tabular"><?php echo esc_html($sku); ?></span>
             <?php endif; ?>

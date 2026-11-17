@@ -51,11 +51,12 @@ if ($active) {
          decoding="async"
          alt="<?php echo esc_attr($name); ?>"
          class="drv-silo-tile__thumb">
-    <div class="l-stack l-stack--xs">
+    <div class="l-stack l-stack--xs drv-silo-tile__info">
         <span class="drv-silo-tile__name"><?php echo esc_html($name); ?></span>
         <?php if ($count > 0) : ?>
             <span class="drv-silo-tile__count u-tabular"><?php echo esc_html((string) $count); ?> mẫu</span>
         <?php endif; ?>
     </div>
+    <i class="ph ph-arrow-right drv-icon drv-icon--xs drv-silo-tile__arrow" aria-hidden="true"></i>
 </a>
 

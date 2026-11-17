@@ -4,6 +4,9 @@ declare(strict_types=1);
 namespace Dravit\Seo;
 
 use Dravit\Catalog\AttributeDeriver;
+use Dravit\Content\AuthorProfile;
+use Dravit\Content\PostMeta;
+use Dravit\Core\Config;
 use Dravit\Core\ServiceProviderInterface;
 use Dravit\Core\Settings;
 use Dravit\Units\Calc;
@@ -536,20 +539,36 @@ final class SchemaGraph implements ServiceProviderInterface {
     }
 
     /**
-     * Chuẩn hóa đồ thị cho bài viết Cẩm nang (`single.php`, docs/06 §5.5, Test M-15):
+     * Chuẩn hóa đồ thị cho bài viết Cẩm nang (`single.php`, docs/06 §5.5, docs/20 §2.2, Test M-15):
      * - Ép `Article` / `NewsArticle` thành `BlogPosting`.
-     * - Gỡ sạch `HowTo` lỗi thời.
-     * - Gắn `reviewedBy` (`Person`) khi có người kiểm duyệt kỹ thuật.
+     * - Gỡ sạch `HowTo` lỗi thời và `Person` rác của user chưa xác minh chuyên môn (`O-13`).
+     * - Chuẩn hóa `author` (`Person` hoặc `#organization`), `reviewedBy` (`Person`), `lastReviewed` và `mentions`.
      *
-     * @param array<string, mixed> $graph_data
+     * @param array<string, mixed>             $graph_data
+     * @param array<string, mixed>|null        $author_node
+     * @param array<string, mixed>|null        $reviewer_node
+     * @param array<int, array<string, mixed>> $mentions
      * @return array<string, mixed>
      */
     public static function sanitizeBlogEntities(
         array $graph_data,
         string $reviewer_name = '',
-        string $reviewer_title = 'Kỹ sư Vật liệu Xây dựng'
+        string $reviewer_title = 'Kỹ sư Vật liệu Xây dựng',
+        ?array $author_node = null,
+        ?array $reviewer_node = null,
+        string $reviewed_at = '',
+        array $mentions = []
     ): array {
         $cleaned = [];
+
+        $effective_reviewer = $reviewer_node;
+        if ($effective_reviewer === null && $reviewer_name !== '') {
+            $effective_reviewer = [
+                '@type'    => 'Person',
+                'name'     => $reviewer_name,
+                'jobTitle' => $reviewer_title,
+            ];
+        }
 
         foreach ($graph_data as $key => $entity) {
             if (!is_array($entity)) {
@@ -557,7 +576,7 @@ final class SchemaGraph implements ServiceProviderInterface {
                 continue;
             }
 
-            $type = $entity['@type'] ?? '';
+            $type  = $entity['@type'] ?? '';
             $types = is_array($type) ? $type : [$type];
 
             // Loại bỏ hoàn toàn HowTo deprecated.
@@ -565,30 +584,99 @@ final class SchemaGraph implements ServiceProviderInterface {
                 continue;
             }
 
+            // Khi author fallback về Organization (`O-13`), gỡ node Person mặc định do Rank Math sinh từ user admin.
+            if (
+                in_array('Person', $types, true)
+                && $author_node !== null
+                && !isset($author_node['@type'])
+            ) {
+                continue;
+            }
+
             // Ép Article / NewsArticle thành BlogPosting.
             if (in_array('Article', $types, true) || in_array('NewsArticle', $types, true) || in_array('BlogPosting', $types, true)) {
                 $entity['@type'] = 'BlogPosting';
-                if ($reviewer_name !== '') {
-                    $entity['reviewedBy'] = [
-                        '@type'    => 'Person',
-                        'name'     => $reviewer_name,
-                        'jobTitle' => $reviewer_title,
-                    ];
+                if ($author_node !== null) {
+                    $entity['author'] = $author_node;
+                }
+                if ($effective_reviewer !== null) {
+                    $entity['reviewedBy'] = $effective_reviewer;
+                }
+                if ($mentions !== []) {
+                    $entity['mentions'] = $mentions;
                 }
             }
 
-            if (in_array('WebPage', $types, true) && $reviewer_name !== '') {
-                $entity['reviewedBy'] = [
-                    '@type'    => 'Person',
-                    'name'     => $reviewer_name,
-                    'jobTitle' => $reviewer_title,
-                ];
+            if (in_array('WebPage', $types, true) && $effective_reviewer !== null) {
+                $entity['reviewedBy'] = $effective_reviewer;
+                if ($reviewed_at !== '') {
+                    $entity['lastReviewed'] = $reviewed_at;
+                }
             }
 
             $cleaned[$key] = $entity;
         }
 
         return $cleaned;
+    }
+
+    /**
+     * Chuyển hồ sơ từ `AuthorProfile` thành node `author` / `reviewedBy` chuẩn Schema.org.
+     *
+     * @param array<string, mixed> $profile
+     * @return array<string, mixed>
+     */
+    public static function buildAuthorOrReviewerSchemaNode(array $profile, string $site_origin = ''): array {
+        $origin = self::resolveOrigin($site_origin);
+        if (!empty($profile['is_organization'])) {
+            return ['@id' => $origin . '#organization'];
+        }
+
+        $url  = UrlNormalizer::untrailingslashUrl((string) ($profile['url'] ?? ($origin . '/gioi-thieu#doi-ngu')));
+        $node = [
+            '@type'    => 'Person',
+            '@id'      => $url,
+            'name'     => (string) ($profile['name'] ?? ''),
+            'jobTitle' => (string) ($profile['job_title'] ?? ''),
+            'url'      => $url,
+            'worksFor' => ['@id' => $origin . '#organization'],
+        ];
+
+        $same_as = isset($profile['same_as']) && is_array($profile['same_as']) ? array_values($profile['same_as']) : [];
+        if ($same_as !== []) {
+            $node['sameAs'] = $same_as;
+        }
+
+        return $node;
+    }
+
+    /**
+     * Dựng mảng `mentions` (`CollectionPage`) từ `drv_related_collections` của bài viết.
+     *
+     * @param array<int, string> $collection_slugs
+     * @return array<int, array<string, string>>
+     */
+    public static function buildBlogMentions(array $collection_slugs, string $site_origin = ''): array {
+        if ($collection_slugs === []) {
+            return [];
+        }
+
+        $origin      = self::resolveOrigin($site_origin);
+        $collections = Config::get('collections');
+        $mentions    = [];
+
+        foreach ($collection_slugs as $slug) {
+            if (!isset($collections[$slug])) {
+                continue;
+            }
+            $mentions[] = [
+                '@type' => 'CollectionPage',
+                'name'  => (string) ($collections[$slug]['name'] ?? $slug),
+                'url'   => $origin . '/' . $slug,
+            ];
+        }
+
+        return $mentions;
     }
 
     /**
@@ -643,15 +731,43 @@ final class SchemaGraph implements ServiceProviderInterface {
             return $data;
         }
 
-        // 4. Bài viết Cẩm nang (`single.php`): ép `BlogPosting`, gỡ `HowTo`, gắn `reviewedBy` + `FAQPage` nếu có.
+        // 4. Bài viết Cẩm nang (`single.php`): ép `BlogPosting`, gỡ `HowTo`, gắn E-E-A-T `author` + `reviewedBy` + `mentions` + `FAQPage`.
         if (is_singular('post')) {
-            $post_id       = get_queried_object_id();
-            $reviewer_name = $post_id > 0 ? trim((string) get_post_meta($post_id, '_drv_reviewer_name', true)) : '';
-            $reviewer_role = $post_id > 0 ? trim((string) get_post_meta($post_id, '_drv_reviewer_role', true)) : '';
-            $data          = self::sanitizeBlogEntities(
+            $post_id = get_queried_object_id();
+            $origin  = self::resolveOrigin('');
+            $post    = $post_id > 0 ? get_post($post_id) : null;
+
+            $author_node   = null;
+            $reviewer_node = null;
+            $reviewed_at   = '';
+            $reviewer_name = '';
+            $reviewer_role = 'Kỹ sư Vật liệu Xây dựng';
+            $mentions      = [];
+
+            if ($post instanceof \WP_Post) {
+                $author_node = self::buildAuthorOrReviewerSchemaNode(AuthorProfile::resolvePostAuthor($post, $origin), $origin);
+                $reviewer    = AuthorProfile::resolvePostReviewer($post, $origin);
+                if ($reviewer !== null) {
+                    $reviewer_node = self::buildAuthorOrReviewerSchemaNode($reviewer, $origin);
+                    $reviewed_at   = (string) ($reviewer['reviewed_at'] ?? '');
+                } else {
+                    $reviewer_name = trim((string) get_post_meta($post_id, '_drv_reviewer_name', true));
+                    $legacy_role   = trim((string) get_post_meta($post_id, '_drv_reviewer_role', true));
+                    if ($legacy_role !== '') {
+                        $reviewer_role = $legacy_role;
+                    }
+                }
+                $mentions = self::buildBlogMentions(PostMeta::getRelatedCollectionSlugs($post_id), $origin);
+            }
+
+            $data = self::sanitizeBlogEntities(
                 $data,
                 $reviewer_name,
-                $reviewer_role !== '' ? $reviewer_role : 'Kỹ sư Vật liệu Xây dựng'
+                $reviewer_role,
+                $author_node,
+                $reviewer_node,
+                $reviewed_at,
+                $mentions
             );
 
             $faq = FaqResolver::resolveForCurrentView();
@@ -660,6 +776,23 @@ final class SchemaGraph implements ServiceProviderInterface {
                 if ($faq_node !== null) {
                     $data['faqPage'] = $faq_node;
                 }
+            }
+            return $data;
+        }
+
+        // 5. Trang Giới thiệu `/gioi-thieu`: xuất `AboutPage` + danh sách chuyên gia công khai `#person-{id}`.
+        if (is_page('gioi-thieu') || is_page_template('page-templates/template-about.php')) {
+            $origin             = self::resolveOrigin('');
+            $data['aboutPage']  = [
+                '@type'    => 'AboutPage',
+                '@id'      => $origin . '/gioi-thieu#webpage',
+                'url'      => $origin . '/gioi-thieu',
+                'name'     => get_the_title() ?: 'Giới thiệu hệ thống kho gạch kiến trúc DRAVIT',
+                'isPartOf' => ['@id' => $origin . '#website'],
+                'about'    => ['@id' => $origin . '#organization'],
+            ];
+            foreach (AuthorProfile::getPublicExperts($origin) as $idx => $expert) {
+                $data['expert_' . ($idx + 1)] = self::buildAuthorOrReviewerSchemaNode($expert, $origin);
             }
         }
 
@@ -715,20 +848,55 @@ final class SchemaGraph implements ServiceProviderInterface {
             $post    = $post_id > 0 ? get_post($post_id) : null;
             if ($post instanceof \WP_Post) {
                 $post_url      = UrlNormalizer::untrailingslashUrl((string) get_permalink($post_id));
-                $reviewer_name = trim((string) get_post_meta($post_id, '_drv_reviewer_name', true));
+                $author_node   = self::buildAuthorOrReviewerSchemaNode(AuthorProfile::resolvePostAuthor($post, $origin), $origin);
+                $reviewer      = AuthorProfile::resolvePostReviewer($post, $origin);
+                $reviewer_node = $reviewer !== null ? self::buildAuthorOrReviewerSchemaNode($reviewer, $origin) : null;
+                $reviewed_at   = $reviewer !== null ? (string) ($reviewer['reviewed_at'] ?? '') : '';
+                $reviewer_name = $reviewer === null ? trim((string) get_post_meta($post_id, '_drv_reviewer_name', true)) : '';
                 $reviewer_role = trim((string) get_post_meta($post_id, '_drv_reviewer_role', true)) ?: 'Kỹ sư Vật liệu Xây dựng';
-                $blog_entities = self::sanitizeBlogEntities([
-                    'blog' => [
-                        '@type'         => 'BlogPosting',
-                        '@id'           => $post_url . '#richSnippet',
-                        'headline'      => get_the_title($post_id),
-                        'url'           => $post_url,
-                        'datePublished' => get_the_date(DATE_ATOM, $post_id),
-                        'dateModified'  => get_the_modified_date(DATE_ATOM, $post_id),
-                        'inLanguage'    => 'vi',
-                        'publisher'     => ['@id' => $origin . '#organization'],
+                $mentions      = self::buildBlogMentions(PostMeta::getRelatedCollectionSlugs($post_id), $origin);
+
+                $webpage_node = [
+                    '@type'         => 'WebPage',
+                    '@id'           => $post_url . '#webpage',
+                    'url'           => $post_url,
+                    'name'          => get_the_title($post_id),
+                    'isPartOf'      => ['@id' => $origin . '#website'],
+                    'datePublished' => get_the_date(DATE_ATOM, $post_id),
+                    'dateModified'  => get_the_modified_date(DATE_ATOM, $post_id),
+                    'inLanguage'    => 'vi',
+                ];
+
+                $blog_post_node = [
+                    '@type'            => 'BlogPosting',
+                    '@id'              => $post_url . '#richSnippet',
+                    'headline'         => get_the_title($post_id),
+                    'url'              => $post_url,
+                    'mainEntityOfPage' => ['@id' => $post_url . '#webpage'],
+                    'datePublished'    => get_the_date(DATE_ATOM, $post_id),
+                    'dateModified'     => get_the_modified_date(DATE_ATOM, $post_id),
+                    'inLanguage'       => 'vi',
+                    'publisher'        => ['@id' => $origin . '#organization'],
+                ];
+                if (has_post_thumbnail($post_id)) {
+                    $img_url = wp_get_attachment_image_url((int) get_post_thumbnail_id($post_id), 'full');
+                    if (is_string($img_url) && $img_url !== '') {
+                        $blog_post_node['image'] = $img_url;
+                    }
+                }
+
+                $blog_entities = self::sanitizeBlogEntities(
+                    [
+                        'webpage' => $webpage_node,
+                        'blog'    => $blog_post_node,
                     ],
-                ], $reviewer_name, $reviewer_role);
+                    $reviewer_name,
+                    $reviewer_role,
+                    $author_node,
+                    $reviewer_node,
+                    $reviewed_at,
+                    $mentions
+                );
 
                 foreach ($blog_entities as $node) {
                     $graph[] = $node;
@@ -741,6 +909,18 @@ final class SchemaGraph implements ServiceProviderInterface {
                         $graph[] = $faq_node;
                     }
                 }
+            }
+        } elseif (is_page('gioi-thieu') || is_page_template('page-templates/template-about.php')) {
+            $graph[] = [
+                '@type'    => 'AboutPage',
+                '@id'      => $origin . '/gioi-thieu#webpage',
+                'url'      => $origin . '/gioi-thieu',
+                'name'     => get_the_title() ?: 'Giới thiệu hệ thống kho gạch kiến trúc DRAVIT',
+                'isPartOf' => ['@id' => $origin . '#website'],
+                'about'    => ['@id' => $origin . '#organization'],
+            ];
+            foreach (AuthorProfile::getPublicExperts($origin) as $expert) {
+                $graph[] = self::buildAuthorOrReviewerSchemaNode($expert, $origin);
             }
         }
 

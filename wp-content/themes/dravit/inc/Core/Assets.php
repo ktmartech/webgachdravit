@@ -117,6 +117,33 @@ final class Assets implements ServiceProviderInterface {
             self::enqueue_section_style('assets/src/css/pages/ai-finder.css');
             self::enqueue_section_script('assets/src/js/chunks/ai-finder.js');
         }
+
+        // Step 10: Cẩm nang Chọn gạch GEO, Chính sách pháp lý, Giới thiệu & 404.
+        $is_blog_search = function_exists('is_search')
+            && is_search()
+            && function_exists('get_query_var')
+            && (get_query_var('post_type') === 'post' || get_query_var('post_type') === ['post']);
+
+        $is_blog_or_policy_interactive = (function_exists('is_home') && is_home())
+            || (function_exists('is_category') && is_category())
+            || (function_exists('is_tag') && is_tag())
+            || (function_exists('is_singular') && is_singular('post'))
+            || (function_exists('is_page_template') && is_page_template('page-templates/template-policy.php'));
+
+        if ($is_blog_or_policy_interactive) {
+            self::enqueue_style('drv-page-blog', 'assets/src/css/pages/blog.css');
+            self::enqueue_module('drv-blog', 'assets/src/js/blog.js');
+        } elseif (
+            $is_blog_search
+            || (function_exists('is_page_template') && is_page_template('page-templates/template-about.php'))
+            || (function_exists('is_page') && is_page('gioi-thieu'))
+        ) {
+            self::enqueue_style('drv-page-blog', 'assets/src/css/pages/blog.css');
+        }
+
+        if (function_exists('is_404') && is_404()) {
+            self::enqueue_section_style('assets/src/css/pages/contact.css');
+        }
     }
 
     public function print_font_preloads(): void {

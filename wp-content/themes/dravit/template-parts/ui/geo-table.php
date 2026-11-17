@@ -3,13 +3,17 @@ declare(strict_types=1);
 
 defined('ABSPATH') || exit;
 
-/** @var array<string, mixed> $args */
+/**
+ * Bảng dữ kiện kỹ thuật chuẩn GEO (`drv_ui('geo-table')`): thẻ trắng có thanh tiêu đề, bảng 4 cột tự cuộn ngang trên mobile.
+ *
+ * @var array<string, mixed> $args
+ */
 $title   = trim((string) ($args['title'] ?? ''));
 $caption = trim((string) ($args['caption'] ?? $title));
 $headers = isset($args['headers']) && is_array($args['headers']) ? $args['headers'] : [];
 $rows    = isset($args['rows']) && is_array($args['rows']) ? $args['rows'] : [];
 $bullets = isset($args['bullets']) && is_array($args['bullets']) ? $args['bullets'] : [];
-$badge   = isset($args['badge']) && is_string($args['badge']) ? trim($args['badge']) : 'Kiểm duyệt kỹ thuật';
+$badge   = isset($args['badge']) && is_string($args['badge']) ? trim($args['badge']) : '';
 $note    = isset($args['note']) && is_string($args['note']) ? trim($args['note']) : '';
 
 if ($rows === [] && $bullets === []) {
@@ -18,8 +22,11 @@ if ($rows === [] && $bullets === []) {
 ?>
 <aside class="drv-geo-box" aria-label="<?php echo esc_attr($title !== '' ? $title : 'Bảng dữ kiện kỹ thuật'); ?>">
     <?php if ($title !== '') : ?>
-        <div class="l-cluster l-cluster--between">
-            <strong class="u-text-sm u-uppercase"><?php echo esc_html($title); ?></strong>
+        <div class="drv-geo-box__head">
+            <strong class="drv-geo-box__title">
+                <i class="ph-bold ph-list-numbers drv-icon--sm" aria-hidden="true"></i>
+                <span><?php echo esc_html($title); ?></span>
+            </strong>
             <?php if ($badge !== '') : ?>
                 <?php drv_ui('badge', ['text' => $badge, 'variant' => 'moss']); ?>
             <?php endif; ?>
@@ -35,7 +42,7 @@ if ($rows === [] && $bullets === []) {
     <?php endif; ?>
 
     <?php if ($rows !== []) : ?>
-        <div class="drv-geo-table-wrap">
+        <div class="drv-geo-table-wrap" tabindex="0" role="region" aria-label="<?php echo esc_attr($caption !== '' ? $caption : 'Bảng thông số'); ?>">
             <table class="drv-spec-table drv-geo-table">
                 <?php if ($caption !== '') : ?>
                     <caption class="u-sr-only"><?php echo esc_html($caption); ?></caption>
@@ -72,6 +79,9 @@ if ($rows === [] && $bullets === []) {
     <?php endif; ?>
 
     <?php if ($note !== '') : ?>
-        <p class="u-text-xs u-text-muted"><?php echo esc_html($note); ?></p>
+        <p class="drv-geo-box__note">
+            <i class="ph ph-info drv-icon--xs" aria-hidden="true"></i>
+            <span><?php echo esc_html($note); ?></span>
+        </p>
     <?php endif; ?>
 </aside>

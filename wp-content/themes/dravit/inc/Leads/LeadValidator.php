@@ -49,7 +49,12 @@ final class LeadValidator {
 
     public static function normalizeSource(string $raw): string {
         $key = strtolower(trim($raw));
-        $map = ['contact_page' => 'contact', 'pdp_consult' => 'pdp', 'showroom_booking' => 'showroom_visit'];
+        $map = [
+            'contact_page'     => 'contact',
+            'pdp_consult'      => 'pdp',
+            'showroom_booking' => 'showroom_visit',
+            'blog_sample'      => 'sample',
+        ];
         $key = $map[$key] ?? $key;
 
         return in_array($key, self::SOURCES, true) ? $key : '';

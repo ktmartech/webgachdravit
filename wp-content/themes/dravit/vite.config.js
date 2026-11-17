@@ -14,6 +14,7 @@ const entries = {
   'pages/checkout': resolve(__dirname, 'assets/src/css/pages/checkout.css'),
   'pages/order': resolve(__dirname, 'assets/src/css/pages/order.css'),
   'pages/account': resolve(__dirname, 'assets/src/css/pages/account.css'),
+  'pages/blog': resolve(__dirname, 'assets/src/css/pages/blog.css'),
   core: resolve(__dirname, 'assets/src/js/core.js'),
   home: resolve(__dirname, 'assets/src/js/home.js'),
   catalog: resolve(__dirname, 'assets/src/js/catalog.js'),
@@ -23,6 +24,7 @@ const entries = {
   cart: resolve(__dirname, 'assets/src/js/cart.js'),
   checkout: resolve(__dirname, 'assets/src/js/checkout.js'),
   account: resolve(__dirname, 'assets/src/js/account.js'),
+  blog: resolve(__dirname, 'assets/src/js/blog.js'),
   'chunks/motion': resolve(__dirname, 'assets/src/js/chunks/motion.js'),
   'chunks/ai-finder': resolve(__dirname, 'assets/src/js/chunks/ai-finder.js'),
 };

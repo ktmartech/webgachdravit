@@ -40,7 +40,7 @@
     "src": "assets/fonts/quicksand-vf-vi.woff2"
   },
   "assets/src/css/global.css": {
-    "file": "css/global-C2-FzsyM.css",
+    "file": "css/global-BBeqTJWq.css",
     "src": "assets/src/css/global.css",
     "isEntry": true
   },
@@ -54,13 +54,18 @@
     "src": "assets/src/css/pages/ai-finder.css",
     "isEntry": true
   },
+  "assets/src/css/pages/blog.css": {
+    "file": "css/pages/blog-CcMI_dDL.css",
+    "src": "assets/src/css/pages/blog.css",
+    "isEntry": true
+  },
   "assets/src/css/pages/cart.css": {
     "file": "css/pages/cart-D9EWQFlU.css",
     "src": "assets/src/css/pages/cart.css",
     "isEntry": true
   },
   "assets/src/css/pages/catalog.css": {
-    "file": "css/pages/catalog-CJLdKk0d.css",
+    "file": "css/pages/catalog-DdaQvVRb.css",
     "src": "assets/src/css/pages/catalog.css",
     "isEntry": true
   },
@@ -70,7 +75,7 @@
     "isEntry": true
   },
   "assets/src/css/pages/contact.css": {
-    "file": "css/pages/contact-D3WgGoKD.css",
+    "file": "css/pages/contact-CPSXTskW.css",
     "src": "assets/src/css/pages/contact.css",
     "isEntry": true
   },
@@ -108,6 +113,24 @@
       "_dom-B0H8ceLe.js"
     ]
   },
+  "assets/src/js/blog.js": {
+    "file": "js/blog-CPrw9PcQ.js",
+    "name": "blog",
+    "src": "assets/src/js/blog.js",
+    "isEntry": true,
+    "imports": [
+      "_preload-helper-Ct5FWWRu.js",
+      "assets/src/js/core.js",
+      "_toast-Da416bHP.js",
+      "_dom-B0H8ceLe.js",
+      "_cart-api-D48FQDQZ.js",
+      "_format-nKLQMfZu.js",
+      "_storage-Dpx2iRci.js"
+    ],
+    "dynamicImports": [
+      "assets/src/js/chunks/lightbox.js"
+    ]
+  },
   "assets/src/js/cart.js": {
     "file": "js/cart-CauZzvX-.js",
     "name": "cart",
@@ -123,7 +146,7 @@
     ]
   },
   "assets/src/js/catalog.js": {
-    "file": "js/catalog-CTO0DkR5.js",
+    "file": "js/catalog-CM_YH0kh.js",
     "name": "catalog",
     "src": "assets/src/js/catalog.js",
     "isEntry": true,
@@ -190,7 +213,7 @@
     "isDynamicEntry": true
   },
   "assets/src/js/chunks/lead-form.js": {
-    "file": "js/chunks/lead-form-ByVFyji8.js",
+    "file": "js/chunks/lead-form-BEJre9zi.js",
     "name": "lead-form",
     "src": "assets/src/js/chunks/lead-form.js",
     "isDynamicEntry": true,
@@ -265,7 +288,7 @@
     ]
   },
   "assets/src/js/core.js": {
-    "file": "js/core-BnUG7G7X.js",
+    "file": "js/core-IqaYKml6.js",
     "name": "core",
     "src": "assets/src/js/core.js",
     "isEntry": true,
@@ -321,7 +344,7 @@
     ]
   },
   "assets/src/js/product.js": {
-    "file": "js/product-B6azL8nA.js",
+    "file": "js/product-DEIIY3-t.js",
     "name": "product",
     "src": "assets/src/js/product.js",
     "isEntry": true,
@@ -343,7 +366,7 @@
     ]
   },
   "assets/src/js/quote.js": {
-    "file": "js/quote-VhfYIC5A.js",
+    "file": "js/quote-B3kZupkY.js",
     "name": "quote",
     "src": "assets/src/js/quote.js",
     "isEntry": true,

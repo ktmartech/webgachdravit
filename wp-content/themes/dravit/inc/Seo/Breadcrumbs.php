@@ -142,15 +142,26 @@ final class Breadcrumbs implements ServiceProviderInterface {
             return $trail;
         }
 
+        if (is_tag()) {
+            $term = get_queried_object();
+            $trail[] = ['label' => 'Cẩm nang', 'url' => $blog_url];
+            if ($term instanceof \WP_Term) {
+                $link     = get_term_link($term);
+                $term_url = is_string($link) ? UrlNormalizer::untrailingslashUrl($link) : '';
+                $trail[]  = ['label' => $term->name, 'url' => $term_url];
+            }
+            return $trail;
+        }
+
         if (is_singular('post')) {
             $post_id = get_queried_object_id();
             $trail[] = ['label' => 'Cẩm nang', 'url' => $blog_url];
 
-            $cats = get_the_category($post_id);
-            if (is_array($cats) && isset($cats[0]) && $cats[0] instanceof \WP_Term && $cats[0]->slug !== 'uncategorized') {
-                $cat_link = get_term_link($cats[0]);
+            $primary_cat = self::resolvePostPrimaryCategory($post_id);
+            if ($primary_cat instanceof \WP_Term) {
+                $cat_link = get_term_link($primary_cat);
                 $trail[]  = [
-                    'label' => $cats[0]->name,
+                    'label' => $primary_cat->name,
                     'url'   => is_string($cat_link) ? UrlNormalizer::untrailingslashUrl($cat_link) : '',
                 ];
             }
@@ -163,8 +174,15 @@ final class Breadcrumbs implements ServiceProviderInterface {
         }
 
         if (is_search()) {
-            $q       = trim((string) get_search_query());
-            $label   = $q !== '' ? sprintf('Tìm kiếm: "%s"', $q) : 'Tìm kiếm sản phẩm';
+            $q           = trim((string) get_search_query());
+            $search_pt   = function_exists('get_query_var') ? get_query_var('post_type') : '';
+            $is_blog_src = $search_pt === 'post' || (is_array($search_pt) && $search_pt === ['post']);
+            if ($is_blog_src) {
+                $trail[] = ['label' => 'Cẩm nang', 'url' => $blog_url];
+            }
+            $label   = $q !== ''
+                ? sprintf('Tìm kiếm: "%s"', $q)
+                : ($is_blog_src ? 'Tìm kiếm cẩm nang' : 'Tìm kiếm sản phẩm');
             $trail[] = ['label' => $label, 'url' => ''];
             return $trail;
         }
@@ -210,5 +228,32 @@ final class Breadcrumbs implements ServiceProviderInterface {
 
         $best_slug = PrimaryCategory::resolvePrimarySlug($slugs, Config::get('collections'));
         return ($best_slug !== null && isset($by_slug[$best_slug])) ? $by_slug[$best_slug] : null;
+    }
+
+    private static function resolvePostPrimaryCategory(int $post_id): ?\WP_Term {
+        if ($post_id <= 0) {
+            return null;
+        }
+
+        $primary_cid = (int) get_post_meta($post_id, 'rank_math_primary_category', true);
+        if ($primary_cid > 0) {
+            $term = get_term($primary_cid, 'category');
+            if ($term instanceof \WP_Term && $term->slug !== 'uncategorized') {
+                return $term;
+            }
+        }
+
+        $cats = get_the_category($post_id);
+        if (!is_array($cats)) {
+            return null;
+        }
+
+        foreach ($cats as $cat) {
+            if ($cat instanceof \WP_Term && $cat->slug !== 'uncategorized') {
+                return $cat;
+            }
+        }
+
+        return null;
     }
 }

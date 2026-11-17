@@ -7,15 +7,16 @@ use Dravit\Seo\UrlNormalizer;
 defined('ABSPATH') || exit;
 
 /**
- * Khối điều hướng cứu hộ cho `404.php` và trạng thái tìm kiếm rỗng `search.php` (`drv_section('error-404-recovery')`, docs/16 §1.1).
+ * Khối điều hướng cứu hộ cho `404.php` và trạng thái tìm kiếm rỗng `search.php` (`drv_section('error-404-recovery')`, docs/07 §8.2, docs/16 §1.1).
  *
  * @var array<string, mixed> $args
  */
-$eyebrow  = trim((string) ($args['eyebrow'] ?? 'Gợi ý tra cứu nhanh'));
-$heading  = trim((string) ($args['heading'] ?? 'Không tìm thấy nội dung khớp yêu cầu'));
-$message  = trim((string) ($args['message'] ?? 'Đường dẫn có thể đã thay đổi hoặc mã gạch bạn tìm hiện chưa cập nhật lên hệ thống trực tuyến.'));
-$is_h1    = !empty($args['is_h1']);
-$tag_name = $is_h1 ? 'h1' : 'h2';
+$eyebrow      = trim((string) ($args['eyebrow'] ?? 'Gợi ý tra cứu nhanh'));
+$heading      = trim((string) ($args['heading'] ?? 'Không tìm thấy nội dung khớp yêu cầu'));
+$message      = trim((string) ($args['message'] ?? 'Đường dẫn có thể đã thay đổi hoặc mã gạch bạn tìm hiện chưa cập nhật lên hệ thống trực tuyến.'));
+$is_h1        = !empty($args['is_h1']);
+$tag_name     = $is_h1 ? 'h1' : 'h2';
+$search_value = function_exists('get_search_query') ? trim((string) get_search_query()) : '';
 
 $silo_slugs = drv_setting('catalog.404_silos', ['gach-lat-nen', 'gach-phong-khach', 'gach-van-da', 'gach-80x80']);
 $silo_slugs = is_array($silo_slugs) ? $silo_slugs : ['gach-lat-nen', 'gach-phong-khach', 'gach-van-da', 'gach-80x80'];
@@ -31,31 +32,51 @@ $hotline  = (string) drv_setting('contact.hotline', '0909 888 777');
 ?>
 <section class="l-section drv-recovery">
     <div class="l-container l-stack l-stack--lg">
-        <div class="l-stack l-stack--sm">
-            <?php if ($eyebrow !== '') : ?>
-                <span class="drv-sec-head__eyebrow"><?php echo esc_html($eyebrow); ?></span>
-            <?php endif; ?>
-            <<?php echo esc_attr($tag_name); ?>><?php echo esc_html($heading); ?></<?php echo esc_attr($tag_name); ?>>
-            <p class="u-text-muted"><?php echo esc_html($message); ?></p>
-        </div>
-
-        <?php if ($keywords !== []) : ?>
-            <div class="l-cluster l-cluster--sm">
-                <span class="u-text-xs u-text-muted">Thử tìm nhanh:</span>
-                <?php foreach ($keywords as $kw) :
-                    $kw_str = trim((string) $kw);
-                    if ($kw_str === '') {
-                        continue;
-                    }
-                    $kw_url = add_query_arg([
-                        's'         => $kw_str,
-                        'post_type' => 'product',
-                    ], home_url('/'));
-                    ?>
-                    <a href="<?php echo esc_url($kw_url); ?>" class="drv-chip"><?php echo esc_html($kw_str); ?></a>
-                <?php endforeach; ?>
+        <div class="drv-recovery__hero l-stack l-stack--md">
+            <div class="l-stack l-stack--xs">
+                <?php if ($eyebrow !== '') : ?>
+                    <span class="drv-sec-head__eyebrow"><?php echo esc_html($eyebrow); ?></span>
+                <?php endif; ?>
+                <<?php echo esc_attr($tag_name); ?> class="drv-page-title"><?php echo esc_html($heading); ?></<?php echo esc_attr($tag_name); ?>>
+                <p class="u-text-muted"><?php echo esc_html($message); ?></p>
             </div>
-        <?php endif; ?>
+
+            <form class="drv-recovery__search" role="search" method="get" action="<?php echo esc_url(home_url('/')); ?>">
+                <input type="hidden" name="post_type" value="product">
+                <label class="u-sr-only" for="drv-recovery-search-input">Tìm mẫu gạch theo mã SKU, kích thước hoặc vân gạch</label>
+                <div class="drv-recovery__search-box">
+                    <?php drv_ui('icon', ['name' => 'magnifying-glass', 'size' => 'sm']); ?>
+                    <input id="drv-recovery-search-input"
+                           type="search"
+                           class="drv-recovery__search-input"
+                           name="s"
+                           value="<?php echo esc_attr($search_value); ?>"
+                           placeholder="Nhập mã SKU (VD: DRV-8801), kích thước 80x80, Terrazzo..."
+                           autocomplete="off">
+                    <button type="submit" class="drv-btn drv-btn--primary">
+                        <span>Tìm mẫu gạch</span>
+                    </button>
+                </div>
+            </form>
+
+            <?php if ($keywords !== []) : ?>
+                <div class="l-cluster l-cluster--sm">
+                    <span class="u-text-xs u-text-muted">Thử tìm nhanh:</span>
+                    <?php foreach ($keywords as $kw) :
+                        $kw_str = trim((string) $kw);
+                        if ($kw_str === '') {
+                            continue;
+                        }
+                        $kw_url = add_query_arg([
+                            's'         => $kw_str,
+                            'post_type' => 'product',
+                        ], home_url('/'));
+                        ?>
+                        <a href="<?php echo esc_url($kw_url); ?>" class="drv-chip"><?php echo esc_html($kw_str); ?></a>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+        </div>
 
         <?php if ($silo_tiles !== []) : ?>
             <div class="l-stack l-stack--sm">
