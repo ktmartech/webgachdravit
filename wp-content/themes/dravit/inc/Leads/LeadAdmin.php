@@ -217,27 +217,37 @@ final class LeadAdmin implements ServiceProviderInterface {
         $m  = static fn (string $k): string => (string) LeadRepository::meta($id, $k, '');
         wp_nonce_field(self::SAVE_NONCE, '_drv_lead_nonce');
         $provinces = (array) require DRV_DIR . '/config/provinces-vn.php';
+        $phone     = $m('_drv_phone');
         ?>
         <table class="form-table drv-lead-form">
             <tr><th>Mã phiếu</th><td><strong>#<?php echo esc_html($m('_drv_quote_code')); ?></strong> · <?php echo esc_html(LeadValidator::SOURCE_LABELS[$m('_drv_lead_type')] ?? $m('_drv_lead_type')); ?></td></tr>
-            <tr><th><label for="drv_lead_name">Họ tên</label></th><td><input id="drv_lead_name" class="regular-text" name="drv_lead[name]" value="<?php echo esc_attr($m('_drv_name')); ?>"></td></tr>
-            <tr><th><label for="drv_lead_phone">Điện thoại</label></th><td><input id="drv_lead_phone" class="regular-text" name="drv_lead[phone]" value="<?php echo esc_attr($m('_drv_phone')); ?>"> <a class="button" href="<?php echo esc_url('https://zalo.me/' . $m('_drv_phone')); ?>" target="_blank" rel="noopener">Zalo</a></td></tr>
-            <tr><th><label for="drv_lead_email">Email</label></th><td><input id="drv_lead_email" type="email" class="regular-text" name="drv_lead[email]" value="<?php echo esc_attr($m('_drv_email')); ?>"></td></tr>
+            <tr><th><label for="drv_lead_name">Họ tên</label></th><td><input id="drv_lead_name" class="regular-text" name="drv_lead[name]" value="<?php echo esc_attr($m('_drv_name')); ?>" placeholder="Họ và tên khách hàng"></td></tr>
+            <tr><th><label for="drv_lead_phone">Điện thoại</label></th><td>
+                <div class="drv-lead-phone-wrap">
+                    <input id="drv_lead_phone" type="tel" class="regular-text" name="drv_lead[phone]" value="<?php echo esc_attr($phone); ?>" placeholder="09xxxxxxxx">
+                    <?php if ($phone !== '') : ?>
+                        <a class="button drv-lead-zalo-btn" href="<?php echo esc_url('https://zalo.me/' . $phone); ?>" target="_blank" rel="noopener">Zalo</a>
+                    <?php endif; ?>
+                </div>
+            </td></tr>
+            <tr><th><label for="drv_lead_email">Email</label></th><td><input id="drv_lead_email" type="email" class="regular-text" name="drv_lead[email]" value="<?php echo esc_attr($m('_drv_email')); ?>" placeholder="email@domain.com"></td></tr>
             <tr><th><label for="drv_lead_province">Tỉnh / TP</label></th><td>
-                <select id="drv_lead_province" name="drv_lead[province]"><option value="">-</option>
-                    <?php foreach ($provinces as $code => $label) : ?>
-                        <option value="<?php echo esc_attr((string) $code); ?>" <?php selected($m('_drv_province'), (string) $code); ?>><?php echo esc_html((string) $label); ?></option>
-                    <?php endforeach; ?>
-                </select>
-                <input class="regular-text" name="drv_lead[ward]" placeholder="Phường / Xã" value="<?php echo esc_attr($m('_drv_ward')); ?>">
+                <div class="drv-lead-geo-wrap">
+                    <select id="drv_lead_province" name="drv_lead[province]"><option value="">-- Chọn Tỉnh / Thành phố --</option>
+                        <?php foreach ($provinces as $code => $label) : ?>
+                            <option value="<?php echo esc_attr((string) $code); ?>" <?php selected($m('_drv_province'), (string) $code); ?>><?php echo esc_html((string) $label); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <input class="regular-text" name="drv_lead[ward]" placeholder="Phường / Xã" value="<?php echo esc_attr($m('_drv_ward')); ?>">
+                </div>
             </td></tr>
             <tr><th><label for="drv_lead_role">Vai trò</label></th><td><select id="drv_lead_role" name="drv_lead[role]">
                 <?php foreach (LeadValidator::ROLES as $val => $label) : ?>
                     <option value="<?php echo esc_attr($val); ?>" <?php selected($m('_drv_role'), $val); ?>><?php echo esc_html($label); ?></option>
                 <?php endforeach; ?>
             </select></td></tr>
-            <tr><th><label for="drv_lead_project">Công trình</label></th><td><input id="drv_lead_project" class="large-text" name="drv_lead[project]" value="<?php echo esc_attr($m('_drv_project')); ?>"></td></tr>
-            <tr><th><label for="drv_lead_message">Ghi chú khách</label></th><td><textarea id="drv_lead_message" class="large-text" rows="3" name="drv_lead[message]"><?php echo esc_textarea($m('_drv_message')); ?></textarea></td></tr>
+            <tr><th><label for="drv_lead_project">Công trình</label></th><td><input id="drv_lead_project" class="regular-text" name="drv_lead[project]" value="<?php echo esc_attr($m('_drv_project')); ?>" placeholder="Biệt thự, nhà phố, dự án..."></td></tr>
+            <tr><th><label for="drv_lead_message">Ghi chú khách</label></th><td><textarea id="drv_lead_message" class="large-text" rows="3" name="drv_lead[message]" placeholder="Nhu cầu cụ thể, diện tích, tiến độ..."><?php echo esc_textarea($m('_drv_message')); ?></textarea></td></tr>
             <tr><th>Hộp mẫu</th><td><label><input type="checkbox" name="drv_lead[sample_box]" value="1" <?php checked($m('_drv_sample_box'), '1'); ?>> Khách yêu cầu gửi mẫu thật</label></td></tr>
             <tr><th>Truy vết</th><td class="drv-lead-muted">
                 Trang gửi: <?php echo $m('_drv_page_url') !== '' ? '<a href="' . esc_url($m('_drv_page_url')) . '" target="_blank" rel="noopener">' . esc_html($m('_drv_page_url')) . '</a>' : '-'; ?><br>
@@ -304,16 +314,22 @@ final class LeadAdmin implements ServiceProviderInterface {
         <?php if (!$done) : ?>
             <h4>Vận chuyển, thanh toán & hóa đơn</h4>
             <table class="form-table drv-lead-form">
-                <tr><th><label for="drv_ship_fee">Phí vận chuyển thỏa thuận (VND)</label></th><td><input id="drv_ship_fee" form="drv-lead-convert-form" name="drv_ops[shipping_fee]" inputmode="numeric" placeholder="Để trống = tạo đơn Chờ xác nhận"></td></tr>
+                <tr><th><label for="drv_ship_fee">Phí vận chuyển thỏa thuận (VND)</label></th><td><input id="drv_ship_fee" class="regular-text" form="drv-lead-convert-form" name="drv_ops[shipping_fee]" inputmode="numeric" placeholder="Để trống = tạo đơn Chờ xác nhận"></td></tr>
                 <tr><th><label for="drv_pay">Phương thức thanh toán</label></th><td><select id="drv_pay" form="drv-lead-convert-form" name="drv_ops[payment_method]"><option value="bacs">Chuyển khoản VietQR</option><option value="cod">COD (thanh toán khi nhận)</option></select></td></tr>
-                <tr><th><label for="drv_vehicle">Phương tiện điều phối</label></th><td><input id="drv_vehicle" form="drv-lead-convert-form" name="drv_ops[ship_vehicle]" class="regular-text"></td></tr>
-                <tr><th><label for="drv_shipnote">Ghi chú giao nhận</label></th><td><input id="drv_shipnote" form="drv-lead-convert-form" name="drv_ops[ship_note]" class="large-text"></td></tr>
+                <tr><th><label for="drv_vehicle">Phương tiện điều phối</label></th><td><input id="drv_vehicle" form="drv-lead-convert-form" name="drv_ops[ship_vehicle]" class="regular-text" placeholder="Ví dụ: Xe tải 2.5T, xe ba gác..."></td></tr>
+                <tr><th><label for="drv_shipnote">Ghi chú giao nhận</label></th><td><input id="drv_shipnote" form="drv-lead-convert-form" name="drv_ops[ship_note]" class="regular-text" placeholder="Hạ hàng tại chân công trình..."></td></tr>
                 <tr><th>Hóa đơn VAT</th><td>
-                    <label><input type="checkbox" form="drv-lead-convert-form" name="drv_ops[vat][required]" value="1"> Xuất hóa đơn GTGT</label><br>
-                    <input form="drv-lead-convert-form" name="drv_ops[vat][company]" class="regular-text" placeholder="Tên công ty">
-                    <input form="drv-lead-convert-form" name="drv_ops[vat][tax_id]" placeholder="Mã số thuế">
-                    <input form="drv-lead-convert-form" name="drv_ops[vat][address]" class="regular-text" placeholder="Địa chỉ ĐKKD">
-                    <input form="drv-lead-convert-form" name="drv_ops[vat][email]" type="email" placeholder="Email kế toán">
+                    <div class="drv-lead-vat-box">
+                        <label><input type="checkbox" form="drv-lead-convert-form" name="drv_ops[vat][required]" value="1"> <strong>Xuất hóa đơn GTGT (VAT)</strong></label>
+                        <div class="drv-lead-vat-fields">
+                            <div class="drv-lead-geo-wrap">
+                                <input form="drv-lead-convert-form" name="drv_ops[vat][company]" class="regular-text" placeholder="Tên công ty / Doanh nghiệp">
+                                <input form="drv-lead-convert-form" name="drv_ops[vat][tax_id]" class="regular-text" placeholder="Mã số thuế">
+                            </div>
+                            <input form="drv-lead-convert-form" name="drv_ops[vat][address]" class="regular-text" placeholder="Địa chỉ ĐKKD">
+                            <input form="drv-lead-convert-form" name="drv_ops[vat][email]" type="email" class="regular-text" placeholder="Email nhận hóa đơn">
+                        </div>
+                    </div>
                 </td></tr>
             </table>
         <?php endif;
@@ -505,6 +521,26 @@ final class LeadAdmin implements ServiceProviderInterface {
             .drv-lead-price{width:120px}.drv-lead-price.is-required{border-color:#d97706;box-shadow:0 0 0 1px #d97706}
             .drv-lead-done{padding:10px;background:#e7f6ec;border:1px solid #15803d}
             .drv-lead-boq td{vertical-align:top}
+
+            /* Form Layout & Normalized Inputs */
+            .drv-lead-form{max-width:820px;width:100%}
+            .drv-lead-form th{width:150px;padding:12px 14px 12px 0;vertical-align:middle;font-weight:600;color:#1d2327}
+            .drv-lead-form td{padding:6px 0;vertical-align:middle}
+            .drv-lead-form input.regular-text,
+            .drv-lead-form select{width:100%;max-width:480px;height:38px;line-height:36px;padding:0 12px;box-sizing:border-box;border:1px solid #8c8f94;border-radius:4px;font-size:14px}
+            .drv-lead-form input:focus,
+            .drv-lead-form select:focus,
+            .drv-lead-form textarea:focus{border-color:#083a4f;box-shadow:0 0 0 1px #083a4f;outline:2px solid transparent}
+            .drv-lead-form textarea.large-text{width:100%;max-width:560px;min-height:84px;padding:8px 12px;line-height:1.5;box-sizing:border-box;border:1px solid #8c8f94;border-radius:4px;font-size:14px}
+            .drv-lead-phone-wrap{display:flex;align-items:center;gap:8px;max-width:480px;width:100%}
+            .drv-lead-phone-wrap input{flex:1;min-width:0}
+            .drv-lead-zalo-btn{display:inline-flex !important;align-items:center;height:38px !important;line-height:36px !important;padding:0 16px !important;font-weight:600 !important;color:#0068ff !important;border-color:#0068ff !important;background:#f0f7ff !important;border-radius:4px !important;text-decoration:none !important;white-space:nowrap}
+            .drv-lead-zalo-btn:hover{background:#0068ff !important;color:#fff !important}
+            .drv-lead-geo-wrap{display:flex;align-items:center;gap:8px;max-width:480px;width:100%}
+            .drv-lead-geo-wrap > *{flex:1;min-width:0}
+            .drv-lead-vat-box{max-width:480px;padding:12px 14px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;margin-top:4px}
+            .drv-lead-vat-fields{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+            .drv-lead-vat-fields input{width:100% !important;max-width:100% !important}
         </style>
         <?php
     }
