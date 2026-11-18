@@ -86,4 +86,48 @@ final class FluentFormsBridgeTest extends TestCase {
         self::assertStringContainsString('Tổng: 44,16 m² · 23 thùng', $text);
         self::assertStringNotContainsString('—', $text, 'Không dùng em-dash (Q-12)');
     }
+
+    public function test_form_options_build_admin_select_labels(): void {
+        $opts = FluentFormsBridge::formOptions([
+            ['id' => 3, 'title' => 'Liên hệ', 'status' => 'published'],
+            ['id' => '7', 'title' => '', 'status' => 'unpublished'],
+            ['id' => 0, 'title' => 'Bỏ qua'],
+            ['title' => 'Không có id'],
+        ]);
+        self::assertSame([3 => '#3 · Liên hệ', 7 => '#7 · Chưa đặt tên (unpublished)'], $opts);
+        self::assertSame([], FluentFormsBridge::available_forms(), 'Fluent Forms chưa bật thì không liệt kê form');
+    }
+
+    public function test_page_context_is_empty_outside_wordpress_and_slot_falls_back_to_native(): void {
+        self::assertSame([], FluentFormsBridge::pageContext());
+        ob_start();
+        $rendered = FluentFormsBridge::render_slot('quote_modal', ['drv_sku' => 'X']);
+        self::assertSame('', (string) ob_get_clean());
+        self::assertFalse($rendered, 'Chưa bật Fluent Forms / slot = 0 -> theme render form native');
+    }
+
+    public function test_every_slot_has_setting_source_and_a_rendering_template(): void {
+        $defaults = \Dravit\Core\Settings::defaults()['forms'];
+        self::assertArrayHasKey('boq_mirror', $defaults);
+
+        $files = [];
+        $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(DRV_DIR, \FilesystemIterator::SKIP_DOTS));
+        foreach ($iterator as $file) {
+            $path = str_replace(DIRECTORY_SEPARATOR, '/', (string) $file);
+            if ($file->getExtension() === 'php' && !str_contains($path, '/vendor/') && !str_contains($path, '/node_modules/') && !str_contains($path, '/tests/') && !str_contains($path, 'FluentFormsBridge.php')) {
+                $files[] = (string) file_get_contents($path);
+            }
+        }
+        $all = implode("
+", $files);
+
+        foreach (FluentFormsBridge::SLOT_SOURCES as $slot => $source) {
+            self::assertArrayHasKey($slot, $defaults, "Slot {$slot} thiếu trong drv_settings.forms");
+            self::assertSame($source, LeadValidator::normalizeSource($slot) ?: $source, "Slot {$slot} lệch nguồn lead");
+            self::assertTrue(
+                str_contains($all, "render_slot('{$slot}'") || str_contains($all, "'form_slot'    => '{$slot}'") || str_contains($all, "'form_slot' => '{$slot}'"),
+                "Slot {$slot} chưa được template nào render"
+            );
+        }
+    }
 }

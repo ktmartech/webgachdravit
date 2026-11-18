@@ -197,7 +197,7 @@ final class ProductViewData {
             'swatches'     => $swatches,
             'primary_cat'  => $primary_cat,
             'similar_ids'  => $similar_ids,
-            'sla_text'     => (string) drv_setting('order.sla_text', 'Báo giá theo khối lượng công trình · Phản hồi trong 30 phút (08:00 - 21:00).'),
+            'sla_text'     => (string) drv_setting('order.sla_text', ''),
         ];
     }
 

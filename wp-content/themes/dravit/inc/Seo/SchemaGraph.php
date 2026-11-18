@@ -502,7 +502,7 @@ final class SchemaGraph implements ServiceProviderInterface {
                 'address'                  => [
                     '@type'           => 'PostalAddress',
                     'streetAddress'   => trim((string) ($sr['address'] ?? '')),
-                    'addressLocality' => 'TP. Hồ Chí Minh',
+                    'addressLocality' => self::localityFromAddress((string) ($sr['address'] ?? '')),
                     'addressCountry'  => 'VN',
                 ],
                 'openingHoursSpecification' => [
@@ -536,6 +536,14 @@ final class SchemaGraph implements ServiceProviderInterface {
         }
 
         return $entities;
+    }
+
+    /**
+     * Lấy tỉnh/thành (phần cuối) từ địa chỉ cấu hình trong Admin; không hardcode địa phương.
+     */
+    private static function localityFromAddress(string $address): string {
+        $parts = array_values(array_filter(array_map('trim', explode(',', $address)), static fn (string $p): bool => $p !== ''));
+        return $parts === [] ? '' : (string) end($parts);
     }
 
     /**

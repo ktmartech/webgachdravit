@@ -64,7 +64,7 @@ return [
     [
         'section' => 'showroom-showcase',
         'props'   => [
-            'eyebrow'          => 'Trải nghiệm thực tế tại TP.HCM',
+            'eyebrow'          => 'Trải nghiệm thực tế tại showroom',
             'title'            => 'Xem Mẫu Gạch Thật Tại Showroom DRAVIT',
             'description'      => 'Đặt các tấm gạch lớn cạnh nhau, sờ tay kiểm tra độ nhám R9 - R12 và kéo thanh trượt bên dưới để so sánh không gian trước và sau khi lát gạch.',
             'show_booking_cta' => true,

@@ -37,16 +37,16 @@ $stock_boxes = $view['stock_boxes'];
 $shelf       = (string) $view['shelf'];
 $ai_enabled  = (bool) drv_setting('features.ai_enabled', false);
 
-$hotline_raw = (string) drv_setting('contact.hotline', '0909 888 777');
+$hotline_raw = (string) drv_setting('contact.hotline', '');
 $hotline_tel = drv_clean_phone($hotline_raw);
-$hours_raw   = (string) drv_setting('contact.working_hours', '08:00 - 21:00');
+$hours_raw   = (string) drv_setting('contact.working_hours', '');
 // "08:00 - 21:00 (Thứ 2 - Chủ nhật)" → "08:00 - 21:00" để tránh ngoặc lồng "(… (…))" trên thẻ liên hệ.
 $hours_text  = trim((string) preg_replace('/\s*\([^)]*\)\s*$/u', '', $hours_raw)) ?: $hours_raw;
 $shelf_label = drv_shelf_label($shelf);
 $showrooms   = drv_setting('showrooms', []);
 $sr_first    = (is_array($showrooms) && isset($showrooms[0]) && is_array($showrooms[0])) ? $showrooms[0] : [];
-$sr_name     = trim((string) ($sr_first['name'] ?? 'Showroom DRAVIT'));
-$sr_addr     = trim((string) ($sr_first['address'] ?? 'Khu đô thị Sala, Phường An Khánh, TP. Hồ Chí Minh'));
+$sr_name     = trim((string) ($sr_first['name'] ?? drv_setting('company.brand_name', '')));
+$sr_addr     = trim((string) ($sr_first['address'] ?? drv_setting('company.address', '')));
 $contact_url = untrailingslashit(home_url('/lien-he'));
 ?>
 <div class="drv-pdp-buybox">
@@ -93,17 +93,8 @@ $contact_url = untrailingslashit(home_url('/lien-he'));
     <div class="drv-pdp-price-bar">
         <?php echo drv_price_html($product, 'single'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped inside price.php ?>
 
-        <div class="drv-pdp-quick-actions" aria-label="Tác vụ nhanh">
-            <button type="button"
-                    class="drv-pdp-action-btn"
-                    data-drv-action="share-product"
-                    data-drv-url="<?php echo esc_attr($permalink); ?>"
-                    data-drv-title="<?php echo esc_attr($title); ?>"
-                    aria-label="Chia sẻ liên kết sản phẩm"
-                    title="Chia sẻ liên kết sản phẩm">
-                <i class="ph ph-share-network drv-icon" aria-hidden="true"></i>
-                <span class="drv-pdp-action-count">Chia sẻ</span>
-            </button>
+        <div class="drv-pdp-quick-actions">
+            <?php Template::render_part('template-parts/ui/share-menu', ['url' => $permalink, 'label' => 'Chia sẻ sản phẩm', 'menu_id' => 'drv-share-menu-pdp']); ?>
         </div>
     </div>
 
@@ -229,7 +220,7 @@ $contact_url = untrailingslashit(home_url('/lien-he'));
                         data-drv-pieces="<?php echo esc_attr((string) $init_pieces); ?>"
                         data-drv-m2="<?php echo esc_attr((string) $default_m2); ?>">
                     <i class="ph-bold ph-plus drv-icon" aria-hidden="true"></i>
-                    <span>+ Báo giá công trình</span>
+                    <span>Báo giá công trình</span>
                 </button>
             </div>
 

@@ -37,7 +37,7 @@ final class Assets implements ServiceProviderInterface {
             'gachUrl'                 => untrailingslashit(home_url('/gach')),
             'boqUrl'                  => untrailingslashit(home_url('/danh-sach-bao-gia')),
             'aiFinderUrl'             => untrailingslashit(home_url('/tro-ly-ai-tim-gach')),
-            'zaloPhone'               => drv_clean_phone((string) drv_setting('contact.zalo', '0909888777')),
+            'zaloPhone'               => drv_clean_phone((string) drv_setting('contact.zalo', '')),
             'quoteRoles'              => array_values(array_map('strval', (array) drv_setting('quote.roles', []))),
         ];
         $json = wp_json_encode($config, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);

@@ -313,7 +313,7 @@ final class MegaMenuRenderer implements ServiceProviderInterface {
      */
     private static function render_desktop_html(array $columns): string {
         $root_url    = self::collection_url('gach');
-        $hotline_raw = (string) drv_setting('contact.hotline', '0909 888 777');
+        $hotline_raw = (string) drv_setting('contact.hotline', '');
         $contact_url = self::internal_url('/lien-he#showroom');
 
         $first_leaf = self::first_leaf($columns);

@@ -122,7 +122,7 @@ final class CatalogController implements ServiceProviderInterface {
      * @return array<string, array<string, mixed>>
      */
     private function build_route_args(): array {
-        $default_per_page = max(1, min(48, (int) drv_setting('catalog.per_page', 24)));
+        $default_per_page = max(1, min(UrlState::MAX_PER_PAGE, (int) drv_setting('catalog.per_page', 12)));
 
         $args = [
             'base'               => [
@@ -138,7 +138,7 @@ final class CatalogController implements ServiceProviderInterface {
             'per_page'           => [
                 'type'              => 'integer',
                 'default'           => $default_per_page,
-                'sanitize_callback' => static fn (mixed $v): int => max(1, min(48, (int) $v)),
+                'sanitize_callback' => static fn (mixed $v): int => max(1, min(UrlState::MAX_PER_PAGE, (int) $v)),
             ],
             'sort'               => [
                 'type'              => 'string',

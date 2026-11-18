@@ -1,0 +1,447 @@
+[
+ {
+  "drv_slot": "boq_mirror",
+  "drv_version": 1,
+  "title": "DRAVIT · Phiếu BOQ (Entries đồng bộ)",
+  "status": "published",
+  "type": "form",
+  "has_payment": "0",
+  "conditions": null,
+  "form": {
+   "fields": [
+    {
+     "index": 0,
+     "element": "input_text",
+     "attributes": {
+      "type": "text",
+      "name": "drv_name",
+      "value": "",
+      "id": "",
+      "class": "",
+      "placeholder": "",
+      "maxlength": ""
+     },
+     "settings": {
+      "container_class": "",
+      "label": "Họ tên",
+      "label_placement": "",
+      "admin_field_label": "Họ tên",
+      "help_message": "",
+      "prefix_label": "",
+      "suffix_label": "",
+      "validation_rules": {
+       "required": {
+        "value": false,
+        "message": "Vui lòng nhập họ tên.",
+        "global": false
+       }
+      },
+      "conditional_logics": [],
+      "is_unique": "no",
+      "unique_validation_message": ""
+     },
+     "editor_options": {
+      "title": "Simple Text",
+      "icon_class": "ff-edit-text",
+      "template": "inputText"
+     },
+     "uniqElKey": "el_drv0062"
+    },
+    {
+     "index": 1,
+     "element": "input_text",
+     "attributes": {
+      "type": "text",
+      "name": "drv_phone",
+      "value": "",
+      "id": "",
+      "class": "",
+      "placeholder": "",
+      "maxlength": ""
+     },
+     "settings": {
+      "container_class": "",
+      "label": "Số điện thoại",
+      "label_placement": "",
+      "admin_field_label": "Số điện thoại",
+      "help_message": "",
+      "prefix_label": "",
+      "suffix_label": "",
+      "validation_rules": {
+       "required": {
+        "value": false,
+        "message": "Vui lòng nhập số điện thoại.",
+        "global": false
+       }
+      },
+      "conditional_logics": [],
+      "is_unique": "no",
+      "unique_validation_message": ""
+     },
+     "editor_options": {
+      "title": "Simple Text",
+      "icon_class": "ff-edit-text",
+      "template": "inputText"
+     },
+     "uniqElKey": "el_drv0063"
+    },
+    {
+     "index": 2,
+     "element": "input_text",
+     "attributes": {
+      "type": "text",
+      "name": "drv_email",
+      "value": "",
+      "id": "",
+      "class": "",
+      "placeholder": "",
+      "maxlength": ""
+     },
+     "settings": {
+      "container_class": "",
+      "label": "Email",
+      "label_placement": "",
+      "admin_field_label": "Email",
+      "help_message": "",
+      "prefix_label": "",
+      "suffix_label": "",
+      "validation_rules": {
+       "required": {
+        "value": false,
+        "message": "Vui lòng nhập email.",
+        "global": false
+       }
+      },
+      "conditional_logics": [],
+      "is_unique": "no",
+      "unique_validation_message": ""
+     },
+     "editor_options": {
+      "title": "Simple Text",
+      "icon_class": "ff-edit-text",
+      "template": "inputText"
+     },
+     "uniqElKey": "el_drv0064"
+    },
+    {
+     "index": 3,
+     "element": "input_text",
+     "attributes": {
+      "type": "text",
+      "name": "drv_province",
+      "value": "",
+      "id": "",
+      "class": "",
+      "placeholder": "",
+      "maxlength": ""
+     },
+     "settings": {
+      "container_class": "",
+      "label": "Tỉnh / Thành phố",
+      "label_placement": "",
+      "admin_field_label": "Tỉnh / Thành phố",
+      "help_message": "",
+      "prefix_label": "",
+      "suffix_label": "",
+      "validation_rules": {
+       "required": {
+        "value": false,
+        "message": "Vui lòng nhập tỉnh / thành phố.",
+        "global": false
+       }
+      },
+      "conditional_logics": [],
+      "is_unique": "no",
+      "unique_validation_message": ""
+     },
+     "editor_options": {
+      "title": "Simple Text",
+      "icon_class": "ff-edit-text",
+      "template": "inputText"
+     },
+     "uniqElKey": "el_drv0065"
+    },
+    {
+     "index": 4,
+     "element": "input_text",
+     "attributes": {
+      "type": "text",
+      "name": "drv_project",
+      "value": "",
+      "id": "",
+      "class": "",
+      "placeholder": "",
+      "maxlength": ""
+     },
+     "settings": {
+      "container_class": "",
+      "label": "Công trình",
+      "label_placement": "",
+      "admin_field_label": "Công trình",
+      "help_message": "",
+      "prefix_label": "",
+      "suffix_label": "",
+      "validation_rules": {
+       "required": {
+        "value": false,
+        "message": "Vui lòng nhập công trình.",
+        "global": false
+       }
+      },
+      "conditional_logics": [],
+      "is_unique": "no",
+      "unique_validation_message": ""
+     },
+     "editor_options": {
+      "title": "Simple Text",
+      "icon_class": "ff-edit-text",
+      "template": "inputText"
+     },
+     "uniqElKey": "el_drv0066"
+    },
+    {
+     "index": 5,
+     "element": "input_text",
+     "attributes": {
+      "type": "text",
+      "name": "drv_area_m2",
+      "value": "",
+      "id": "",
+      "class": "",
+      "placeholder": "",
+      "maxlength": ""
+     },
+     "settings": {
+      "container_class": "",
+      "label": "Tổng diện tích (m²)",
+      "label_placement": "",
+      "admin_field_label": "Tổng diện tích (m²)",
+      "help_message": "",
+      "prefix_label": "",
+      "suffix_label": "",
+      "validation_rules": {
+       "required": {
+        "value": false,
+        "message": "Vui lòng nhập tổng diện tích (m²).",
+        "global": false
+       }
+      },
+      "conditional_logics": [],
+      "is_unique": "no",
+      "unique_validation_message": ""
+     },
+     "editor_options": {
+      "title": "Simple Text",
+      "icon_class": "ff-edit-text",
+      "template": "inputText"
+     },
+     "uniqElKey": "el_drv0067"
+    },
+    {
+     "index": 6,
+     "element": "textarea",
+     "attributes": {
+      "name": "drv_boq_summary",
+      "value": "",
+      "id": "",
+      "class": "",
+      "placeholder": "",
+      "rows": 4,
+      "cols": 2,
+      "maxlength": "1000"
+     },
+     "settings": {
+      "container_class": "",
+      "label": "Tóm tắt BOQ",
+      "admin_field_label": "Tóm tắt BOQ",
+      "label_placement": "",
+      "help_message": "",
+      "validation_rules": {
+       "required": {
+        "value": false,
+        "message": "Vui lòng mô tả ngắn nhu cầu của bạn.",
+        "global": false
+       }
+      },
+      "conditional_logics": []
+     },
+     "editor_options": {
+      "title": "Text Area",
+      "icon_class": "ff-edit-textarea",
+      "template": "inputTextarea"
+     },
+     "uniqElKey": "el_drv0068"
+    },
+    {
+     "index": 7,
+     "element": "input_text",
+     "attributes": {
+      "type": "text",
+      "name": "drv_quote_code",
+      "value": "",
+      "id": "",
+      "class": "",
+      "placeholder": "",
+      "maxlength": ""
+     },
+     "settings": {
+      "container_class": "",
+      "label": "Mã phiếu",
+      "label_placement": "",
+      "admin_field_label": "Mã phiếu",
+      "help_message": "",
+      "prefix_label": "",
+      "suffix_label": "",
+      "validation_rules": {
+       "required": {
+        "value": false,
+        "message": "Vui lòng nhập mã phiếu.",
+        "global": false
+       }
+      },
+      "conditional_logics": [],
+      "is_unique": "no",
+      "unique_validation_message": ""
+     },
+     "editor_options": {
+      "title": "Simple Text",
+      "icon_class": "ff-edit-text",
+      "template": "inputText"
+     },
+     "uniqElKey": "el_drv0069"
+    },
+    {
+     "index": 8,
+     "element": "input_text",
+     "attributes": {
+      "type": "text",
+      "name": "drv_lead_id",
+      "value": "",
+      "id": "",
+      "class": "",
+      "placeholder": "",
+      "maxlength": ""
+     },
+     "settings": {
+      "container_class": "",
+      "label": "Lead ID",
+      "label_placement": "",
+      "admin_field_label": "Lead ID",
+      "help_message": "",
+      "prefix_label": "",
+      "suffix_label": "",
+      "validation_rules": {
+       "required": {
+        "value": false,
+        "message": "Vui lòng nhập lead id.",
+        "global": false
+       }
+      },
+      "conditional_logics": [],
+      "is_unique": "no",
+      "unique_validation_message": ""
+     },
+     "editor_options": {
+      "title": "Simple Text",
+      "icon_class": "ff-edit-text",
+      "template": "inputText"
+     },
+     "uniqElKey": "el_drv0070"
+    },
+    {
+     "index": 9,
+     "element": "textarea",
+     "attributes": {
+      "name": "message",
+      "value": "",
+      "id": "",
+      "class": "",
+      "placeholder": "",
+      "rows": 4,
+      "cols": 2,
+      "maxlength": "1000"
+     },
+     "settings": {
+      "container_class": "",
+      "label": "Ghi chú",
+      "admin_field_label": "Ghi chú",
+      "label_placement": "",
+      "help_message": "",
+      "validation_rules": {
+       "required": {
+        "value": false,
+        "message": "Vui lòng mô tả ngắn nhu cầu của bạn.",
+        "global": false
+       }
+      },
+      "conditional_logics": []
+     },
+     "editor_options": {
+      "title": "Text Area",
+      "icon_class": "ff-edit-textarea",
+      "template": "inputTextarea"
+     },
+     "uniqElKey": "el_drv0071"
+    }
+   ],
+   "submitButton": {
+    "uniqElKey": "el_1524065200616",
+    "element": "button",
+    "attributes": {
+     "type": "submit",
+     "class": "drv-btn drv-btn--primary"
+    },
+    "settings": {
+     "align": "left",
+     "button_style": "default",
+     "container_class": "",
+     "help_message": "",
+     "background_color": "#4A6B3C",
+     "button_size": "md",
+     "color": "#ffffff",
+     "button_ui": {
+      "type": "default",
+      "text": "Gửi",
+      "img_url": ""
+     },
+     "normal_styles": {
+      "backgroundColor": "#4A6B3C",
+      "borderColor": "#4A6B3C",
+      "color": "#ffffff",
+      "borderRadius": "",
+      "minWidth": ""
+     },
+     "hover_styles": {
+      "backgroundColor": "#ffffff",
+      "borderColor": "#4A6B3C",
+      "color": "#4A6B3C",
+      "borderRadius": "",
+      "minWidth": ""
+     },
+     "current_state": "normal_styles"
+    },
+    "editor_options": {
+     "title": "Submit Button"
+    }
+   }
+  },
+  "metas": [
+   {
+    "meta_key": "formSettings",
+    "value": "{\"confirmation\": {\"redirectTo\": \"samePage\", \"messageToShow\": \"Đã ghi nhận phiếu BOQ.\", \"customPage\": null, \"samePageFormBehavior\": \"hide_form\", \"customUrl\": null}, \"restrictions\": {\"limitNumberOfEntries\": {\"enabled\": false, \"numberOfEntries\": null, \"period\": \"total\", \"limitReachedMsg\": \"Maximum number of entries exceeded.\"}, \"scheduleForm\": {\"enabled\": false, \"start\": null, \"end\": null, \"pendingMsg\": \"\", \"expiredMsg\": \"\"}, \"requireLogin\": {\"enabled\": false, \"requireLoginMsg\": \"\"}, \"denyEmptySubmission\": {\"enabled\": false, \"message\": \"\"}}, \"layout\": {\"labelPlacement\": \"top\", \"helpMessagePlacement\": \"with_label\", \"errorMessagePlacement\": \"inline\", \"asteriskPlacement\": \"asterisk-right\"}, \"delete_entry_on_submission\": \"no\"}"
+   },
+   {
+    "meta_key": "notifications",
+    "value": "{\"name\": \"Thông báo quản trị\", \"sendTo\": {\"type\": \"email\", \"email\": \"{wp.admin_email}\", \"field\": \"email\", \"routing\": [{\"email\": null, \"field\": null, \"operator\": \"=\", \"value\": null}]}, \"fromName\": \"\", \"fromEmail\": \"\", \"replyTo\": \"\", \"bcc\": \"\", \"subject\": \"[DRAVIT] Yêu cầu mới từ {inputs.name}\", \"message\": \"<p>{all_data}</p>\", \"conditionals\": {\"status\": false, \"type\": \"all\", \"conditions\": [{\"field\": null, \"operator\": \"=\", \"value\": null}]}, \"enabled\": false, \"email_template\": \"\"}"
+   },
+   {
+    "meta_key": "template_name",
+    "value": "drv_boq_mirror"
+   },
+   {
+    "meta_key": "_primary_email_field",
+    "value": "email"
+   }
+  ]
+ }
+]

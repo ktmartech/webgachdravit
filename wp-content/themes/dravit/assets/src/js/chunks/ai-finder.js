@@ -115,7 +115,7 @@ export class AiFinderElement extends HTMLElement {
         this.dataset.defaultFilterUrl || runtimeCfg.gachUrl || '/gach',
       boqUrl:
         this.dataset.boqUrl || runtimeCfg.boqUrl || '/danh-sach-bao-gia',
-      zaloUrl: this.dataset.zaloUrl || 'https://zalo.me/0909888777',
+      zaloUrl: this.dataset.zaloUrl || 'https://zalo.me',
     };
 
     this._onQuoteUpdated = () => {

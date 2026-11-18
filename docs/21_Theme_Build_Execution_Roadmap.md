@@ -1,4 +1,4 @@
-# 21. Roadmap Thực Thi Xây Dựng WordPress Theme DRAVIT (`wp-content/themes/dravit/`)
+﻿# 21. Roadmap Thực Thi Xây Dựng WordPress Theme DRAVIT (`wp-content/themes/dravit/`)
 
 > **Nguồn chuẩn (Single Source of Truth):** Bộ tài liệu [docs/00..20](README.md), [AGENTS.md](../AGENTS.md), 12 bản mẫu giao diện tại `docs/layout/` và báo cáo kiểm toán [00_LAYOUT_AUDIT_REPORT.md](layout/00_LAYOUT_AUDIT_REPORT.md).
 > **Trạng thái:** **ĐÃ PHÊ DUYỆT CHÍNH THỨC (`D-31`..`D-34` — 2026-11-11)** · Sẵn sàng triển khai tuần tự từ `Step 0` → `Step 11`.
@@ -213,7 +213,7 @@ function drv_section(string $name, array $props = []): void {
   4. **22 UI Primitives `drv_ui()` & Khung `SectionRegistry` (`drv_section()`, `D-34`):**
      - Cắt toàn bộ 22 nguyên tử/phân tử từ `00-ui-kit.html` sang `template-parts/ui/{name}.php` (`inc/Core/Template.php`).
      - Xây dựng `inc/Core/SectionRegistry.php` + `config/sections.php` hỗ trợ `drv_section($name, $props)` và `SectionRegistry::render_stack($layout)` theo đúng **Phương án `S-3`**.
-  5. **Settings API (`inc/Admin/SettingsPage.php`):** Xây dựng trang cấu hình `drv_settings` (9 tabs: Công ty, Liên hệ & Showroom, Ngân hàng VietQR, Đơn hàng & Vận chuyển, Báo giá BOQ, Trang chủ, SEO/GEO, Form & Fluent Forms Slots, Trợ lý AI) kèm helper `drv_setting($path, $default)`.
+  5. **Settings API (`inc/Admin/SettingsPage.php`):** Xây dựng trang cấu hình `drv_settings` (9 tabs: Công ty, Liên hệ, Ngân hàng VietQR, Đơn hàng & Vận chuyển, Báo giá BOQ, Trang chủ, SEO/GEO, Form & Fluent Forms Slots, Trợ lý AI) kèm helper `drv_setting($path, $default)`.
   6. **Cắt Global Shell (`header.php`, `header-minimal.php`, `footer.php`):**
      - Đảm bảo đủ 100% hook chuẩn WP (`wp_head()`, `wp_body_open()`, `wp_footer()`).
      - Tier 1 hiển thị kép **[DS Báo giá `(n)`]** + **[Giỏ hàng `(n)`]** + nút **Trợ lý AI** (`drv_setting('features.ai_enabled', true)` theo `D-32`).
@@ -488,7 +488,7 @@ function drv_section(string $name, array $props = []): void {
 - **Kết quả thực thi 9A + 9B (`2026-11-16`, chưa commit — nhánh `feat/theme-step-0-to-2-catalog-engine`):**
   - **PHP:** `Woo\{CartPresenter,StoreApiExtend,CartHooks,CheckoutVN,CheckoutValidator,Wards,QuoteShippingMethod,OrderSnapshot}`; `drv_settings.order` thêm `shipping_label`, `checkout_ship_notice`, `vehicle_thresholds`, `shipping_zone_hints`, `note_chips`; `WooCompat` gỡ `wc-cart-fragments` toàn site.
   - **Template:** `woocommerce/cart/{cart,cart-empty}.php`, `woocommerce/checkout/{form-checkout,review-order,payment,payment-method,terms}.php`, `template-parts/cart/line-row.php`, `ui/qty-input.php` (hợp đồng `15 §5.2`), `page.php` (giỏ/checkout tự dựng layout).
-  - **Asset:** entry `cart.js`, `checkout.js`; `utils/cart-api.js`, `chunks/{qty-input,mini-cart}.js` (mini-cart có stepper + xóa dòng, nạp lười); `core.js` giảm còn `7,56KB` gzip; CSS `pages/{cart,checkout}.css` cắt bằng `tools/port-css-step9.py` (bỏ FBT `D-26`, thanh demo).
+  - **Asset:** entry `cart.js`, `checkout.js`; `utils/cart-api.js`, `chunks/{qty-input,mini-cart}.js` (mini-cart có stepper + xóa dòng, nạp lười); `core.js` giảm còn `7,56KB` gzip; CSS `pages/{cart,checkout}.css` cắt bằng `tools/port-css-step9.py` (bỏ thanh demo; FBT ban đầu bỏ theo `D-26`, sau mở lại cho Giỏ hàng theo `D-38`).
   - **Phường/Xã:** `tools/build-wards.mjs` sinh `assets/data/wards/{KEY}.json` (34 tỉnh · 3.321 đơn vị, mã TCTK) từ bản chụp `tools/data/dvhc-2025-07-01.json` (nguồn `provinces.open-api.vn/api/v2`, NQ 202/2025/QH15) — **cần đối chiếu lại với nguồn chính thức `O-06` trước go-live**.
   - **Setup:** `tools/setup-step9.php` (zone "Việt Nam" + `drv_quote_later`, terms = `/dieu-khoan`, chỉ bán VN, tên cổng BACS/COD).
   - **Đối soát local:** Store API trả đủ `extensions.dravit`; cùng SP gộp 1 dòng; stepper → `update-item` cập nhật dòng + tổng; C-1 (không chọn sẵn phường) ✅ · C-2 ✅ · C-3 ✅ · C-9 (nhãn "Báo sau khi xác nhận đơn", terms không tick sẵn) ✅ · C-12 (unit test) ✅ · đơn COD #169: `_drv_ward_code`, `_drv_total_*`, `_drv_transfer_ref`, snapshot `_drv_*` đủ.

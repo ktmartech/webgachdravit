@@ -1,7 +1,7 @@
 # 03. Mô hình dữ liệu Catalog
 
 > Nguồn chuẩn URL/H1/breadcrumb/phase: [branding/Thiet_Ke_Silo_URL_Va_Bo_Loc_GachDravit.md](branding/Thiet_Ke_Silo_URL_Va_Bo_Loc_GachDravit.md) và [branding/Thiet_Ke_Silo_URL_Va_Bo_Loc_GachDravit.xlsx](branding/Thiet_Ke_Silo_URL_Va_Bo_Loc_GachDravit.xlsx).
-> Quyết định: D-02, D-14, D-20, D-24, D-26, D-27, D-29, D-30. Từ điển kiểu dữ liệu & sanitize chi tiết: [14_Data_Dictionary_And_Settings.md](14_Data_Dictionary_And_Settings.md).
+> Quyết định: D-02, D-14, D-20, D-24, D-26, D-27, D-29, D-30, D-38. Từ điển kiểu dữ liệu & sanitize chi tiết: [14_Data_Dictionary_And_Settings.md](14_Data_Dictionary_And_Settings.md).
 > Skill: `wp-plugin-development` (hook/data), `programmatic-seo`, `wp-rest-api`.
 
 ## 1. Tổng quan ánh xạ

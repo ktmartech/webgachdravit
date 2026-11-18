@@ -394,42 +394,6 @@
     flex-shrink: 0;
   }
 
-  .drv-pdp-action-btn {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-    /* Mockup 44×44 với nhãn "Share"; nhãn tiếng Việt "Chia sẻ" (D-01) rộng hơn → khung nới theo nhãn, giữ tối thiểu 44px */
-    min-width: 44px;
-    height: 44px;
-    padding: 0 6px;
-    background-color: var(--c-sand-50);
-    border: var(--bw);
-    border-color: var(--c-navy-200);
-    border-radius: var(--r-md);
-    color: var(--c-navy-700);
-    font-size: 1.15rem;
-    cursor: pointer;
-    transition: all var(--dur-fast) var(--ease-out);
-  }
-
-  .drv-pdp-action-btn:hover {
-    background-color: var(--c-white);
-    border-color: var(--c-navy-600);
-    color: var(--c-moss-600);
-    box-shadow: var(--shadow-sm);
-  }
-
-  .drv-pdp-action-count {
-    font-size: 12px;
-    font-weight: 700;
-    line-height: 1;
-    margin-top: 2px;
-    white-space: nowrap;
-    font-variant-numeric: tabular-nums;
-  }
-
   .drv-pdp-price-main {
     display: flex;
     flex-wrap: wrap;
@@ -1211,6 +1175,49 @@
     gap: 4px;
   }
 
+  /* Mobile gọn: bên trái 1 dòng giá/nhãn, bên phải nút phụ chỉ còn icon + nút chính */
+  @media (width < 768px) {
+    .drv-sticky-purchase {
+      padding-block: 8px;
+      padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+    }
+
+    .drv-sticky-purchase__mobile-meta,
+    .drv-sticky-purchase__unit-price {
+      display: none;
+    }
+
+    .drv-sticky-purchase__total {
+      font-size: 1rem;
+      white-space: normal;
+    }
+
+    .drv-sticky-purchase__btns {
+      gap: 8px;
+    }
+
+    .drv-sticky-purchase__btn {
+      min-height: 44px;
+      padding-inline: 18px;
+      font-size: 0.875rem;
+      font-weight: 700;
+    }
+
+    .drv-sticky-purchase__btn:not(.drv-btn-pill--navy) {
+      width: 44px;
+      padding-inline: 0;
+      justify-content: center;
+    }
+
+    .drv-sticky-purchase__btn:not(.drv-btn-pill--navy) i {
+      font-size: 1.25rem;
+    }
+
+    .drv-sticky-purchase__btn-text {
+      display: none;
+    }
+  }
+
   @media (width >= 768px) {
     .drv-sticky-purchase__right {
       justify-content: flex-end;
@@ -1610,6 +1617,10 @@
     display: flex;
     flex-wrap: wrap;
     gap: var(--s-2);
+  }
+
+  .drv-pdp-cta-row + .drv-pdp-b2b__actions {
+    margin-top: var(--s-2-5);
   }
 
   .drv-pdp-b2b .drv-pdp-b2b__actions {

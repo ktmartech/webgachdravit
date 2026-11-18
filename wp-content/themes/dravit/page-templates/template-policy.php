@@ -38,11 +38,11 @@ get_header();
             $effective_date = (string) get_the_modified_date('d/m/Y', $page_id);
         }
 
-        $legal_name = (string) drv_setting('company.legal_name', 'Công ty TNHH Vật Liệu Kiến Trúc DRAVIT');
+        $legal_name = (string) drv_setting('company.legal_name', '');
         $tax_id     = (string) drv_setting('company.tax_id', '');
         $comp_addr  = (string) drv_setting('company.address', '');
-        $hotline    = (string) drv_setting('contact.hotline', '0909 888 777');
-        $email      = (string) drv_setting('contact.email', 'cskh@gachdravit.vn');
+        $hotline    = (string) drv_setting('contact.hotline', '');
+        $email      = (string) drv_setting('contact.email', '');
         ?>
         <div class="l-container drv-single-post__crumb">
             <?php drv_ui('breadcrumb'); ?>

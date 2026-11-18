@@ -6,7 +6,7 @@
  */
 import './chunks/qty-input.js';
 import { calcCartLine } from './utils/calc.js';
-import { drvExt, errorText, removeItem } from './utils/cart-api.js';
+import { addItem, drvExt, errorText, removeItem } from './utils/cart-api.js';
 import { qs, qsa } from './utils/dom.js';
 import { formatDecimalVn, formatVnd } from './utils/format.js';
 import { showToast } from './utils/toast.js';
@@ -32,6 +32,9 @@ function paintLoose(row, { boxes, loose, need, unitLabel }) {
     return;
   }
   warn.hidden = loose <= 0;
+  if (loose > 0) {
+    setRowDetail(row, true);
+  }
   const text = qs('[data-row-loose-text]', warn);
   if (text && loose > 0) {
     text.textContent =
@@ -171,6 +174,100 @@ async function handleRemove(link, event) {
   }
 }
 
+
+/** Ghi nhớ số lượng lúc mở trang của từng dòng để nút "Đặt lại số lượng mặc định" khôi phục. */
+function rememberDefaultQuantities(root) {
+  for (const row of qsa('[data-cart-row]', root)) {
+    const qtyEl = qs('drv-qty-input', row);
+    if (qtyEl && !row.dataset.defaultQty) {
+      row.dataset.defaultQty = String(qtyEl.value);
+    }
+  }
+}
+
+/** Cập nhật số món & tổng tiền của khối "Vật tư thi công đề xuất" theo các ô đã chọn. */
+function syncFbt(box) {
+  const checks = qsa('.drv-fbt-item__check', box);
+  let total = 0;
+  let count = 0;
+  for (const c of checks) {
+    if (c.checked) {
+      total += Number(c.dataset.fbtPrice) || 0;
+      count += 1;
+    }
+  }
+  const totalEl = qs('[data-fbt-total]', box);
+  const countEl = qs('[data-fbt-count]', box);
+  const submit = qs('[data-drv-action="cart-fbt-submit"]', box);
+  if (totalEl) {
+    totalEl.textContent = formatVnd(total);
+  }
+  if (countEl) {
+    countEl.textContent = String(count);
+  }
+  if (submit) {
+    submit.disabled = count === 0;
+  }
+}
+
+async function submitFbt(button) {
+  const box = button.closest('[data-drv-fbt]');
+  if (!box || button.disabled) {
+    return;
+  }
+  const picked = qsa('.drv-fbt-item__check:checked', box);
+  if (picked.length === 0) {
+    return;
+  }
+
+  button.disabled = true;
+  button.setAttribute('aria-busy', 'true');
+  let failed = '';
+  for (const c of picked) {
+    const result = await addItem(Number(c.dataset.fbtId), Number(c.dataset.fbtQty) || 1);
+    if (!result?.ok) {
+      failed = errorText(result);
+      break;
+    }
+  }
+  button.removeAttribute('aria-busy');
+
+  if (failed) {
+    button.disabled = false;
+    showToast(failed, 'error', 3600);
+    return;
+  }
+
+  showToast('Đã thêm vật tư vào đơn, đang cập nhật bảng kê...', 'success', 1800);
+  window.location.reload();
+}
+
+const LABEL_OPEN = 'Xem chi tiết & quy đổi';
+const LABEL_CLOSE = 'Thu gọn chi tiết';
+
+/**
+ * Mở / đóng khay chi tiết & quy đổi của 1 dòng giỏ hàng (mockup `04-cart.html`).
+ *
+ * @param {Element} row
+ * @param {boolean} open
+ */
+function setRowDetail(row, open) {
+  const drawer = qs('[data-cart-row-drawer]', row);
+  const toggle = qs('[data-drv-action="cart-toggle-row-detail"]', row);
+  if (!drawer) {
+    return;
+  }
+  drawer.hidden = !open;
+  if (toggle) {
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    toggle.classList.toggle('is-expanded', open);
+    const label = qs('[data-toggle-label]', toggle);
+    if (label) {
+      label.textContent = open ? LABEL_CLOSE : LABEL_OPEN;
+    }
+  }
+}
+
 export function initCartPage() {
   const root = qs('[data-drv-cart]');
   if (!root || root.dataset.drvCartBound === '1') {
@@ -183,8 +280,12 @@ export function initCartPage() {
   for (const btn of qsa('[data-drv-cart-update]', root)) {
     btn.hidden = true;
   }
-  for (const btn of qsa('[data-qty-round-box], [data-row-loose-warning] [data-qty-add-box]', root)) {
+  for (const btn of qsa('[data-qty-round-box], [data-row-loose-warning] [data-qty-add-box], [data-drv-action="cart-reset-qty"]', root)) {
     btn.hidden = false;
+  }
+  rememberDefaultQuantities(root);
+  for (const box of qsa('[data-drv-fbt]', root)) {
+    syncFbt(box);
   }
 
   root.addEventListener('drv:qty-input', (event) => {
@@ -197,6 +298,35 @@ export function initCartPage() {
   root.addEventListener('click', (event) => {
     const target = event.target instanceof Element ? event.target : null;
     if (!target) {
+      return;
+    }
+    const fbtSubmit = target.closest('[data-drv-action="cart-fbt-submit"]');
+    if (fbtSubmit) {
+      event.preventDefault();
+      void submitFbt(fbtSubmit);
+      return;
+    }
+    if (target.closest('[data-drv-action="cart-reset-qty"]')) {
+      event.preventDefault();
+      let changed = 0;
+      for (const r of qsa('[data-cart-row]', root)) {
+        const el = qs('drv-qty-input', r);
+        const def = Number(r.dataset.defaultQty);
+        if (el && def > 0 && Number(el.value) !== def) {
+          el.setValue(def);
+          changed += 1;
+        }
+      }
+      showToast(changed > 0 ? 'Đã đặt lại số lượng về mặc định' : 'Số lượng đang ở mức mặc định', 'default', 2200);
+      return;
+    }
+    const detailToggle = target.closest('[data-drv-action="cart-toggle-row-detail"]');
+    if (detailToggle) {
+      event.preventDefault();
+      const toggleRow = detailToggle.closest('[data-cart-row]');
+      if (toggleRow) {
+        setRowDetail(toggleRow, detailToggle.getAttribute('aria-expanded') !== 'true');
+      }
       return;
     }
     const removeLink = target.closest('[data-cart-remove]');
@@ -215,6 +345,14 @@ export function initCartPage() {
     } else if (target.closest('[data-qty-add-box]')) {
       event.preventDefault();
       qtyEl.addBox();
+    }
+  });
+
+  root.addEventListener('change', (event) => {
+    const check = event.target instanceof Element ? event.target.closest('.drv-fbt-item__check') : null;
+    const box = check ? check.closest('[data-drv-fbt]') : null;
+    if (box) {
+      syncFbt(box);
     }
   });
 

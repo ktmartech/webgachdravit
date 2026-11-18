@@ -27,7 +27,7 @@ final class FluentFormsBridge implements ServiceProviderInterface {
     ];
 
     /** @var array<int, string> Tên Hidden field được bơm ngữ cảnh. */
-    public const CONTEXT_KEYS = ['drv_sku', 'drv_product_id', 'drv_product_name', 'drv_area_m2', 'drv_boq_summary', 'drv_page_url', 'utm_source', 'utm_medium', 'utm_campaign'];
+    public const CONTEXT_KEYS = ['drv_sku', 'drv_product_id', 'drv_product_name', 'drv_area_m2', 'drv_boq_summary', 'drv_page_url', 'drv_post_id', 'utm_source', 'utm_medium', 'utm_campaign'];
 
     /** @var array<string, string> */
     private static array $render_context = [];
@@ -60,7 +60,7 @@ final class FluentFormsBridge implements ServiceProviderInterface {
             return false;
         }
 
-        self::$render_context = self::sanitizeContext($context + ['drv_page_url' => self::currentUrl()]);
+        self::$render_context = self::sanitizeContext($context + self::pageContext() + ['drv_page_url' => self::currentUrl()]);
         $output               = do_shortcode(sprintf('[fluentform id="%d"]', self::slot_form_id($slot)));
         $ctx_json             = (string) wp_json_encode(self::$render_context, JSON_UNESCAPED_UNICODE);
         self::$render_context = [];
@@ -77,6 +77,67 @@ final class FluentFormsBridge implements ServiceProviderInterface {
         echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Rendered by Fluent Forms shortcode.
         echo '</div>';
         return true;
+    }
+
+    /**
+     * Ngữ cảnh tự động theo trang hiện tại (SSR, an toàn với cache theo URL): SP -> `drv_product_*`, bài Cẩm nang -> `drv_post_id`.
+     *
+     * @return array<string, string>
+     */
+    public static function pageContext(): array {
+        if (!function_exists('is_singular') || !function_exists('get_queried_object_id')) {
+            return [];
+        }
+        if (is_singular('product') && function_exists('wc_get_product')) {
+            $product = wc_get_product((int) get_queried_object_id());
+            if ($product instanceof \WC_Product) {
+                return array_filter([
+                    'drv_product_id'   => (string) $product->get_id(),
+                    'drv_sku'          => (string) $product->get_sku(),
+                    'drv_product_name' => (string) $product->get_name(),
+                ], static fn (string $v): bool => $v !== '' && $v !== '0');
+            }
+        }
+        if (is_singular('post')) {
+            return ['drv_post_id' => (string) get_queried_object_id()];
+        }
+        return [];
+    }
+
+    /**
+     * Danh sách form Fluent Forms để chọn trong Admin (`id => nhãn`); rỗng khi plugin chưa bật.
+     *
+     * @return array<int, string>
+     */
+    public static function available_forms(): array {
+        global $wpdb;
+        if (!drv_is_fluent_forms_active() || !isset($wpdb) || !is_object($wpdb)) {
+            return [];
+        }
+        $table = $wpdb->prefix . 'fluentform_forms';
+        $rows  = $wpdb->get_results("SELECT id, title, status FROM {$table} ORDER BY id ASC", ARRAY_A); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Tên bảng từ $wpdb->prefix, không có input người dùng.
+        return self::formOptions(is_array($rows) ? $rows : []);
+    }
+
+    /**
+     * @param array<int, array<string, mixed>> $rows Hàng `fluentform_forms` (id, title, status).
+     * @return array<int, string>
+     */
+    public static function formOptions(array $rows): array {
+        $out = [];
+        foreach ($rows as $row) {
+            $id = (int) ($row['id'] ?? 0);
+            if ($id <= 0) {
+                continue;
+            }
+            $title = trim((string) ($row['title'] ?? ''));
+            $label = '#' . $id . ' · ' . ($title !== '' ? $title : 'Chưa đặt tên');
+            if (isset($row['status']) && (string) $row['status'] !== 'published') {
+                $label .= ' (' . (string) $row['status'] . ')';
+            }
+            $out[$id] = $label;
+        }
+        return $out;
     }
 
     /**

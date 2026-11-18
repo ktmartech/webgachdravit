@@ -13,7 +13,7 @@ defined('ABSPATH') || exit;
 $title   = (string) ($args['title'] ?? 'Trợ lý AI Tìm gạch & Dự toán vật tư');
 $zaloUrl = (string) drv_setting('contact.zalo', '');
 if ($zaloUrl === '') {
-    $rawPhone = drv_clean_phone((string) drv_setting('contact.hotline', '0909888777'));
+    $rawPhone = drv_clean_phone((string) drv_setting('contact.hotline', ''));
     $zaloUrl  = 'https://zalo.me/' . $rawPhone;
 }
 $gachUrl = untrailingslashit(home_url('/gach'));

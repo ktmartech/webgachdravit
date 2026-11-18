@@ -30,6 +30,7 @@ use Dravit\Content\Toc;
 use Dravit\Core\Assets;
 use Dravit\Core\Cleanup;
 use Dravit\Core\Integrations\FluentFormsBridge;
+use Dravit\Core\Integrations\FluentFormsProvisioner;
 use Dravit\Core\Integrations\LiteSpeedCompat;
 use Dravit\Core\Integrations\RankMathCompat;
 use Dravit\Core\Integrations\WooCompat;
@@ -174,6 +175,7 @@ final class Theme {
 
         if (drv_is_fluent_forms_active()) {
             $providers[] = FluentFormsBridge::class;
+            $providers[] = FluentFormsProvisioner::class;
         }
 
         if (drv_is_litespeed_active()) {

@@ -320,7 +320,7 @@ if ($is_out) {
             <?php elseif ($shelf !== '') : ?>
                 Sẵn mẫu thật tại <strong><?php echo esc_html(drv_shelf_label($shelf)); ?></strong>
             <?php else : ?>
-                Sẵn hàng tại <strong>Kho TP.HCM</strong>
+                Sẵn hàng tại <strong>kho</strong>
             <?php endif; ?>
         </p>
 

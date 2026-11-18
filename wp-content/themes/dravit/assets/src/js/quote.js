@@ -33,6 +33,7 @@ import {
   updateSlot,
   writeState,
 } from './utils/quote-store.js';
+import { XS, buildXlsxBlob } from './utils/xlsx.js';
 
 const MODE_LABEL = { m2: 'm²', thung: 'Thùng', vien: 'Viên' };
 const QUOTE_LABEL = 'Liên hệ báo giá';
@@ -974,11 +975,119 @@ export function buildCsv(state, calc) {
   return String.fromCharCode(0xfeff) + lines.join('\r\n');
 }
 
-function downloadCsv() {
+/**
+ * Bố cục .xlsx giống bản in A4: đầu trang công ty, tiêu đề + mã phiếu, bảng theo phòng, tổng cộng, ghi chú, chữ ký.
+ */
+export function buildXlsxSpec(state, calc, meta = {}) {
+  const t = calc.totals;
+  const COLS = 10;
+  const rows = [];
+  const merges = [];
+  const brand = cfg.brand || 'DRAVIT';
+  const today = new Date().toLocaleDateString('vi-VN');
+  const validDays = Number(cfg.validDays) || 7;
+  const blank = () => rows.push({ cells: [] });
+  /** Dòng gộp A:J (hoặc khoảng cột tuỳ chọn). */
+  const full = (text, style, h, from = 0, to = COLS - 1) => {
+    const cells = [];
+    cells[from] = [text, style];
+    rows.push({ h, cells });
+    if (to > from) {
+      merges.push(`${String.fromCharCode(65 + from)}${rows.length}:${String.fromCharCode(65 + to)}${rows.length}`);
+    }
+  };
+
+  full(`${brand} - GẠCH ỐP LÁT`, XS.BRAND, 24);
+  if (cfg.legalName) full(cfg.legalName, XS.LABEL);
+  if (cfg.address) full(cfg.address, XS.SMALL);
+  full(`${cfg.siteHost || ''} · Hotline / Zalo: ${cfg.hotline || ''}`, XS.SMALL);
+  blank();
+  full('BẢNG DỰ TOÁN KHỐI LƯỢNG GẠCH ỐP LÁT', XS.TITLE, 30);
+  full(`Mã phiếu: ${meta.code || 'Bản nháp'} · Ngày lập: ${today} · Hiệu lực ${validDays} ngày`, XS.SIGN_HINT);
+  blank();
+  {
+    const cells = [];
+    cells[0] = [`Công trình: ${state.project_name || '-'}`, XS.LABEL];
+    cells[5] = [`Hao hụt đã cộng: ${state.waste_pct}%`, XS.LABEL];
+    rows.push({ cells });
+    merges.push(`A${rows.length}:E${rows.length}`, `F${rows.length}:J${rows.length}`);
+  }
+  blank();
+
+  const head = ['#', 'Hạng mục', 'Mã · Tên gạch', 'Khổ', 'Đơn giá (đ/m²)', 'Số thùng', 'Viên/tấm lẻ', 'Diện tích thực nhận (m²)', 'Khối lượng (kg)', 'Thành tiền (VND)'];
+  let idx = 0;
+  for (const entry of calc.rooms) {
+    const lines = entry.lines.filter((l) => l.res);
+    if (lines.length === 0) {
+      continue;
+    }
+    const roomCells = [];
+    roomCells[0] = [entry.room.name, XS.ROOM];
+    for (let c = 1; c < COLS; c += 1) roomCells[c] = ['', XS.ROOM];
+    rows.push({ h: 22, cells: roomCells });
+    merges.push(`A${rows.length}:J${rows.length}`);
+    rows.push({ h: 32, cells: head.map((h) => [h, XS.TH]) });
+    for (const l of lines) {
+      idx += 1;
+      const q = l.res.isQuote;
+      rows.push({
+        h: 30,
+        cells: [
+          [idx, XS.TEXT_C],
+          [l.slot.role, XS.TEXT],
+          [`${l.product.sku} · ${l.product.name}`, XS.TEXT],
+          [l.product.size_label || '', XS.TEXT_C],
+          q ? [QUOTE_LABEL, XS.TEXT_R] : [Number(l.product.price_m2) || 0, XS.VND],
+          [Number(l.res.fullBoxes) || 0, XS.INT],
+          [Number(l.res.loosePieces) || 0, XS.INT],
+          [Number(l.res.actualM2) || 0, XS.DEC],
+          [Number(l.res.totalKg) || 0, XS.INT],
+          q ? [QUOTE_TOTAL, XS.TEXT_R] : [Number(l.res.totalVnd) || 0, XS.VND],
+        ],
+      });
+    }
+    blank();
+  }
+
+  const totalRow = (label, value, labelStyle = XS.TOTAL_LABEL, h) => {
+    const cells = [];
+    cells[0] = [label, labelStyle];
+    cells[9] = value;
+    rows.push({ h, cells });
+    merges.push(`A${rows.length}:I${rows.length}`);
+  };
+  totalRow('Tổng diện tích thực xuất:', [`${dec(t.total_m2)} m²`, XS.TEXT_R]);
+  totalRow('Đóng gói:', [boxesText(t), XS.TEXT_R]);
+  totalRow('Trọng lượng:', [`${dec(t.total_kg, 0)} kg (${t.vehicle_hint})`, XS.TEXT_R]);
+  totalRow('Tạm tính các mẫu có giá:', [Number(t.subtotal_vnd) || 0, XS.TOTAL_VND]);
+  totalRow(`Chiết khấu dự kiến (${dec(t.discount_rate, 0)}%):`, [-(Number(t.discount_est_vnd) || 0), XS.TOTAL_VND]);
+  totalRow('TỔNG DỰ TOÁN TẠM TÍNH:', [Number(t.grand_est_vnd) || 0, XS.GRAND], XS.TOTAL_LABEL, 26);
+  full(t.quote_count > 0 ? `Chưa gồm ${t.quote_count} mẫu báo giá riêng · Chưa gồm phí vận chuyển` : 'Đã gồm VAT · Chưa gồm phí vận chuyển', XS.NOTE);
+  blank();
+  full(
+    `Bảng dự toán phục vụ bóc tách khối lượng tham khảo. Đơn giá thực tế, phí vận chuyển và mã lô xuất kho được xác nhận chính thức khi chốt đơn (hiệu lực báo giá: ${String(validDays).padStart(2, '0')} ngày).`,
+    XS.NOTE,
+    32,
+  );
+  blank();
+  full('KHÁCH HÀNG', XS.SIGN, 20, 0, 4);
+  rows[rows.length - 1].cells[5] = [brand, XS.SIGN];
+  merges.push(`F${rows.length}:J${rows.length}`);
+  full('(Ký, ghi rõ họ tên)', XS.SIGN_HINT, 18, 0, 4);
+  rows[rows.length - 1].cells[5] = ['Cam kết xuất kho cùng 1 lô màu (Shade / Caliber)', XS.SIGN_HINT];
+  merges.push(`F${rows.length}:J${rows.length}`);
+  blank();
+  blank();
+  blank();
+
+  return { sheetName: 'Bảng dự toán', widths: [5, 20, 42, 14, 16, 11, 12, 16, 13, 20], rows, merges };
+}
+
+function downloadXlsx() {
   const state = readState();
-  const csv = buildCsv(state, lastCalc || computeQuote(state, productCache, cfg));
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
-  const a = el('a', { href: URL.createObjectURL(blob), download: `dravit-du-toan-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}.csv` });
+  const calc = lastCalc || computeQuote(state, productCache, cfg);
+  const blob = buildXlsxBlob(buildXlsxSpec(state, calc, { code: submittedCode }));
+  const a = el('a', { href: URL.createObjectURL(blob), download: `dravit-du-toan-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}.xlsx` });
   document.body.append(a);
   a.click();
   setTimeout(() => {
@@ -1507,8 +1616,8 @@ function onClick(event) {
     case 'pdf':
       printPdf();
       break;
-    case 'csv':
-      downloadCsv();
+    case 'xlsx':
+      downloadXlsx();
       break;
     case 'share':
       copyShare();

@@ -1,0 +1,369 @@
+[
+ {
+  "drv_slot": "showroom_booking",
+  "drv_version": 1,
+  "title": "DRAVIT · Đặt lịch xem mẫu",
+  "status": "published",
+  "type": "form",
+  "has_payment": "0",
+  "conditions": null,
+  "form": {
+   "fields": [
+    {
+     "index": 0,
+     "element": "input_text",
+     "attributes": {
+      "type": "text",
+      "name": "name",
+      "value": "",
+      "id": "",
+      "class": "",
+      "placeholder": "Nguyễn Văn A",
+      "maxlength": "80"
+     },
+     "settings": {
+      "container_class": "",
+      "label": "Họ và tên",
+      "label_placement": "",
+      "admin_field_label": "Họ và tên",
+      "help_message": "",
+      "prefix_label": "",
+      "suffix_label": "",
+      "validation_rules": {
+       "required": {
+        "value": true,
+        "message": "Vui lòng nhập họ và tên.",
+        "global": false
+       }
+      },
+      "conditional_logics": [],
+      "is_unique": "no",
+      "unique_validation_message": ""
+     },
+     "editor_options": {
+      "title": "Simple Text",
+      "icon_class": "ff-edit-text",
+      "template": "inputText"
+     },
+     "uniqElKey": "el_drv0041"
+    },
+    {
+     "index": 1,
+     "element": "input_text",
+     "attributes": {
+      "type": "tel",
+      "name": "phone",
+      "value": "",
+      "id": "",
+      "class": "",
+      "placeholder": "0909 123 456",
+      "maxlength": "16"
+     },
+     "settings": {
+      "container_class": "",
+      "label": "Số điện thoại",
+      "label_placement": "",
+      "admin_field_label": "Số điện thoại",
+      "help_message": "",
+      "prefix_label": "",
+      "suffix_label": "",
+      "validation_rules": {
+       "required": {
+        "value": true,
+        "message": "Vui lòng nhập số điện thoại.",
+        "global": false
+       },
+       "regex": {
+        "value": "^(\\+?84|0)\\s?[35789](\\s?\\d){8}$",
+        "message": "Số điện thoại cần gồm 10 chữ số di động Việt Nam.",
+        "global": false
+       }
+      },
+      "conditional_logics": [],
+      "is_unique": "no",
+      "unique_validation_message": ""
+     },
+     "editor_options": {
+      "title": "Simple Text",
+      "icon_class": "ff-edit-text",
+      "template": "inputText"
+     },
+     "uniqElKey": "el_drv0042"
+    },
+    {
+     "index": 2,
+     "element": "input_email",
+     "attributes": {
+      "type": "email",
+      "name": "email",
+      "value": "",
+      "id": "",
+      "class": "",
+      "placeholder": "ten@email.com"
+     },
+     "settings": {
+      "container_class": "",
+      "label": "Email",
+      "label_placement": "",
+      "admin_field_label": "Email",
+      "help_message": "",
+      "validation_rules": {
+       "required": {
+        "value": false,
+        "message": "Vui lòng nhập email.",
+        "global": false
+       },
+       "email": {
+        "value": true,
+        "message": "Email chưa đúng định dạng.",
+        "global": false
+       }
+      },
+      "conditional_logics": []
+     },
+     "editor_options": {
+      "title": "Email Address",
+      "icon_class": "ff-edit-email",
+      "template": "inputText"
+     },
+     "uniqElKey": "el_drv0043"
+    },
+    {
+     "index": 3,
+     "element": "input_text",
+     "attributes": {
+      "type": "text",
+      "name": "preferred_time",
+      "value": "",
+      "id": "",
+      "class": "",
+      "placeholder": "VD: Sáng thứ 7, 9:00 - 10:00",
+      "maxlength": "60"
+     },
+     "settings": {
+      "container_class": "",
+      "label": "Ngày / khung giờ muốn đến xem mẫu",
+      "label_placement": "",
+      "admin_field_label": "Ngày / khung giờ muốn đến xem mẫu",
+      "help_message": "",
+      "prefix_label": "",
+      "suffix_label": "",
+      "validation_rules": {
+       "required": {
+        "value": true,
+        "message": "Vui lòng nhập ngày / khung giờ muốn đến xem mẫu.",
+        "global": false
+       }
+      },
+      "conditional_logics": [],
+      "is_unique": "no",
+      "unique_validation_message": ""
+     },
+     "editor_options": {
+      "title": "Simple Text",
+      "icon_class": "ff-edit-text",
+      "template": "inputText"
+     },
+     "uniqElKey": "el_drv0044"
+    },
+    {
+     "index": 4,
+     "element": "textarea",
+     "attributes": {
+      "name": "message",
+      "value": "",
+      "id": "",
+      "class": "",
+      "placeholder": "Số người đi, mẫu muốn xem...",
+      "rows": 4,
+      "cols": 2,
+      "maxlength": "1000"
+     },
+     "settings": {
+      "container_class": "",
+      "label": "Ghi chú thêm",
+      "admin_field_label": "Ghi chú thêm",
+      "label_placement": "",
+      "help_message": "",
+      "validation_rules": {
+       "required": {
+        "value": false,
+        "message": "Vui lòng mô tả ngắn nhu cầu của bạn.",
+        "global": false
+       }
+      },
+      "conditional_logics": []
+     },
+     "editor_options": {
+      "title": "Text Area",
+      "icon_class": "ff-edit-textarea",
+      "template": "inputTextarea"
+     },
+     "uniqElKey": "el_drv0045"
+    },
+    {
+     "index": 5,
+     "element": "gdpr_agreement",
+     "attributes": {
+      "type": "checkbox",
+      "name": "gdpr-agreement",
+      "value": false,
+      "class": "ff_gdpr_field"
+     },
+     "settings": {
+      "label": "Đồng ý",
+      "tnc_html": "Tôi đồng ý để DRAVIT lưu thông tin này nhằm liên hệ tư vấn theo <a href=\"/chinh-sach-bao-mat\" target=\"_blank\" rel=\"noopener\">Chính sách bảo mật</a>.",
+      "admin_field_label": "Đồng ý xử lý dữ liệu",
+      "has_checkbox": true,
+      "container_class": "",
+      "validation_rules": {
+       "required": {
+        "value": true,
+        "message": "Vui lòng đồng ý để chúng tôi liên hệ tư vấn.",
+        "global": false
+       }
+      },
+      "required_field_message": "",
+      "conditional_logics": []
+     },
+     "editor_options": {
+      "title": "GDPR Agreement",
+      "icon_class": "ff-edit-gdpr",
+      "template": "termsCheckbox"
+     },
+     "uniqElKey": "el_drv0046"
+    },
+    {
+     "index": 6,
+     "element": "input_hidden",
+     "attributes": {
+      "type": "hidden",
+      "name": "drv_page_url",
+      "value": ""
+     },
+     "settings": {
+      "admin_field_label": "drv_page_url"
+     },
+     "editor_options": {
+      "title": "Hidden Field",
+      "icon_class": "ff-edit-hidden-field",
+      "template": "inputHidden"
+     },
+     "uniqElKey": "el_drv0047"
+    },
+    {
+     "index": 7,
+     "element": "input_hidden",
+     "attributes": {
+      "type": "hidden",
+      "name": "utm_source",
+      "value": "{get.utm_source}"
+     },
+     "settings": {
+      "admin_field_label": "utm_source"
+     },
+     "editor_options": {
+      "title": "Hidden Field",
+      "icon_class": "ff-edit-hidden-field",
+      "template": "inputHidden"
+     },
+     "uniqElKey": "el_drv0048"
+    },
+    {
+     "index": 8,
+     "element": "input_hidden",
+     "attributes": {
+      "type": "hidden",
+      "name": "utm_medium",
+      "value": "{get.utm_medium}"
+     },
+     "settings": {
+      "admin_field_label": "utm_medium"
+     },
+     "editor_options": {
+      "title": "Hidden Field",
+      "icon_class": "ff-edit-hidden-field",
+      "template": "inputHidden"
+     },
+     "uniqElKey": "el_drv0049"
+    },
+    {
+     "index": 9,
+     "element": "input_hidden",
+     "attributes": {
+      "type": "hidden",
+      "name": "utm_campaign",
+      "value": "{get.utm_campaign}"
+     },
+     "settings": {
+      "admin_field_label": "utm_campaign"
+     },
+     "editor_options": {
+      "title": "Hidden Field",
+      "icon_class": "ff-edit-hidden-field",
+      "template": "inputHidden"
+     },
+     "uniqElKey": "el_drv0050"
+    }
+   ],
+   "submitButton": {
+    "uniqElKey": "el_1524065200616",
+    "element": "button",
+    "attributes": {
+     "type": "submit",
+     "class": "drv-btn drv-btn--primary"
+    },
+    "settings": {
+     "align": "left",
+     "button_style": "default",
+     "container_class": "",
+     "help_message": "",
+     "background_color": "#4A6B3C",
+     "button_size": "md",
+     "color": "#ffffff",
+     "button_ui": {
+      "type": "default",
+      "text": "Đặt lịch hẹn",
+      "img_url": ""
+     },
+     "normal_styles": {
+      "backgroundColor": "#4A6B3C",
+      "borderColor": "#4A6B3C",
+      "color": "#ffffff",
+      "borderRadius": "",
+      "minWidth": ""
+     },
+     "hover_styles": {
+      "backgroundColor": "#ffffff",
+      "borderColor": "#4A6B3C",
+      "color": "#4A6B3C",
+      "borderRadius": "",
+      "minWidth": ""
+     },
+     "current_state": "normal_styles"
+    },
+    "editor_options": {
+     "title": "Submit Button"
+    }
+   }
+  },
+  "metas": [
+   {
+    "meta_key": "formSettings",
+    "value": "{\"confirmation\": {\"redirectTo\": \"samePage\", \"messageToShow\": \"Cảm ơn bạn! DRAVIT đã nhận lịch hẹn và sẽ gọi xác nhận trước giờ đến.\", \"customPage\": null, \"samePageFormBehavior\": \"hide_form\", \"customUrl\": null}, \"restrictions\": {\"limitNumberOfEntries\": {\"enabled\": false, \"numberOfEntries\": null, \"period\": \"total\", \"limitReachedMsg\": \"Maximum number of entries exceeded.\"}, \"scheduleForm\": {\"enabled\": false, \"start\": null, \"end\": null, \"pendingMsg\": \"\", \"expiredMsg\": \"\"}, \"requireLogin\": {\"enabled\": false, \"requireLoginMsg\": \"\"}, \"denyEmptySubmission\": {\"enabled\": false, \"message\": \"\"}}, \"layout\": {\"labelPlacement\": \"top\", \"helpMessagePlacement\": \"with_label\", \"errorMessagePlacement\": \"inline\", \"asteriskPlacement\": \"asterisk-right\"}, \"delete_entry_on_submission\": \"no\"}"
+   },
+   {
+    "meta_key": "notifications",
+    "value": "{\"name\": \"Thông báo quản trị\", \"sendTo\": {\"type\": \"email\", \"email\": \"{wp.admin_email}\", \"field\": \"email\", \"routing\": [{\"email\": null, \"field\": null, \"operator\": \"=\", \"value\": null}]}, \"fromName\": \"\", \"fromEmail\": \"\", \"replyTo\": \"\", \"bcc\": \"\", \"subject\": \"[DRAVIT] Yêu cầu mới từ {inputs.name}\", \"message\": \"<p>{all_data}</p>\", \"conditionals\": {\"status\": false, \"type\": \"all\", \"conditions\": [{\"field\": null, \"operator\": \"=\", \"value\": null}]}, \"enabled\": false, \"email_template\": \"\"}"
+   },
+   {
+    "meta_key": "template_name",
+    "value": "drv_showroom_booking"
+   },
+   {
+    "meta_key": "_primary_email_field",
+    "value": "email"
+   }
+  ]
+ }
+]

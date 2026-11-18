@@ -1,4 +1,4 @@
-# 07. Đặc tả UI/UX từng trang (Architectural Grid System)
+﻿# 07. Đặc tả UI/UX từng trang (Architectural Grid System)
 
 > Token, màu sắc, typography, thang z-index & component cơ bản: xem [01_Brand_Design_System.md](01_Brand_Design_System.md).
 > Giọng văn & khung copy từng trang: xem [10_Brand_Voice_And_Content_Guide.md](10_Brand_Voice_And_Content_Guide.md).
@@ -291,7 +291,7 @@ Desktop (≥ 1024px): Cột trái 7/12 (Gallery 6 vai trò) │ Cột phải 5/1
 ### 5.3 Khu vực Dưới (Below the Fold) & Sticky Purchase Bar
 
 - **Lưới 6 Mặt vân ngẫu nhiên (`drv_face_image_ids`):** Hiển thị trực quan các mặt vân không lặp của mẫu gạch (mở zoom chung qua PhotoSwipe 5).
-- **3 Khối Lưu ý Trách nhiệm (`<details>` / thẻ ngang):** (1) Biến thiên sắc độ `Shade` & cam kết xuất cùng mã lô `Lot` cho một lần đặt; (2) Độ rộng đường ron khuyến nghị (`1,5–2mm` với cạnh mài Rectified); (3) Quy trình kiểm hàng và báo phí vận chuyển theo tải trọng. *(Ẩn khối gợi ý mua kèm keo/ke ron ở Phase 1 theo `D-26`)*.
+- **3 Khối Lưu ý Trách nhiệm (`<details>` / thẻ ngang):** (1) Biến thiên sắc độ `Shade` & cam kết xuất cùng mã lô `Lot` cho một lần đặt; (2) Độ rộng đường ron khuyến nghị (`1,5–2mm` với cạnh mài Rectified); (3) Quy trình kiểm hàng và báo phí vận chuyển theo tải trọng. *(PDP vẫn ẩn khối gợi ý mua kèm keo/ke ron theo `D-26`; chỉ Giỏ hàng có khối này theo `D-38`)*.
 - **Lưới 8 Sản phẩm tương tự (`4 cột × 2 hàng`, `IL-06`)** + dải **Sản phẩm vừa xem** (đọc tối đa 8 ID từ `localStorage` `drv_viewed`, nạp thẻ qua `/wp-json/dravit/v1/products?include=...`).
 - **Sticky Purchase Bar (hiện ở đáy màn hình khi cuộn qua khỏi `<form class="cart">`, `z-index: var(--z-header)`):**
   - **Chế độ `priced`:** Hiển thị ảnh nhỏ + tên + đang chọn `{X} viên ({Y} thùng · {Z} m²)` + tạm tính + nút `Thêm vào giỏ` & `Mua ngay`.
@@ -306,7 +306,8 @@ Desktop (≥ 1024px): Cột trái 7/12 (Gallery 6 vai trò) │ Cột phải 5/1
 - **Quy tắc hiển thị bất biến trên cả `/gio-hang` và Mini-cart Drawer:** Mỗi dòng sản phẩm luôn hiển thị rõ **đơn giá kép (`385.000đ/m²` và `246.400đ/viên`)**, cụm tăng giảm `.drv-stepper--cart` theo đúng bước nhảy sản phẩm (kèm nút nhanh `+1 thùng`) và dòng quy đổi đầy đủ **`6 thùng · 11,52 m² · ~252 kg`** (tuyệt đối không ẩn giá/viên hay dòng quy đổi trong drawer).
 - **Cảnh báo lẻ thùng:** Với SKU cho phép mua lẻ viên (`drv_round_mode = piece`), nếu tổng số viên chưa chẵn thùng, hiển thị dải nhắc nhẹ màu `--c-warning-bg` kèm nút 1-click **`[Làm tròn chẵn thùng (+N viên)]`**.
 - **Hộp tổng kết `.drv-summary-box`:** Tổng số thùng · Tổng diện tích `m²` · Tổng trọng lượng ước tính `kg` · **Gợi ý phương tiện giao hàng** theo ngưỡng tải trọng (`drv_settings.order.vehicle_thresholds`: ba gác/bán tải/xe tải 1,5–5 tấn) · Phí vận chuyển: *"Báo sau khi xác nhận đơn"* (không ghi `"0đ"`) · Nút tiến hành thanh toán + Liên kết chuyển giỏ hàng sang Danh sách Báo giá BOQ.
-- **Phạm vi sạch Phase 1:** Chủ động tắt ô nhập mã ưu đãi (coupon) và ẩn khối mua kèm phụ kiện. Khi giỏ trống, hiển thị thông báo gọn kèm 4 thẻ dẫn về 4 nhóm Silo chính.
+- **Khối bổ trợ cuối giỏ (`D-38`, sửa đổi `D-26`):** nút *Đặt lại số lượng mặc định*; khối **"Vật tư thi công đề xuất"** (FBT: checkbox từng món, số lượng tự tính theo định mức phủ, tổng tiền cập nhật tức thì, nút *Thêm vào đơn*; tự ẩn khi chưa có SKU `phu_kien`); **3 thẻ cam kết** (cùng lô màu, 1 đổi 1 mẻ cạnh, giữ lô miễn phí `order.lot_hold_days` ngày); mục **"Mẫu gạch phối đồng bộ"** (4 thẻ sản phẩm).
+- **Phạm vi sạch Phase 1:** Chủ động tắt ô nhập mã ưu đãi (coupon); khối mua kèm phụ kiện chỉ xuất hiện trong Giỏ hàng như trên, vẫn ẩn ở PDP, danh mục, BOQ. Khi giỏ trống, hiển thị thông báo gọn kèm 4 thẻ dẫn về 4 nhóm Silo chính.
 
 ### 6.2 Danh sách Báo giá Công trình BOQ (`/danh-sach-bao-gia` — `template-quote.php`, `D-23`)
 > Đặc tả chi tiết luồng dữ liệu, công thức và xử lý Admin: xem [17_Quote_BOQ_And_Lead_Spec.md](17_Quote_BOQ_And_Lead_Spec.md).
@@ -385,7 +386,7 @@ Mobile: Nút nổi "Mục lục" (z-index: --z-fab, đặt trên Mobile Bar) m�
 
 | Trang | Template & Slug chuẩn | Đặc tả bố cục & chức năng |
 |---|---|---|
-| **Liên hệ & Showroom** | `page-templates/template-contact.php` (`/lien-he`, redirect `301` từ `/showroom` — `D-29`) | **Layout 2 cột (6/6 hoặc 5/7):**<br>• **Cột trái:** Thông tin pháp nhân đầy đủ (Tên công ty, MST, Email chính thức), danh sách thẻ **Showroom** & **Tổng kho** từ `drv_settings.showrooms` (địa chỉ hành chính 2 cấp mới, giờ mở cửa kèm badge trạng thái server, hướng dẫn đỗ ô tô, nút mở Google Maps).<br>• **Cột phải:** Form hợp nhất (`Liên hệ tư vấn / Đặt lịch xem mẫu / Nhận báo giá`) gửi về `POST /dravit/v1/lead` (`drv_lead`), gồm Họ tên, SĐT, Tỉnh/TP, Nhu cầu, Ghi chú, **checkbox đồng ý xử lý dữ liệu cá nhân**, honeypot và nonce tươi. Xuất Schema `ContactPage` + `LocalBusiness`. |
+| **Liên hệ** | `page-templates/template-contact.php` (`/lien-he`, redirect `301` từ `/showroom` — `D-29`) | **Layout 2 cột (6/6 hoặc 5/7):**<br>• **Cột trái:** Thông tin pháp nhân đầy đủ (Tên công ty, MST, Email chính thức), danh sách thẻ **Showroom** & **Tổng kho** từ `drv_settings.showrooms` (địa chỉ hành chính 2 cấp mới, giờ mở cửa kèm badge trạng thái server, hướng dẫn đỗ ô tô, nút mở Google Maps).<br>• **Cột phải:** Form hợp nhất (`Liên hệ tư vấn / Đặt lịch xem mẫu / Nhận báo giá`) gửi về `POST /dravit/v1/lead` (`drv_lead`), gồm Họ tên, SĐT, Tỉnh/TP, Nhu cầu, Ghi chú, **checkbox đồng ý xử lý dữ liệu cá nhân**, honeypot và nonce tươi. Xuất Schema `ContactPage` + `LocalBusiness`. |
 | **Giới thiệu** | `page.php` (`/gioi-thieu`) | Bản copy chuẩn tại `10_Brand_Voice_And_Content_Guide.md` §4.5 + ảnh thực tế showroom/kho hàng + các chuẩn mực kiểm định vật liệu + dải liên hệ cuối trang. |
 | **5 Trang Chính sách** | `page-templates/template-policy.php` | **Layout 2 cột:** Cột trái (3/12) là menu chuyển nhanh giữa 5 chính sách (Vận chuyển, Đổi trả & kiểm hàng, Thanh toán, Bảo mật thông tin, Điều khoản) + mục lục trang; Cột phải (9/12, `max-width: 70ch`) trình bày văn bản rõ ràng kèm ngày hiệu lực. |
 | **404 Không tìm thấy** | `404.php` | Thông điệp ngắn gọn giải thích liên kết không tồn tại hoặc mã gạch đã ngừng kinh doanh + **Ô tìm kiếm mã gạch/kích thước (`get_search_form()`)** + **Lưới 4 thẻ danh mục tĩnh trọng điểm** từ `drv_settings.catalog.404_collections` (`/gach-lat-nen`, `/gach-phong-khach`, `/gach-van-da`, `/gach-80x80`) + nút hỏi mẫu thay thế qua Zalo. |

@@ -35,6 +35,9 @@ if (!$is_distraction_free_checkout) {
     }
     Template::render_part('template-parts/header/mobile-drawer');
     Template::render_part('template-parts/footer/quote-modal');
+    if (!empty($GLOBALS['drv_needs_showroom_booking'])) {
+        Template::render_part('template-parts/footer/showroom-booking-modal');
+    }
     Template::render_part('template-parts/footer/minicart-drawer');
 }
 ?>

@@ -1,5 +1,6 @@
-import { copyText, openDialog, registerAction } from './core.js';
+import { openDialog, registerAction } from './core.js';
 import { registerCalcElements } from './chunks/calc-elements.js';
+import { initShareMenu } from './chunks/share-menu.js';
 import { prefersReducedMotion, qs } from './utils/dom.js';
 import { readJsonStorage, writeJsonStorage } from './utils/storage.js';
 import { showToast } from './utils/toast.js';
@@ -96,7 +97,8 @@ function setupStickyPurchaseObserver(signal) {
 function registerPdpActions() {
   registerAction('pdp-quote-modal', (trigger, event) => {
     event?.preventDefault();
-    const modal = qs('#drv-quote-modal');
+    // Ưu tiên dialog Tư vấn riêng của PDP (slot `pdp_consult`), dự phòng modal báo giá toàn site.
+    const modal = qs('#drv-pdp-consult-modal') || qs('#drv-quote-modal');
     if (!modal) {
       return;
     }
@@ -122,33 +124,12 @@ function registerPdpActions() {
 
     openDialog(modal, trigger);
   });
-
-  registerAction('share-product', async (trigger, event) => {
-    event?.preventDefault();
-    const shareUrl = trigger.dataset.drvUrl || window.location.href;
-    const shareTitle = trigger.dataset.drvTitle || document.title;
-
-    if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
-      try {
-        await navigator.share({ title: shareTitle, url: shareUrl });
-        return;
-      } catch (err) {
-        if (err?.name === 'AbortError') {
-          return;
-        }
-      }
-    }
-
-    const copied = await copyText(shareUrl);
-    if (copied) {
-      showToast('Đã sao chép liên kết sản phẩm', 'success', 2400);
-    }
-  });
 }
 
 export function initProductPage() {
   registerCalcElements();
   registerPdpActions();
+  initShareMenu();
 
   pdpAbort?.abort();
   pdpAbort = new AbortController();

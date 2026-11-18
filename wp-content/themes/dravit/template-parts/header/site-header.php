@@ -10,7 +10,7 @@ $home_url    = MegaMenuRenderer::internal_url('/');
 $boq_url     = MegaMenuRenderer::internal_url('/danh-sach-bao-gia');
 $ai_url      = MegaMenuRenderer::internal_url('/tro-ly-ai-tim-gach');
 $ai_enabled  = (bool) drv_setting('features.ai_enabled', true);
-$hotline_raw = (string) drv_setting('contact.hotline', '0909 888 777');
+$hotline_raw = (string) drv_setting('contact.hotline', '');
 $hotline_tel = drv_clean_phone($hotline_raw);
 $brand_name  = (string) drv_setting('company.brand_name', 'DRAVIT');
 

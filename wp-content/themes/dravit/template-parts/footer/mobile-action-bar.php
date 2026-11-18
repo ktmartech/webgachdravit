@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 defined('ABSPATH') || exit;
 
-$hotline_raw = (string) drv_setting('contact.hotline', '0909 888 777');
+$hotline_raw = (string) drv_setting('contact.hotline', '');
 $hotline_tel = drv_clean_phone($hotline_raw);
 $zalo_clean  = drv_clean_phone((string) drv_setting('contact.zalo', $hotline_raw));
 

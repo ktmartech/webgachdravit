@@ -767,7 +767,7 @@ final class Shortcodes implements ServiceProviderInterface {
         }
 
         $post_id  = function_exists('get_the_ID') ? max(0, (int) get_the_ID()) : 0;
-        $sla_text = (string) drv_setting('order.sla_text', 'Phản hồi trong 30 phút giờ làm việc (08:00 - 21:00)');
+        $sla_text = (string) drv_setting('order.sla_text', '');
         $source   = $is_sample ? 'sample' : 'blog_inline';
         $uid_sfx  = substr(md5($source . '|' . $post_id . '|' . $sku . '|' . $title), 0, 6);
 

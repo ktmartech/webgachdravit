@@ -341,7 +341,7 @@ $val = static function (string $key) use ($checkout): string {
                     <ul class="drv-checkout-guarantee__list">
                         <li class="drv-checkout-guarantee__item">
                             <?php drv_ui('icon', ['name' => 'check', 'weight' => 'bold', 'size' => 'xs']); ?>
-                            <span>Gọi xác nhận trong giờ làm việc <?php echo esc_html((string) drv_setting('contact.working_hours', '08:00 - 21:00')); ?>.</span>
+                            <span>Gọi xác nhận trong giờ làm việc <?php echo esc_html((string) drv_setting('contact.working_hours', '')); ?>.</span>
                         </li>
                         <li class="drv-checkout-guarantee__item">
                             <?php drv_ui('icon', ['name' => 'check', 'weight' => 'bold', 'size' => 'xs']); ?>

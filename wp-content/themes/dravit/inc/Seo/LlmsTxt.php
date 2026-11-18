@@ -95,12 +95,12 @@ final class LlmsTxt implements ServiceProviderInterface {
             : (function_exists('home_url') ? UrlNormalizer::untrailingslashUrl(home_url('/')) : 'https://gachdravit.vn');
 
         $brand   = (string) ($cfg['company']['brand_name'] ?? 'DRAVIT');
-        $legal   = (string) ($cfg['company']['legal_name'] ?? 'Công ty TNHH Vật Liệu Kiến Trúc DRAVIT');
+        $legal   = (string) ($cfg['company']['legal_name'] ?? '');
         $summary = trim((string) ($cfg['seo']['geo_brand_summary'] ?? ''));
-        $hotline = trim((string) ($cfg['contact']['hotline'] ?? '0909 888 777'));
-        $zalo    = trim((string) ($cfg['contact']['zalo'] ?? '0909888777'));
-        $email   = trim((string) ($cfg['contact']['email'] ?? 'cskh@gachdravit.vn'));
-        $hours   = trim((string) ($cfg['contact']['working_hours'] ?? '08:00 - 21:00 (Thứ 2 - Chủ nhật)'));
+        $hotline = trim((string) ($cfg['contact']['hotline'] ?? ''));
+        $zalo    = trim((string) ($cfg['contact']['zalo'] ?? ''));
+        $email   = trim((string) ($cfg['contact']['email'] ?? ''));
+        $hours   = trim((string) ($cfg['contact']['working_hours'] ?? ''));
 
         $lines   = [];
         $lines[] = sprintf('# %s - Hệ thống Gạch Ốp Lát Kiến Trúc & Đá Nung Kết Chính Hãng', $brand);

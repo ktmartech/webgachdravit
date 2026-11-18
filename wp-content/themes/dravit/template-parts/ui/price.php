@@ -40,7 +40,7 @@ $discount = ($is_sale && $old_price_m2 > 0) ? (int) round((1 - ($price_m2 / $old
 
 if (in_array($context, ['single', 'pdp'], true)) :
     // Mockup 03: dòng phụ gọn "≈ 246.400đ/viên"; quy cách thùng/kg hiển thị trong ghi chú của <drv-unit-calc>.
-    $sla_text = (string) drv_setting('order.sla_text', 'Báo giá theo khối lượng công trình · Phản hồi trong 30 phút (08:00 - 21:00).');
+    $sla_text = (string) drv_setting('order.sla_text', '');
     ?>
     <?php if ($is_quote) : ?>
         <div class="drv-pdp-price-block drv-pdp-price-block--quote u-tabular">

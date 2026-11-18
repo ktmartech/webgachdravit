@@ -27,8 +27,8 @@ $keywords = is_array($keywords) ? $keywords : [];
 
 $gach_url = UrlNormalizer::untrailingslashUrl(home_url('/gach'));
 $boq_url  = UrlNormalizer::untrailingslashUrl(home_url('/danh-sach-bao-gia'));
-$zalo     = drv_clean_phone((string) drv_setting('contact.zalo', '0909888777'));
-$hotline  = (string) drv_setting('contact.hotline', '0909 888 777');
+$zalo     = drv_clean_phone((string) drv_setting('contact.zalo', ''));
+$hotline  = (string) drv_setting('contact.hotline', '');
 ?>
 <section class="l-section drv-recovery">
     <div class="l-container l-stack l-stack--lg">

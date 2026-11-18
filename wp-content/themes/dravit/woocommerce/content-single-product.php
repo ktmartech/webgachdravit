@@ -105,6 +105,12 @@ $view = ProductViewData::forProduct($product);
 </div>
 
 <?php
+Template::render_part('template-parts/product/consult-modal', [
+    'product_id' => (int) $product->get_id(),
+    'sku'        => (string) $product->get_sku(),
+    'name'       => (string) $product->get_name(),
+]);
+
 Template::render_part('template-parts/product/sticky-bar', [
     'product' => $product,
     'view'    => $view,

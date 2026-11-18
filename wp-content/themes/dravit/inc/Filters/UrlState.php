@@ -16,6 +16,9 @@ defined('ABSPATH') || exit;
  * (ADR D-21, docs/05 §3, docs/15 §2.1, Test R-3..R-8, M-1..M-8, F-14).
  */
 final class UrlState {
+    /** Tối đa 12 sản phẩm mỗi lần hiển thị (trang SSR, AJAX và nút "Xem thêm"). */
+    public const MAX_PER_PAGE = 12;
+
     private string $base_taxonomy;
     private string $base_slug;
     private string $base_url;
@@ -91,18 +94,18 @@ final class UrlState {
         $facet_defs             = FacetRegistry::getFacets($f_cfg);
         $sort_options           = FacetRegistry::getSortOptions($f_cfg);
 
-        $default_per_page = (int) drv_setting('catalog.per_page', 24);
+        $default_per_page = (int) drv_setting('catalog.per_page', 12);
         if ($default_per_page < 1) {
-            $default_per_page = 24;
+            $default_per_page = self::MAX_PER_PAGE;
         }
-        $resolved_per_page = $per_page !== null ? max(1, min(48, $per_page)) : max(1, min(48, $default_per_page));
+        $resolved_per_page = $per_page !== null ? max(1, min(self::MAX_PER_PAGE, $per_page)) : max(1, min(self::MAX_PER_PAGE, $default_per_page));
         $resolved_page     = max(1, $page);
 
         if (isset($raw_params['page']) && $page <= 1) {
             $resolved_page = max(1, (int) $raw_params['page']);
         }
         if (isset($raw_params['per_page']) && $per_page === null) {
-            $resolved_per_page = max(1, min(48, (int) $raw_params['per_page']));
+            $resolved_per_page = max(1, min(self::MAX_PER_PAGE, (int) $raw_params['per_page']));
         }
 
         $resolved_sort = 'moi-ve';
@@ -223,7 +226,7 @@ final class UrlState {
             ? trim($params['base'])
             : 'product_cat:gach';
         $page     = isset($params['page']) ? max(1, (int) $params['page']) : 1;
-        $per_page = isset($params['per_page']) ? max(1, min(48, (int) $params['per_page'])) : null;
+        $per_page = isset($params['per_page']) ? max(1, min(self::MAX_PER_PAGE, (int) $params['per_page'])) : null;
 
         return self::fromArray($base, is_array($params) ? $params : [], $page, $per_page);
     }

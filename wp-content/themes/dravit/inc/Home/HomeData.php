@@ -540,10 +540,10 @@ final class HomeData {
             ? $showrooms[0]
             : [];
 
-        $name     = trim((string) ($overrides['name'] ?? $primary['name'] ?? 'Showroom Flagship Sala'));
-        $address  = trim((string) ($overrides['address'] ?? $primary['address'] ?? '128 Nguyễn Cơ Thạch, Phường An Khánh, TP.HCM'));
-        $phone    = trim((string) ($overrides['phone'] ?? $primary['phone'] ?? drv_setting('contact.hotline', '0909 888 777')));
-        $hours    = trim((string) ($overrides['hours'] ?? $primary['hours'] ?? '08:00 - 20:30'));
+        $name     = trim((string) ($overrides['name'] ?? $primary['name'] ?? drv_setting('company.brand_name', '')));
+        $address  = trim((string) ($overrides['address'] ?? $primary['address'] ?? drv_setting('company.address', '')));
+        $phone    = trim((string) ($overrides['phone'] ?? $primary['phone'] ?? drv_setting('contact.hotline', '')));
+        $hours    = trim((string) ($overrides['hours'] ?? $primary['hours'] ?? drv_setting('contact.working_hours', '')));
         $maps_url = trim((string) ($overrides['maps_url'] ?? $primary['maps_url'] ?? ''));
 
         $after_id = (int) ($overrides['after_img_id'] ?? $primary['after_img_id'] ?? 0);

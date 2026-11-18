@@ -5,18 +5,18 @@ use Dravit\Core\Menu\MegaMenuRenderer;
 
 defined('ABSPATH') || exit;
 
-$hotline_raw   = (string) drv_setting('contact.hotline', '0909 888 777');
+$hotline_raw   = (string) drv_setting('contact.hotline', '');
 $hotline_tel   = drv_clean_phone($hotline_raw);
 $zalo_clean    = drv_clean_phone((string) drv_setting('contact.zalo', $hotline_raw));
-$project_email = (string) drv_setting('contact.project_email', 'duan@gachdravit.vn');
+$project_email = (string) drv_setting('contact.project_email', '');
 $open_hour     = (int) drv_setting('contact.open_hour', 8);
 $close_hour    = (int) drv_setting('contact.close_hour', 21);
 $hours_badge   = sprintf('%02d:00 - %02d:00', $open_hour, $close_hour);
 
 $showrooms     = drv_setting('showrooms', []);
 $primary_sr    = (is_array($showrooms) && isset($showrooms[0]) && is_array($showrooms[0])) ? $showrooms[0] : [];
-$sr_name       = (string) ($primary_sr['name'] ?? 'Showroom Flagship Sala');
-$sr_address    = (string) ($primary_sr['address'] ?? drv_setting('company.address', '68 Nguyễn Cơ Thạch, Phường An Khánh, TP. Hồ Chí Minh'));
+$sr_name       = (string) ($primary_sr['name'] ?? drv_setting('company.brand_name', ''));
+$sr_address    = (string) ($primary_sr['address'] ?? drv_setting('company.address', ''));
 $sr_maps_url   = (string) ($primary_sr['maps_url'] ?? MegaMenuRenderer::internal_url('/lien-he'));
 $contact_url   = MegaMenuRenderer::internal_url('/lien-he');
 ?>
@@ -57,7 +57,7 @@ $contact_url   = MegaMenuRenderer::internal_url('/lien-he');
                             <i class="ph ph-map-pin drv-icon--sm" aria-hidden="true"></i>
                             <span><?php echo esc_html($sr_name); ?></span>
                         </span>
-                        <span class="drv-footer-dock__status drv-footer-dock__status--neutral">Mở cửa T2 - CN</span>
+                        <span class="drv-footer-dock__status drv-footer-dock__status--neutral"><?php echo esc_html((string) ($primary_sr['hours'] ?? $hours_badge)); ?></span>
                     </div>
                     <span class="drv-footer-dock__title"><?php echo esc_html($sr_address); ?></span>
                     <p class="drv-footer-dock__desc">Trải nghiệm thực tế mẫu gạch khổ lớn Big Slab và kiểm tra chất men dưới hệ đèn ánh sáng 3000K - 6500K.</p>

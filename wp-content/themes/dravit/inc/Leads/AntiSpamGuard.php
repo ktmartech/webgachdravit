@@ -160,7 +160,7 @@ final class AntiSpamGuard {
         }
 
         if ((int) $rec['count'] >= $limit) {
-            $hotline = (string) drv_setting('contact.hotline', '0909 888 777');
+            $hotline = (string) drv_setting('contact.hotline', '');
             return new \WP_Error(
                 'drv_rate_limited',
                 sprintf('Bạn đã gửi tối đa %d yêu cầu trong 15 phút. Cần hỗ trợ gấp vui lòng gọi %s.', $limit, $hotline),

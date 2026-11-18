@@ -104,9 +104,10 @@ $sticky_meta = sprintf(
                                 data-drv-sku="<?php echo esc_attr($sku); ?>"
                                 data-drv-title="<?php echo esc_attr($title); ?>"
                                 data-drv-sync-calc="true"
-                                data-drv-open-drawer="true">
+                                data-drv-open-drawer="true"
+                                aria-label="Thêm vào giỏ">
                             <i class="ph-bold ph-shopping-cart-simple drv-icon--xs" aria-hidden="true"></i>
-                            <span>Thêm vào giỏ</span>
+                            <span class="drv-sticky-purchase__btn-text">Thêm vào giỏ</span>
                         </button>
                     <?php else : ?>
                         <button type="button"
@@ -118,9 +119,10 @@ $sticky_meta = sprintf(
                                 data-drv-sku="<?php echo esc_attr($sku); ?>"
                                 data-drv-title="<?php echo esc_attr($title); ?>"
                                 data-drv-pieces="<?php echo esc_attr((string) $init_pieces); ?>"
-                                data-drv-m2="<?php echo esc_attr((string) $default_m2); ?>">
+                                data-drv-m2="<?php echo esc_attr((string) $default_m2); ?>"
+                                aria-label="Thêm vào danh sách báo giá">
                             <i class="ph-bold ph-plus drv-icon--xs" aria-hidden="true"></i>
-                            <span>+ DS báo giá</span>
+                            <span class="drv-sticky-purchase__btn-text">DS báo giá</span>
                         </button>
 
                         <button type="button"

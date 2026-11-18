@@ -5,7 +5,7 @@ use Dravit\Core\Menu\MegaMenuRenderer;
 
 defined('ABSPATH') || exit;
 
-$hotline_raw = (string) drv_setting('contact.hotline', '0909 888 777');
+$hotline_raw = (string) drv_setting('contact.hotline', '');
 $hotline_tel = drv_clean_phone($hotline_raw);
 ?>
 <dialog id="drv-mobile-menu-drawer" class="drv-dialog drv-dialog--drawer-left" aria-labelledby="mobile-menu-title">

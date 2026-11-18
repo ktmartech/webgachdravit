@@ -41,7 +41,7 @@ final class SettingsHelperTest extends TestCase {
         self::assertSame('0399888777', drv_setting('company.tax_id'));
         self::assertSame('DRAVIT', drv_setting('company.brand_name'));
         self::assertFalse(drv_setting('features.ai_enabled'));
-        self::assertSame(24, drv_setting('catalog.per_page'));
+        self::assertSame(12, drv_setting('catalog.per_page'));
         self::assertSame('default-val', drv_setting('unknown.deep.key', 'default-val'));
     }
 
@@ -78,7 +78,7 @@ final class SettingsHelperTest extends TestCase {
         self::assertSame(24, $sanitized['contact']['close_hour']);
         self::assertSame('970436', $sanitized['bank']['bank_bin']);
         self::assertSame('0071000888999', $sanitized['bank']['account_no']);
-        self::assertSame(48, $sanitized['catalog']['per_page']);
+        self::assertSame(12, $sanitized['catalog']['per_page']);
         self::assertSame(12, $sanitized['forms']['quote_modal']);
         self::assertSame('rule_only', $sanitized['ai']['provider']);
     }

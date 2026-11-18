@@ -5,6 +5,8 @@ namespace Dravit\Admin;
 
 use Dravit\Catalog\SearchTrending;
 use Dravit\Core\Config;
+use Dravit\Core\Integrations\FluentFormsBridge;
+use Dravit\Core\Integrations\FluentFormsProvisioner;
 use Dravit\Core\ServiceProviderInterface;
 use Dravit\Core\Settings;
 
@@ -250,6 +252,18 @@ final class SettingsPage implements ServiceProviderInterface {
                             <td><input id="drv-legal-name" type="text" class="regular-text" name="drv_settings[company][legal_name]" value="<?php echo esc_attr((string) $s['company']['legal_name']); ?>"></td>
                         </tr>
                         <tr>
+                            <th scope="row"><label for="drv-brand">Tên thương hiệu</label></th>
+                            <td><input id="drv-brand" type="text" class="regular-text" name="drv_settings[company][brand_name]" value="<?php echo esc_attr((string) ($s['company']['brand_name'] ?? '')); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="drv-tagline">Slogan</label></th>
+                            <td><input id="drv-tagline" type="text" class="large-text" name="drv_settings[company][tagline]" value="<?php echo esc_attr((string) ($s['company']['tagline'] ?? '')); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="drv-comp-email">Email chung công ty (CSKH)</label></th>
+                            <td><input id="drv-comp-email" type="email" class="regular-text" name="drv_settings[company][email]" value="<?php echo esc_attr((string) ($s['company']['email'] ?? '')); ?>"></td>
+                        </tr>
+                        <tr>
                             <th scope="row"><label for="drv-tax-id">Mã số thuế (MST)</label></th>
                             <td><input id="drv-tax-id" type="text" class="regular-text" name="drv_settings[company][tax_id]" value="<?php echo esc_attr((string) $s['company']['tax_id']); ?>"></td>
                         </tr>
@@ -277,6 +291,18 @@ final class SettingsPage implements ServiceProviderInterface {
                             <td><input id="drv-email-proj" type="email" class="regular-text" name="drv_settings[contact][project_email]" value="<?php echo esc_attr((string) $s['contact']['project_email']); ?>"></td>
                         </tr>
                         <tr>
+                            <th scope="row"><label for="drv-email-cs">Email CSKH hiển thị</label></th>
+                            <td><input id="drv-email-cs" type="email" class="regular-text" name="drv_settings[contact][email]" value="<?php echo esc_attr((string) ($s['contact']['email'] ?? '')); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="drv-open-hour">Giờ mở cửa (giờ, 0-23)</label></th>
+                            <td><input id="drv-open-hour" type="number" class="small-text" name="drv_settings[contact][open_hour]" value="<?php echo esc_attr((string) ($s['contact']['open_hour'] ?? '')); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="drv-close-hour">Giờ đóng cửa (giờ, 1-24)</label></th>
+                            <td><input id="drv-close-hour" type="number" class="small-text" name="drv_settings[contact][close_hour]" value="<?php echo esc_attr((string) ($s['contact']['close_hour'] ?? '')); ?>"></td>
+                        </tr>
+                        <tr>
                             <th scope="row"><label for="drv-hours">Khung giờ làm việc</label></th>
                             <td><input id="drv-hours" type="text" class="regular-text" name="drv_settings[contact][working_hours]" value="<?php echo esc_attr((string) $s['contact']['working_hours']); ?>"></td>
                         </tr>
@@ -291,6 +317,36 @@ final class SettingsPage implements ServiceProviderInterface {
                         <tr>
                             <th scope="row"><label for="drv-sr-maps">Google Maps URL</label></th>
                             <td><input id="drv-sr-maps" type="url" class="large-text" name="drv_settings[showrooms][0][maps_url]" value="<?php echo esc_attr((string) $room['maps_url']); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="drv-sr-phone">Hotline Showroom</label></th>
+                            <td><input id="drv-sr-phone" type="text" class="regular-text" name="drv_settings[showrooms][0][phone]" value="<?php echo esc_attr((string) ($room['phone'] ?? '')); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="drv-sr-hours">Giờ mở cửa Showroom (hiển thị)</label></th>
+                            <td><input id="drv-sr-hours" type="text" class="regular-text" name="drv_settings[showrooms][0][hours]" value="<?php echo esc_attr((string) ($room['hours'] ?? '')); ?>"></td>
+                        </tr>
+                        <input type="hidden" name="drv_settings[showrooms][0][after_img_id]" value="<?php echo esc_attr((string) ($room['after_img_id'] ?? 0)); ?>">
+                        <input type="hidden" name="drv_settings[showrooms][0][before_img_id]" value="<?php echo esc_attr((string) ($room['before_img_id'] ?? 0)); ?>">
+                        <tr>
+                            <th scope="row"><label for="drv-soc-facebook">Facebook URL</label></th>
+                            <td><input id="drv-soc-facebook" type="url" class="large-text" name="drv_settings[social][facebook]" value="<?php echo esc_attr((string) ($s['social']['facebook'] ?? '')); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="drv-soc-youtube">YouTube URL</label></th>
+                            <td><input id="drv-soc-youtube" type="url" class="large-text" name="drv_settings[social][youtube]" value="<?php echo esc_attr((string) ($s['social']['youtube'] ?? '')); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="drv-soc-tiktok">TikTok URL</label></th>
+                            <td><input id="drv-soc-tiktok" type="url" class="large-text" name="drv_settings[social][tiktok]" value="<?php echo esc_attr((string) ($s['social']['tiktok'] ?? '')); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="drv-soc-instagram">Instagram URL</label></th>
+                            <td><input id="drv-soc-instagram" type="url" class="large-text" name="drv_settings[social][instagram]" value="<?php echo esc_attr((string) ($s['social']['instagram'] ?? '')); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="drv-soc-pinterest">Pinterest URL</label></th>
+                            <td><input id="drv-soc-pinterest" type="url" class="large-text" name="drv_settings[social][pinterest]" value="<?php echo esc_attr((string) ($s['social']['pinterest'] ?? '')); ?>"></td>
                         </tr>
                     </table>
                 <?php elseif ($active_tab === 'bank') : ?>
@@ -310,6 +366,10 @@ final class SettingsPage implements ServiceProviderInterface {
                         <tr>
                             <th scope="row"><label for="drv-bank-holder">Chủ tài khoản (Không dấu)</label></th>
                             <td><input id="drv-bank-holder" type="text" class="large-text" name="drv_settings[bank][account_name]" value="<?php echo esc_attr((string) $s['bank']['account_name']); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="drv-bank-branch">Chi nhánh</label></th>
+                            <td><input id="drv-bank-branch" type="text" class="regular-text" name="drv_settings[bank][branch]" value="<?php echo esc_attr((string) ($s['bank']['branch'] ?? '')); ?>"></td>
                         </tr>
                     </table>
                 <?php elseif ($active_tab === 'order') : ?>
@@ -378,7 +438,23 @@ final class SettingsPage implements ServiceProviderInterface {
                         </tr>
                     </table>
                 <?php elseif ($active_tab === 'forms') : ?>
-                    <p class="description">Nhập Form ID của Fluent Forms cho từng vị trí (để <code>0</code> để dùng form native chống spam mặc định của theme theo ADR D-31).</p>
+                    <p class="description">Nhập Form ID của Fluent Forms cho từng vị trí (chọn <code>Dùng form native</code> để dùng form chống spam mặc định của theme theo ADR D-31).</p>
+                    <?php
+                    // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Chỉ đọc số form vừa tạo để hiện thông báo.
+                    $ff_made = isset($_GET['drv_ff_made']) ? (int) $_GET['drv_ff_made'] : -1;
+                    if ($ff_made >= 0) :
+                        ?>
+                        <div class="notice notice-success inline"><p><?php echo $ff_made > 0 ? esc_html(sprintf('Đã tạo và gắn %d form Fluent Forms từ mẫu của theme.', $ff_made)) : 'Không có form nào cần tạo: mọi vị trí đã gắn form hợp lệ.'; ?></p></div>
+                    <?php endif; ?>
+                    <?php if (drv_is_fluent_forms_active()) : ?>
+                        <p>
+                            <a class="button" href="<?php echo esc_url(wp_nonce_url(admin_url('admin-post.php?action=' . FluentFormsProvisioner::ACTION), FluentFormsProvisioner::ACTION)); ?>">Tạo lại form còn thiếu từ mẫu của theme</a>
+                            <span class="description">Theme tự tạo 6 form mẫu (<code>config/fluent-forms/*.json</code>) khi Fluent Forms bật; nút này chỉ tạo cho vị trí chưa gắn form hợp lệ, không ghi đè form đang dùng.</span>
+                        </p>
+                    <?php endif; ?>
+                    <?php if (!drv_is_fluent_forms_active()) : ?>
+                        <div class="notice notice-warning inline"><p>Fluent Forms chưa được kích hoạt: các vị trí luôn dùng form native, ô bên dưới chỉ lưu Form ID để dùng sau.</p></div>
+                    <?php endif; ?>
                     <table class="form-table" role="presentation">
                         <?php
                         $form_labels = [
@@ -389,11 +465,27 @@ final class SettingsPage implements ServiceProviderInterface {
                             'showroom_booking' => 'Form Đặt lịch hẹn xem mẫu Showroom',
                             'blog_inline'      => 'Form nhận báo giá trong bài Cẩm nang',
                         ];
+                        $ff_forms = FluentFormsBridge::available_forms();
                         foreach ($form_labels as $slot => $lbl) :
+                            $cur = (int) ($s['forms'][$slot] ?? 0);
                             ?>
                             <tr>
                                 <th scope="row"><label for="<?php echo esc_attr('drv-ff-' . $slot); ?>"><?php echo esc_html($lbl); ?></label></th>
-                                <td><input id="<?php echo esc_attr('drv-ff-' . $slot); ?>" type="number" min="0" name="drv_settings[forms][<?php echo esc_attr($slot); ?>]" value="<?php echo esc_attr((string) ($s['forms'][$slot] ?? 0)); ?>"></td>
+                                <td>
+                                    <?php if ($ff_forms !== []) : ?>
+                                        <select id="<?php echo esc_attr('drv-ff-' . $slot); ?>" name="drv_settings[forms][<?php echo esc_attr($slot); ?>]">
+                                            <option value="0"<?php selected($cur, 0); ?>>Dùng form native của theme</option>
+                                            <?php foreach ($ff_forms as $fid => $flabel) : ?>
+                                                <option value="<?php echo esc_attr((string) $fid); ?>"<?php selected($cur, $fid); ?>><?php echo esc_html($flabel); ?></option>
+                                            <?php endforeach; ?>
+                                            <?php if ($cur > 0 && !isset($ff_forms[$cur])) : ?>
+                                                <option value="<?php echo esc_attr((string) $cur); ?>" selected>#<?php echo esc_html((string) $cur); ?> (không tồn tại, theme sẽ dùng form native)</option>
+                                            <?php endif; ?>
+                                        </select>
+                                    <?php else : ?>
+                                        <input id="<?php echo esc_attr('drv-ff-' . $slot); ?>" type="number" min="0" name="drv_settings[forms][<?php echo esc_attr($slot); ?>]" value="<?php echo esc_attr((string) $cur); ?>">
+                                    <?php endif; ?>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     </table>

@@ -131,7 +131,7 @@ final class QuoteController implements ServiceProviderInterface {
             'sla_message' => sprintf(
                 'Chuyên viên DRAVIT sẽ kiểm tra mã lô tồn kho và liên hệ số %s. %s.',
                 (string) $data['phone'],
-                (string) drv_setting('order.sla_text', 'phản hồi trong 30 phút giờ làm việc')
+                (string) drv_setting('order.sla_text', '')
             ),
             'summary'     => $totals,
         ];

@@ -139,7 +139,7 @@ final class Settings implements ServiceProviderInterface {
                 'hero_img_id'  => 0,
             ],
             'catalog'  => [
-                'per_page'  => 24,
+                'per_page'  => 12,
                 'new_days'  => 45,
                 '404_silos' => ['gach-lat-nen', 'gach-phong-khach', 'gach-van-da', 'gach-80x80'],
             ],
@@ -318,7 +318,7 @@ final class Settings implements ServiceProviderInterface {
 
         if (isset($input['catalog']) && is_array($input['catalog'])) {
             if (isset($input['catalog']['per_page'])) {
-                $base['catalog']['per_page'] = max(12, min(48, (int) $input['catalog']['per_page']));
+                $base['catalog']['per_page'] = max(6, min(12, (int) $input['catalog']['per_page']));
             }
             if (isset($input['catalog']['new_days'])) {
                 $base['catalog']['new_days'] = max(7, min(180, (int) $input['catalog']['new_days']));

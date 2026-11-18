@@ -574,4 +574,31 @@
     max-width: none;
     width: 100%;
   }
+
+  /* Thanh 3 bước: 3 ô luôn cao bằng nhau (không lộ nền xám dưới ô thấp), nhãn cân dòng. */
+  .drv-cart-steps > li {
+    display: flex;
+    min-width: 0;
+  }
+
+  .drv-cart-steps > li > .drv-cart-step {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .drv-cart-step__title {
+    text-wrap: balance;
+  }
+
+  @media (width <= 639.98px) {
+    .drv-cart-steps > li > .drv-cart-step {
+      justify-content: flex-start;
+      padding: var(--s-2-5) var(--s-2);
+    }
+
+    .drv-cart-step__title {
+      font-size: 0.8125rem;
+      line-height: 1.25;
+    }
+  }
 }

@@ -18,7 +18,7 @@ $default_rooms = array_values(array_map('strval', (array) drv_setting('quote.def
 $waste_options = array_values(array_map('intval', (array) drv_setting('order.waste_options', [0, 5, 10])));
 $waste_default = (int) drv_setting('order.default_waste_pct', 5);
 $valid_days    = (int) drv_setting('quote.valid_days', 7);
-$hotline       = (string) drv_setting('contact.hotline', '0909 888 777');
+$hotline       = (string) drv_setting('contact.hotline', '');
 $hotline_tel   = drv_clean_phone($hotline);
 $zalo          = drv_clean_phone((string) drv_setting('contact.zalo', $hotline_tel));
 $provinces     = (array) require DRV_DIR . '/config/provinces-vn.php';
@@ -102,7 +102,7 @@ $breadcrumb = [
         <div class="l-container l-stack l-stack--sm">
             <div class="l-cluster l-cluster--between">
                 <?php drv_ui('breadcrumb', ['items' => $breadcrumb]); ?>
-                <div class="l-cluster l-cluster--xs">
+                <div class="l-cluster l-cluster--xs drv-boq-nav-chips">
                     <a href="<?php echo esc_url($cart_url); ?>" class="drv-chip">
                         <i class="ph ph-shopping-bag drv-icon--xs" aria-hidden="true"></i>
                         <span>Giỏ hàng đặt lẻ</span>
@@ -121,9 +121,9 @@ $breadcrumb = [
                         <i class="ph-bold ph-file-pdf drv-icon--xs" aria-hidden="true"></i>
                         <span>In / Lưu PDF (A4)</span>
                     </button>
-                    <button type="button" class="drv-btn drv-btn--outline drv-btn--sm" data-qs-action="csv" data-qs-needs-items disabled>
+                    <button type="button" class="drv-btn drv-btn--outline drv-btn--sm" data-qs-action="xlsx" data-qs-needs-items disabled>
                         <i class="ph-bold ph-file-xls drv-icon--xs" aria-hidden="true"></i>
-                        <span>Tải file CSV (Excel)</span>
+                        <span>Tải Excel (.xlsx)</span>
                     </button>
                     <button type="button" class="drv-btn drv-btn--outline drv-btn--sm" data-qs-action="share" data-qs-needs-items disabled>
                         <i class="ph-bold ph-link drv-icon--xs" aria-hidden="true"></i>
@@ -133,17 +133,19 @@ $breadcrumb = [
             </div>
 
             <div class="drv-meta-strip" role="region" aria-label="Thông tin phiếu báo giá">
-                <div class="drv-meta-strip__item">
-                    <span class="drv-meta-strip__label">Mã phiếu</span>
-                    <strong class="drv-meta-strip__val u-tabular" data-qs-code>Bản nháp</strong>
-                </div>
-                <div class="drv-meta-strip__item">
-                    <span class="drv-meta-strip__label">Ngày lập</span>
-                    <strong class="drv-meta-strip__val u-tabular" data-qs-date><?php echo esc_html($today); ?></strong>
-                </div>
-                <div class="drv-meta-strip__item">
-                    <span class="drv-meta-strip__label">Hiệu lực</span>
-                    <strong class="drv-meta-strip__val u-tabular"><?php echo esc_html(sprintf('%02d ngày', $valid_days)); ?></strong>
+                <div class="drv-meta-strip__meta-row">
+                    <div class="drv-meta-strip__item">
+                        <span class="drv-meta-strip__label">Mã phiếu</span>
+                        <strong class="drv-meta-strip__val u-tabular" data-qs-code>Bản nháp</strong>
+                    </div>
+                    <div class="drv-meta-strip__item">
+                        <span class="drv-meta-strip__label">Ngày lập</span>
+                        <strong class="drv-meta-strip__val u-tabular" data-qs-date><?php echo esc_html($today); ?></strong>
+                    </div>
+                    <div class="drv-meta-strip__item">
+                        <span class="drv-meta-strip__label">Hiệu lực</span>
+                        <strong class="drv-meta-strip__val u-tabular"><?php echo esc_html(sprintf('%02d ngày', $valid_days)); ?></strong>
+                    </div>
                 </div>
                 <div class="drv-meta-strip__item drv-meta-strip__project">
                     <label for="qs-project-name" class="drv-meta-strip__label">Công trình:</label>
@@ -267,7 +269,7 @@ $breadcrumb = [
             <div class="drv-quote-cta" data-qs-cta hidden>
                 <div class="drv-quote-cta__text">
                     <h2 class="drv-quote-cta__title">Nhận báo giá sỉ &amp; xác nhận tồn kho cùng lô</h2>
-                    <p class="drv-quote-cta__sub">Chuyên viên DRAVIT kiểm tra tồn kho mã lô (Shade), gửi báo giá sỉ kèm cước vận chuyển tận công trình qua Zalo. <?php echo esc_html((string) drv_setting('order.sla_text', '')); ?></p>
+                    <p class="drv-quote-cta__sub">Chuyên viên DRAVIT kiểm tra tồn kho mã lô (Shade), gửi báo giá sỉ kèm cước vận chuyển tận công trình qua Zalo.</p>
                 </div>
                 <div class="drv-quote-cta__action">
                     <button type="button" class="drv-btn drv-btn--moss drv-btn--lg" data-qs-action="open-lead">
@@ -300,13 +302,15 @@ $breadcrumb = [
     <!-- 3. BẢN IN A4 (chỉ hiện khi in / lưu PDF) -->
     <section class="drv-boq-print" aria-hidden="true">
         <div class="drv-boq-print__head">
-            <div>
-                <strong class="drv-boq-print__brand"><?php echo esc_html($config['brand'] . ' - GẠCH ỐP LÁT'); ?></strong>
+            <div class="drv-boq-print__company">
+                <div class="drv-boq-print__logo">
+                    <?php drv_render_brand_logo('header', false); ?>
+                </div>
                 <span><?php echo esc_html($config['legalName']); ?></span><br>
                 <span><?php echo esc_html($config['address']); ?></span><br>
-                <span><?php echo esc_html($config['siteHost'] . ' · Hotline / Zalo: ' . $hotline); ?></span>
+                <span><?php echo esc_html(($config['siteHost'] === 'localhost' ? 'gachdravit.vn' : $config['siteHost']) . ' · Hotline / Zalo: ' . $hotline); ?></span>
             </div>
-            <div style="text-align: right">
+            <div class="drv-boq-print__meta">
                 <strong class="drv-boq-print__title">BẢNG DỰ TOÁN KHỐI LƯỢNG GẠCH ỐP LÁT</strong>
                 <span>Mã phiếu: <strong data-qs-print-code>Bản nháp</strong></span><br>
                 <span>Ngày lập: <strong data-qs-print-date><?php echo esc_html($today); ?></strong> · Hiệu lực <?php echo (int) $valid_days; ?> ngày</span>

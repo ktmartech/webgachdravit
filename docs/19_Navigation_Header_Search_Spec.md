@@ -1,4 +1,4 @@
-# 19. Đặc tả Điều hướng, Header, Mega Menu 4+1 & Tìm kiếm Tức thì
+﻿# 19. Đặc tả Điều hướng, Header, Mega Menu 4+1 & Tìm kiếm Tức thì
 
 > **Quyết định tham chiếu:** `D-01`, `D-04`, `D-08`, `D-11`, `D-12`, `D-17`, `D-18`, `D-20`, `D-21`, `D-25`, `D-26`, `D-28`, `D-29`, `D-30` ([00_Project_Brief_Decisions.md](00_Project_Brief_Decisions.md)).
 > **Liên kết tài liệu:** [01_Brand_Design_System.md](01_Brand_Design_System.md) · [03_Catalog_Data_Model.md](03_Catalog_Data_Model.md) · [07_UI_UX_Page_Specs.md](07_UI_UX_Page_Specs.md) · [14_Data_Dictionary_And_Settings.md](14_Data_Dictionary_And_Settings.md) · [15_REST_API_And_JS_Contract.md](15_REST_API_And_JS_Contract.md).
@@ -149,7 +149,7 @@ Hiển thị trên màn hình `≥ 1024px`, phân tách với Tier 1 và nội d
 
     <!-- Cụm phải: Menu tiện ích (nav_menu location: primary_utility) -->
     <nav class="drv-nav-utility" aria-label="Thông tin và showroom">
-      <!-- Mặc định gồm: Bộ sưu tập (/bo-suu-tap/dravit-signature), Cẩm nang (/cam-nang), Liên hệ & Showroom (/lien-he) -->
+      <!-- Mặc định gồm: Bộ sưu tập (/bo-suu-tap/dravit-signature), Cẩm nang (/cam-nang), Liên hệ (/lien-he) -->
     </nav>
   </div>
 
@@ -201,7 +201,7 @@ Trên trang `/thanh-toan` (trừ màn hình `order-received` sau khi đặt thà
 |---|---|---|---|
 | `mega_menu` | `Mega Menu 4+1 - Tất cả danh mục gạch (Tự fallback config/collections.php khi trống)` | Cột 1–4 của Mega Menu Desktop & Khối Danh mục Gạch trong Mobile Drawer (`D-35`) | `3` (Cấp 1 Cột → Cấp 2 Nhóm con / Link → Cấp 3 Link con) |
 | `primary_silo_nav` | `Thanh điều hướng ngang - Nhóm gạch chính (Tầng 2 trái)` | Cạnh nút `"Tất cả gạch"` trên Tier 2 (có fallback tự động nếu Admin chưa gán menu) | `3` (Cấp 1 ngang → Cấp 2 Dropdown → Cấp 3 Flyout) |
-| `primary_utility` | `Thanh điều hướng ngang - Tiện ích phải (Tầng 2 phải)` | Cụm phải Tier 2 & phần dưới Mobile Drawer (`Cẩm nang`, `Liên hệ & Showroom`) | `1` |
+| `primary_utility` | `Thanh điều hướng ngang - Tiện ích phải (Tầng 2 phải)` | Cụm phải Tier 2 & phần dưới Mobile Drawer (`Cẩm nang`, `Liên hệ`) | `1` |
 | `footer_col_2` | `Footer Cột 2 - Danh mục gạch chủ lực` | Cột 2 Footer (tự lấy tiêu đề cột theo tên Menu WP được gán) | `1` |
 | `footer_col_3` | `Footer Cột 3 - Dịch vụ & Công cụ dự toán` | Cột 3 Footer (`BOQ`, `Cẩm nang`, `Giới thiệu`, `Liên hệ`) | `1` |
 | `footer_col_4` | `Footer Cột 4 - Chính sách & Pháp lý` | Cột 4 Footer (Đổi trả, Vận chuyển, Thanh toán, Bảo mật, Điều khoản) | `1` |

@@ -1,0 +1,94 @@
+@layer components {
+  /* Menu chia sẻ dùng chung: bài viết (Cẩm nang) và trang sản phẩm */
+  .drv-btn-share-ghost {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    flex-shrink: 0;
+    background: transparent;
+    border: none;
+    border-radius: var(--r-sm);
+    color: var(--c-navy-600);
+    font-size: 16px;
+    cursor: pointer;
+    transition: color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
+  }
+
+  .drv-btn-share-ghost:hover {
+    background-color: var(--c-champagne);
+    color: var(--c-navy-900);
+  }
+
+  .drv-share {
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .drv-share .drv-btn-share-ghost {
+    width: 36px;
+    height: 36px;
+    border: var(--bw);
+  }
+
+  .drv-share .drv-btn-share-ghost[aria-expanded="true"] {
+    color: var(--c-white);
+    background-color: var(--c-navy-900);
+    border-color: var(--c-navy-900);
+  }
+
+  .drv-share__menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    z-index: 30;
+    display: flex;
+    flex-direction: column;
+    min-width: 220px;
+    padding: var(--s-1);
+    background-color: var(--c-white);
+    border: var(--bw);
+    border-radius: var(--r-md);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .drv-share__menu[hidden] {
+    display: none;
+  }
+
+  .drv-share__item {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2-5);
+    width: 100%;
+    min-height: 44px;
+    padding: 0 var(--s-3);
+    font: inherit;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--c-navy-900);
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+    border-radius: var(--r-sm);
+    transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+  }
+
+  .drv-share__item i {
+    color: var(--c-teal-700);
+  }
+
+  .drv-share__item:hover,
+  .drv-share__item:focus-visible {
+    background-color: var(--c-champagne);
+    outline: none;
+  }
+
+  .drv-share__item.is-copied i {
+    color: var(--c-success);
+  }
+}

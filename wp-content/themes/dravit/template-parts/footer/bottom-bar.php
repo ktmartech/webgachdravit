@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 defined('ABSPATH') || exit;
 
-$legal_name = (string) drv_setting('company.legal_name', 'Công ty TNHH Vật Liệu Kiến Trúc DRAVIT');
+$legal_name = (string) drv_setting('company.legal_name', '');
 $year       = gmdate('Y');
 ?>
 <div class="drv-footer__bottom">

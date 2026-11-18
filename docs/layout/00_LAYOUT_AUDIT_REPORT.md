@@ -54,7 +54,7 @@ Lỗi docs phụ (đã sửa): `11` L1 bỏ chữ rác `firecrawl`; `02 §7` đ�
 | Q9 | **Chiết khấu khối lượng 5% (≥30 m²) / 8% (≥100 m²)** | A. Chỉ hiển thị "chiết khấu dự kiến" trong BOQ, sale xác nhận sau. B. Áp vào giỏ qua `woocommerce_cart_calculate_fees`. C. Bỏ | **ĐÃ CHỐT — Phương án A (`D-23`):** Chỉ hiển thị *"Chiết khấu dự kiến"* trên BOQ (`drv_settings.quote.volume_tiers`), không tự trừ vào Giỏ hàng bán lẻ |
 | Q10 | **Đơn vị mua & mua lẻ viên** | Đề xuất cũ: chỉ cấu hình `drv_qty_step`. Chủ dự án yêu cầu linh hoạt đầy đủ đơn vị mua trên từng SP | **ĐÃ CHỐT THEO QUYẾT ĐỊNH CHỦ DỰ ÁN (`D-24`):** **Cấu hình đơn vị mua `m² / thùng / viên` + chế độ lẻ viên/chẵn thùng trực tiếp trong cài đặt từng sản phẩm** (`drv_buy_units`, `drv_default_buy_unit`, `drv_round_mode = box \| piece`, `drv_qty_min`); lõi WC giữ số nguyên `viên`, dùng chung 1 lõi tính toán `Dravit\Units\Calc` + `utils/calc.js` |
 | Q11 | **Biến thể màu/size/bề mặt** | A. Swatch = `<a>` tới SP anh em cùng `drv_series` (1 SKU = 1 URL, SSR). B. Đổi giá tại chỗ như prototype (SKU tự chế) | **ĐÃ CHỐT — Phương án A (`D-26`):** Swatch là thẻ `<a href>` SSR nối qua `drv_series` (cấm đổi giá/SKU giả phía client) |
-| Q12 | **Phụ kiện `pack` (keo, ke ron) ở Phase 1** | A. Ẩn FBT và vật tư (D-13). B. Cho phép SKU `pack` tối thiểu | **ĐÃ CHỐT — Phương án A (`D-26`):** Ẩn khối mua kèm vật tư phụ / FBT keo-ron ở Phase 1 |
+| Q12 | **Phụ kiện `pack` (keo, ke ron) ở Phase 1** | A. Ẩn FBT và vật tư (D-13). B. Cho phép SKU `pack` tối thiểu | **ĐÃ CHỐT — Phương án A (`D-26`):** Ẩn khối mua kèm vật tư phụ / FBT keo-ron ở Phase 1. *Cập nhật `D-38`: riêng Giỏ hàng mở lại khối "Vật tư thi công đề xuất" (dữ liệu thật); PDP, danh mục, BOQ vẫn ẩn* |
 
 ### 2B. Nhóm khuyến nghị kỹ thuật (16/16 ĐÃ CHỐT)
 

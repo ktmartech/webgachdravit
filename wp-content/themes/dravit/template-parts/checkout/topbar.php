@@ -9,7 +9,7 @@ $home_url    = MegaMenuRenderer::internal_url('/');
 $cart_url    = (drv_is_woo_active() && function_exists('wc_get_cart_url'))
     ? untrailingslashit((string) wc_get_cart_url())
     : MegaMenuRenderer::internal_url('/gio-hang');
-$hotline_raw = (string) drv_setting('contact.hotline', '0909 888 777');
+$hotline_raw = (string) drv_setting('contact.hotline', '');
 $hotline_tel = drv_clean_phone($hotline_raw);
 $zalo_clean  = drv_clean_phone((string) drv_setting('contact.zalo', $hotline_raw));
 $brand_name  = (string) drv_setting('company.brand_name', 'DRAVIT');

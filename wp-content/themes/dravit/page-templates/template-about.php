@@ -14,7 +14,7 @@ defined('ABSPATH') || exit;
 get_header();
 
 $brand_name = (string) drv_setting('company.brand_name', 'DRAVIT');
-$legal_name = (string) drv_setting('company.legal_name', 'Công ty TNHH Vật Liệu Kiến Trúc DRAVIT');
+$legal_name = (string) drv_setting('company.legal_name', '');
 $tagline    = (string) drv_setting('company.tagline', 'Thẩm mỹ từ những đường nét nhỏ nhất.');
 $experts    = AuthorProfile::getPublicExperts();
 $org_team   = AuthorProfile::organizationFallback();
@@ -63,7 +63,7 @@ $boq_url    = HomeData::siteUrl('/danh-sach-bao-gia');
                     </div>
                     <div class="drv-about-stat">
                         <span class="drv-about-stat__num u-tabular">3000K - 6500K</span>
-                        <span class="drv-about-stat__label">Hệ đèn thử màu thực tế tại Showroom Flagship Sala</span>
+                        <span class="drv-about-stat__label">Hệ đèn thử màu thực tế tại Showroom <?php echo esc_html($brand_name); ?></span>
                     </div>
                 </div>
             </div>

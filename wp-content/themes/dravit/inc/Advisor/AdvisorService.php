@@ -405,9 +405,9 @@ final class AdvisorService {
      * @return array{zalo_url: string, hotline: string, summary: string}
      */
     private function buildHandoffPayload(string $message, array $slots): array {
-        $zaloPhone = drv_clean_phone((string) drv_setting('contact.zalo', '0909888777'));
+        $zaloPhone = drv_clean_phone((string) drv_setting('contact.zalo', ''));
         $zaloUrl   = $zaloPhone !== '' ? 'https://zalo.me/' . $zaloPhone : 'https://zalo.me';
-        $hotline   = trim((string) drv_setting('contact.hotline', '0909 888 777'));
+        $hotline   = trim((string) drv_setting('contact.hotline', ''));
 
         $summaryParts = [];
         if (!empty($slots['space'])) {

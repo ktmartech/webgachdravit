@@ -14,7 +14,7 @@ defined('ABSPATH') || exit;
  * @var array<string, mixed> $args
  */
 
-$eyebrow          = trim((string) ($args['eyebrow'] ?? 'Trải nghiệm thực tế tại TP.HCM'));
+$eyebrow          = trim((string) ($args['eyebrow'] ?? 'Trải nghiệm thực tế tại showroom'));
 $title            = trim((string) ($args['title'] ?? 'Xem Mẫu Gạch Thật Tại Showroom DRAVIT'));
 $desc             = trim((string) ($args['description'] ?? ''));
 $show_booking_cta = (bool) ($args['show_booking_cta'] ?? true);
@@ -25,6 +25,11 @@ if ($surface === 'white') {
     $sec_cls .= ' l-section--white';
 } elseif ($surface === 'champagne') {
     $sec_cls .= ' l-section--champagne';
+}
+
+// Báo footer.php dựng dialog đặt lịch (slot `showroom_booking`) đúng 1 lần ở cuối trang.
+if ($show_booking_cta) {
+    $GLOBALS['drv_needs_showroom_booking'] = true;
 }
 
 $vm     = HomeData::getShowroomViewModel($args);
@@ -192,7 +197,7 @@ $first_slide = (is_array($first_zone) && isset($first_zone['slides'][0]) && is_a
                                 <dt><i class="ph-fill ph-clock" aria-hidden="true"></i> Giờ mở cửa</dt>
                                 <dd>
                                     <span>
-                                        <?php echo esc_html((string) $vm['hours']); ?> · T2 – CN<br>
+                                        <?php echo esc_html((string) $vm['hours']); ?><br>
                                         <small><?php echo esc_html((string) ($status['detail_label'] ?: 'Mở cả Chủ nhật & ngày lễ')); ?></small>
                                     </span>
                                 </dd>
@@ -247,10 +252,10 @@ $first_slide = (is_array($first_zone) && isset($first_zone['slides'][0]) && is_a
                                     type="button"
                                     class="drv-btn drv-btn--primary"
                                     data-drv-action="dialog-open"
-                                    data-drv-target="#drv-quote-modal"
+                                    data-drv-target="#drv-showroom-booking-modal"
                                 >
                                     <i class="ph-bold ph-calendar-check drv-icon--sm" aria-hidden="true"></i>
-                                    <span>Đặt lịch tư vấn</span>
+                                    <span>Đặt lịch xem mẫu</span>
                                 </button>
                             <?php endif; ?>
                         </div>

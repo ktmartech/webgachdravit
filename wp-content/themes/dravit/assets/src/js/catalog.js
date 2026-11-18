@@ -48,7 +48,7 @@ function renderLoadMoreHtml({ shown, total, nextUrl, perPage }) {
   const shownSafe = Math.min(Math.max(0, Number(shown) || 0), totalSafe);
   const pct = Math.round((shownSafe / totalSafe) * 100);
   const remaining = Math.max(0, totalSafe - shownSafe);
-  const batch = Math.min(Math.max(1, Number(perPage) || 24), remaining);
+  const batch = Math.min(Math.max(1, Number(perPage) || 12), remaining);
 
   const btnHtml =
     remaining > 0 && nextUrl
@@ -198,7 +198,7 @@ export class DrvFilterForm extends HTMLElement {
   }
 
   get perPage() {
-    return Math.max(1, Number.parseInt(this.dataset.perPage || '24', 10) || 24);
+    return Math.max(1, Number.parseInt(this.dataset.perPage || '24', 10) || 12);
   }
 
   get debounceMs() {

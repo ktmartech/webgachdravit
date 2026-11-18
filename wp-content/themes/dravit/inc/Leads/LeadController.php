@@ -61,7 +61,7 @@ final class LeadController implements ServiceProviderInterface {
                 'Đã tiếp nhận yêu cầu #%s. Chuyên viên DRAVIT sẽ liên hệ số %s. %s.',
                 $result['code'],
                 $phone,
-                (string) drv_setting('order.sla_text', 'phản hồi trong 30 phút giờ làm việc')
+                (string) drv_setting('order.sla_text', '')
             ),
         ], 201);
         $resp->header('Cache-Control', 'no-store');

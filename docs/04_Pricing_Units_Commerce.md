@@ -13,7 +13,7 @@
 | `area_pack` | Gạch ốp lát (Phase 1) | đ/m² | **đ/m²** | đ/viên | **viên** | thùng | ✓ |
 | `piece` | Thiết bị, phụ kiện | đ/chiếc | đ/chiếc | | chiếc | | |
 | `set` | Bộ sen vòi, combo | đ/bộ | đ/bộ | | bộ | | |
-| `pack` | Keo chà ron, vữa (ẩn UI ở Phase 1 theo `D-26`) | đ/tuýp, đ/bao | đ/tuýp | đ/kg (nếu có khối lượng) | tuýp/bao | thùng | tùy chọn |
+| `pack` | Keo chà ron, vữa (ẩn UI ở Phase 1 theo `D-26`, trừ khối FBT trong Giỏ hàng theo `D-38`) | đ/tuýp, đ/bao | đ/tuýp | đ/kg (nếu có khối lượng) | tuýp/bao | thùng | tùy chọn |
 
 ### 1.2 `config/units.php`
 
@@ -189,7 +189,7 @@ total_vnd    = pieces * price_piece
   - Khi `drv_round_mode === 'piece'`: ở tab `Viên` nút `- / +` tăng giảm `± 1` viên; ở tab `Thùng` tăng giảm `± drv_pieces_per_box` viên. Giá trị gửi cập nhật giỏ luôn là **số nguyên viên**.
 - **Tắt Coupon & Ẩn Phụ kiện mua kèm (Phase 1):**
   - Trả `false` tại filter `woocommerce_coupons_enabled` để tắt hẳn ô nhập mã giảm giá trên Giỏ hàng và Checkout.
-  - Ẩn hoàn toàn khối gợi ý vật tư phụ mua kèm (keo chà ron, ke cân bằng - FBT / `pack`) trên UI Phase 1 (`D-26`).
+  - Khối gợi ý vật tư phụ mua kèm (keo dán, ke cân bằng - FBT / `pack`) ẩn trên PDP, danh mục và BOQ ở Phase 1 (`D-26`); **riêng Giỏ hàng** hiển thị "Vật tư thi công đề xuất" từ SKU `drv_line = phu_kien` (`D-38`): số lượng = `ceil(tổng m² gạch / drv_coverage_m2_per_unit)`, thêm vào đơn qua Store API, tự ẩn khi chưa có SKU, tắt bằng `drv_settings.features.cart_accessories = false`.
 - **Cart item data (`woocommerce_add_cart_item_data`):**
   - Lưu kèm `drv_m2_input` (diện tích `m²` khách nhập trên máy tính PDP, `float`) và `drv_waste_pct` (`%` hao hụt đã chọn, `int`: `0 | 5 | 10`) để giữ ngữ cảnh tính toán xuyên suốt tới đơn hàng.
 - **Snapshot Order Item Meta (`woocommerce_checkout_create_order_line_item`):**

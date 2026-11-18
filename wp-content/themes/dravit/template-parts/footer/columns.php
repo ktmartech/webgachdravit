@@ -8,15 +8,15 @@ defined('ABSPATH') || exit;
 
 $home_url    = MegaMenuRenderer::internal_url('/');
 $brand_name  = (string) drv_setting('company.brand_name', 'DRAVIT');
-$legal_name  = (string) drv_setting('company.legal_name', 'Công ty TNHH Vật Liệu Kiến Trúc DRAVIT');
-$tax_id      = (string) drv_setting('company.tax_id', '0318688999');
-$address     = (string) drv_setting('company.address', '68 Nguyễn Cơ Thạch, Phường An Khánh, TP. Hồ Chí Minh');
-$email       = (string) drv_setting('company.email', 'cskh@gachdravit.vn');
+$legal_name  = (string) drv_setting('company.legal_name', '');
+$tax_id      = (string) drv_setting('company.tax_id', '');
+$address     = (string) drv_setting('company.address', '');
+$email       = (string) drv_setting('company.email', '');
 $bct_url     = trim((string) drv_setting('company.bct_url', ''));
-$hotline_raw = (string) drv_setting('contact.hotline', '0909 888 777');
+$hotline_raw = (string) drv_setting('contact.hotline', '');
 $hotline_tel = drv_clean_phone($hotline_raw);
 $zalo_clean  = drv_clean_phone((string) drv_setting('contact.zalo', $hotline_raw));
-$hours_text  = (string) drv_setting('contact.working_hours', '08:00 - 21:00');
+$hours_text  = (string) drv_setting('contact.working_hours', '');
 
 $facebook  = trim((string) drv_setting('social.facebook', ''));
 $youtube   = trim((string) drv_setting('social.youtube', ''));

@@ -46,7 +46,7 @@ final class UrlStateTest extends TestCase {
             'https://gachdravit.vn'
         );
 
-        self::assertSame(48, $state->perPage(), 'X-2: per_page phải bị chặn trần ở 48');
+        self::assertSame(12, $state->perPage(), 'X-2: per_page phải bị chặn trần ở 12');
         self::assertSame('moi-ve', $state->sort());
         self::assertSame(
             'https://gachdravit.vn/gach-phong-khach?kich-thuoc=60x60,80x80&mau-sac=trang,xam&be-mat=mo&gia=200k-350k,350k-600k',

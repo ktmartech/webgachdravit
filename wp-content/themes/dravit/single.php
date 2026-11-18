@@ -86,45 +86,7 @@ get_header();
                                     </span>
                                 </div>
 
-                                <div class="drv-share" data-drv-share>
-                                    <button type="button"
-                                            class="drv-btn-share-ghost"
-                                            data-drv-action="share-toggle"
-                                            aria-haspopup="true"
-                                            aria-expanded="false"
-                                            aria-controls="drv-share-menu"
-                                            title="Chia sẻ bài viết"
-                                            aria-label="Chia sẻ bài viết">
-                                        <i class="ph-bold ph-share-network" aria-hidden="true"></i>
-                                    </button>
-                                    <div class="drv-share__menu" id="drv-share-menu" role="menu" aria-label="Chia sẻ bài viết" hidden>
-                                        <a role="menuitem"
-                                           class="drv-share__item"
-                                           href="<?php echo esc_url('https://www.facebook.com/sharer/sharer.php?u=' . rawurlencode($permalink)); ?>"
-                                           target="_blank"
-                                           rel="noopener noreferrer"
-                                           data-drv-action="share-close">
-                                            <i class="ph ph-facebook-logo drv-icon--sm" aria-hidden="true"></i>
-                                            <span>Chia sẻ Facebook</span>
-                                        </a>
-                                        <button type="button"
-                                                role="menuitem"
-                                                class="drv-share__item"
-                                                data-drv-action="share-zalo"
-                                                data-share-url="<?php echo esc_attr($permalink); ?>">
-                                            <i class="ph ph-chat-circle-dots drv-icon--sm" aria-hidden="true"></i>
-                                            <span>Gửi qua Zalo</span>
-                                        </button>
-                                        <button type="button"
-                                                role="menuitem"
-                                                class="drv-share__item"
-                                                data-drv-action="copy-text"
-                                                data-copy-value="<?php echo esc_attr($permalink); ?>">
-                                            <i class="ph ph-copy drv-icon--sm" aria-hidden="true"></i>
-                                            <span>Sao chép liên kết</span>
-                                        </button>
-                                    </div>
-                                </div>
+                                <?php \Dravit\Core\Template::render_part('template-parts/ui/share-menu', ['url' => $permalink, 'label' => 'Chia sẻ bài viết']); ?>
                             </div>
 
                             <?php if ($lead !== '') : ?>

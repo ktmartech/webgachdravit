@@ -375,8 +375,8 @@ final class Validator {
         }
 
         // 2. Kiểm tra SĐT ngoài hotline / Zalo đã cấu hình
-        $hotlineDigits = (string) preg_replace('/\D/', '', (string) drv_setting('contact.hotline', '0909888777'));
-        $zaloDigits    = (string) preg_replace('/\D/', '', (string) drv_setting('contact.zalo', '0909888777'));
+        $hotlineDigits = (string) preg_replace('/\D/', '', (string) drv_setting('contact.hotline', ''));
+        $zaloDigits    = (string) preg_replace('/\D/', '', (string) drv_setting('contact.zalo', ''));
         if (preg_match_all('/(?<!\d)(?:\+?84|0)(?:[\s.\-]?\d){8,10}(?!\d)/u', $text, $phMatches) > 0) {
             foreach ($phMatches[0] as $foundPhone) {
                 $digits = (string) preg_replace('/\D/', '', $foundPhone);

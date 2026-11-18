@@ -52,7 +52,7 @@ final class LeadNotifier {
         $get   = static fn (string $k): string => (string) LeadRepository::meta($lead_id, $k, '');
         $phone = $get('_drv_phone');
         $role  = LeadValidator::ROLES[$get('_drv_role')] ?? '';
-        $sla   = (string) drv_setting('order.sla_text', 'Phản hồi trong 30 phút giờ làm việc');
+        $sla   = (string) drv_setting('order.sla_text', '');
 
         $rows = [
             'Mã phiếu'     => '#' . $get('_drv_quote_code'),

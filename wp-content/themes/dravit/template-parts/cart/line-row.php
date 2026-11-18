@@ -65,6 +65,7 @@ if ((int) $product->get_image_id() <= 0) {
     }
 }
 
+$open_detail = $ppb > 1 && ($line['round_mode'] ?? 'box') === 'piece' && $loose > 0;
 $remove_url = function_exists('wc_get_cart_remove_url') ? (string) wc_get_cart_remove_url($key) : '';
 ?>
 <article class="drv-cart-item woocommerce-cart-form__cart-item <?php echo esc_attr((string) apply_filters('woocommerce_cart_item_class', 'cart_item', $cart_item, $key)); ?>" data-cart-row data-cart-key="<?php echo esc_attr($key); ?>" data-cart-sku="<?php echo esc_attr($sku); ?>">
@@ -98,6 +99,13 @@ $remove_url = function_exists('wc_get_cart_remove_url') ? (string) wc_get_cart_r
             // Thông tin meta bổ sung của plugin khác (variation, add-ons...).
             echo wc_get_formatted_cart_item_data($cart_item); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- WC escapes internally.
             ?>
+            <button type="button"
+                    class="drv-cart-detail-toggle<?php echo $open_detail ? ' is-expanded' : ''; ?>"
+                    data-drv-action="cart-toggle-row-detail"
+                    aria-expanded="<?php echo $open_detail ? 'true' : 'false'; ?>">
+                <i class="ph ph-caret-down drv-icon--xs" aria-hidden="true"></i>
+                <span data-toggle-label><?php echo $open_detail ? 'Thu gọn chi tiết' : 'Xem chi tiết & quy đổi'; ?></span>
+            </button>
         </div>
     </div>
 
@@ -157,7 +165,7 @@ $remove_url = function_exists('wc_get_cart_remove_url') ? (string) wc_get_cart_r
         <span class="u-text-xs u-text-muted u-hide-mobile">Đã gồm VAT</span>
     </div>
 
-    <div class="drv-cart-drawer" data-cart-row-drawer>
+    <div class="drv-cart-drawer" data-cart-row-drawer<?php echo $open_detail ? '' : ' hidden'; ?>>
         <div class="drv-cart-drawer__grid">
             <?php if ($is_area) : ?>
                 <div class="drv-cart-drawer__cell">
