@@ -715,6 +715,47 @@
     color: var(--c-teal-700);
   }
 
+  /* Typewriter cursor cho text AI */
+  .drv-aif-msg__text.is-typing::after {
+    content: '';
+    display: inline-block;
+    width: 2px;
+    height: 1em;
+    background-color: var(--c-teal-600);
+    margin-left: 2px;
+    vertical-align: text-bottom;
+    animation: drv-aif-cursor 0.75s step-end infinite;
+  }
+
+  @keyframes drv-aif-cursor {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  /* Fade-in cho extra content (cards, chips) sau khi typewrite xong */
+  .drv-aif-msg__after {
+    display: contents;
+  }
+
+  .drv-aif-msg__after.is-revealed {
+    animation: drv-aif-fade-in 0.3s var(--ease-out) both;
+  }
+
+  @keyframes drv-aif-fade-in {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Typing stage label — fade khi chuyển text */
+  [data-aif-typing-label] {
+    transition: opacity 0.18s ease, transform 0.18s ease;
+  }
+
+  [data-aif-typing-label].is-fading {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
   /* Typing Indicator */
   .drv-aif-typing-wrap {
     display: inline-flex;
@@ -1162,6 +1203,44 @@
   }
 
   /* 6. Product Cards Grid & Skeleton Shimmer ------------------------------- */
+
+  /* Status bar hiển thị khi loading skeleton */
+  .drv-aif-skeleton-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 2px 12px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--c-navy-700);
+  }
+
+  .drv-aif-skeleton-status__dots {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .drv-aif-skeleton-status__dots span {
+    width: 5px;
+    height: 5px;
+    border-radius: var(--r-pill);
+    background-color: var(--c-teal-600);
+    animation: drv-aif-bounce 1.2s infinite ease-in-out both;
+  }
+
+  .drv-aif-skeleton-status__dots span:nth-child(2) { animation-delay: 0.16s; }
+  .drv-aif-skeleton-status__dots span:nth-child(3) { animation-delay: 0.32s; }
+
+  .drv-aif-skeleton-status__label {
+    transition: opacity 0.18s ease, transform 0.18s ease;
+  }
+
+  .drv-aif-skeleton-status__label.is-fading {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
   .drv-aif-product-grid:not([hidden]) {
     display: grid;
     grid-template-columns: 1fr;

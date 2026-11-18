@@ -439,7 +439,7 @@ class SearchController implements ServiceProviderInterface {
             $this->ssr_matched_ids = null;
             $query->set('post_type', 'post');
             $query->set('post_status', 'publish');
-            $query->set('posts_per_page', 12);
+            $query->set('posts_per_page', 9);
             return;
         }
 

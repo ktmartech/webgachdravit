@@ -21,7 +21,7 @@ return [
         'props'   => [
             'eyebrow'     => 'Chọn theo không gian',
             'title'       => 'Bạn Đang Tìm Gạch Cho Khu Vực Nào?',
-            'description' => 'Mỗi không gian cần chuẩn độ nhám R và xương gạch khác nhau — chọn đúng ngay từ đầu.',
+            'description' => 'Mỗi không gian cần chuẩn độ nhám R và xương gạch khác nhau - chọn đúng ngay từ đầu.',
             'cta_label'   => 'Xem tất cả 28 danh mục',
             'cta_path'    => '/gach',
             'surface'     => 'ivory',
@@ -52,7 +52,7 @@ return [
             'mode'        => 'deals',
             'eyebrow'     => 'Khuyến mãi đặc biệt',
             'title'       => 'Chương Trình Khuyến Mãi & Giảm Giá',
-            'description' => 'Ưu đãi theo m² và xả kho lẻ lô nguyên thùng loại 1 — số lượng thùng tồn kho hiển thị minh bạch.',
+            'description' => 'Ưu đãi theo m² và xả kho lẻ lô nguyên thùng loại 1 - số lượng thùng tồn kho hiển thị minh bạch.',
             'cta_label'   => 'Xem tất cả khuyến mãi',
             'cta_path'    => '/gach-uu-dai',
             'limit'       => 4,

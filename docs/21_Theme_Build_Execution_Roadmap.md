@@ -9,7 +9,7 @@
 > - **`D-31` (Phương án 1A — Fluent Forms & Plugin Hybrid Adapter):** Giữ lõi tính native cho dự toán đa phòng `/danh-sach-bao-gia` (`BoqService` + chuyển đơn HPOS 1-click) đồng thời bắn hook sang Fluent Forms; 5 điểm form báo giá còn lại hỗ trợ **Dual-Mode** (`[fluentform]` hoặc Native Form) qua `Core\Integrations\FluentFormsBridge` + tầng CSS `@layer plugins`.
 > - **`D-32` (Phương án 2A — Mở sẵn Full Pipeline Trợ lý AI & Bật ngay `RuleOnlyDriver`):** Dựng đầy đủ 100% Interfaces `Dravit\Advisor\*`, REST `/dravit/v1/advisor`, cắt hoàn chỉnh `01.1-ai-finder.html` và kích hoạt chạy thật ngay bằng `RuleOnlyDriver` (`< 200ms`, `0đ` phí API, lọc cứng chống trượt `R10/R11/R12`, nối thẳng BOQ); cắm API Key (`Claude` / `Gemini`) trong `drv_settings.ai` là tự nâng cấp lên LLM Closed-World.
 > - **`D-33` (Phương án 3A — Unit Test Tự động Mỗi Step):** Thiết lập **PHPUnit 10 + Vitest + Shared JSON Vectors (`tests/fixtures/calc-vectors.json`) + PHPStan + WP-CLI Verify** chạy dev-only ở cuối mỗi Step (loại khỏi file `.zip` deploy production).
-> - **`D-34` (Phương án S-3 — Cắt Layout Bottom-Up 4 Tầng & Mở Rộng Section Thuần Code Config-Driven):** Tách toàn bộ phần tử lặp thành `22` primitives `drv_ui()` + `16` khối lớn `drv_section()` (`template-parts/sections/*.php`). Mọi trang/section mở rộng về sau ghép bằng mảng config PHP sạch tuyệt đối (`0` Page Builder, `0` SCF/ACF; Gutenberg Block Patterns & Shortcodes chỉ dùng trong bài viết Cẩm nang).
+> - **`D-34` (Phương án S-3 — Cắt Layout Bottom-Up 4 Tầng & Mở Rộng Section Thuần Code Config-Driven):** Tách toàn bộ phần tử lặp thành `22` primitives `drv_ui()` + `16` khối lớn `drv_section()` (`template-parts/sections/*.php`). Mọi trang/section mở rộng về sau ghép bằng mảng config PHP sạch tuyệt đối (`0` Page Builder, `0` SCF/ACF; Shortcodes chỉ dùng trong bài viết Cẩm nang; Gutenberg/Block Patterns đã bỏ theo `D-36`).
 
 ---
 
@@ -168,7 +168,7 @@ function drv_section(string $name, array $props = []): void {
 | **Step 7** | Cắt Chi tiết Sản phẩm (PDP): Gallery PhotoSwipe, Swatch `drv_series`, `<drv-unit-calc>` & Nút Báo giá/Mua | `03-product-single.html`, `unit-calc.js`, `calc-core.js` | `03 §5.3-5.4`, `04 §3`, `07 §5`, `15 §5.1`, `16` | `dravit-catalog-commerce`, `dravit-frontend-ui`, `dravit-filter-seo-geo` | `page-cro`, `frontend-developer`, `javascript-pro`, `schema-markup`, `fixing-accessibility` | `Vitest`: `unit-calc.test.js` (`U-1..U-16`) · `PHPUnit`: `SeriesSwatchTest`, `BuyNowTest` |
 | **Step 8** | **Trọng tâm Báo giá:** Dự toán BOQ đa phòng, 6 Điểm chạm Lead Dual-Mode (`FluentFormsBridge` `D-31`) & `OrderConverter` | `04.1-quote-cart.html`, `09-contact.html`, `quote-sheet.js`, `#drv-quote-modal` | `14 §6`, `15 §2.5-2.6`, `17`, `16` | `dravit-catalog-commerce`, `dravit-security-testing`, `dravit-frontend-ui` | `form-cro`, `page-cro`, `backend-security-coder`, `frontend-security-coder`, `wp-rest-api`, `clean-code` | `Vitest`: `quote-store.test.js` · `PHPUnit`: `BoqServiceTest`, `AntiSpamGuardTest`, `FluentFormsBridgeTest`, `OrderConverterTest` |
 | **Step 9** | Cắt Giỏ hàng, Mini-Cart Store API, Checkout 2 cột VN (VAT), Vận hành HPOS & VietQR + Emails | `04-cart.html`, `05-checkout.html`, `06-order-received.html` | `04 §4-9`, `14 §7`, `15 §3`, `18` | `dravit-catalog-commerce`, `dravit-architecture`, `dravit-security-testing` | `wordpress`, `form-cro`, `php-pro`, `backend-security-coder`, `wcag-audit-patterns` | `PHPUnit`: `CartQuantityRulesTest`, `VatValidatorTest`, `OrderFlowHposTest`, `BankQrTest` |
-| **Step 10** | Cắt Cẩm nang (GEO Hub), 6 Patterns, 6 Shortcodes thương mại, `<drv-toc>`, Trang Chính sách & 404 | `07-blog-archive.html`, `08-blog-single.html`, `10-404.html` | `06 §4-7`, `07 §7-8`, `10`, `16`, `20` | `dravit-filter-seo-geo`, `dravit-frontend-ui`, `dravit-coding-standards` | `wp-block-development`, `seo-content-writer`, `avoid-ai-writing`, `schema-markup`, `fixing-accessibility` | `PHPUnit`: `TocGeneratorTest`, `BlogShortcodesTest` · `Vitest`: `toc.test.js` |
+| **Step 10** | Cắt Cẩm nang (GEO Hub), 6 Shortcodes trình bày (thay Patterns, `D-36`), 6 Shortcodes thương mại, `<drv-toc>`, Trang Chính sách & 404 | `07-blog-archive.html`, `08-blog-single.html`, `10-404.html` | `06 §4-7`, `07 §7-8`, `10`, `16`, `20` | `dravit-filter-seo-geo`, `dravit-frontend-ui`, `dravit-coding-standards` | `wp-block-development`, `seo-content-writer`, `avoid-ai-writing`, `schema-markup`, `fixing-accessibility` | `PHPUnit`: `TocGeneratorTest`, `ReadingTimeCalculatorTest`, `BlogShortcodeRenderTest` · `Vitest`: `toc-scrollspy.test.js` |
 | **Step 11** | Tối ưu LiteSpeed Cache/ESI, Ngân sách Hiệu năng, Pentest OWASP, Full QA Gate & Đóng gói Release | Toàn bộ 12 templates | `08`, `09 §3-4`, `16 §5-6` | Toàn bộ 6 files `.agents/rules/dravit-*.md` | `wp-performance`, `seo-audit`, `wcag-audit-patterns`, `007`, `wordpress-penetration-testing`, `code-review-checklist` | Full Suite: PHPUnit + Vitest + PHPStan + Lighthouse CI (`≥ 90` Mobile) + `STRIP-01..26` |
 
 ---
@@ -511,9 +511,9 @@ function drv_section(string $name, array $props = []): void {
 
 ---
 
-### STEP 10: Cắt Cẩm Nang Chọn Gạch (GEO Content Hub), Patterns/Shortcodes Bài Viết, Chính sách & 404 (`07`, `08`, `10`)
+### STEP 10: Cắt Cẩm Nang Chọn Gạch (GEO Content Hub), Shortcodes Bài Viết, Chính sách & 404 (`07`, `08`, `10`)
 
-- **Mục tiêu:** Hoàn thiện chuyên mục Cẩm nang (`home.php`, `category.php`, `single.php`) với 6 Block Patterns & 6 Shortcodes thương mại dành riêng cho biên tập bài viết (`D-34`), cùng trang Chính sách `3/9`, `/gioi-thieu` (dựng bằng `drv_section()` config `S-3`) và `404.php`.
+- **Mục tiêu:** Hoàn thiện chuyên mục Cẩm nang (`home.php`, `category.php`, `single.php`) với 6 Shortcodes trình bày (`D-36`) & 6 Shortcodes thương mại dành riêng cho biên tập bài viết (`D-34`), cùng trang Chính sách `3/9`, `/gioi-thieu` (dựng bằng `drv_section()` config `S-3`) và `404.php`.
 - **Nguồn cắt Layout:** `docs/layout/07-blog-archive.html`, `docs/layout/08-blog-single.html`, `docs/layout/10-404.html`.
 - **Rules & Skills:**
   - Rules: [dravit-filter-seo-geo.md](../.agents/rules/dravit-filter-seo-geo.md), [dravit-frontend-ui.md](../.agents/rules/dravit-frontend-ui.md), [dravit-coding-standards.md](../.agents/rules/dravit-coding-standards.md).
@@ -524,15 +524,35 @@ function drv_section(string $name, array $props = []): void {
   2. **Cắt `single.php` (`/cam-nang/{slug}`), E-E-A-T & `<drv-toc>` (`core.js + blog.js ≤ 10KB gzip`):**
      - Xóa sạch JSON-LD viết tay, microdata trùng, poll giả và ~277 dòng inline script của prototype (`STRIP-14..18`).
      - Post Meta (`Admin\PostFields`) + User Meta E-E-A-T (`Admin\UserFields` cho `BlogPosting.reviewedBy`) + `Content\Toc` (`<drv-toc>`).
-  3. **6 Gutenberg Block Patterns & 6 Shortcodes Thương mại Động (dành riêng cho bài viết Cẩm nang theo `D-34`):**
-     - Block Patterns cho nội dung bài viết: *Key Takeaways GEO*, *Bảng thông số GEO*, *Callout kỹ thuật*, *Pros/Cons*, *Hộp công thức tính gạch*, *FAQ bài viết*.
+  3. **6 Shortcodes Trình bày (thay Block Patterns theo `D-36`) & 6 Shortcodes Thương mại Động (dành riêng cho bài viết Cẩm nang theo `D-34`):**
+     - Shortcodes trình bày cho nội dung bài viết: *Key Takeaways GEO*, *Bảng thông số GEO*, *Callout kỹ thuật*, *Pros/Cons*, *Hộp công thức tính gạch*, *FAQ bài viết*.
      - Shortcodes gọi trực tiếp `drv_ui()` từ dữ liệu sống WC: `[drv_products]`, `[drv_shop_the_look]` (`drv_ui('shop-the-look')`), `[drv_price_table]`, `[drv_lead_form]` (kết nối Dual-Mode `FluentFormsBridge`), `[drv_related_posts]`, `[drv_ai_card]`.
   4. **Cắt `404.php` (`drv_section('error-404-recovery')`), `page-templates/template-policy.php` & Trang `/gioi-thieu` (`page-templates/template-about.php` ghép từ `config/pages/about.php` qua `SectionRegistry::render_stack()` theo đúng `S-3`).**
 - **Unit Tests (`Step 10`):**
   - `PHPUnit`: `TocGeneratorTest`, `ReadingTimeCalculatorTest`, `BlogShortcodeRenderTest`.
   - `Vitest`: `toc-scrollspy.test.js`.
 - **Check hoàn thành (`Gate 10`):**
-  - [ ] Bài viết Cẩm nang chỉ xuất duy nhất 1 `BreadcrumbList` (`/chu-de/{slug}`), dùng `BlogPosting` (`M-15`); tổng JS trên bài viết `≤ 10KB gzip`.
+  - [x] Bài viết Cẩm nang chỉ xuất duy nhất 1 `BreadcrumbList` (`/chu-de/{slug}`), dùng `BlogPosting` (`M-15`); tổng JS trên bài viết `≤ 10KB gzip` — đạt (`9,41KB`); các mục kiểm tay còn lại ghi ở danh sách dưới, chuyển sang Step 11.
+
+- **Kết quả thực thi (`2026-11-18`, commit `d17fb75`; nhánh `feat/theme-step-0-to-2-catalog-engine`):**
+  - **Template:** `home.php`, `category.php`, `tag.php`, `search.php`, `single.php`, `404.php` (`drv_section('error-404-recovery')`), `page-templates/{template-policy,template-about,template-contact}.php`; `config/pages/about.php` + `config/pages/system-pages.php` (7 trang chân trang tạo qua `tools/setup-pages.php`); partial `template-parts/blog/*` (bento hero 5/4/3, topic-cluster, tools-strip, card, sidebar sticky, author-box, cro-strip, toc).
+  - **PHP:** `Admin\{PostFields,UserFields}`, `Content\{BlogSetup,PostMeta,Toc,ReadingTime,AuthorProfile,ContentFilters,Shortcodes}`; `Seo\{Breadcrumbs,SchemaGraph,FaqResolver,RobotsMatrix}` chỉnh cho `BlogPosting`.
+  - **Shortcodes:** đủ 6 shortcode thương mại (`drv_products`, `drv_shop_the_look`, `drv_price_table`, `drv_lead_form`, `drv_related_posts`, `drv_ai_card`) + 7 shortcode biên tập (`drv_takeaways`, `drv_callout`, `drv_pros_cons`, `drv_formula`, `drv_steps`, `drv_faq`/`drv_faq_item`) + `drv_info` (đọc `drv_settings`).
+  - **Asset:** entry `blog.js` + `pages/blog.css`; `<drv-toc>` hiện từ 2 H2.
+  - **Đối soát local (`localhost:10029`):** `/cam-nang` `200`; bài mẫu có đúng `1` `BreadcrumbList` + `1` `BlogPosting`. JS bài viết: `core.js 7,78KB` + `blog.js 1,63KB` = **`9,41KB` gzip** (`≤ 10KB`).
+  - **Test:** PHPUnit `230/230`, Vitest `86/86` (gồm `TocGeneratorTest`, `ReadingTimeCalculatorTest`, `BlogShortcodeRenderTest`, `toc-scrollspy.test.js`).
+
+- **Còn tồn đọng Step 10:**
+  1. ~~6 Gutenberg Block Patterns~~ — **không làm theo `D-36`** (Classic Editor/TinyMCE thay Gutenberg, Patterns thay bằng 6 shortcode trình bày `drv_takeaways/callout/pros_cons/formula/steps/faq`, đã có). Các mô tả Patterns trong `02`, `14`, `16`, `20 §3` và mục này đã dọn.
+  2. ~~PHPStan~~ — **đã sạch toàn theme** (`2026-11-18`): bổ sung array shape `swatch_url`/`role_label` ở `Shortcodes::formatPriceTableRow`, ép `int` cho `get_image_id()`, khai báo kiểu trả về `pending_slots()`, stub `wpFluent()` trong `tests/php/phpstan-bootstrap.php`; PHPCS + PHPUnit `230/230` xanh.
+  3. ~~ESLint~~ — **đã sạch** (`2026-11-18`): bỏ hằng `MOSS` thừa và tách `CTRL_CHARS` (kèm `eslint-disable no-control-regex`) trong `utils/xlsx.js`; Vitest `86/86`.
+  4. **Đối soát bổ sung (`2026-11-18`, local):** `/chu-de/chon-gach-theo-phong` `200`, `index, follow`, canonical sạch, 1 `H1`, 1 `BreadcrumbList`; tìm kiếm `/?s=…&post_type=post` `200`, `noindex, follow`; `single.php` 390px: không tràn ngang, 1 `H1`, heading không nhảy cấp, `0` ảnh thiếu `alt`, `0` input thiếu label, có skip link, `lang="vi"`, `FAQPage` trong `@graph`.
+     - **Đã sửa:** `MetaTags::sanitizeTitle` để lại dấu `-` dở ở cuối khi cắt `<title>` (`… R10 - | DRAVIT` → `… R10 | DRAVIT`).
+  5. **Chuyển sang Step 11 (chưa kiểm được ở local):**
+     - Rich Results Test (cần URL public).
+     - ~~Phân trang~~ — **đã kiểm** (`2026-11-18`) với `10` bài thử `[TEST]` (`tools/seed-test-posts.php`, thêm tham số `remove` để xóa; tổng `16` bài). **Chốt: mọi trang archive Cẩm nang (`/cam-nang`, `/chu-de/*`, `/tag/*`, tìm kiếm bài) đúng `9` bài/trang** (`BlogSetup::ARCHIVE_PER_PAGE`; trước đó `9`/`12` lệch nhau làm mất bài thứ 10–12). `/cam-nang` trang 1 = `9`, `/page/2` = `7`, `/page/3` = `404`. Còn lại: `/chu-de/{slug}/page/{n}` cần một chuyên mục `> 9` bài; `<title>` trang 2 chưa có hậu tố "Trang 2".
+     - WCAG 2.5.8 (Target Size): breadcrumb cao `17px` và link cột footer cao `20px` (< `24px`); footer dùng chung toàn site, xử lý cùng đợt a11y Step 11 (tăng `padding-block`/`min-height`).
+     - Kiểm tương phản màu & điều hướng bàn phím thủ công.
 
 ---
 

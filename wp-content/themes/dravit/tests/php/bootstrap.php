@@ -39,6 +39,13 @@ spl_autoload_register(static function (string $class): void {
 
 require_once DRV_DIR . '/inc/Core/Helpers.php';
 
+// Stub wp_unslash cho unit test (WordPress function not available in test env).
+if (!function_exists('wp_unslash')) {
+    function wp_unslash(mixed $value): mixed {
+        return is_string($value) ? stripslashes($value) : $value;
+    }
+}
+
 
 // Stub tối thiểu `WP_Error` cho unit test thuần (không nạp WordPress core).
 if (!class_exists('WP_Error')) {
@@ -59,4 +66,35 @@ if (!class_exists('WP_Error')) {
             return $this->data;
         }
     }
+}
+
+// Stub tối thiểu WP REST classes cho unit test LiteSpeedCompat & các REST controller.
+if (!class_exists('WP_REST_Request')) {
+    // phpcs:ignore Generic.Files.OneObjectStructurePerFile.MultipleFound
+    class WP_REST_Request {
+        private string $route = '';
+        public function get_route(): string { return $this->route; }
+        public function set_route(string $route): void { $this->route = $route; }
+    }
+}
+if (!class_exists('WP_HTTP_Response')) {
+    // phpcs:ignore Generic.Files.OneObjectStructurePerFile.MultipleFound
+    class WP_HTTP_Response {
+        /** @var array<string, string> */
+        protected array $headers = [];
+    }
+}
+if (!class_exists('WP_REST_Response')) {
+    // phpcs:ignore Generic.Files.OneObjectStructurePerFile.MultipleFound
+    class WP_REST_Response extends WP_HTTP_Response {
+        public function header(string $key, string $value, bool $replace = true): void {
+            $this->headers[$key] = $value;
+        }
+        /** @return array<string, string> */
+        public function get_headers(): array { return $this->headers; }
+    }
+}
+if (!class_exists('WP_REST_Server')) {
+    // phpcs:ignore Generic.Files.OneObjectStructurePerFile.MultipleFound
+    class WP_REST_Server {}
 }

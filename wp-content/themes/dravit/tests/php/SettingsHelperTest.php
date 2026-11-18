@@ -124,10 +124,12 @@ final class SettingsHelperTest extends TestCase {
             'company' => [
                 'header_logo_id' => '45',
                 'footer_logo_id' => '-9',
+                'favicon_id'     => '-3',
             ],
         ]);
         self::assertSame(45, $sanitized['company']['header_logo_id']);
         self::assertSame(0, $sanitized['company']['footer_logo_id']);
+        self::assertSame(0, $sanitized['company']['favicon_id']);
 
         Settings::flush_cache();
         Functions\when('get_option')->justReturn([

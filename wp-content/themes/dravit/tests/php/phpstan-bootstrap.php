@@ -23,3 +23,10 @@ if (!class_exists('WP_CLI')) {
     }
 }
 
+
+if (!function_exists('wpFluent')) {
+    /** Stub query builder của Fluent Forms (chỉ dùng cho PHPStan). */
+    function wpFluent(): mixed {
+        return null;
+    }
+}

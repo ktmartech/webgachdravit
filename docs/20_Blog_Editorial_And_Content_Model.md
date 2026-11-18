@@ -1,8 +1,8 @@
-# 20. Đặc tả Hệ thống Cẩm nang, Gutenberg Patterns, Shortcodes & E-E-A-T
+# 20. Đặc tả Hệ thống Cẩm nang, Shortcodes & E-E-A-T
 
 > **Quyết định tham chiếu:** `D-01`, `D-04`, `D-08`, `D-17`, `D-20`, `D-21`, `D-23`, `D-24`, `D-25`, `D-26`, `D-28`, `D-29`, `D-30` ([00_Project_Brief_Decisions.md](00_Project_Brief_Decisions.md)).
 > **Liên kết tài liệu:** [06_SEO_GEO_Spec.md](06_SEO_GEO_Spec.md) · [07_UI_UX_Page_Specs.md](07_UI_UX_Page_Specs.md) · [10_Brand_Voice_And_Content_Guide.md](10_Brand_Voice_And_Content_Guide.md) · [14_Data_Dictionary_And_Settings.md](14_Data_Dictionary_And_Settings.md) · [15_REST_API_And_JS_Contract.md](15_REST_API_And_JS_Contract.md).
-> **Module phụ trách:** `Dravit\Content\BlogSetup`, `Dravit\Content\PostMeta`, `Dravit\Content\AuthorProfile`, `Dravit\Content\BlockStyles`, `Dravit\Content\Patterns`, `Dravit\Content\Shortcodes`, `Dravit\Content\Toc`, `Dravit\SEO\BlogSchema`, `assets/src/js/blog.js`.
+> **Module phụ trách:** `Dravit\Content\BlogSetup`, `Dravit\Content\PostMeta`, `Dravit\Content\AuthorProfile`, `Dravit\Content\ContentFilters`, `Dravit\Content\Shortcodes`, `Dravit\Content\Toc`, `Dravit\SEO\BlogSchema`, `assets/src/js/blog.js`.
 
 ---
 
@@ -52,12 +52,12 @@ Seeder khởi tạo sẵn 4 chuyên mục chuẩn (xóa hoặc đổi `Uncategor
   4. **Bảng Tra nhanh Chỉ số Chống trượt `R9 - R13` theo Không gian (GEO Reference Block):** Render bằng bảng HTML ngữ nghĩa `<table>` từ dữ liệu cấu hình kỹ thuật chuẩn (`O-15`), mỗi dòng có link thẳng sang Collection tĩnh tương ứng (`/gach-phong-khach`, `/gach-nha-tam`, `/gach-phong-bep`, `/gach-san-vuon`, `/gach-ho-boi`).
   5. **Lưới Bài viết Còn lại + Phân trang chuẩn `/cam-nang/page/2`:** Hiển thị 9 bài/trang.
   6. **Dải Chuyển đổi Cuối trang (CRO Strip):** 2 cột đối xứng: *Cần tính số thùng theo diện tích phòng?* (`/danh-sach-bao-gia`) và *Xem mẫu gạch thật dưới đèn 3000K / 6500K* (`/lien-he`).
-- **Từ trang 2 trở đi (`is_paged()`):** Thu gọn khối Bento, Topic Clusters và bảng `R9 - R13`; hiển thị thẳng Header chuyên mục + Lưới 12 bài viết + Phân trang số có `<a href="/cam-nang/page/{n}">` để Googlebot thu thập sâu không trùng lặp nội dung đầu trang.
+- **Từ trang 2 trở đi (`is_paged()`):** Thu gọn khối Bento, Topic Clusters và bảng `R9 - R13`; hiển thị thẳng Header chuyên mục + Lưới 9 bài viết + Phân trang số có `<a href="/cam-nang/page/{n}">` để Googlebot thu thập sâu không trùng lặp nội dung đầu trang.
 
 #### C. Bố cục Trang Chuyên mục `category.php` (`/chu-de/{slug}`)
 - Breadcrumb Rank Math: `Trang chủ > Cẩm nang (/cam-nang) > {Tên chuyên mục}`.
 - H1 `{Tên chuyên mục}`, đoạn mô tả chuyên mục (`term_description()`), thanh chuyển nhanh giữa 4 chuyên mục (`aria-current="page"` trên mục đang xem).
-- Lưới 12 bài viết/trang (`3 cột` Desktop · `2 cột` Tablet · `1 cột` Mobile) + phân trang chuẩn `/chu-de/{slug}/page/{n}` (`index, follow`).
+- Lưới 9 bài viết/trang (`3 cột` Desktop · `2 cột` Tablet · `1 cột` Mobile) + phân trang chuẩn `/chu-de/{slug}/page/{n}` (`index, follow`).
 - Khối chân trang **Danh mục Gạch Liên quan (`IL-05`)**: Hiển thị 4 thẻ Collection tĩnh gắn với chuyên mục đó (qua term meta `drv_related_collections` của category hoặc bảng ánh xạ mặc định ở §1.2).
 
 ---
@@ -66,7 +66,7 @@ Seeder khởi tạo sẵn 4 chuyên mục chuẩn (xóa hoặc đổi `Uncategor
 
 ### 2.1 Bảng Post Meta của Bài viết Cẩm nang (`Dravit\Content\PostMeta`)
 
-Đăng ký qua `register_post_meta('post', ...)` (`show_in_rest => true` cho Gutenberg Sidebar / Metabox PHP thuần, không cài ACF):
+Đăng ký qua `register_post_meta('post', ...)` (Metabox PHP thuần, không cài ACF):
 
 | Meta key | Kiểu dữ liệu | Mặc định | Quy tắc Tự tính / Sanitize trên `save_post_post` | Tác dụng ngoài Frontend & Schema |
 |---|---|---|---|---|
@@ -103,77 +103,20 @@ Vì lưu trữ tác giả `/author/*` bị tắt trong Rank Math để tránh m�
 
 ---
 
-## 3. Hệ thống Gutenberg Block Styles & Block Patterns (`inc/Content/{BlockStyles,Patterns}.php`)
+## 3. Thành phần Trình bày Bài viết: 6 Shortcodes thay Block Styles/Patterns (`inc/Content/Shortcodes.php`)
 
-Tuân thủ `D-01` và `D-04`: **Không viết custom Gutenberg block bằng React/JSX** để tránh gánh nặng bảo trì deprecation khi nâng cấp WordPress. Toàn bộ thành phần trình bày chuyên sâu của Cẩm nang xây dựng bằng **Core Blocks + `register_block_style()` + PHP Block Patterns (`patterns/*.php`)**, chia sẻ chung hệ CSS tokens (`assets/src/css/editor.css` nạp qua `add_editor_style()`).
+> **Cập nhật theo `D-36`:** site dùng **Classic Editor (TinyMCE)**, Gutenberg bị tắt toàn bộ. Block Styles (`BlockStyles`), Block Patterns (`patterns/*.php`) và `editor.css` dành cho block **không còn triển khai**. Các thành phần trình bày dưới đây chuyển sang shortcode; CSS dùng chung `pages/blog.css` (`@layer components`).
 
-### 3.1 Đăng ký Block Styles (`Dravit\Content\BlockStyles`)
+| # | Thành phần | Shortcode | Class CSS gốc | Ghi chú |
+|---|---|---|---|---|
+| 1 | Hộp Tóm tắt nhanh chuẩn GEO | `[drv_takeaways title="..." items="Ý 1\|Ý 2"]` | `.drv-takeaways` | Tiêu đề dùng `<p>`, không chiếm mục số 1 của `<drv-toc>`. Nếu Metabox `drv_key_takeaways` có dữ liệu mà bài chưa chèn hộp, `single.php` tự render trên đầu `the_content()`. |
+| 2 | Ghi chú / Mẹo / Cảnh báo | `[drv_callout type="note\|tip\|warning"]...[/drv_callout]` | `.drv-callout--*` | Thay 3 Block Style `drv-callout-*`. |
+| 3 | Bảng Ưu / Nhược điểm | `[drv_pros_cons]` | `.drv-pros`, `.drv-cons` | Lưới 2 cột ron `1px`, 1 cột dưới `768px`. |
+| 4 | Hộp Công thức định mức | `[drv_formula]` | `.drv-formula-box` | HTML thuần, `font-variant-numeric: tabular-nums`. |
+| 5 | Quy trình các bước | `[drv_steps]` | `.drv-steps` | **Không** sinh `HowTo` JSON-LD (`06 §4`). |
+| 6 | FAQ cuối bài | `[drv_faq]` + `[drv_faq_item q="..."]` | `.drv-faq-group` | Không gắn microdata `FAQPage`; `FaqResolver` bơm duy nhất 1 `FAQPage` vào `@graph` (§5.3). |
 
-| Block gốc | Tên style (`name`) | Nhãn trong Editor | Quy cách hiển thị CSS (`@layer components`) |
-|---|---|---|---|
-| `core/group` | `drv-callout-note` | `DRAVIT: Ghi chú kỹ thuật` | Nền `--c-ivory` (`#F8FAFC`), viền trái `3px solid var(--c-navy-900)`, padding `16px 20px` |
-| `core/group` | `drv-callout-tip` | `DRAVIT: Mẹo thi công chuẩn` | Nền `#F0FDFA`, viền trái `3px solid var(--c-teal-500)` (`#0D9488`), nhấn mạnh kinh nghiệm thực tế tại công trình |
-| `core/group` | `drv-callout-warning` | `DRAVIT: Cảnh báo sai lầm` | Nền `--c-amber-100` (`#FEF3C7`), viền trái `3px solid var(--c-amber-500)` (`#F59E0B`), chữ `--c-navy-900`, cảnh báo trượt ngã / lệch lô / thấm ngược |
-| `core/list` | `drv-checklist` | `DRAVIT: Danh sách kiểm tra` | Dấu tick màu `--c-teal-700`, khoảng cách dòng rộng dễ quét mắt trên di động |
-| `core/image` | `drv-scene-frame` | `DRAVIT: Ảnh phối cảnh có viền ron` | Viền mảnh `1px solid var(--c-navy-200)`, liền mạch với thanh `[drv_shop_the_look]` bên dưới |
-
-### 3.2 Bộ 6 Block Patterns Chuẩn Biên tập (`patterns/*.php`, Category `dravit-editorial`)
-
-#### 1. Hộp Tóm tắt Nhanh Chuẩn GEO (`patterns/blog-key-takeaways.php`)
-Đặt ngay sau đoạn mở bài để các công cụ AI (ChatGPT, Gemini, Perplexity, Google AI Overviews) trích xuất câu trả lời trực diện:
-```html
-<!-- wp:group {"className":"drv-takeaways","layout":{"type":"constrained"}} -->
-<aside class="wp-block-group drv-takeaways" aria-label="Tóm tắt nội dung cốt lõi">
-  <!-- wp:heading {"level":2,"className":"drv-takeaways__title"} -->
-  <h2 class="wp-block-heading drv-takeaways__title">Tóm tắt nhanh cho gia chủ</h2>
-  <!-- /wp:heading -->
-  <!-- wp:list {"className":"drv-takeaways__list"} -->
-  <ul class="wp-block-list drv-takeaways__list">
-    <li>Sàn nhà tắm có dốc thoát nước bắt buộc chọn gạch xương Porcelain (E ≤ 0,5%) và bề mặt chống trượt từ R10 trở lên.</li>
-    <li>Khổ gạch 30x60 cm dễ tạo độ dốc về phễu thu sàn hơn khổ 60x120 cm trong phòng tắm dưới 5 m².</li>
-    <li>Luôn cộng thêm 5 - 10% hao hụt cắt gạch và đặt dư 1 thùng cùng mã lô xuất kho để dự phòng bảo trì.</li>
-  </ul>
-  <!-- /wp:list -->
-</aside>
-<!-- /wp:group -->
-```
-> *Lưu ý:* Thẻ tiêu đề trong `.drv-takeaways` có thể dùng `<p class="drv-takeaways__title"><strong>Tóm tắt nhanh cho gia chủ</strong></p>` (mặc định trong pattern) để không chiếm mất mục số 1 của Mục lục `<drv-toc>`. Nếu biên tập viên điền mảng `drv_key_takeaways` trong Metabox mà chưa chèn block `.drv-takeaways` vào nội dung, `single-post.php` tự động render hộp này ngay trên đầu `the_content()`.
-
-#### 2. Bảng Thông số So sánh Chuẩn GEO (`core/table` + Filter `render_block_core/table`)
-Để mọi bảng thông số kỹ thuật đọc tốt trên màn hình 360px và đạt chuẩn dữ liệu có cấu trúc cho AI:
-- Hook `render_block_core/table` trong `BlockStyles` tự động:
-  1. Bọc `<figure class="wp-block-table">` trong `<div class="drv-geo-table-wrap" tabindex="0" role="region" aria-label="Bảng thông số kỹ thuật (vuốt ngang để xem thêm)">` (cuộn ngang mượt trên mobile, ghim cột đầu tiên nếu bảng `≥ 5` cột).
-  2. Tự động gắn `scope="col"` cho mọi thẻ `<th>` nằm trong `<thead>` nếu Gutenberg chưa xuất.
-- Pattern `patterns/blog-geo-table.php` tạo sẵn khung `core/table` có `<thead>` và `<figcaption>` (render kèm `<caption class="sr-only">` hoặc dùng `<figcaption>` mô tả rõ ngữ cảnh bảng).
-
-#### 3. Bảng Đối chiếu Ưu / Nhược điểm (`patterns/blog-pros-cons.php`)
-Lưới 2 cột `core/columns` chia đường ron `1px` (`1 cột` trên `< 768px`):
-- **Cột Ưu điểm (`.drv-pros`):** Header nền nhẹ `#F0FDFA`, tiêu đề `Ưu điểm thực tế`.
-- **Cột Hạn chế cần lưu ý (`.drv-cons`):** Header nền `#FFFBEB`, tiêu đề `Điểm cần lưu ý khi thi công`.
-
-#### 4. Hộp Công thức Tính Định mức Vật tư (`patterns/blog-formula-box.php`)
-Trình bày công thức toán học và ví dụ tính thực tế bằng chữ HTML thuần (`font-variant-numeric: tabular-nums`):
-```html
-<!-- wp:group {"className":"drv-formula-box"} -->
-<div class="wp-block-group drv-formula-box">
-  <p class="drv-formula-box__label">CÔNG THỨC QUY ĐỔI SỐ THÙNG GẠCH CHUẨN</p>
-  <p class="drv-formula-box__eq">
-    Số thùng cần mua = Làm tròn lên [ (Diện tích đo thực tế × 1,05) ÷ Diện tích 1 thùng ]
-  </p>
-  <p class="drv-formula-box__example">
-    Ví dụ: Phòng khách rộng 28 m², chọn gạch 80x80 cm (3 viên/thùng = 1,92 m²/thùng), hao hụt 5% → Cần 29,4 ÷ 1,92 = 15,31 → Đặt chẵn <strong>16 thùng (48 viên = 30,72 m²)</strong>.
-  </p>
-</div>
-<!-- /wp:group -->
-```
-
-#### 5. Khối Quy trình Các Bước Trực quan (`patterns/blog-steps.php`)
-Danh sách có thứ tự trình bày các bước thi công / kiểm tra gạch tại công trình. **Chỉ render giao diện HTML/CSS sạch, tuyệt đối KHÔNG sinh `HowTo` JSON-LD** (Google đã ngừng hỗ trợ `HowTo` Rich Results từ 2023 theo `06 §4`).
-
-#### 6. Khối Câu hỏi Thường gặp Cuối bài (`patterns/blog-faq-group.php`)
-Sử dụng tổ hợp `core/group` (class `.drv-faq-group`) chứa các block native `core/details` (`<details class="wp-block-details"><summary>Câu hỏi?</summary><p>Câu trả lời...</p></details>`):
-- **Không gắn `itemscope` / `itemtype="https://schema.org/FAQPage"` trực tiếp vào HTML** (khắc phục lỗi trùng lặp Schema kép của prototype `08-blog-single.html`).
-- Class `Dravit\SEO\BlogSchema` tự động đọc các cặp `<summary>` + nội dung bên trong `.drv-faq-group` của bài viết để bơm duy nhất 1 thực thể `FAQPage` sạch vào đồ thị `@graph` JSON-LD của Rank Math (§5.3).
+**Bảng thông số GEO:** bảng HTML viết trong TinyMCE. `ContentFilters` (filter `the_content`) bọc `<table>` trong `<div class="drv-geo-table-wrap" tabindex="0" role="region" aria-label="Bảng thông số kỹ thuật (vuốt ngang để xem thêm)">` và gắn `scope="col"` cho `<th>` trong `<thead>`.
 
 ---
 

@@ -43,6 +43,7 @@ final class Settings implements ServiceProviderInterface {
                 'bct_url'        => '',
                 'header_logo_id' => 0,
                 'footer_logo_id' => 0,
+                'favicon_id'     => 0,
             ],
             'contact'  => [
                 'hotline'        => '0909 888 777',
@@ -218,6 +219,9 @@ final class Settings implements ServiceProviderInterface {
             }
             if (array_key_exists('footer_logo_id', $input['company'])) {
                 $base['company']['footer_logo_id'] = max(0, (int) $input['company']['footer_logo_id']);
+            }
+            if (array_key_exists('favicon_id', $input['company'])) {
+                $base['company']['favicon_id'] = max(0, (int) $input['company']['favicon_id']);
             }
         }
 

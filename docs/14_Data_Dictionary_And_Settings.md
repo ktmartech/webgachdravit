@@ -364,7 +364,7 @@ Dùng trong `config/collections.php` để `PrimaryCategory` tự chọn danh m�
 
 ### 5.1 Post Meta (`post_type = 'post'` - Cẩm nang `/cam-nang/{slug}`)
 
-Đăng ký qua `Dravit\Content\PostMeta` (Metabox trong Gutenberg / Classic).
+Đăng ký qua `Dravit\Content\PostMeta` (Metabox PHP thuần, Classic Editor theo `D-36`).
 
 | Meta key | Kiểu PHP / Lưu DB | Mặc định | Validate / Sanitize | Nơi sử dụng |
 |---|---|---|---|---|

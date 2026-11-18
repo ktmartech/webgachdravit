@@ -571,7 +571,7 @@ final class HomeData {
                         'real_before' => $has_real_pair,
                         'thumb'     => $main_after,
                         'alt'       => 'Khu trưng bày tấm gạch lớn 60x120 và 80x80 tại Showroom DRAVIT',
-                        'caption'   => 'Kệ cánh lật 120 tấm khổ 80×80, 60×120 & đá nung kết — kéo thanh trượt để so sánh trước và sau khi lát gạch',
+                        'caption'   => 'Kệ cánh lật 120 tấm khổ 80×80, 60×120 & đá nung kết - kéo thanh trượt để so sánh trước và sau khi lát gạch',
                     ],
                     [
                         'after'      => self::roomUrl('room-facade-stone.jpg'),
@@ -579,7 +579,7 @@ final class HomeData {
                         'real_before' => false,
                         'thumb'     => self::roomUrl('room-facade-stone.jpg'),
                         'alt'       => 'Sảnh trưng bày gạch vân đá khổ lớn liền mạch',
-                        'caption'   => 'Sảnh lát thực tế khổ 60×120 vân đá tự nhiên — dễ hình dung tỷ lệ đường ron trên mảng sàn rộng',
+                        'caption'   => 'Sảnh lát thực tế khổ 60×120 vân đá tự nhiên - dễ hình dung tỷ lệ đường ron trên mảng sàn rộng',
                     ],
                     [
                         'after'      => self::roomUrl('room-bedroom-wood.jpg'),
@@ -633,7 +633,7 @@ final class HomeData {
                         'real_before' => false,
                         'thumb'     => self::roomUrl('room-balcony-terrace.jpg'),
                         'alt'       => 'Khu hộp đèn đổi nhiệt độ màu 3000K - 4000K - 6500K tại Showroom',
-                        'caption'   => 'Hộp đèn đổi màu 3000K · 4000K · 6500K — kiểm tra độ lệch tông màu gạch trước khi chốt lô',
+                        'caption'   => 'Hộp đèn đổi màu 3000K · 4000K · 6500K - kiểm tra độ lệch tông màu gạch trước khi chốt lô',
                     ],
                     [
                         'after'      => self::roomUrl('room-outdoor-patio.jpg'),
@@ -649,7 +649,7 @@ final class HomeData {
                         'real_before' => false,
                         'thumb'     => self::placeholderUrl('detail-edge-10mm.svg'),
                         'alt'       => 'Mẫu cắt mặt ngang xương gạch Porcelain BIa nén đặc độ hút nước dưới 0,5%',
-                        'caption'   => 'Mẫu cắt mặt ngang xương gạch Porcelain BIa — kiểm chứng độ đặc và độ hút nước E ≤ 0,5%',
+                        'caption'   => 'Mẫu cắt mặt ngang xương gạch Porcelain BIa - kiểm chứng độ đặc và độ hút nước E ≤ 0,5%',
                     ],
                 ],
             ],

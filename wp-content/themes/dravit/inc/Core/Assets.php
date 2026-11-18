@@ -11,12 +11,107 @@ final class Assets implements ServiceProviderInterface {
     /** @var array<string, bool> */
     private static array $enqueued_entries = [];
 
+    /** @var array<string, string> Mapping template → critical CSS key. */
+    private const CRITICAL_MAP = [
+        'home'     => 'home',
+        'catalog'  => 'catalog',
+        'product'  => 'product',
+        'blog'     => 'blog',
+        'commerce' => 'commerce',
+        'page'     => 'page',
+    ];
+
     public function register(): void {
+        add_action('wp_head', [$this, 'print_critical_css'], 1);
         add_action('wp_enqueue_scripts', [$this, 'enqueue_global_assets'], 10);
         add_action('wp_head', [$this, 'print_font_preloads'], 1);
         add_action('wp_head', [$this, 'print_vite_hmr_client'], 2);
         add_action('wp_head', [$this, 'print_modulepreload_links'], 3);
         add_action('wp_head', [$this, 'print_runtime_config'], 4);
+    }
+
+    /**
+     * Detect current template key and inline critical CSS.
+     * Hook: wp_head priority 1.
+     */
+    public function print_critical_css(): void {
+        $key = $this->detect_template_key();
+        if ($key !== '') {
+            self::inline_critical_css($key);
+        }
+    }
+
+    /**
+     * Detect template key dựa trên conditional tags.
+     */
+    private function detect_template_key(): string {
+        if (function_exists('is_front_page') && is_front_page()) {
+            return 'home';
+        }
+
+        if (
+            drv_is_woo_active()
+            && (
+                (function_exists('is_shop') && is_shop())
+                || (function_exists('is_product_category') && is_product_category())
+                || (function_exists('is_tax') && is_tax(['pa_bo-suu-tap', 'pa_xuat-xu']))
+            )
+        ) {
+            return 'catalog';
+        }
+
+        if (drv_is_woo_active() && function_exists('is_product') && is_product()) {
+            return 'product';
+        }
+
+        if (
+            drv_is_woo_active()
+            && (
+                (function_exists('is_cart') && is_cart())
+                || (function_exists('is_checkout') && is_checkout())
+                || (function_exists('is_wc_endpoint_url') && is_wc_endpoint_url('order-received'))
+            )
+        ) {
+            return 'commerce';
+        }
+
+        if (
+            (function_exists('is_home') && is_home())
+            || (function_exists('is_category') && is_category())
+            || (function_exists('is_tag') && is_tag())
+            || (function_exists('is_singular') && is_singular('post'))
+        ) {
+            return 'blog';
+        }
+
+        return 'page';
+    }
+
+    /**
+     * Inline critical CSS vào <head> từ file source.
+     *
+     * Đọc assets/src/css/critical/critical-{$template_key}.css và output
+     * <style id="drv-critical-{key}">...</style>.
+     * Dùng cho trước khi full CSS được tải bất đồng bộ.
+     */
+    public static function inline_critical_css(string $template_key): void {
+        $allowed = array_keys(self::CRITICAL_MAP);
+        if (!in_array($template_key, $allowed, true)) {
+            return;
+        }
+
+        $file = DRV_DIR . '/assets/src/css/critical/critical-' . $template_key . '.css';
+        if (!is_file($file)) {
+            return;
+        }
+
+        $css = file_get_contents($file); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- local file
+        if ($css === false || $css === '') {
+            return;
+        }
+
+        $key = esc_attr($template_key);
+        echo '<style id="drv-critical-' . $key . '">' . $css . "</style>\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- CSS from theme source
     }
 
     public function print_runtime_config(): void {

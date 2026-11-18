@@ -169,4 +169,66 @@
   .rank-math-breadcrumb a:hover {
     color: var(--c-teal-700);
   }
+
+  /* Form lead nhúng (hộp `.drv-inline-lead-form`): 2 ô một dòng khi đủ rộng — Họ tên | SĐT, Tỉnh/TP | Diện tích, Vai trò | Email;
+     ô nhu cầu, đồng ý và nút gửi luôn full width; dưới 360px (container) về 1 cột. */
+  .drv-inline-lead-form {
+    container: leadform / inline-size;
+  }
+
+  .drv-inline-lead-form .frm-fluent-form fieldset {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    column-gap: var(--s-3);
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .drv-inline-lead-form .frm-fluent-form fieldset > .ff-el-group {
+    min-width: 0;
+    margin-bottom: var(--s-3);
+  }
+
+  /* CSS của Fluent Forms (không nằm trong @layer nên thắng mọi layer) đặt `display: block` cho `.ff-el-form-control`,
+     làm nút chọn tùy biến `drv-select-ui` rớt caret xuống dòng: định vị tuyệt đối thay vì dựa vào flex. */
+  .fluentform .drv-select-ui__btn {
+    position: relative;
+    padding-right: 36px;
+  }
+
+  .fluentform .drv-select-ui__btn .drv-select-ui__caret {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    translate: 0 -50%;
+  }
+
+  .fluentform .drv-select-ui.is-open > .drv-select-ui__btn .drv-select-ui__caret {
+    transform: rotate(180deg);
+  }
+
+  .fluentform .drv-select-ui__btn .drv-select-ui__label {
+    display: block;
+  }
+
+  @container leadform (min-width: 360px) {
+    .drv-inline-lead-form .frm-fluent-form fieldset {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .drv-inline-lead-form .frm-fluent-form fieldset > .ff-el-group:has(textarea),
+    .drv-inline-lead-form .frm-fluent-form fieldset > .ff-el-group:has(.ff-el-form-check),
+    .drv-inline-lead-form .frm-fluent-form fieldset > .ff-el-group:has(.ff-btn-submit),
+    .drv-inline-lead-form .frm-fluent-form fieldset > .ff-el-group:has(.ff_gdpr_field),
+    .drv-inline-lead-form .frm-fluent-form fieldset > .ff-el-group:not(:has(.ff-el-form-control)) {
+      grid-column: 1 / -1;
+    }
+
+    /* Trường lẻ cuối cùng trong một cặp (ví dụ chỉ còn Tỉnh/TP khi admin bỏ ô Diện tích) cũng chiếm cả dòng. */
+    .drv-inline-lead-form .frm-fluent-form fieldset > .ff-el-group:has(.ff-el-form-control):last-of-type {
+      grid-column: 1 / -1;
+    }
+  }
 }

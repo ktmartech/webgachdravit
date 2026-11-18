@@ -348,11 +348,17 @@ $quickPrompts = [
                         </div>
 
                         <!-- SKELETON SHIMMER GRID -->
-                        <div class="drv-aif-product-grid" data-aif-skeleton hidden aria-hidden="true">
-                            <div class="drv-aif-skeleton-card"></div>
-                            <div class="drv-aif-skeleton-card"></div>
-                            <div class="drv-aif-skeleton-card"></div>
-                            <div class="drv-aif-skeleton-card"></div>
+                        <div data-aif-skeleton-wrap hidden aria-hidden="true">
+                            <div class="drv-aif-skeleton-status">
+                                <div class="drv-aif-skeleton-status__dots"><span></span><span></span><span></span></div>
+                                <span class="drv-aif-skeleton-status__label" data-aif-search-label>Đang phân tích yêu cầu...</span>
+                            </div>
+                            <div class="drv-aif-product-grid" data-aif-skeleton>
+                                <div class="drv-aif-skeleton-card"></div>
+                                <div class="drv-aif-skeleton-card"></div>
+                                <div class="drv-aif-skeleton-card"></div>
+                                <div class="drv-aif-skeleton-card"></div>
+                            </div>
                         </div>
 
                         <!-- EMPTY / HANDOFF STATE -->

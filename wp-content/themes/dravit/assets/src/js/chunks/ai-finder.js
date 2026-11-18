@@ -565,7 +565,7 @@ export class AiFinderElement extends HTMLElement {
         response = await this.postAdvisorPayload(message, fromChip, freshNonce);
       }
 
-      typingNode?.remove();
+      this._removeTypingNode(typingNode);
 
       if (!response.ok) {
         let errMsg =
@@ -587,7 +587,7 @@ export class AiFinderElement extends HTMLElement {
       this.setLoadingState(false);
       this.applyAdvisorResponse(data, silentBubble);
     } catch {
-      typingNode?.remove();
+      this._removeTypingNode(typingNode);
       this.setLoadingState(false);
       this.appendBotResponse({
         summary:
@@ -597,6 +597,15 @@ export class AiFinderElement extends HTMLElement {
     } finally {
       this.busy = false;
     }
+  }
+
+  /** Xoá typing node và clear toàn bộ stage timers đính kèm */
+  _removeTypingNode(node) {
+    if (!node) return;
+    if (Array.isArray(node._stageTimers)) {
+      node._stageTimers.forEach(clearTimeout);
+    }
+    node.remove();
   }
 
   async postAdvisorPayload(message, fromChip, nonce) {
@@ -825,13 +834,71 @@ export class AiFinderElement extends HTMLElement {
       <div class="drv-aif-msg__bubble">
         <div class="drv-aif-typing-wrap" aria-label="Đang lọc thông số và tính số thùng">
           <div class="drv-aif-typing-dots"><span></span><span></span><span></span></div>
-          <span>Đang lọc thông số &amp; tính số thùng...</span>
+          <span data-aif-typing-label>Đang phân tích yêu cầu...</span>
         </div>
       </div>`;
 
     log.appendChild(el);
     log.scrollTop = log.scrollHeight;
+
+    // Rotate qua các stages để giả lập quá trình tìm kiếm thật
+    const stages = [
+      { delay: 900,  text: 'Đang tìm trong catalog...' },
+      { delay: 1800, text: 'Đang lọc theo thông số kỹ thuật...' },
+      { delay: 2900, text: 'Đang tính số thùng & hao hụt...' },
+      { delay: 4000, text: 'Đang chọn mẫu phù hợp nhất...' },
+    ];
+    const labelEl = el.querySelector('[data-aif-typing-label]');
+    const timers = stages.map(({ delay, text }) =>
+      setTimeout(() => {
+        if (labelEl && el.isConnected) {
+          labelEl.classList.add('is-fading');
+          setTimeout(() => {
+            if (labelEl && el.isConnected) {
+              labelEl.textContent = text;
+              labelEl.classList.remove('is-fading');
+            }
+          }, 180);
+        }
+      }, delay),
+    );
+    // Lưu timers để cleanup khi node bị remove
+    el._stageTimers = timers;
+
     return el;
+  }
+
+  /**
+   * Hiệu ứng typewriter cho text AI — gõ từng ký tự sau 1 delay ngắn.
+   * Trả về Promise hoàn tất khi gõ xong.
+   * @param {HTMLElement} targetEl - element chứa text (innerText sẽ bị thay)
+   * @param {string} fullText - nội dung đầy đủ cần gõ (plain text)
+   * @param {Object} opts
+   * @param {number} opts.startDelay - ms trước khi bắt đầu gõ (default 400)
+   * @param {number} opts.charDelay - ms mỗi ký tự (default 18)
+   */
+  _typewriteText(targetEl, fullText, { startDelay = 400, charDelay = 18 } = {}) {
+    return new Promise((resolve) => {
+      targetEl.textContent = '';
+      targetEl.classList.add('is-typing');
+
+      setTimeout(() => {
+        let i = 0;
+        const chars = [...fullText]; // hỗ trợ Unicode / emoji
+        const tick = () => {
+          if (i >= chars.length) {
+            targetEl.classList.remove('is-typing');
+            resolve();
+            return;
+          }
+          targetEl.textContent += chars[i++];
+          // Jitter ngẫu nhiên ±6ms để không máy móc
+          const jitter = Math.random() * 12 - 6;
+          setTimeout(tick, charDelay + jitter);
+        };
+        tick();
+      }, startDelay);
+    });
   }
 
   appendBotResponse(data) {
@@ -932,19 +999,43 @@ export class AiFinderElement extends HTMLElement {
 
     const el = document.createElement('div');
     el.className = 'drv-aif-msg drv-aif-msg--bot';
+
+    // Render bubble với summary trống — sẽ được typewrite sau
     el.innerHTML = `
       <div class="drv-aif-msg__avatar" aria-hidden="true">
         <i class="ph-fill ph-sparkle"></i>
       </div>
       <div class="drv-aif-msg__bubble">
         ${headHtml}
-        <p class="drv-aif-msg__text">${formatRichSummaryHtml(summary)}</p>
-        ${extraHtml}
+        <p class="drv-aif-msg__text" data-aif-typewrite></p>
+        <div class="drv-aif-msg__after" hidden>${extraHtml}</div>
       </div>`;
 
     log.appendChild(el);
     log.scrollTop = log.scrollHeight;
-    this.syncAddedCardStates();
+
+    // Typewrite summary → reveal extra content sau khi gõ xong
+    const textTarget = el.querySelector('[data-aif-typewrite]');
+    const afterBlock = el.querySelector('.drv-aif-msg__after');
+
+    if (textTarget && summary) {
+      // Delay 600ms giống người đang nghĩ trước khi bắt đầu gõ
+      this._typewriteText(textTarget, summary, { startDelay: 600, charDelay: 16 }).then(() => {
+        // Sau khi gõ xong summary → hiện phần card + chips với fade-in
+        if (afterBlock && afterBlock.innerHTML.trim()) {
+          afterBlock.hidden = false;
+          afterBlock.classList.add('is-revealed');
+        }
+        log.scrollTop = log.scrollHeight;
+        this.syncAddedCardStates();
+      });
+    } else {
+      if (textTarget) textTarget.textContent = summary;
+      if (afterBlock && afterBlock.innerHTML.trim()) {
+        afterBlock.hidden = false;
+      }
+      this.syncAddedCardStates();
+    }
   }
 
   openQuickSpecModal(rawSpecJson) {
@@ -1333,20 +1424,56 @@ export class AiFinderElement extends HTMLElement {
       submitBtn.disabled = isLoading;
     }
 
-    const skeleton = this.querySelector('[data-aif-skeleton]');
+    const skeletonWrap = this.querySelector('[data-aif-skeleton-wrap]');
     const grid = this.querySelector('[data-aif-grid]');
     const emptyBox = this.querySelector('[data-aif-empty]');
 
-    if (skeleton) {
-      skeleton.hidden = !isLoading;
+    if (skeletonWrap) {
+      skeletonWrap.hidden = !isLoading;
+      skeletonWrap.setAttribute('aria-hidden', isLoading ? 'true' : 'true');
+
+      if (isLoading) {
+        // Khởi động stage rotation cho label trong skeleton
+        this._startSkeletonStages(skeletonWrap);
+      } else {
+        this._stopSkeletonStages();
+      }
     }
+
     if (isLoading) {
-      if (grid) {
-        grid.hidden = true;
-      }
-      if (emptyBox) {
-        emptyBox.hidden = true;
-      }
+      if (grid) grid.hidden = true;
+      if (emptyBox) emptyBox.hidden = true;
+    }
+  }
+
+  _startSkeletonStages(wrapEl) {
+    this._stopSkeletonStages(); // clear cũ nếu có
+
+    const stages = [
+      { delay: 950,  text: 'Đang tìm trong catalog...' },
+      { delay: 2000, text: 'Đang lọc theo thông số kỹ thuật...' },
+      { delay: 3100, text: 'Đang tính số thùng & hao hụt...' },
+      { delay: 4300, text: 'Đang chọn mẫu phù hợp nhất...' },
+    ];
+
+    const labelEl = wrapEl.querySelector('[data-aif-search-label]');
+    this._skeletonTimers = stages.map(({ delay, text }) =>
+      setTimeout(() => {
+        if (!labelEl || !wrapEl.isConnected) return;
+        labelEl.classList.add('is-fading');
+        setTimeout(() => {
+          if (!labelEl || !wrapEl.isConnected) return;
+          labelEl.textContent = text;
+          labelEl.classList.remove('is-fading');
+        }, 180);
+      }, delay),
+    );
+  }
+
+  _stopSkeletonStages() {
+    if (Array.isArray(this._skeletonTimers)) {
+      this._skeletonTimers.forEach(clearTimeout);
+      this._skeletonTimers = [];
     }
   }
 }

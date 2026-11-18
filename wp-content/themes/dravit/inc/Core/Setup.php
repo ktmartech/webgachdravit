@@ -13,6 +13,21 @@ final class Setup implements ServiceProviderInterface {
         add_filter('intermediate_image_sizes_advanced', [$this, 'prune_unused_image_sizes']);
         add_filter('big_image_size_threshold', static fn (): int => 2560);
         add_filter('wp_editor_set_quality', static fn (): int => 80);
+        // Chưa chọn Favicon trong Cài đặt Hệ thống (`site_icon` trống): dùng biểu tượng "D" mặc định thay vì để trình duyệt tự tìm `/favicon.ico` (404).
+        add_action('wp_head', [$this, 'print_default_favicon'], 99);
+        add_action('admin_head', [$this, 'print_default_favicon'], 99);
+        add_action('login_head', [$this, 'print_default_favicon'], 99);
+    }
+
+    public function print_default_favicon(): void {
+        if (function_exists('has_site_icon') && has_site_icon()) {
+            return;
+        }
+        printf(
+            '<link rel="icon" href="%s" type="image/svg+xml">' . "
+",
+            esc_url(DRV_URI . '/assets/images/avatar-admin.svg')
+        );
     }
 
     public function setup_theme(): void {

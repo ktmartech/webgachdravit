@@ -188,7 +188,7 @@ final class LlmsTxt implements ServiceProviderInterface {
                 continue;
             }
             $lines[] = sprintf(
-                '- **%s:** %s — ĐT: %s (%s)',
+                '- **%s:** %s - ĐT: %s (%s)',
                 trim((string) $sr['name']),
                 trim((string) ($sr['address'] ?? '')),
                 trim((string) ($sr['phone'] ?? $hotline)),

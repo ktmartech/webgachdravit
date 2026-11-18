@@ -16,6 +16,9 @@ defined('ABSPATH') || exit;
  * (docs/20 §1, docs/07 §7–§8).
  */
 final class BlogSetup implements ServiceProviderInterface {
+    /** Mọi trang archive Cẩm nang (`/cam-nang`, `/chu-de/*`, `/tag/*`) hiện đúng 9 bài. */
+    private const ARCHIVE_PER_PAGE = 9;
+
     /**
      * 4 chuyên mục Cẩm nang chuẩn (`20 §1.2`) kèm ánh xạ Silo thương mại `IL-05`.
      *
@@ -92,18 +95,17 @@ final class BlogSetup implements ServiceProviderInterface {
         }
 
         if ($query->is_home()) {
-            $paged = max(1, (int) $query->get('paged', 1));
             $query->set('post_type', 'post');
             $query->set('post_status', 'publish');
             $query->set('ignore_sticky_posts', true);
-            $query->set('posts_per_page', $paged >= 2 ? 12 : 9);
+            $query->set('posts_per_page', self::ARCHIVE_PER_PAGE);
             return;
         }
 
         if ($query->is_category() || $query->is_tag()) {
             $query->set('post_type', 'post');
             $query->set('post_status', 'publish');
-            $query->set('posts_per_page', 12);
+            $query->set('posts_per_page', self::ARCHIVE_PER_PAGE);
         }
     }
 
@@ -372,35 +374,38 @@ final class BlogSetup implements ServiceProviderInterface {
             }
         }
 
+        // Chưa cài `blog.popular_post_ids` (hoặc cài thiếu): tự bù đủ 5 bài. Ưu tiên chuyên mục kỹ thuật/định mức,
+        // sau đó lấy bài mới nhất còn lại, không trùng bài đã chọn.
         if (count($popular_posts) < 5) {
-            $exclude_pop = array_map(static fn (mixed $p): int => $p instanceof \WP_Post ? $p->ID : 0, $popular_posts);
-            $fallback_pop = get_posts([
-                'post_type'           => 'post',
-                'post_status'         => 'publish',
-                'posts_per_page'      => 6,
-                'post__not_in'        => array_values(array_filter($exclude_pop)),
-                'category_name'       => 'ky-thuat-op-lat,dinh-muc-bao-gia',
-                'ignore_sticky_posts' => true,
-                'no_found_rows'       => true,
-            ]);
-            if (!is_array($fallback_pop) || $fallback_pop === []) {
+            $queries = [
+                ['category_name' => 'ky-thuat-op-lat,dinh-muc-bao-gia'],
+                [],
+            ];
+            foreach ($queries as $extra) {
+                $exclude_pop = array_values(array_filter(array_map(
+                    static fn (mixed $p): int => $p instanceof \WP_Post ? $p->ID : 0,
+                    $popular_posts
+                )));
                 $fallback_pop = get_posts([
                     'post_type'           => 'post',
                     'post_status'         => 'publish',
                     'posts_per_page'      => 6,
-                    'post__not_in'        => array_values(array_filter($exclude_pop)),
+                    'post__not_in'        => $exclude_pop,
                     'ignore_sticky_posts' => true,
                     'no_found_rows'       => true,
-                ]);
-            }
-            if (is_array($fallback_pop)) {
-                foreach ($fallback_pop as $fp) {
-                    if ($fp instanceof \WP_Post && $fp->post_name !== 'hello-world') {
-                        $popular_posts[] = $fp;
+                ] + $extra);
+                if (is_array($fallback_pop)) {
+                    foreach ($fallback_pop as $fp) {
+                        if ($fp instanceof \WP_Post && $fp->post_name !== 'hello-world') {
+                            $popular_posts[] = $fp;
+                        }
+                        if (count($popular_posts) >= 5) {
+                            break;
+                        }
                     }
-                    if (count($popular_posts) >= 5) {
-                        break;
-                    }
+                }
+                if (count($popular_posts) >= 5) {
+                    break;
                 }
             }
         }

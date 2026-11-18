@@ -21,7 +21,6 @@ if ($is_blog_search) :
     <?php
     get_template_part('template-parts/blog/hero', null, [
         'title'      => $raw_query !== '' ? sprintf('Bài viết cẩm nang cho "%s"', $raw_query) : 'Tìm kiếm bài viết Cẩm nang',
-        'tools_link' => false,
     ]);
     ?>
 

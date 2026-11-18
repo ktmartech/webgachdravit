@@ -1126,6 +1126,8 @@ final class Shortcodes implements ServiceProviderInterface {
      *   surface_r: string,
      *   pack_spec: string,
      *   is_quote: bool,
+     *   swatch_url: string,
+     *   role_label: string,
      *   price_m2_text: string,
      *   price_piece_text: string
      * }
@@ -1175,7 +1177,7 @@ final class Shortcodes implements ServiceProviderInterface {
         $eff_m2   = ($state === PriceState::SALE && $sale_m2 > 0 && $sale_m2 < $reg_m2) ? $sale_m2 : $reg_m2;
         $piece_vn = $is_quote ? 0 : (int) round((float) $product->get_price());
 
-        $img_id     = $product->get_image_id();
+        $img_id     = (int) $product->get_image_id();
         $swatch_url = $img_id > 0 && function_exists('wp_get_attachment_image_url')
             ? (string) wp_get_attachment_image_url($img_id, 'thumbnail')
             : '';

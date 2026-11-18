@@ -15,7 +15,17 @@ defined('ABSPATH') || exit;
  * - Định danh `Person.url` trỏ về `/gioi-thieu#person-{user_id}` khi tắt Author Archive.
  */
 final class AuthorProfile implements ServiceProviderInterface {
+    /** Đang dựng Admin Bar: ảnh đại diện mặc định phải vuông, không dùng logo ngang (bị méo trong khung tròn). */
+    private static bool $square_default = false;
+
     public function register(): void {
+        add_action('admin_bar_menu', static function (): void {
+            self::$square_default = true;
+        }, 0);
+        add_action('admin_bar_menu', static function (): void {
+            self::$square_default = false;
+        }, 9999);
+
         // Chặn tuyệt đối mọi kết nối ra gravatar.com (bảo vệ LCP & quyền riêng tư theo docs/20 §2.2.A).
         add_filter('pre_get_avatar_data', [$this, 'filter_avatar_data'], 20, 2);
     }
@@ -54,7 +64,9 @@ final class AuthorProfile implements ServiceProviderInterface {
             }
         }
 
-        return DRV_URI . '/assets/images/logo-navy@1x.webp';
+        return (self::$square_default || (function_exists('is_admin') && is_admin()))
+            ? DRV_URI . '/assets/images/avatar-admin.svg'
+            : DRV_URI . '/assets/images/logo-navy@1x.webp';
     }
 
     /**

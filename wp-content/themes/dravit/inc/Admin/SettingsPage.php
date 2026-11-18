@@ -120,7 +120,36 @@ final class SettingsPage implements ServiceProviderInterface {
             }
         }
 
+        if (isset($input['company']) && is_array($input['company']) && array_key_exists('favicon_id', $input['company'])) {
+            $this->sync_site_icon((int) ($clean['company']['favicon_id'] ?? 0));
+        }
+
         return $clean;
+    }
+
+    /**
+     * Đồng bộ Favicon sang `site_icon` của lõi WP để WP tự xuất `<link rel="icon">` + `apple-touch-icon`
+     * (192/512/180/32px) và dùng lại ở màn hình đăng nhập / admin. Khuyến nghị ảnh vuông `≥ 512×512`.
+     */
+    private function sync_site_icon(int $attachment_id): void {
+        if ($attachment_id <= 0 || !wp_attachment_is_image($attachment_id)) {
+            delete_option('site_icon');
+            return;
+        }
+
+        update_option('site_icon', $attachment_id);
+
+        $meta = wp_get_attachment_metadata($attachment_id);
+        $w    = is_array($meta) ? (int) ($meta['width'] ?? 0) : 0;
+        $h    = is_array($meta) ? (int) ($meta['height'] ?? 0) : 0;
+        if ($w > 0 && $h > 0 && ($w !== $h || $w < 512)) {
+            add_settings_error(
+                Settings::OPTION_KEY,
+                'drv_favicon_size',
+                sprintf('Favicon %d×%d px: nên dùng ảnh vuông từ 512×512 px để hiển thị nét trên mọi thiết bị.', $w, $h),
+                'warning'
+            );
+        }
     }
 
     /**
@@ -141,6 +170,7 @@ final class SettingsPage implements ServiceProviderInterface {
         $upload_map = [
             'drv_upload_header_logo' => 'header_logo_id',
             'drv_upload_footer_logo' => 'footer_logo_id',
+            'drv_upload_favicon'     => 'favicon_id',
         ];
 
         foreach ($upload_map as $file_field => $setting_key) {
@@ -153,7 +183,7 @@ final class SettingsPage implements ServiceProviderInterface {
             }
             $file_name = sanitize_file_name((string) wp_unslash($_FILES[$file_field]['name']));
             if ($error_code !== UPLOAD_ERR_OK || $file_name === '') {
-                add_settings_error(Settings::OPTION_KEY, $file_field . '_err', 'Không thể tải file logo lên. Vui lòng kiểm tra dung lượng tệp.');
+                add_settings_error(Settings::OPTION_KEY, $file_field . '_err', 'Không thể tải tệp lên. Vui lòng kiểm tra dung lượng tệp.');
                 continue;
             }
 
@@ -245,6 +275,14 @@ final class SettingsPage implements ServiceProviderInterface {
                             (int) ($s['company']['footer_logo_id'] ?? 0),
                             DRV_URI . '/assets/images/logo-ivory.png',
                             true
+                        );
+                        $this->render_logo_row(
+                            'Favicon (ảnh vuông ≥ 512×512)',
+                            'favicon_id',
+                            'drv_upload_favicon',
+                            (int) ($s['company']['favicon_id'] ?? 0),
+                            DRV_URI . '/assets/images/avatar-admin.svg',
+                            false
                         );
                         ?>
                         <tr>
@@ -597,7 +635,7 @@ final class SettingsPage implements ServiceProviderInterface {
                     <button type="button"
                             class="button-link button-link-delete"
                             data-drv-media-clear
-                            <?php echo $attachment_id <= 0 ? 'hidden' : ''; ?>>Khôi phục logo mặc định</button>
+                            <?php echo $attachment_id <= 0 ? 'hidden' : ''; ?>>Khôi phục mặc định</button>
                 </p>
                 <p class="description">
                     Hoặc tải file trực tiếp lên Media khi bấm <strong>Lưu cấu hình Dravit</strong>:
@@ -625,8 +663,8 @@ document.addEventListener('click', (event) => {
         if (!wrap || typeof wp === 'undefined' || !wp.media) return;
 
         const frame = wp.media({
-            title: 'Chọn hoặc tải Logo lên Thư viện Media',
-            button: { text: 'Sử dụng Logo này' },
+            title: 'Chọn hoặc tải ảnh lên Thư viện Media',
+            button: { text: 'Sử dụng ảnh này' },
             library: { type: 'image' },
             multiple: false,
         });
@@ -723,7 +761,7 @@ JS;
                             data-sortable="true"
                             data-maximum-selection-length="<?php echo esc_attr((string) $max_pinned); ?>">
                         <?php foreach ($pinned_items as $item) :
-                            $opt_label = $item['title'] . ' (' . $item['sku'] . ')' . ($item['in_stock'] ? '' : ' — [Tạm hết hàng]');
+                            $opt_label = $item['title'] . ' (' . $item['sku'] . ')' . ($item['in_stock'] ? '' : ' - [Tạm hết hàng]');
                             ?>
                             <option value="<?php echo esc_attr((string) $item['id']); ?>" selected="selected">
                                 <?php echo esc_html($opt_label); ?>
@@ -737,7 +775,7 @@ JS;
                          <?php echo $is_full ? '' : 'hidden'; ?>>
                         <p style="margin:0;">
                             <strong>Đã đạt tối đa <?php echo esc_html($max_pinned . '/' . $max_pinned); ?> sản phẩm ghim.</strong>
-                            Hệ thống đã khóa chọn thêm — hãy bấm dấu <strong>&times;</strong> gỡ bớt ít nhất 1 sản phẩm trước khi ghim mẫu mới.
+                            Hệ thống đã khóa chọn thêm - hãy bấm dấu <strong>&times;</strong> gỡ bớt ít nhất 1 sản phẩm trước khi ghim mẫu mới.
                         </p>
                     </div>
 

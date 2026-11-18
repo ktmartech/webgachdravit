@@ -1,0 +1,13 @@
+/**
+ * Critical CSS — Product (PDP)
+ * Above-the-fold: tokens, reset, header, breadcrumb, gallery, calculator.
+ * Inline trong <head> qua Assets::inline_critical_css('product').
+ * Budget: ≤ 14 KB gzip.
+ */
+
+@import "../layers/tokens.css";
+@import "../layers/reset.css";
+@import "../layers/base.css";
+@import "../layers/components/header-mega.css";
+@import "../layers/components/breadcrumb.css";
+@import "../layers/components/calculators-tables.css";

@@ -28,7 +28,7 @@ Trước khi thực hiện bất kỳ task nào, **BẮT BUỘC** đọc file `d
 | Đặc tả BOQ (`/danh-sach-bao-gia`) & CPT `drv_lead` | `docs/17_Quote_BOQ_And_Lead_Spec.md` |
 | Vận hành đơn HPOS Admin, Auto-cancel & Email templates | `docs/18_Order_Ops_And_Email_Spec.md` |
 | Header, Mega Menu 4+1 từ config, Walkers & Live Search | `docs/19_Navigation_Header_Search_Spec.md` |
-| Mô hình Cẩm nang, E-E-A-T, Patterns, Shortcodes & TOC | `docs/20_Blog_Editorial_And_Content_Model.md` |
+| Mô hình Cẩm nang, E-E-A-T, Shortcodes & TOC | `docs/20_Blog_Editorial_And_Content_Model.md` |
 
 ---
 

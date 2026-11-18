@@ -14,7 +14,6 @@ $is_paged = ($paged >= 2);
     <?php
     get_template_part('template-parts/blog/hero', null, [
         'title'      => $is_paged ? sprintf('Cẩm nang chọn gạch & kỹ thuật ốp lát - Trang %d', $paged) : 'Cẩm nang chọn gạch & kỹ thuật ốp lát',
-        'tools_link' => !$is_paged,
     ]);
     ?>
 

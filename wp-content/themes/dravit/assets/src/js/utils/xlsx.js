@@ -26,7 +26,6 @@ export const XS = Object.freeze({
 });
 
 const NAVY = 'FF1B2A41';
-const MOSS = 'FF5B6B3A';
 const LINE = 'FFBFBFBF';
 
 const STYLES = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -76,9 +75,12 @@ const STYLES = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>
 </styleSheet>`;
 
+// eslint-disable-next-line no-control-regex -- loại ký tự điều khiển không hợp lệ trong XML 1.0
+const CTRL_CHARS = /[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g;
+
 const esc = (s) =>
   String(s)
-    .replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g, '')
+    .replace(CTRL_CHARS, '')
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')

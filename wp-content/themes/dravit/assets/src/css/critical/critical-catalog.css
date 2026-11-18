@@ -1,0 +1,13 @@
+/**
+ * Critical CSS — Catalog (/gach, /gach-*)
+ * Above-the-fold: tokens, reset, header, breadcrumb, filter bar, card grid.
+ * Inline trong <head> qua Assets::inline_critical_css('catalog').
+ * Budget: ≤ 14 KB gzip.
+ */
+
+@import "../layers/tokens.css";
+@import "../layers/reset.css";
+@import "../layers/base.css";
+@import "../layers/components/header-mega.css";
+@import "../layers/components/breadcrumb.css";
+@import "../layers/components/cards-silo.css";

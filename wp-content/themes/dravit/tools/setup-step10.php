@@ -106,7 +106,7 @@ HTML,
 
 <h2>2. Các hình thức thanh toán được chấp nhận</h2>
 <h3>Chuyển khoản ngân hàng qua mã VietQR</h3>
-<p>Sau khi đơn hàng được xác nhận và chuyển sang trạng thái chờ chuyển khoản, hệ thống sinh mã VietQR chính xác theo số tiền đơn hàng kèm nội dung <code>DRV{Mã đơn}</code> để đối soát tự động nhanh chóng.</p>
+<p>Sau khi đơn hàng được xác nhận và chuyển sang trạng thái chờ chuyển khoản, hệ thống sinh mã VietQR chính xác theo số tiền đơn hàng kèm nội dung <code>DRV{Mã đơn}</code>. Nhân viên kế toán kiểm tra và cập nhật trạng thái đơn ngay sau khi nhận khoản chuyển.</p>
 <h3>Thanh toán khi nhận hàng (COD)</h3>
 <p>Áp dụng cho đơn hàng nội thành theo hạn mức quy định hoặc phần thanh toán còn lại sau khi đặt cọc giữ lô hàng tại kho.</p>
 

@@ -35,7 +35,7 @@ wp-content/themes/dravit/
 │   ├── Filters/                 # FacetRegistry, UrlState, QueryBuilder, FacetCounter, CatalogController, Renderer
 │   ├── Quote/                   # QuoteController, BoqService, OrderConverter
 │   ├── Leads/                   # LeadPostType, LeadController, AntiSpamGuard, LeadNotifier, AdminColumns
-│   ├── Content/                 # Toc, ReadingTime, BlockStyles, Patterns, Shortcodes
+│   ├── Content/                 # Toc, ReadingTime, ContentFilters, Shortcodes
 │   ├── Seo/                     # RobotsMatrix, Canonical, SchemaGraph, Breadcrumbs, InternalLinks, LlmsTxt
 │   ├── Woo/                     # Hooks, AssetsDequeue, CheckoutVN, QuoteShippingMethod, OrderFlow, OrderMeta, StoreApiExtend, Emails/*, BankQR
 │   └── Admin/                   # ProductDataTab, TermFields, PostFields, UserFields, OrderMetabox, ToolsResync

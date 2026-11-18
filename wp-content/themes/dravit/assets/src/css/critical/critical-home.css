@@ -1,0 +1,11 @@
+/**
+ * Critical CSS — Home (/)
+ * Above-the-fold: tokens, reset cơ bản, header, hero section.
+ * Inline trong <head> qua Assets::inline_critical_css('home').
+ * Budget: ≤ 14 KB gzip.
+ */
+
+@import "../layers/tokens.css";
+@import "../layers/reset.css";
+@import "../layers/base.css";
+@import "../layers/components/header-mega.css";

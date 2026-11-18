@@ -114,7 +114,11 @@ final class FluentFormsProvisioner implements ServiceProviderInterface {
         return $out;
     }
 
-    /** Slot cần tạo form: chưa có Form ID hợp lệ và (khi không ép) chưa được tự tạo ở phiên bản JSON này. */
+    /**
+     * Slot cần tạo form: chưa có Form ID hợp lệ và (khi không ép) chưa được tự tạo ở phiên bản JSON này.
+     *
+     * @return array<string, array<string, mixed>>
+     */
     public static function pending_slots(bool $force = false): array {
         $recorded = get_option(self::OPTION_KEY, []);
         $recorded = is_array($recorded) ? $recorded : [];

@@ -12,6 +12,8 @@ readme.html
 xmlrpc.php
 local-xdebuginfo.php
 .htaccess
+.htaccess*
+*.bk
 wp-config.php
 wp-config-sample.php
 wp-cli.local.yml

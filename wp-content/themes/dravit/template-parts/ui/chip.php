@@ -58,7 +58,7 @@ if ($href !== null && !$disabled) {
     printf(
         '<a href="%s" %s>%s</a>',
         esc_url($href),
-        implode(' ', $attr_pairs),
+        implode(' ', $attr_pairs), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Each pair built with esc_attr()
         $inner // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
     );
     return;
@@ -70,7 +70,7 @@ if ($disabled) {
 }
 printf(
     '<button type="button" %s>%s</button>',
-    implode(' ', $attr_pairs),
+    implode(' ', $attr_pairs), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Each pair built with esc_attr()
     $inner // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 );
 

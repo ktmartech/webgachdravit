@@ -41,7 +41,7 @@ Khi có mâu thuẫn thông tin, tuân thủ nghiêm ngặt thứ tự:
 | `17` | [17_Quote_BOQ_And_Lead_Spec.md](docs/17_Quote_BOQ_And_Lead_Spec.md) | Đặc tả BOQ (`/danh-sach-bao-gia`), CPT `drv_lead`, Chống spam, Admin Tạo đơn | Báo giá công trình & Lead |
 | `18` | [18_Order_Ops_And_Email_Spec.md](docs/18_Order_Ops_And_Email_Spec.md) | Vận hành đơn HPOS Admin, Action Scheduler auto-cancel, Email templates | Xử lý đơn & Email |
 | `19` | [19_Navigation_Header_Search_Spec.md](docs/19_Navigation_Header_Search_Spec.md) | Header 2 tầng, Mega Menu 4+1 từ config, Walkers, Live Search không dấu | Header, Menu, Tìm kiếm |
-| `20` | [20_Blog_Editorial_And_Content_Model.md](docs/20_Blog_Editorial_And_Content_Model.md) | Mô hình Cẩm nang, E-E-A-T, Block Styles/Patterns, Shortcodes, TOC | Cẩm nang / Gutenberg |
+| `20` | [20_Blog_Editorial_And_Content_Model.md](docs/20_Blog_Editorial_And_Content_Model.md) | Mô hình Cẩm nang, E-E-A-T, Shortcodes (D-36), TOC | Cẩm nang / Classic Editor |
 | `21` | [21_Theme_Build_Execution_Roadmap.md](docs/21_Theme_Build_Execution_Roadmap.md) | **Roadmap thực thi 12 Steps dựng Theme (`D-31..34`):** cắt 4 tầng `drv_section()` (`S-3`), Rules × Skills, Unit Tests, AI/GEO/BOQ/FluentForms | Thực thi code Theme |
 | `L` | [layout/00_LAYOUT_AUDIT_REPORT.md](docs/layout/00_LAYOUT_AUDIT_REPORT.md) | Báo cáo audit đối chiếu 12 HTML prototypes vs bộ docs | Tra cứu quyết định port |
 

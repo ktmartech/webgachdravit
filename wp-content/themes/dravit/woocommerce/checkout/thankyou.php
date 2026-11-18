@@ -8,7 +8,7 @@
  * WooCommerce đã xác thực `order key` trước khi nạp template này.
  *
  * @package Dravit
- * @version 8.1.0
+ * @version 11.2.0
  *
  * @var \WC_Order|false $order
  */

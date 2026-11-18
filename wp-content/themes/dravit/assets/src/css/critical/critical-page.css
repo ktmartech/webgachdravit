@@ -1,0 +1,12 @@
+/**
+ * Critical CSS — Page (Liên hệ, Giới thiệu, Chính sách, 404, ...)
+ * Above-the-fold: tokens, reset, header, breadcrumb.
+ * Inline trong <head> qua Assets::inline_critical_css('page').
+ * Budget: ≤ 14 KB gzip.
+ */
+
+@import "../layers/tokens.css";
+@import "../layers/reset.css";
+@import "../layers/base.css";
+@import "../layers/components/header-mega.css";
+@import "../layers/components/breadcrumb.css";

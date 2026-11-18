@@ -34,7 +34,7 @@ flowchart TB
     FLT["Filters: FacetRegistry, UrlState, QueryBuilder, FacetCounter, CatalogController, Renderer"]
     QUO["Quote: QuoteController, BoqService, OrderConverter"]
     LEAD["Leads: LeadPostType, LeadController, AntiSpamGuard, LeadNotifier, AdminColumns"]
-    CNT["Content: Toc, ReadingTime, BlockStyles, Patterns, Shortcodes"]
+    CNT["Content: Toc, ReadingTime, ContentFilters, Shortcodes"]
     SEO["Seo: RobotsMatrix, Canonical, SchemaGraph, Breadcrumbs, InternalLinks, LlmsTxt"]
     WOO["Woo: Hooks, AssetsDequeue, CheckoutVN, QuoteShippingMethod, OrderFlow, OrderMeta, StoreApiExtend, Emails/*, BankQR"]
     ADM["Admin: ProductDataTab, TermFields, PostFields, UserFields, OrderMetabox, ToolsResync"]
@@ -77,7 +77,7 @@ wp-content/themes/dravit/
 │   ├── Filters/                 # FacetRegistry.php, UrlState.php, QueryBuilder.php, FacetCounter.php, CatalogController.php, Renderer.php
 │   ├── Quote/                   # QuoteController.php, BoqService.php, OrderConverter.php (17)
 │   ├── Leads/                   # LeadPostType.php (drv_lead), LeadController.php (/nonce, /lead), AntiSpamGuard.php, LeadNotifier.php, AdminColumns.php
-│   ├── Content/                 # Toc.php, ReadingTime.php, BlockStyles.php, Patterns.php, Shortcodes.php (20)
+│   ├── Content/                 # Toc.php, ReadingTime.php, ContentFilters.php, Shortcodes.php (20)
 │   ├── Seo/                     # RobotsMatrix.php, Canonical.php, SchemaGraph.php, Breadcrumbs.php, InternalLinks.php, LlmsTxt.php
 │   ├── Woo/                     # Hooks.php, AssetsDequeue.php, CheckoutVN.php, QuoteShippingMethod.php, OrderFlow.php, OrderMeta.php, StoreApiExtend.php, Emails/*, BankQR.php
 │   └── Admin/                   # ProductDataTab.php, TermFields.php, PostFields.php, UserFields.php, OrderMetabox.php, ToolsResync.php
@@ -102,7 +102,6 @@ wp-content/themes/dravit/
 │   ├── blog/      (subnav, bento-hero, card, key-takeaways, toc, product-embed, price-table, author-box, inline-lead)
 │   └── common/    (breadcrumb, pagination, cta-quote, usp)
 ├── woocommerce/                 # override tối thiểu (§7)
-├── patterns/                    # Gutenberg block patterns cho trang nội dung & cẩm nang
 ├── assets/
 │   ├── src/tokens/tokens.json   # Nguồn khai báo design tokens duy nhất
 │   ├── src/css/

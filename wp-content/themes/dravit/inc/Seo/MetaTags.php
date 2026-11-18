@@ -47,12 +47,12 @@ final class MetaTags implements ServiceProviderInterface {
                 $sp   = mb_strrpos($cut, ' ');
                 $head = ($sp !== false && $sp > 15) ? mb_substr($cut, 0, $sp) : $cut;
             }
-            return trim($head) . $suffix;
+            return rtrim(trim($head), '|-–— ') . $suffix;
         }
 
         $cut = mb_substr($clean, 0, $max_chars);
         $sp  = mb_strrpos($cut, ' ');
-        return ($sp !== false && $sp > 20) ? trim(mb_substr($cut, 0, $sp)) : trim($cut);
+        return rtrim(($sp !== false && $sp > 20) ? trim(mb_substr($cut, 0, $sp)) : trim($cut), '|-–— ');
     }
 
     public static function buildCollectionFallbackDescription(string $slug, string $name, int $count = 0): string {

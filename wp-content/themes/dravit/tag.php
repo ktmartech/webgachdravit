@@ -18,7 +18,6 @@ $found_count = ($wp_query instanceof \WP_Query) ? (int) $wp_query->found_posts :
     <?php
     get_template_part('template-parts/blog/hero', null, [
         'title'      => 'Bài viết gắn thẻ: ' . $tag_title,
-        'tools_link' => false,
     ]);
     ?>
 
