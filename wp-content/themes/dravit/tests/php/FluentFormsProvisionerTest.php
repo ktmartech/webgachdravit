@@ -31,7 +31,7 @@ final class FluentFormsProvisionerTest extends TestCase {
     public function test_every_slot_has_a_valid_definition_file(): void {
         $defs = $this->definitions();
         self::assertEqualsCanonicalizing(array_keys(FluentFormsProvisioner::slot_labels()), array_keys($defs));
-        self::assertEqualsCanonicalizing(array_keys(FluentFormsProvisioner::slot_labels()), array_keys(\Dravit\Core\Settings::defaults()['forms']));
+        self::assertEqualsCanonicalizing(array_keys(FluentFormsProvisioner::slot_labels()), array_keys(array_diff_key(\Dravit\Core\Settings::defaults()['forms'], ['native_ui' => true])));
 
         foreach ($defs as $slot => $def) {
             self::assertSame('published', $def['status'], $slot);

@@ -48,7 +48,13 @@ final class MegaMenuRenderer implements ServiceProviderInterface {
 
         if (!$bypass_cache && function_exists('get_transient')) {
             $cached = get_transient(self::TRANSIENT_KEY);
-            if (is_array($cached) && isset($cached['desktop'], $cached['mobile']) && is_string($cached['desktop']) && is_string($cached['mobile'])) {
+            if (
+                is_array($cached) &&
+                isset($cached['desktop'], $cached['mobile']) &&
+                is_string($cached['desktop']) &&
+                is_string($cached['mobile']) &&
+                !str_contains($cached['desktop'], 'placeholders/room-')
+            ) {
                 self::$memory_cache = [
                     'desktop' => $cached['desktop'],
                     'mobile'  => $cached['mobile'],
@@ -678,12 +684,19 @@ final class MegaMenuRenderer implements ServiceProviderInterface {
     public static function resolve_preview_image(string $raw): string {
         $trimmed = trim($raw);
         if ($trimmed === '') {
-            return DRV_URI . '/assets/images/placeholders/room-living-calacatta.svg';
+            return DRV_URI . '/assets/images/rooms/room-living-calacatta.jpg';
         }
         if (str_starts_with($trimmed, 'http://') || str_starts_with($trimmed, 'https://') || str_starts_with($trimmed, '/')) {
             return $trimmed;
         }
-        return DRV_URI . '/assets/images/placeholders/' . ltrim($trimmed, '/');
+        $clean = ltrim($trimmed, '/');
+        if (str_starts_with($clean, 'rooms/')) {
+            return DRV_URI . '/assets/images/' . $clean;
+        }
+        if (str_starts_with($clean, 'room-') && str_ends_with($clean, '.svg')) {
+            return DRV_URI . '/assets/images/rooms/' . substr($clean, 0, -4) . '.jpg';
+        }
+        return DRV_URI . '/assets/images/placeholders/' . $clean;
     }
 
     public static function collection_url(string $slug): string {

@@ -43,11 +43,10 @@ final class ProductViewData {
             ? UrlNormalizer::untrailingslashUrl((string) get_permalink($id))
             : UrlNormalizer::untrailingslashUrl(home_url('/san-pham/' . $product->get_slug()));
         $price_state = PriceState::resolve($product);
-        $is_quote    = ($price_state === PriceState::QUOTE_ONLY);
+        $reg_m2      = max(0, (int) $product->get_meta('drv_price_m2', true));
+        $is_quote    = ($price_state === PriceState::QUOTE_ONLY || $reg_m2 <= 0);
         $is_out      = ($price_state === PriceState::OUT_OF_STOCK || !$product->is_in_stock());
         $unit_cfg    = PriceState::readUnitConfig($product);
-
-        $reg_m2      = max(0, (int) $product->get_meta('drv_price_m2', true));
         $sale_m2     = max(0, (int) $product->get_meta('drv_sale_price_m2', true));
         $eff_m2      = $is_quote ? 0 : (($price_state === PriceState::SALE && $sale_m2 > 0 && $sale_m2 < $reg_m2) ? $sale_m2 : $reg_m2);
         $is_sale     = (!$is_quote && $sale_m2 > 0 && $sale_m2 < $reg_m2 && $price_state === PriceState::SALE);

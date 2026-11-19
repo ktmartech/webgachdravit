@@ -80,6 +80,7 @@
     display: inline-flex;
     align-items: center;
     gap: 4px;
+    min-block-size: 24px; /* WCAG 2.5.8 Target Size (Minimum) */
     color: var(--c-navy-600);
     font-weight: 500;
     text-decoration: none;

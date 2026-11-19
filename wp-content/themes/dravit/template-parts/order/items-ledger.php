@@ -65,7 +65,7 @@ $boxes = (int) $view['total_boxes'];
             </div>
             <div class="drv-cart-metric">
                 <span class="drv-cart-metric__label">Tổng số thùng</span>
-                <strong class="drv-cart-metric__val"><?php echo esc_html($boxes > 0 ? $boxes . ' thùng' : '—'); ?></strong>
+                <strong class="drv-cart-metric__val"><?php echo esc_html($boxes > 0 ? $boxes . ' thùng' : 'Chưa có'); ?></strong>
             </div>
             <div class="drv-cart-metric">
                 <span class="drv-cart-metric__label">Tổng tải trọng</span>
@@ -73,7 +73,7 @@ $boxes = (int) $view['total_boxes'];
             </div>
             <div class="drv-cart-metric">
                 <span class="drv-cart-metric__label">Khu vực nhận hàng</span>
-                <strong class="drv-cart-metric__val u-text-navy"><?php echo esc_html((string) $view['province'] ?: '—'); ?></strong>
+                <strong class="drv-cart-metric__val u-text-navy"><?php echo esc_html((string) $view['province'] ?: 'Chưa có'); ?></strong>
             </div>
         </div>
     </div>

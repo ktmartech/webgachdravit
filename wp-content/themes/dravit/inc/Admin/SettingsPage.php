@@ -494,6 +494,13 @@ final class SettingsPage implements ServiceProviderInterface {
                         <div class="notice notice-warning inline"><p>Fluent Forms chưa được kích hoạt: các vị trí luôn dùng form native, ô bên dưới chỉ lưu Form ID để dùng sau.</p></div>
                     <?php endif; ?>
                     <table class="form-table" role="presentation">
+                        <tr>
+                            <th scope="row">Giao diện form</th>
+                            <td>
+                                <input type="hidden" name="drv_settings[forms][native_ui]" value="0">
+                                <label><input type="checkbox" name="drv_settings[forms][native_ui]" value="1"<?php checked(!empty($s['forms']['native_ui'])); ?>> Giữ giao diện form native của theme, vẫn đẩy lead vào Entries của Form ID bên dưới (Webhook / Zalo / Sheets / email của Fluent Forms chạy bình thường).</label>
+                            </td>
+                        </tr>
                         <?php
                         $form_labels = [
                             'boq_mirror'       => 'Đồng bộ phiếu BOQ sang Entries (Webhook / Zalo / Sheets)',

@@ -52,9 +52,12 @@ final class LiteSpeedCompatTest extends TestCase {
         self::assertEmpty($tags, 'Không gắn tag nào trên admin');
     }
 
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
+    #[\PHPUnit\Framework\Attributes\PreserveGlobalState(false)]
     public function test_woo_transactional_pages_marked_no_cache(): void {
-        if (!drv_is_woo_active()) {
-            self::markTestSkipped('WooCommerce class not loaded in test env');
+        // Tiến trình riêng: khai báo lớp giả WooCommerce mà không làm drv_is_woo_active() đổi ở các test khác.
+        if (!class_exists('WooCommerce', false)) {
+            eval('class WooCommerce {}');
         }
         Functions\when('is_admin')->justReturn(false);
         Functions\when('is_cart')->justReturn(true);
@@ -114,9 +117,12 @@ final class LiteSpeedCompatTest extends TestCase {
         self::assertContains('personalized-page', $no_cache_reasons);
     }
 
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
+    #[\PHPUnit\Framework\Attributes\PreserveGlobalState(false)]
     public function test_archive_product_gets_catalog_tag(): void {
-        if (!drv_is_woo_active()) {
-            self::markTestSkipped('WooCommerce class not loaded in test env');
+        // Tiến trình riêng: khai báo lớp giả WooCommerce mà không làm drv_is_woo_active() đổi ở các test khác.
+        if (!class_exists('WooCommerce', false)) {
+            eval('class WooCommerce {}');
         }
         Functions\when('is_admin')->justReturn(false);
         Functions\when('is_cart')->justReturn(false);
@@ -141,9 +147,12 @@ final class LiteSpeedCompatTest extends TestCase {
         self::assertContains('drv_catalog', $tags);
     }
 
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
+    #[\PHPUnit\Framework\Attributes\PreserveGlobalState(false)]
     public function test_product_taxonomy_gets_catalog_tag(): void {
-        if (!drv_is_woo_active()) {
-            self::markTestSkipped('WooCommerce class not loaded in test env');
+        // Tiến trình riêng: khai báo lớp giả WooCommerce mà không làm drv_is_woo_active() đổi ở các test khác.
+        if (!class_exists('WooCommerce', false)) {
+            eval('class WooCommerce {}');
         }
         Functions\when('is_admin')->justReturn(false);
         Functions\when('is_cart')->justReturn(false);
@@ -168,9 +177,12 @@ final class LiteSpeedCompatTest extends TestCase {
         self::assertContains('drv_catalog', $tags);
     }
 
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
+    #[\PHPUnit\Framework\Attributes\PreserveGlobalState(false)]
     public function test_single_product_gets_product_and_catalog_tags(): void {
-        if (!drv_is_woo_active()) {
-            self::markTestSkipped('WooCommerce class not loaded in test env');
+        // Tiến trình riêng: khai báo lớp giả WooCommerce mà không làm drv_is_woo_active() đổi ở các test khác.
+        if (!class_exists('WooCommerce', false)) {
+            eval('class WooCommerce {}');
         }
         Functions\when('is_admin')->justReturn(false);
         Functions\when('is_cart')->justReturn(false);

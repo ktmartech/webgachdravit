@@ -34,11 +34,21 @@ final class FluentFormsBridge implements ServiceProviderInterface {
 
     private static bool $mirroring = false;
 
+    /** Đang xử lý entry do chính Fluent Forms tạo -> không nhân bản ngược lại. */
+    private static bool $ingesting = false;
+
     public function register(): void {
         add_filter('fluentform/disable_default_style', '__return_false');
         add_filter('fluentform/rendering_field_data_input_hidden', [$this, 'inject_hidden_value'], 10, 2);
+        add_filter('fluentform/validation_errors', [$this, 'validate_phone'], 10, 3);
         add_action('fluentform/submission_inserted', [$this, 'on_submission_inserted'], 20, 3);
         add_action('drv/lead/created', [$this, 'mirror_boq_entry'], 20, 2);
+        add_action('drv/lead/created', [$this, 'mirror_native_lead'], 25, 2);
+    }
+
+    /** Giữ giao diện native cho mọi slot (lead vẫn đẩy sang Fluent Forms qua mirror). */
+    public static function native_ui(): bool {
+        return (bool) Settings::get('forms.native_ui', false);
     }
 
     public static function slot_form_id(string $slot): int {
@@ -56,7 +66,7 @@ final class FluentFormsBridge implements ServiceProviderInterface {
      * @param array<string, scalar> $context Ngữ cảnh gạch (drv_sku, drv_product_name, drv_area_m2...).
      */
     public static function render_slot(string $slot, array $context = []): bool {
-        if (!self::has_slot_form($slot) || !function_exists('do_shortcode')) {
+        if (self::native_ui() || !self::has_slot_form($slot) || !function_exists('do_shortcode')) {
             return false;
         }
 
@@ -156,6 +166,26 @@ final class FluentFormsBridge implements ServiceProviderInterface {
     }
 
     /**
+     * Kiểm SĐT di động VN ở phía server cho mọi form thuộc slot DRAVIT. Không dùng rule `regex` của Fluent Forms: nó tách
+     * chuỗi quy tắc theo `|` nên biểu thức `^(\+?84|0)...` bị cắt đôi và từ chối cả SĐT hợp lệ như `0987654321`.
+     *
+     * @param mixed $errors
+     * @param mixed $form_data
+     * @param mixed $form
+     * @return mixed
+     */
+    public function validate_phone($errors, $form_data = [], $form = null) {
+        if (!is_array($errors) || !is_array($form_data) || !is_object($form) || self::slotForFormId((int) ($form->id ?? 0)) === '') {
+            return $errors;
+        }
+        $phone = isset($form_data['phone']) && is_scalar($form_data['phone']) ? trim((string) $form_data['phone']) : '';
+        if ($phone !== '' && LeadValidator::normalizePhone($phone) === '') {
+            $errors['phone'] = ['phone' => 'Số điện thoại cần gồm 10 chữ số di động Việt Nam (bắt đầu 03, 05, 07, 08 hoặc 09).'];
+        }
+        return $errors;
+    }
+
+    /**
      * Đồng bộ entry Fluent Forms -> `drv_lead` (chỉ với form đang gắn vào 1 trong 5 slot).
      *
      * @param mixed $entry_id
@@ -172,15 +202,20 @@ final class FluentFormsBridge implements ServiceProviderInterface {
         }
 
         $mapped = self::mapSubmission($form_data, $slot);
-        $result = LeadController::submit($mapped['input'], $mapped['source'], [
-            'page_url'   => $mapped['page_url'],
-            'utm'        => $mapped['utm'],
-            'channel'    => 'fluentform',
-            'extra_meta' => [
-                '_drv_ff_entry_id' => (int) $entry_id,
-                '_drv_ff_form_id'  => (int) ($form->id ?? 0),
-            ],
-        ]);
+        self::$ingesting = true;
+        try {
+            $result = LeadController::submit($mapped['input'], $mapped['source'], [
+                'page_url'   => $mapped['page_url'],
+                'utm'        => $mapped['utm'],
+                'channel'    => 'fluentform',
+                'extra_meta' => [
+                    '_drv_ff_entry_id' => (int) $entry_id,
+                    '_drv_ff_form_id'  => (int) ($form->id ?? 0),
+                ],
+            ]);
+        } finally {
+            self::$ingesting = false;
+        }
 
         if ($result instanceof \WP_Error) {
             do_action('drv/integrations/fluentform_unmapped', (int) $entry_id, $result, $form_data);
@@ -322,6 +357,98 @@ final class FluentFormsBridge implements ServiceProviderInterface {
         } finally {
             self::$mirroring = false;
         }
+    }
+
+    /**
+     * Chế độ UI native: nhân bản lead (contact, pdp, showroom...) vào Entries của Form ID gắn với slot,
+     * để Webhook / Zalo / Sheets / email của Fluent Forms chạy như khi khách gửi form Fluent.
+     *
+     * @param array<string, mixed> $payload
+     */
+    public function mirror_native_lead(int $lead_id, array $payload): void {
+        $type = (string) ($payload['lead_type'] ?? '');
+        if (self::$ingesting || self::$mirroring || $type === 'boq' || !self::native_ui() || !function_exists('wpFluent') || !drv_is_fluent_forms_active()) {
+            return;
+        }
+        $slot    = array_search($type, self::SLOT_SOURCES, true);
+        $form_id = is_string($slot) ? self::slot_form_id($slot) : 0;
+        if ($form_id <= 0) {
+            return;
+        }
+
+        try {
+            $form = wpFluent()->table('fluentform_forms')->find($form_id);
+            if (!is_object($form)) {
+                return;
+            }
+            $page_url = (string) get_post_meta($lead_id, '_drv_page_url', true);
+            $utm_meta = get_post_meta($lead_id, '_drv_utm', true);
+            $utm      = is_array($utm_meta) ? array_map(static fn ($v): string => is_scalar($v) ? (string) $v : '', $utm_meta) : [];
+            $response = self::nativeResponse($payload, $lead_id, $page_url, $utm);
+
+            $now    = current_time('mysql');
+            $serial = (int) wpFluent()->table('fluentform_submissions')->where('form_id', $form_id)->max('serial_number');
+            $entry  = (int) wpFluent()->table('fluentform_submissions')->insertGetId([
+                'form_id'       => $form_id,
+                'serial_number' => $serial + 1,
+                'response'      => (string) wp_json_encode($response, JSON_UNESCAPED_UNICODE),
+                'source_url'    => $page_url,
+                'user_id'       => get_current_user_id(),
+                'status'        => 'unread',
+                'is_favourite'  => 0,
+                'created_at'    => $now,
+                'updated_at'    => $now,
+            ]);
+            if ($entry > 0) {
+                update_post_meta($lead_id, '_drv_ff_entry_id', $entry);
+                update_post_meta($lead_id, '_drv_ff_form_id', $form_id);
+                self::$mirroring = true;
+                do_action('fluentform/submission_inserted', $entry, $response, $form);
+            }
+        } catch (\Throwable $e) {
+            do_action('drv/integrations/fluentform_mirror_failed', $lead_id, $e->getMessage());
+        } finally {
+            self::$mirroring = false;
+        }
+    }
+
+    /**
+     * Lead native -> khóa field của form mẫu Fluent Forms (`config/fluent-forms/*.json`) + khóa `drv_*`.
+     *
+     * @param array<string, mixed>  $payload
+     * @param array<string, string> $utm
+     * @return array<string, mixed>
+     */
+    public static function nativeResponse(array $payload, int $lead_id, string $page_url, array $utm): array {
+        $product_id = (int) ($payload['product_id'] ?? 0);
+        $product    = $product_id > 0 && function_exists('wc_get_product') ? wc_get_product($product_id) : null;
+        $area       = (float) ($payload['area_m2'] ?? 0);
+        $post_id    = (int) ($payload['post_id'] ?? 0);
+        $response   = [
+            'name'             => (string) ($payload['name'] ?? ''),
+            'phone'            => (string) ($payload['phone'] ?? ''),
+            'email'            => (string) ($payload['email'] ?? ''),
+            'province'         => (string) ($payload['province'] ?? ''),
+            'ward'             => (string) ($payload['ward'] ?? ''),
+            'role'             => (string) ($payload['role'] ?? ''),
+            'project'          => (string) ($payload['project'] ?? ''),
+            'area_m2'          => $area > 0 ? (string) $area : '',
+            'preferred_time'   => (string) ($payload['preferred_time'] ?? ''),
+            'message'          => (string) ($payload['message'] ?? ''),
+            'drv_product_id'   => $product_id > 0 ? (string) $product_id : '',
+            'drv_sku'          => $product instanceof \WC_Product ? (string) $product->get_sku() : '',
+            'drv_product_name' => $product instanceof \WC_Product ? (string) $product->get_name() : '',
+            'drv_post_id'      => $post_id > 0 ? (string) $post_id : '',
+            'drv_page_url'     => $page_url,
+            'drv_quote_code'   => (string) ($payload['code'] ?? ''),
+            'drv_lead_id'      => (string) $lead_id,
+        ];
+        foreach (['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'gclid', 'fbclid'] as $key) {
+            if (($utm[$key] ?? '') !== '') {
+                $response[$key] = $utm[$key];
+            }
+        }
+        return array_filter($response, static fn ($v): bool => $v !== '');
     }
 
     /**

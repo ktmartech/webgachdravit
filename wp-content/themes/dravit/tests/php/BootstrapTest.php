@@ -21,6 +21,7 @@ use Dravit\Core\Menu\MegaMenuRenderer;
 use Dravit\Core\Menu\MenuSetup;
 use Dravit\Core\NonceController;
 use Dravit\Core\RestSecurity;
+use Dravit\Core\Security;
 use Dravit\Core\SectionRegistry;
 use Dravit\Core\ServiceProviderInterface;
 use Dravit\Core\Settings;
@@ -66,6 +67,7 @@ final class BootstrapTest extends TestCase {
         $expected = [
             Settings::class,
             Setup::class,
+            Security::class,
             RestSecurity::class,
             NonceController::class,
             SlugGuard::class,

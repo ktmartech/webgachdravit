@@ -197,7 +197,7 @@ final class CheckoutVN implements ServiceProviderInterface {
     public static function posted_extras(): array {
         $out = [];
         foreach (self::EXTRA_KEYS as $key) {
-            // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce đã được WC_Checkout::process_checkout() kiểm.
+            // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce do WC_Checkout::process_checkout() kiểm; giá trị được sanitize ngay dòng dưới.
             $raw = isset($_POST[$key]) && is_scalar($_POST[$key]) ? wp_unslash((string) $_POST[$key]) : '';
             $out[$key] = $key === 'vat_email' ? sanitize_email($raw) : sanitize_text_field($raw);
         }

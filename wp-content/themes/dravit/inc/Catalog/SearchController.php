@@ -550,9 +550,10 @@ class SearchController implements ServiceProviderInterface {
                 }
             }
 
-            if ($thumb === '') {
-                $preview_img = (string) ($cfg['preview_img'] ?? 'tile-marble-calacatta.svg');
-                $thumb       = DRV_URI . '/assets/images/placeholders/' . $preview_img;
+            $preview_img = (string) ($cfg['preview_img'] ?? 'tile-marble-calacatta.svg');
+            $is_room     = (($cfg['group'] ?? '') === 'space') || str_starts_with($preview_img, 'rooms/') || str_starts_with($preview_img, 'room-');
+            if ($is_room || $thumb === '') {
+                $thumb = \Dravit\Core\Menu\MegaMenuRenderer::resolve_preview_image($preview_img);
             }
 
             $group_key = (string) ($cfg['group'] ?? 'function');

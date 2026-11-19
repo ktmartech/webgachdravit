@@ -187,15 +187,9 @@
     font-weight: 700;
   }
 
-  /* 2. Mobile Segmented Tabs ----------------------------------------------- */
+  /* 2. Mobile Segmented Tabs (Ẩn — Mobile chỉ hiển thị 1 cột Chat đơn) ---- */
   .drv-aif-mobile-tabs-wrap {
-    padding-top: 10px;
-  }
-
-  @media (width >= 1024px) {
-    .drv-aif-mobile-tabs-wrap {
-      display: none;
-    }
+    display: none;
   }
 
   .drv-aif-mobile-tabs {
@@ -280,17 +274,13 @@
   }
 
   @media (width <= 1023.98px) {
-    .drv-aif-workspace[data-active-pane="chat"] .drv-aif-results {
+    .drv-aif-results,
+    [data-aif-expand-split] {
       display: none;
     }
 
-    .drv-aif-workspace[data-active-pane="results"] .drv-aif-chat {
-      display: none;
-    }
-
-    .drv-aif-chat,
-    .drv-aif-results {
-      height: calc(100dvh - 210px);
+    .drv-aif-chat {
+      height: calc(100dvh - var(--header-h-current, 68px) - var(--mobile-bar-h, 56px) - 72px);
       min-height: 520px;
     }
   }
@@ -742,8 +732,15 @@
   }
 
   @keyframes drv-aif-fade-in {
-    from { opacity: 0; transform: translateY(4px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   /* Typing stage label — fade khi chuyển text */

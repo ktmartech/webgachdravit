@@ -19,9 +19,12 @@ if ($gallery === []) {
     return;
 }
 
-$is_single_img = count($gallery) === 1;
+$total_images  = count($gallery);
+$is_single_img = $total_images === 1;
+$has_more_mob  = $total_images > 4;
+$remaining_mob = $total_images - 3;
 ?>
-<div class="drv-pdp-gallery<?php echo $is_single_img ? ' drv-pdp-gallery--single' : ''; ?>"
+<div class="drv-pdp-gallery<?php echo $is_single_img ? ' drv-pdp-gallery--single' : ''; ?><?php echo $has_more_mob ? ' drv-pdp-gallery--has-more' : ''; ?>"
      data-pswp-gallery="pdp-main"
      data-pswp-title="<?php echo esc_attr('Chi tiết thực tế ' . $title . ($sku !== '' ? ' (Mã ' . $sku . ')' : '')); ?>"
      <?php echo $map_url !== '' ? 'data-pswp-map-url="' . esc_url($map_url) . '"' : ''; ?>
@@ -44,6 +47,9 @@ $is_single_img = count($gallery) === 1;
         $fig_cls = 'drv-pdp-gallery__item';
         if ($is_wide) {
             $fig_cls .= ' drv-pdp-gallery__item--wide';
+        }
+        if ($has_more_mob && $idx === 3) {
+            $fig_cls .= ' drv-pdp-gallery__item--more-trigger';
         }
         ?>
         <figure class="<?php echo esc_attr($fig_cls); ?>">
@@ -73,6 +79,14 @@ $is_single_img = count($gallery) === 1;
                 </a>
             <?php elseif ($role_label !== '') : ?>
                 <figcaption class="drv-pdp-gallery__tag"><?php echo esc_html($role_label); ?></figcaption>
+            <?php endif; ?>
+
+            <?php if ($has_more_mob && $idx === 3) : ?>
+                <div class="drv-pdp-gallery__more-overlay" aria-hidden="true">
+                    <i class="ph-bold ph-images drv-pdp-gallery__more-icon" aria-hidden="true"></i>
+                    <span class="drv-pdp-gallery__more-count">+<?php echo esc_html((string) $remaining_mob); ?></span>
+                    <span class="drv-pdp-gallery__more-label">Xem tất cả</span>
+                </div>
             <?php endif; ?>
         </figure>
     <?php endforeach; ?>

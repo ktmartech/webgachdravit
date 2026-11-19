@@ -22,7 +22,7 @@ $eyebrow         = trim((string) ($args['eyebrow'] ?? drv_setting('home.hero_eye
 $headline_line1  = trim((string) ($args['headline_top'] ?? drv_setting('home.hero_headline_top', 'CHỌN ĐÚNG GẠCH.')));
 $headline_accent = trim((string) ($args['headline_accent'] ?? drv_setting('home.hero_headline_accent', 'CHUẨN THÔNG SỐ, SÁT')));
 $headline_line3  = trim((string) ($args['headline_bottom'] ?? drv_setting('home.hero_headline_bottom', 'DỰ TOÁN.')));
-$subhead         = trim((string) ($args['subhead'] ?? drv_setting('home.hero_subhead', 'Chỉ cần mô tả không gian, diện tích hoặc ngân sách — hệ thống tự động đối chiếu thông số kỹ thuật (độ nhám R, xương gạch) và quy đổi chính xác số thùng cần mua.')));
+$subhead         = trim((string) ($args['subhead'] ?? drv_setting('home.hero_subhead', 'Chỉ cần mô tả không gian, diện tích hoặc ngân sách, hệ thống tự động đối chiếu thông số kỹ thuật (độ nhám R, xương gạch) và quy đổi chính xác số thùng cần mua.')));
 
 $ai_url      = HomeData::siteUrl('/tro-ly-ai-tim-gach');
 $catalog_url = HomeData::siteUrl('/gach');

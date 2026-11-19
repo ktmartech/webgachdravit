@@ -132,7 +132,7 @@ else :
                         }
                         drv_ui('product-card', [
                             'product'       => $product,
-                            'priority_load' => ($card_idx < 4),
+                            'priority_load' => ($card_idx === 0),
                             'heading_tag'   => 'h2',
                         ]);
                         $card_idx++;

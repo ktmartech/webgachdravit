@@ -23,7 +23,7 @@ return [
         'h1'            => 'Kho Gạch Ốp Lát Chính Hãng DRAVIT',
         'preview_badge' => 'Hệ thống 28 danh mục',
         'preview_desc'  => 'Tra cứu toàn bộ mẫu gạch lát nền, ốp tường, vân đá, giả gỗ và đá nung kết có sẵn tại kho.',
-        'preview_img'   => 'room-living-calacatta.svg',
+        'preview_img'   => 'rooms/room-living-calacatta.jpg',
         'related'       => ['gach-lat-nen', 'gach-op-tuong', 'gach-phong-khach', 'da-nung-ket'],
     ],
 
@@ -40,7 +40,7 @@ return [
         'h1'            => 'Gạch Lát Nền Đẹp, Chịu Lực & Chống Trầy Cao Cấp',
         'preview_badge' => 'Công năng chủ lực',
         'preview_desc'  => 'Xương đá Porcelain đặc chắc, độ hút nước ≤ 0,5%, mài cạnh phẳng đi ron 1,5 - 2 mm.',
-        'preview_img'   => 'room-living-calacatta.svg',
+        'preview_img'   => 'rooms/room-living-calacatta.jpg',
         'related'       => ['gach-80x80', 'gach-60x60', 'gach-phong-khach', 'gach-van-da'],
     ],
     'gach-op-tuong' => [
@@ -90,7 +90,7 @@ return [
         'h1'            => 'Gạch Bông Porcelain Họa Tiết Đông Dương',
         'preview_badge' => 'Phong cách Indochine',
         'preview_desc'  => 'Gạch bông xương Porcelain không cần phủ sáp chống thấm, bền màu cho quán cafe và bếp.',
-        'preview_img'   => 'room-kitchen-cement.svg',
+        'preview_img'   => 'rooms/room-kitchen-cement.jpg',
         'related'       => ['gach-trang-tri', 'gach-the', 'gach-phong-bep'],
     ],
     'gach-bong-gio' => [
@@ -105,7 +105,7 @@ return [
         'h1'            => 'Gạch Bông Gió Lấy Sáng & Đối Lưu Không Khí',
         'preview_badge' => 'Mặt tiền nhiệt đới',
         'preview_desc'  => 'Giải pháp chắn nắng hướng Tây, lấy gió tự nhiên và tạo vách ngăn thoáng cho nhà phố.',
-        'preview_img'   => 'room-outdoor-patio.svg',
+        'preview_img'   => 'rooms/room-outdoor-patio.jpg',
         'related'       => ['gach-mat-tien', 'gach-ngoai-troi', 'gach-trang-tri'],
     ],
     'gach-the' => [
@@ -120,7 +120,7 @@ return [
         'h1'            => 'Gạch Thẻ Ốp Tường Bếp, Quầy Bar & Mặt Tiền',
         'preview_badge' => 'Ốp kiểu xương cá / so le',
         'preview_desc'  => 'Gạch thẻ Subway men bóng rạn, men mờ thủ công dễ phối màu ron tương phản.',
-        'preview_img'   => 'room-kitchen-cement.svg',
+        'preview_img'   => 'rooms/room-kitchen-cement.jpg',
         'related'       => ['gach-phong-bep', 'gach-nha-tam', 'gach-trang-tri'],
     ],
     'gach-uu-dai' => [
@@ -154,7 +154,7 @@ return [
         'h1'            => 'Gạch Lát Nền & Ốp Vách Phòng Khách Sang Trọng',
         'preview_badge' => 'Không gian trọng tâm',
         'preview_desc'  => 'Khổ 80x80, 60x120 vân đá Marble và xi măng hiện đại, kiểm soát đồng lô cho mảng sàn rộng.',
-        'preview_img'   => 'room-living-calacatta.svg',
+        'preview_img'   => 'rooms/room-living-calacatta.jpg',
         'related'       => ['gach-80x80', 'gach-60x120', 'gach-van-da', 'da-nung-ket'],
     ],
     'gach-nha-tam' => [
@@ -169,7 +169,7 @@ return [
         'h1'            => 'Gạch Ốp Lát Nhà Tắm Chống Trơn R10 - R11 An Toàn',
         'preview_badge' => 'An toàn sàn ướt ≥ R10',
         'preview_desc'  => 'Bề mặt Matt nhám mịn thoát nước nhanh, an toàn cho người lớn tuổi và trẻ nhỏ.',
-        'preview_img'   => 'room-bathroom-terrazzo.svg',
+        'preview_img'   => 'rooms/room-bathroom-terrazzo.jpg',
         'related'       => ['gach-30x60', 'gach-terrazzo', 'gach-mosaic'],
     ],
     'gach-phong-bep' => [
@@ -184,7 +184,7 @@ return [
         'h1'            => 'Gạch Ốp Tường & Lát Sàn Phòng Bếp Dễ Lau Dầu Mỡ',
         'preview_badge' => 'Chống ố bẩn cấp 4 - 5',
         'preview_desc'  => 'Gạch lát sàn bếp chống trơn R10 và gạch ốp tường bếp chống bám mắm muối, dầu mỡ.',
-        'preview_img'   => 'room-kitchen-cement.svg',
+        'preview_img'   => 'rooms/room-kitchen-cement.jpg',
         'related'       => ['gach-the', 'da-nung-ket', 'gach-van-xi-mang'],
     ],
     'gach-san-vuon' => [
@@ -204,7 +204,7 @@ return [
         'h1'            => 'Gạch Lát Sân Vườn & Gara Ô Tô Chịu Lực Chống Rêu',
         'preview_badge' => 'Chịu tải trọng & chống trượt R11',
         'preview_desc'  => 'Xương đá dày 12 - 20 mm chịu tải bánh xe ô tô, bề mặt định hình chống rêu mốc mùa mưa.',
-        'preview_img'   => 'room-outdoor-patio.svg',
+        'preview_img'   => 'rooms/room-outdoor-patio.jpg',
         'related'       => ['gach-ngoai-troi', 'gach-60x60', 'gach-van-da'],
     ],
     'gach-ngoai-troi' => [
@@ -219,7 +219,7 @@ return [
         'h1'            => 'Gạch Ốp Lát Ngoài Trời, Ban Công & Sân Thượng',
         'preview_badge' => 'Kháng tia UV & sốc nhiệt',
         'preview_desc'  => 'Chống phai màu dưới nắng gắt, độ hút nước cực thấp tránh phồng rộp sàn sân thượng.',
-        'preview_img'   => 'room-outdoor-patio.svg',
+        'preview_img'   => 'rooms/room-balcony-terrace.jpg',
         'related'       => ['gach-san-vuon', 'gach-mat-tien', 'gach-ho-boi'],
     ],
     'gach-mat-tien' => [
@@ -234,7 +234,7 @@ return [
         'h1'            => 'Gạch Ốp Mặt Tiền Nhà Phố & Biệt Thự Bền Màu',
         'preview_badge' => 'Bảo vệ kết cấu ngoại thất',
         'preview_desc'  => 'Đá nung kết, gạch giả đá và gạch thẻ ngoại thất bền màu trước mưa axit và khói bụi.',
-        'preview_img'   => 'tile-sintered-emperador.svg',
+        'preview_img'   => 'rooms/room-facade-stone.jpg',
         'related'       => ['da-nung-ket', 'gach-bong-gio', 'gach-the'],
     ],
     'gach-phong-ngu' => [
@@ -249,7 +249,7 @@ return [
         'h1'            => 'Gạch Lát Phòng Ngủ Ấm Áp, Êm Chân & Dịu Mắt',
         'preview_badge' => 'Bề mặt Satin / Vân gỗ ấm',
         'preview_desc'  => 'Thanh gạch giả gỗ 15x90 và tông kem nhám lụa không chói đèn ngủ, không lo mối mọt.',
-        'preview_img'   => 'tile-wood-oak.svg',
+        'preview_img'   => 'rooms/room-bedroom-wood.jpg',
         'related'       => ['gach-gia-go', 'gach-15x80-20x100', 'gach-60x60'],
     ],
     'gach-ho-boi' => [
@@ -264,7 +264,7 @@ return [
         'h1'            => 'Gạch Mosaic & Gạch Lát Bờ Hồ Bơi Kháng Hóa Chất',
         'preview_badge' => 'Chống trơn chân trần R11 - R12',
         'preview_desc'  => 'Mosaic thủy tinh/gốm lòng hồ và gạch lát tràn bờ chống trượt chân ướt, kháng Clo.',
-        'preview_img'   => 'room-bathroom-terrazzo.svg',
+        'preview_img'   => 'rooms/room-pool-mosaic.jpg',
         'related'       => ['gach-mosaic', 'gach-san-vuon', 'gach-ngoai-troi'],
     ],
 
@@ -345,7 +345,7 @@ return [
         'h1'            => 'Gạch Mosaic Vỉ Lưới Ốp Tường Bếp, Phòng Tắm & Hồ Bơi',
         'preview_badge' => 'Dễ ốp mảng cong & hốc tường',
         'preview_desc'  => 'Vỉ mosaic lục giác, thẻ que, vảy cá và thủy tinh tạo điểm nhấn tinh xảo.',
-        'preview_img'   => 'room-bathroom-terrazzo.svg',
+        'preview_img'   => 'rooms/room-pool-mosaic.jpg',
         'related'       => ['gach-ho-boi', 'gach-nha-tam', 'gach-trang-tri'],
     ],
     'da-nung-ket' => [

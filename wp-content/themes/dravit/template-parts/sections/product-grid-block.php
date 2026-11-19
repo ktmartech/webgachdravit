@@ -43,6 +43,7 @@ if ($framed) :
     <section class="drv-pdp-panel"
              id="<?php echo esc_attr($section_id); ?>"
              aria-label="<?php echo esc_attr($title); ?>"
+             data-drv-slider
              <?php echo $is_viewed ? 'data-drv-viewed-section data-current-product-id="' . esc_attr((string) $current_pid) . '" hidden' : ''; ?>>
         <div class="drv-pdp-panel__head">
             <h2 class="drv-pdp-panel__title"><?php echo esc_html($title); ?></h2>
@@ -56,17 +57,34 @@ if ($framed) :
             <?php endif; ?>
         </div>
 
-        <div class="<?php echo esc_attr($is_viewed ? 'drv-pdp-viewed-grid' : 'drv-pdp-mini-grid'); ?>"
-             <?php echo $is_viewed ? 'data-drv-viewed-grid' : 'data-drv-stagger="55"'; ?>>
-            <?php foreach ($products as $item) : ?>
-                <?php
-                drv_ui('product-card', [
-                    'product'     => $item,
-                    'context'     => $card_context,
-                    'heading_tag' => 'h3',
-                ]);
-                ?>
-            <?php endforeach; ?>
+        <div class="drv-pdp-slider-viewport">
+            <button type="button"
+                    class="drv-pdp-slider__btn drv-pdp-slider__btn--prev"
+                    data-drv-slider-prev
+                    aria-label="Xem sản phẩm trước">
+                <i class="ph-bold ph-caret-left" aria-hidden="true"></i>
+            </button>
+
+            <div class="<?php echo esc_attr($is_viewed ? 'drv-pdp-viewed-grid' : 'drv-pdp-mini-grid'); ?>"
+                 data-drv-slider-track
+                 <?php echo $is_viewed ? 'data-drv-viewed-grid' : 'data-drv-stagger="55"'; ?>>
+                <?php foreach ($products as $item) : ?>
+                    <?php
+                    drv_ui('product-card', [
+                        'product'     => $item,
+                        'context'     => $card_context,
+                        'heading_tag' => 'h3',
+                    ]);
+                    ?>
+                <?php endforeach; ?>
+            </div>
+
+            <button type="button"
+                    class="drv-pdp-slider__btn drv-pdp-slider__btn--next"
+                    data-drv-slider-next
+                    aria-label="Xem sản phẩm tiếp theo">
+                <i class="ph-bold ph-caret-right" aria-hidden="true"></i>
+            </button>
         </div>
 
         <?php if (!$is_viewed && $cta_label !== '' && $cta_path !== '') : ?>

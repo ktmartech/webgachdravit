@@ -190,7 +190,7 @@
 | # | Kiểm tra |
 |---|---|
 | X-1 | REST `catalog` với param ngoài whitelist / SQL payload → bị loại, không lỗi PHP |
-| X-2 | `per_page=1000` → giới hạn 48 |
+| X-2 | `per_page=1000` → bị kẹp về trần `UrlState::MAX_PER_PAGE` (12; trần cũ 48 đã giảm theo `catalog.per_page` tối đa 12) |
 | X-3 | Form báo giá / lead thiếu hoặc sai nonce → từ chối (`403`) |
 | X-4 | Order action/Tools resync/Convert lead bằng user không có `manage_woocommerce` → từ chối |
 | X-5 | Mọi output có escape (rà PHPCS `WordPress.Security`) |

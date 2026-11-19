@@ -44,10 +44,10 @@ $progress = count($timeline) > 1 ? round($active_idx / (count($timeline) - 1) * 
 $has_fee     = (bool) $view['has_ship_fee'];
 $total_label = $has_fee ? 'Tổng thanh toán' : 'Tạm tính';
 $facts       = [
-    ['label' => 'Ngày đặt', 'value' => $created ? $created->date_i18n('d/m/Y · H:i') : '—', 'icon' => 'calendar-blank'],
+    ['label' => 'Ngày đặt', 'value' => $created ? $created->date_i18n('d/m/Y · H:i') : 'Chưa có', 'icon' => 'calendar-blank'],
     ['label' => 'Thanh toán', 'value' => (string) $view['payment'] === 'cod' ? 'COD - trả khi nhận hàng' : 'Chuyển khoản VietQR', 'icon' => 'credit-card'],
     ['label' => $total_label, 'value' => drv_format_vnd((int) $view['total']), 'icon' => 'receipt', 'strong' => true, 'note' => $has_fee ? 'Đã gồm phí vận chuyển' : 'Chưa gồm phí ship'],
-    ['label' => 'Giao đến', 'value' => (string) $view['province'] !== '' ? (string) $view['province'] : '—', 'icon' => 'truck'],
+    ['label' => 'Giao đến', 'value' => (string) $view['province'] !== '' ? (string) $view['province'] : 'Chưa có', 'icon' => 'truck'],
 ];
 
 $lead = match ($state) {

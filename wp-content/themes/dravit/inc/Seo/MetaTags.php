@@ -107,7 +107,7 @@ final class MetaTags implements ServiceProviderInterface {
 
     public function filter_title(string $title): string {
         $computed = $this->resolve_contextual_title($title);
-        return self::sanitizeTitle($computed);
+        return self::sanitizeTitle(self::appendPageSuffix($computed, self::currentPage()));
     }
 
     public function filter_wp_document_title(string $title): string {
@@ -115,7 +115,28 @@ final class MetaTags implements ServiceProviderInterface {
         if ($computed === '') {
             return '';
         }
-        return self::sanitizeTitle($computed);
+        return self::sanitizeTitle(self::appendPageSuffix($computed, self::currentPage()));
+    }
+
+    private static function currentPage(): int {
+        return function_exists('get_query_var') ? max(1, (int) get_query_var('paged', 1)) : 1;
+    }
+
+    /**
+     * Trang phân trang `/page/n` (n >= 2) phải có tiêu đề riêng, tránh trùng `<title>` với trang 1:
+     * "Gạch Ốp Lát | DRAVIT" -> "Gạch Ốp Lát - Trang 2 | DRAVIT".
+     */
+    public static function appendPageSuffix(string $title, int $page): string {
+        $title = trim($title);
+        if ($title === '' || $page < 2 || preg_match('/Trang\s+\d+/u', $title) === 1) {
+            return $title;
+        }
+        $suffix = sprintf(' - Trang %d', $page);
+        $pos    = mb_strrpos($title, ' | ');
+        if ($pos === false) {
+            return $title . $suffix;
+        }
+        return mb_substr($title, 0, $pos) . $suffix . mb_substr($title, $pos);
     }
 
     public function filter_description(string $description): string {

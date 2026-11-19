@@ -93,53 +93,35 @@ for (const [key, budget] of Object.entries(BUDGETS)) {
   });
 }
 
-// 2) Kiểm tra critical-*.css nếu tồn tại trong dist
-for (const entryKey of Object.keys(manifest)) {
-  if (!entryKey.includes('critical-')) continue;
+// 2) Critical CSS: PHẢI nằm trong dist (đã gộp @import qua Vite) và ≤ 14 KB gzip. File nguồn chỉ chứa @import nên không đo.
+const CRITICAL_KEYS = ['home', 'catalog', 'product', 'blog', 'commerce', 'page'];
+const seenCritical = new Set();
 
-  const outputFile = manifest[entryKey]?.file;
-  if (!outputFile) continue;
+for (const key of CRITICAL_KEYS) {
+  const record = manifest[`assets/src/css/critical/critical-${key}.css`];
+  const outputFile = record?.file;
+  const absPath = outputFile ? resolve(DIST_DIR, outputFile) : '';
 
-  const absPath = resolve(DIST_DIR, outputFile);
-  if (!existsSync(absPath)) continue;
+  if (!outputFile || !existsSync(absPath)) {
+    failed = true;
+    rows.push({ file: `critical-${key} (thiếu trong dist)`, raw: '-', gzip: '-', budget: fmt(CRITICAL_CSS_BUDGET), status: '❌ FAIL' });
+    continue;
+  }
 
-  const { raw, gzip } = gzipSize(absPath);
-  const pass = gzip <= CRITICAL_CSS_BUDGET;
-  if (!pass) failed = true;
-
-  rows.push({
-    file: outputFile,
-    raw: fmt(raw),
-    gzip: fmt(gzip),
-    budget: fmt(CRITICAL_CSS_BUDGET),
-    status: pass ? '✅ PASS' : '❌ FAIL',
-  });
-}
-
-// 3) Kiểm tra critical CSS source (chưa qua Vite build, nằm ở src)
-const criticalDir = resolve(THEME_DIR, 'assets/src/css/critical');
-const criticalFiles = [
-  'critical-home.css',
-  'critical-catalog.css',
-  'critical-product.css',
-  'critical-blog.css',
-  'critical-commerce.css',
-  'critical-page.css',
-];
-
-for (const fileName of criticalFiles) {
-  // Bỏ qua nếu đã check từ manifest ở bước 2
-  if (rows.some((r) => r.file.includes(fileName.replace('.css', '')))) continue;
-
-  const absPath = resolve(criticalDir, fileName);
-  if (!existsSync(absPath)) continue;
+  const text = readFileSync(absPath, 'utf-8');
+  const issues = [];
+  if (/@import/.test(text)) issues.push('còn @import');
+  if (text.length < 2_000) issues.push('quá nhỏ, nghi thiếu nội dung');
 
   const { raw, gzip } = gzipSize(absPath);
-  const pass = gzip <= CRITICAL_CSS_BUDGET;
+  const pass = gzip <= CRITICAL_CSS_BUDGET && issues.length === 0;
   if (!pass) failed = true;
 
+  if (seenCritical.has(outputFile)) continue;
+  seenCritical.add(outputFile);
+
   rows.push({
-    file: `src/css/critical/${fileName}`,
+    file: outputFile + (issues.length ? ` (${issues.join(', ')})` : ''),
     raw: fmt(raw),
     gzip: fmt(gzip),
     budget: fmt(CRITICAL_CSS_BUDGET),

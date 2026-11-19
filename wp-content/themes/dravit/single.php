@@ -99,7 +99,7 @@ get_header();
                                 <div class="drv-key-takeaways__top">
                                     <div class="drv-key-takeaways__head" id="key-takeaways-heading">
                                         <i class="ph-fill ph-bookmarks-simple drv-icon" aria-hidden="true"></i>
-                                        <span>Những Điểm Chính (Key Takeaways) — Tóm Tắt Cho KTS &amp; Chủ Nhà</span>
+                                        <span>Những Điểm Chính (Key Takeaways): Tóm Tắt Cho KTS &amp; Chủ Nhà</span>
                                     </div>
                                 </div>
                                 <ul class="drv-key-takeaways__list">
@@ -239,7 +239,7 @@ get_header();
                         <div style="margin-top: var(--s-4); padding: var(--s-3) var(--s-4); background-color: var(--c-white); border: var(--bw); border-radius: var(--r-sm); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s-2);">
                             <span class="u-text-xs u-bold u-text-navy">
                                 <i class="ph-fill ph-compass drv-icon--xs u-text-moss" aria-hidden="true"></i>
-                                Khám phá nhanh các Danh mục Silo liên quan:
+                                Đọc thêm các Danh mục liên quan:
                             </span>
                             <div class="l-cluster l-cluster--xs">
                                 <?php foreach ($related_silos as $tile) : ?>

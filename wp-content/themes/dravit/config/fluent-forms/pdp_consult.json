@@ -72,11 +72,6 @@
         "value": true,
         "message": "Vui lòng nhập số điện thoại.",
         "global": false
-       },
-       "regex": {
-        "value": "^(\\+?84|0)\\s?[35789](\\s?\\d){8}$",
-        "message": "Số điện thoại cần gồm 10 chữ số di động Việt Nam.",
-        "global": false
        }
       },
       "conditional_logics": [],

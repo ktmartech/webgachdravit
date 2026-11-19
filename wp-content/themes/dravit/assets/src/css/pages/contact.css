@@ -4,7 +4,6 @@
    ========================================================================== */
 
 @layer components {
-
   /* Đầu trang nội dung (Liên hệ…): cùng nhịp với hero danh mục `.drv-silo-hero`; breadcrumb tách hàng riêng, H1 cách breadcrumb. */
   .drv-page-head {
     padding-block: var(--s-4) var(--s-6);

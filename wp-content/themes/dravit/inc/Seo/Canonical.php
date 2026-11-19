@@ -15,6 +15,9 @@ defined('ABSPATH') || exit;
  * - Trang danh mục có bất kỳ tham số lọc/utility nào -> trỏ canonical về URL tĩnh gốc trang 1 không query (M-3..M-7).
  */
 final class Canonical implements ServiceProviderInterface {
+    /** Robots cuối cùng của request này đã chứa `noindex` (Rank Math sẽ không in canonical trên trang như vậy). */
+    private static bool $noindex = false;
+
     public function register(): void {
         add_filter('rank_math/frontend/canonical', [$this, 'filter_rank_math_canonical'], 20, 1);
         add_filter('get_canonical_url', [$this, 'filter_wp_canonical_url'], 20, 2);
@@ -22,6 +25,11 @@ final class Canonical implements ServiceProviderInterface {
         if (!drv_is_rank_math_active()) {
             remove_action('wp_head', 'rel_canonical');
             add_action('wp_head', [$this, 'print_fallback_canonical'], 5);
+        } else {
+            // Rank Math bỏ canonical trên mọi trang `noindex` (URL lọc `?param`), trong khi M-3..M-7 và Q-02 yêu cầu canonical
+            // về URL tĩnh gốc: in bù ở cuối `wp_head`, chỉ khi Rank Math chưa in.
+            add_filter('rank_math/frontend/robots', [$this, 'remember_robots'], 999, 1);
+            add_action('wp_head', [$this, 'print_canonical_when_rank_math_skips'], 100);
         }
     }
 
@@ -85,6 +93,21 @@ final class Canonical implements ServiceProviderInterface {
     public function filter_wp_canonical_url(string $canonical_url, \WP_Post $post): string {
         unset($post);
         return UrlNormalizer::untrailingslashUrl($canonical_url);
+    }
+
+    /**
+     * @param mixed $robots
+     * @return mixed
+     */
+    public function remember_robots($robots) {
+        self::$noindex = is_array($robots) && isset($robots['index']) && $robots['index'] === 'noindex';
+        return $robots;
+    }
+
+    public function print_canonical_when_rank_math_skips(): void {
+        if (self::$noindex) {
+            $this->print_fallback_canonical();
+        }
     }
 
     public function print_fallback_canonical(): void {

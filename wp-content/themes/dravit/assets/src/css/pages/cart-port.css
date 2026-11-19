@@ -860,7 +860,7 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
-    box-shadow: 0 1px 4px rgba(10, 29, 44, 0.04);
+    box-shadow: 0 1px 4px rgb(10 29 44 / 4%);
   }
 
   .drv-fbt-bundle__head {
@@ -893,7 +893,7 @@
     align-items: stretch;
   }
 
-  @media (min-width: 820px) {
+  @media (width >= 820px) {
     .drv-fbt-bundle__body {
       grid-template-columns: minmax(0, 1fr) 210px;
       gap: 14px;
@@ -924,12 +924,12 @@
 
   .drv-fbt-item:hover {
     border-color: var(--c-navy-300);
-    box-shadow: 0 1px 4px rgba(10, 29, 44, 0.04);
+    box-shadow: 0 1px 4px rgb(10 29 44 / 4%);
   }
 
   .drv-fbt-item:has(input:checked) {
     border-color: var(--c-moss-500);
-    background-color: #f7faf8;
+    background-color: var(--c-teal-50);
   }
 
   .drv-fbt-item__check {
@@ -1027,7 +1027,7 @@
     gap: 6px;
   }
 
-  @media (max-width: 819.98px) {
+  @media (width <= 819.98px) {
     .drv-fbt-summary {
       flex-direction: row;
       align-items: center;
@@ -1042,64 +1042,17 @@
     }
   }
 
-  /* Cart Guarantees 3-Card Grid */
-  .drv-cart-guarantees {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--s-3);
-  }
-
-  @media (min-width: 640px) {
+  @media (width >= 640px) {
     .drv-cart-guarantees {
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 12px;
     }
   }
 
-  .drv-cart-guarantee-card {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    padding: 14px 16px;
-    background-color: var(--c-white);
-    border: 1px solid var(--c-navy-200);
-    border-radius: var(--r-md);
-    box-shadow: 0 1px 3px rgba(10, 29, 44, 0.03);
-    transition: border-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
-  }
-
   .drv-cart-guarantee-card:hover {
     border-color: var(--c-teal-500);
     transform: translateY(-1px);
   }
-
-  .drv-cart-guarantee-card__head {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .drv-cart-guarantee-card__head i {
-    font-size: 18px;
-    color: var(--c-teal-600);
-    flex-shrink: 0;
-  }
-
-  .drv-cart-guarantee-card__title {
-    font-size: var(--fs-xs);
-    font-weight: 700;
-    color: var(--c-navy-900);
-    margin: 0;
-    line-height: 1.35;
-  }
-
-  .drv-cart-guarantee-card__desc {
-    font-size: 12px;
-    color: var(--c-text-muted);
-    line-height: 1.45;
-    margin: 0;
-  }
-
 
   /* Mục "Mẫu gạch phối đồng bộ" cuối giỏ hàng: cùng khung với panel ở trang sản phẩm. */
   .drv-pdp-panel {

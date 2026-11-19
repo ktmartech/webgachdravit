@@ -37,7 +37,7 @@ if (!$order instanceof \WC_Order) :
             <div class="drv-order-notice__icon" aria-hidden="true"><i class="ph ph-seal-check"></i></div>
             <div class="l-stack l-stack--2xs">
                 <h1 class="drv-order-notice__title">Cảm ơn Quý khách. Đơn hàng đã được tiếp nhận.</h1>
-                <p class="drv-order-notice__text">Nhân viên DRAVIT sẽ liên hệ xác nhận lô gạch và phí vận chuyển trong giờ làm việc<?php echo $hotline !== '' ? ' · Hotline ' . esc_html($hotline) : ''; ?>.</p>
+                <p class="drv-order-notice__text">Nhân viên <?php echo esc_html((string) drv_setting('company.brand_name', '')); ?> sẽ liên hệ xác nhận lô gạch và phí vận chuyển trong giờ làm việc<?php echo $hotline !== '' ? ' · Hotline ' . esc_html($hotline) : ''; ?>.</p>
             </div>
         </div>
     </div>

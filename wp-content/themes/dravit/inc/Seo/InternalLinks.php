@@ -110,8 +110,12 @@ final class InternalLinks {
             }
 
             $preview_img = (string) ($cfg['preview_img'] ?? '');
-            if ($thumb_id <= 0 && $preview_img !== '') {
-                $thumb_url = DRV_URI . '/assets/images/placeholders/' . $preview_img;
+            $is_room     = (($cfg['group'] ?? '') === 'space') || str_starts_with($preview_img, 'rooms/') || str_starts_with($preview_img, 'room-');
+            if ($is_room && $preview_img !== '') {
+                $thumb_id  = 0;
+                $thumb_url = \Dravit\Core\Menu\MegaMenuRenderer::resolve_preview_image($preview_img);
+            } elseif ($thumb_id <= 0 && $preview_img !== '') {
+                $thumb_url = \Dravit\Core\Menu\MegaMenuRenderer::resolve_preview_image($preview_img);
             }
 
             $items[] = [

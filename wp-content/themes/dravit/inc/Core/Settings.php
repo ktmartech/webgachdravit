@@ -84,7 +84,7 @@ final class Settings implements ServiceProviderInterface {
                 'waste_options'     => [0, 5, 10],
                 'transfer_due_days' => 3,
                 'auto_cancel_hours' => 72,
-                'sla_text'          => 'Phản hồi trong 30 phút giờ làm việc (08:00 - 21:00)',
+                'sla_text'          => 'Phản hồi trong 30 phút trong giờ làm việc',
                 // docs/14 §8.2 TAB 4 — Giỏ hàng & Checkout VN (Step 9).
                 'shipping_label'       => 'Báo sau khi xác nhận đơn',
                 'checkout_ship_notice' => 'Nhân viên Dravit sẽ gọi xác nhận tồn kho cùng lô màu và báo phí vận chuyển tốt nhất trước khi giao.',
@@ -161,6 +161,7 @@ final class Settings implements ServiceProviderInterface {
                 'geo_brand_summary' => 'DRAVIT là hệ thống phân phối gạch ốp lát kiến trúc và đá nung kết chính hãng tại Việt Nam, niêm yết giá minh bạch theo m² và giao dịch theo số nguyên viên/thùng.',
             ],
             'forms'    => [
+                'native_ui'        => false,
                 'boq_mirror'       => 0,
                 'quote_modal'      => 0,
                 'pdp_consult'      => 0,
@@ -396,6 +397,7 @@ final class Settings implements ServiceProviderInterface {
         }
 
         if (isset($input['forms']) && is_array($input['forms'])) {
+            $base['forms']['native_ui'] = !empty($input['forms']['native_ui']);
             foreach (['boq_mirror', 'quote_modal', 'pdp_consult', 'contact_page', 'showroom_booking', 'blog_inline'] as $slot) {
                 if (array_key_exists($slot, $input['forms'])) {
                     $base['forms'][$slot] = max(0, (int) $input['forms'][$slot]);

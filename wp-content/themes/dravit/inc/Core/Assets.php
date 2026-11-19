@@ -88,20 +88,19 @@ final class Assets implements ServiceProviderInterface {
     }
 
     /**
-     * Inline critical CSS vào <head> từ file source.
+     * Inline critical CSS vào <head> từ bản ĐÃ BUILD (`assets/dist/css/critical/critical-{key}-{hash}.css`,
+     * Vite đã gộp `@import` và minify). Chưa build (hoặc đang chạy Vite dev) thì bỏ qua: CSS đầy đủ vẫn nạp qua `global.css`.
      *
-     * Đọc assets/src/css/critical/critical-{$template_key}.css và output
-     * <style id="drv-critical-{key}">...</style>.
-     * Dùng cho trước khi full CSS được tải bất đồng bộ.
+     * `@font-face` bị loại vì `url()` tương đối chỉ đúng khi nằm trong file CSS; font đã preload và khai báo trong `global.css`.
      */
     public static function inline_critical_css(string $template_key): void {
-        $allowed = array_keys(self::CRITICAL_MAP);
-        if (!in_array($template_key, $allowed, true)) {
+        if (!in_array($template_key, array_keys(self::CRITICAL_MAP), true) || Vite::is_dev_server_running()) {
             return;
         }
 
-        $file = DRV_DIR . '/assets/src/css/critical/critical-' . $template_key . '.css';
-        if (!is_file($file)) {
+        $record = Vite::manifest()['assets/src/css/critical/critical-' . $template_key . '.css'] ?? null;
+        $file   = is_array($record) && is_string($record['file'] ?? null) ? DRV_DIR . '/assets/dist/' . ltrim($record['file'], '/') : '';
+        if ($file === '' || !is_file($file)) {
             return;
         }
 
@@ -110,8 +109,10 @@ final class Assets implements ServiceProviderInterface {
             return;
         }
 
+        $css = (string) preg_replace('/@charset\s+"[^"]*";|@font-face\s*\{[^{}]*\}/', '', $css);
         $key = esc_attr($template_key);
-        echo '<style id="drv-critical-' . $key . '">' . $css . "</style>\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- CSS from theme source
+        echo '<style id="drv-critical-' . $key . '">' . $css . "</style>
+"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- CSS do chính theme build ra
     }
 
     public function print_runtime_config(): void {

@@ -145,7 +145,7 @@ $req_sec->set_param('base', 'product_cat:gach');
 $req_sec->set_param('per_page', 1000);
 $req_sec->set_param('kich-thuoc', "80x80,' OR 1=1--");
 $data_sec = $server->dispatch($req_sec)->get_data();
-$assert(($data_sec['per_page'] ?? 0) === 48, 'X-2: per_page=1000 phải bị giới hạn về 48.');
+$assert(($data_sec['per_page'] ?? 0) === 12, 'X-2: per_page=1000 phải bị giới hạn về UrlState::MAX_PER_PAGE (12).');
 $assert(($data_sec['url'] ?? '') === $origin . '/gach-80x80' || ($data_sec['redirect_to'] ?? '') === $origin . '/gach-80x80', 'X-1: Giá trị SQL payload phải bị lọc sạch.');
 
 $ver_before = FacetCounter::getCacheVersion();

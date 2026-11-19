@@ -109,10 +109,10 @@ foreach (ProductSeeder::definitions() as $def) {
     $card_html = drv_ui_html('product-card', ['product' => $product]);
     if ($price_m2 > 0) {
         $assert(str_contains($card_html, 'drv-card--priced'), "Card {$sku} thiếu class drv-card--priced.");
-        $assert(!str_contains($card_html, 'drv-card--quote'), "Card {$sku} không được mang class drv-card--quote.");
+        $assert(!str_contains($card_html, 'drv-card--quote-only'), "Card {$sku} không được mang class drv-card--quote-only.");
         $assert(str_contains($card_html, 'data-drv-action="add-to-cart"'), "Card {$sku} phải có action add-to-cart.");
     } else {
-        $assert(str_contains($card_html, 'drv-card--quote'), "Card quote {$sku} phải mang class drv-card--quote.");
+        $assert(str_contains($card_html, 'drv-card--quote-only'), "Card quote {$sku} phải mang class drv-card--quote-only.");
         $assert(str_contains($card_html, 'Liên hệ báo giá'), "Card quote {$sku} phải hiển thị Liên hệ báo giá.");
         $assert(str_contains($card_html, 'data-drv-action="quote-add"'), "Card quote {$sku} phải có action quote-add.");
     }

@@ -63,7 +63,7 @@ $due   = max(1, (int) drv_setting('order.transfer_due_days', 3));
                     Nhân viên DRAVIT đã gửi thông tin tài khoản qua Zalo/điện thoại khi xác nhận đơn. Nội dung chuyển khoản:
                     <strong class="u-tabular"><?php echo esc_html((string) $view['transfer_ref']); ?></strong>
                     <?php drv_ui('copy-inline', ['value' => (string) $view['transfer_ref'], 'aria_label' => 'Sao chép nội dung chuyển khoản']); ?>.
-                    Đơn được giữ <?php echo esc_html((string) $due); ?> ngày kể từ khi xác nhận. Sau khi chuyển khoản, kế toán DRAVIT kiểm tra và cập nhật trạng thái trong giờ làm việc; Quý khách có thể gửi ảnh biên lai qua Zalo để được ưu tiên xếp xe.
+                    Đơn được giữ <?php echo esc_html((string) $due); ?> ngày kể từ khi xác nhận. Sau khi chuyển khoản, kế toán <?php echo esc_html((string) drv_setting('company.brand_name', '')); ?> kiểm tra và cập nhật trạng thái trong giờ làm việc; Quý khách có thể gửi ảnh biên lai qua Zalo để được ưu tiên xếp xe.
                 </p>
             </div>
         <?php endif; ?>

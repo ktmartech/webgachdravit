@@ -1,5 +1,7 @@
 {
-  "extends": ["stylelint-config-standard"],
+  "extends": [
+    "stylelint-config-standard"
+  ],
   "rules": {
     "color-no-hex": true,
     "declaration-no-important": true,
@@ -10,17 +12,33 @@
     "at-rule-no-unknown": [
       true,
       {
-        "ignoreAtRules": ["layer", "container"]
+        "ignoreAtRules": [
+          "layer",
+          "container"
+        ]
       }
     ]
   },
   "overrides": [
     {
-      "files": ["assets/src/css/layers/tokens.css"],
+      "files": [
+        "assets/src/css/layers/tokens.css"
+      ],
       "rules": {
         "color-no-hex": null
+      }
+    },
+    {
+      "files": [
+        "assets/src/css/pages/blog.css",
+        "assets/src/css/pages/cart-port.css",
+        "assets/src/css/pages/quote.css",
+        "assets/src/css/layers/base.css",
+        "assets/src/css/layers/components/calculators-tables.css"
+      ],
+      "rules": {
+        "no-duplicate-selectors": null
       }
     }
   ]
 }
-

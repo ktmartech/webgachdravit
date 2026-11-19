@@ -44,6 +44,16 @@ final class FluentFormsBridgeTest extends TestCase {
         self::assertSame(32.5, $checked['data']['area_m2']);
     }
 
+    public function test_vn_phone_formats_accepted_without_fluent_regex_rule(): void {
+        // Rule `regex` của Fluent Forms bị cắt tại ký tự `|`; việc kiểm SĐT nay do `validate_phone()` dùng chung hàm này.
+        self::assertSame('0987654321', LeadValidator::normalizePhone('0987654321'));
+        self::assertSame('0987654321', LeadValidator::normalizePhone('0987 654 321'));
+        self::assertSame('0987654321', LeadValidator::normalizePhone('+84987654321'));
+        self::assertSame('0987654321', LeadValidator::normalizePhone('84987654321'));
+        self::assertSame('', LeadValidator::normalizePhone('12345'));
+        self::assertSame('', LeadValidator::normalizePhone('0187654321'));
+    }
+
     public function test_slot_to_source_mapping_and_boq_summary_fallback(): void {
         self::assertSame('contact', FluentFormsBridge::mapSubmission(['name' => 'A B'], 'contact_page')['source']);
         self::assertSame('showroom_visit', FluentFormsBridge::mapSubmission([], 'showroom_booking')['source']);
@@ -104,6 +114,29 @@ final class FluentFormsBridgeTest extends TestCase {
         $rendered = FluentFormsBridge::render_slot('quote_modal', ['drv_sku' => 'X']);
         self::assertSame('', (string) ob_get_clean());
         self::assertFalse($rendered, 'Chưa bật Fluent Forms / slot = 0 -> theme render form native');
+    }
+
+    public function test_native_lead_is_mapped_to_fluent_form_fields_and_round_trips(): void {
+        $response = FluentFormsBridge::nativeResponse(
+            ['name' => 'Nguyễn An', 'phone' => '0909123456', 'email' => '', 'area_m2' => 25.5, 'message' => 'Cần báo giá', 'post_id' => 0, 'code' => 'DRV-1'],
+            77,
+            'https://gachdravit.vn/lien-he',
+            ['utm_source' => 'google', 'utm_medium' => '']
+        );
+        self::assertSame('Nguyễn An', $response['name']);
+        self::assertSame('25.5', $response['area_m2']);
+        self::assertSame('77', $response['drv_lead_id']);
+        self::assertSame('google', $response['utm_source']);
+        self::assertArrayNotHasKey('email', $response, 'Field rỗng bị lược bỏ');
+        self::assertArrayNotHasKey('utm_medium', $response);
+
+        $mapped = FluentFormsBridge::mapSubmission($response, 'contact_page');
+        self::assertSame('0909123456', $mapped['input']['phone']);
+        self::assertSame('https://gachdravit.vn/lien-he', $mapped['page_url']);
+    }
+
+    public function test_native_ui_defaults_off_and_is_a_declared_setting(): void {
+        self::assertFalse(\Dravit\Core\Settings::defaults()['forms']['native_ui']);
     }
 
     public function test_every_slot_has_setting_source_and_a_rendering_template(): void {

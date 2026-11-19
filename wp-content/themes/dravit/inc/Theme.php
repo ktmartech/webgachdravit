@@ -38,6 +38,7 @@ use Dravit\Core\Menu\MegaMenuRenderer;
 use Dravit\Core\Menu\MenuSetup;
 use Dravit\Core\NonceController;
 use Dravit\Core\RestSecurity;
+use Dravit\Core\Security;
 use Dravit\Core\ServiceProviderInterface;
 use Dravit\Core\Settings;
 use Dravit\Core\Setup;
@@ -102,6 +103,7 @@ final class Theme {
         $providers = [
             Settings::class,
             Setup::class,
+            Security::class,
             RestSecurity::class,
             NonceController::class,
             SlugGuard::class,

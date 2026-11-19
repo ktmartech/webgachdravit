@@ -93,7 +93,7 @@ final class CatalogController implements ServiceProviderInterface {
             'url'          => $state->url(),
             'canonical'    => $state->canonical(),
             'robots'       => $state->robots($total, $total_pages),
-            'title'        => $state->title($archive_name),
+            'title'        => self::resolveTitle($state, $archive_name),
             'redirect_to'  => $state->redirectTo(),
             'next_url'     => $state->buildNextPageUrl($total_pages),
             'active_chips' => $state->activeChips(),
@@ -169,6 +169,33 @@ final class CatalogController implements ServiceProviderInterface {
         }
 
         return $args;
+    }
+
+    /**
+     * Tiêu đề trả cho client. URL tĩnh sạch phải trùng đúng `<title>` SSR (Rank Math term meta `rank_math_title`),
+     * nếu không bấm Back từ URL lọc về URL gốc sẽ đổi tiêu đề trang (F-2). URL có lọc/phân trang dùng `UrlState::title()`.
+     */
+    private static function resolveTitle(UrlState $state, string $archive_name): string {
+        if (
+            !$state->hasActiveFilters()
+            && $state->page() === 1
+            && $state->baseTaxonomy() === 'product_cat'
+            && function_exists('get_term_by')
+        ) {
+            $term = get_term_by('slug', $state->baseSlug(), 'product_cat');
+            if ($term instanceof \WP_Term) {
+                $raw = trim((string) get_term_meta($term->term_id, 'rank_math_title', true));
+                $callback = 'RankMath\Helper::replace_vars';
+                if ($raw !== '' && is_callable($callback)) {
+                    $resolved = trim((string) call_user_func($callback, $raw, $term));
+                    if ($resolved !== '') {
+                        return \Dravit\Seo\MetaTags::sanitizeTitle($resolved);
+                    }
+                }
+            }
+        }
+
+        return $state->title($archive_name);
     }
 }
 

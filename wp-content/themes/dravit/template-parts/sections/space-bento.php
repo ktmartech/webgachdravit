@@ -14,7 +14,7 @@ defined('ABSPATH') || exit;
 
 $eyebrow   = trim((string) ($args['eyebrow'] ?? 'Chọn theo không gian'));
 $title     = trim((string) ($args['title'] ?? 'Bạn Đang Tìm Gạch Cho Khu Vực Nào?'));
-$desc      = trim((string) ($args['description'] ?? 'Mỗi không gian cần chuẩn độ nhám R và xương gạch khác nhau — chọn đúng ngay từ đầu.'));
+$desc      = trim((string) ($args['description'] ?? 'Mỗi không gian cần chuẩn độ nhám R và xương gạch khác nhau, chọn đúng ngay từ đầu.'));
 $cta_label = trim((string) ($args['cta_label'] ?? 'Xem tất cả 28 danh mục'));
 $cta_path  = trim((string) ($args['cta_path'] ?? '/gach'));
 $surface   = (string) ($args['surface'] ?? 'ivory');

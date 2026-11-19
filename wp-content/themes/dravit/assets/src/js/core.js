@@ -850,108 +850,6 @@ export const Dravit = Object.freeze({
   formatDecimalVn,
 });
 
-/**
- * Hiệu ứng "gương quét" (glass shine) khi hover vào ảnh nội dung — không cần markup riêng ở từng template.
- * Chèn `<span class="drv-shine">` vào phần tử cha của ảnh; CSS ở `components/motion.css`.
- */
-function setupImageShine() {
-  if (typeof window.matchMedia !== 'function' || !window.matchMedia('(hover: hover)').matches || prefersReducedMotion()) {
-    return;
-  }
-
-  const SKIP = '.drv-logo, .drv-footer__logo-img, .drv-qr-img, .drv-author-box__avatar, .drv-checkout-topbar__brand, .drv-sr__stage, [data-no-shine]';
-  const MIN_SIZE = 56;
-  const eligible = (img) => !img.closest(SKIP) && img.offsetWidth >= MIN_SIZE && img.offsetHeight >= MIN_SIZE;
-
-  /**
-   * Gom ảnh theo khung (phần tử cha): ảnh chồng nhau trong cùng khung (vd. product card primary + hover swap)
-   * tính là 1 khung. Trả về ảnh đại diện (ảnh đầu tiên) của từng khung.
-   * @param {Element} root
-   * @returns {HTMLImageElement[]}
-   */
-  const imageSlots = (root) => {
-    const imgs = root.tagName === 'IMG' ? [root] : [...root.querySelectorAll('img')];
-    const slots = new Map();
-    for (const img of imgs) {
-      if (img.parentElement && !slots.has(img.parentElement) && eligible(img)) {
-        slots.set(img.parentElement, img);
-      }
-    }
-    return [...slots.values()];
-  };
-
-  /** @type {WeakSet<Element>} host đang hover — chỉ quét 1 lần mỗi lượt vào. */
-  const activeHosts = new WeakSet();
-
-  const shine = (img, host) => {
-    const parent = img.parentElement;
-    if (!parent) {
-      return;
-    }
-    const parentStyle = getComputedStyle(parent);
-    if (parentStyle.display === 'inline') {
-      return;
-    }
-    if (parentStyle.position === 'static') {
-      parent.style.position = 'relative';
-    }
-
-    let beam = parent.querySelector(':scope > .drv-shine');
-    if (!beam) {
-      beam = document.createElement('span');
-      beam.className = 'drv-shine';
-      beam.setAttribute('aria-hidden', 'true');
-      parent.appendChild(beam);
-    }
-    beam.style.cssText = `left:${img.offsetLeft}px;top:${img.offsetTop}px;width:${img.offsetWidth}px;height:${img.offsetHeight}px;border-radius:${getComputedStyle(img).borderRadius}`;
-
-    // Reset về vị trí đầu rồi reflow để mỗi lượt hover đều quét lại từ trái.
-    parent.classList.remove('is-shining');
-    void beam.offsetWidth;
-    parent.classList.add('is-shining');
-
-    activeHosts.add(host);
-    host.addEventListener(
-      'mouseleave',
-      () => {
-        activeHosts.delete(host);
-        parent.classList.remove('is-shining');
-      },
-      { once: true },
-    );
-  };
-
-  document.addEventListener('mouseover', (event) => {
-    // Tìm phần tử gần nhất chứa ĐÚNG 1 ảnh hợp lệ (card / khung ảnh). Gặp vùng chứa nhiều ảnh (lưới) thì dừng.
-    let node = event.target instanceof Element ? event.target : null;
-    for (let depth = 0; node && depth < 6 && !/^(MAIN|SECTION|BODY)$/.test(node.tagName); depth += 1, node = node.parentElement) {
-      const imgs = imageSlots(node);
-      if (!imgs.length) {
-        continue;
-      }
-      if (imgs.length > 1) {
-        return;
-      }
-      // Mở rộng host lên tới card ngoài cùng vẫn chỉ chứa ảnh này → di chuột trong card không quét lại.
-      let host = node;
-      for (let up = 0; up < 6; up += 1) {
-        const next = host.parentElement;
-        if (!next || /^(MAIN|SECTION|BODY)$/.test(next.tagName)) {
-          break;
-        }
-        if (imageSlots(next).length !== 1) {
-          break;
-        }
-        host = next;
-      }
-      if (!activeHosts.has(host)) {
-        shine(imgs[0], host);
-      }
-      return;
-    }
-  });
-}
-
 export function initCore() {
   if (coreBooted || typeof document === 'undefined') {
     return;
@@ -1018,7 +916,6 @@ export function initCore() {
 
     setupHeaderAndMenus();
     hydrateQuoteAndCartBadges();
-    setupImageShine();
     setupLeadForms();
     captureUtm();
 

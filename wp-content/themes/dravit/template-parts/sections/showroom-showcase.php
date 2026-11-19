@@ -44,7 +44,7 @@ $first_slide = (is_array($first_zone) && isset($first_zone['slides'][0]) && is_a
         'before'      => HomeData::roomUrl('room-living-calacatta.jpg'),
         'real_before' => false,
         'alt'       => 'Không gian trưng bày gạch khổ lớn tại Showroom DRAVIT',
-        'caption'   => 'Kệ cánh lật 120 tấm khổ 80×80, 60×120 & đá nung kết — kéo thanh trượt để so sánh trước và sau khi lát gạch',
+        'caption'   => 'Kệ cánh lật 120 tấm khổ 80×80, 60×120 & đá nung kết, kéo thanh trượt để so sánh trước và sau khi lát gạch',
     ];
 ?>
 <section class="<?php echo esc_attr($sec_cls); ?>" id="home-showroom">
@@ -198,7 +198,7 @@ $first_slide = (is_array($first_zone) && isset($first_zone['slides'][0]) && is_a
                                 <dd>
                                     <span>
                                         <?php echo esc_html((string) $vm['hours']); ?><br>
-                                        <small><?php echo esc_html((string) ($status['detail_label'] ?: 'Mở cả Chủ nhật & ngày lễ')); ?></small>
+                                        <small><?php echo esc_html((string) $status['detail_label']); ?></small>
                                     </span>
                                 </dd>
                             </div>
@@ -226,15 +226,15 @@ $first_slide = (is_array($first_zone) && isset($first_zone['slides'][0]) && is_a
                             <span class="drv-sr__exp-title">3 trải nghiệm nên thử khi ghé</span>
                             <button type="button" class="drv-sr__exp-item" data-sr-exp="lighting">
                                 <span class="drv-sr__exp-icon"><i class="ph-bold ph-lightbulb" aria-hidden="true"></i></span>
-                                <span><strong>So màu dưới 3 nhiệt độ đèn</strong> — 3000K vàng ấm, 4000K trung tính &amp; 6500K trắng ngày</span>
+                                <span><strong>So màu dưới 3 nhiệt độ đèn</strong>: 3000K vàng ấm, 4000K trung tính &amp; 6500K trắng ngày</span>
                             </button>
                             <button type="button" class="drv-sr__exp-item" data-sr-exp="bath">
                                 <span class="drv-sr__exp-icon"><i class="ph-bold ph-bathtub" aria-hidden="true"></i></span>
-                                <span><strong>Cabin bếp &amp; nhà tắm mẫu</strong> — xem mạch ron 1,5 mm thực tế trên mảng tường lớn</span>
+                                <span><strong>Cabin bếp &amp; nhà tắm mẫu</strong>: xem mạch ron 1,5 mm thực tế trên mảng tường lớn</span>
                             </button>
                             <button type="button" class="drv-sr__exp-item" data-sr-exp="lab">
                                 <span class="drv-sr__exp-icon"><i class="ph-bold ph-drop-half-bottom" aria-hidden="true"></i></span>
-                                <span><strong>Bàn thử nước độ nhám R9–R12</strong> — cảm nhận độ bám chân thật trước khi chọn lát sàn ướt</span>
+                                <span><strong>Bàn thử nước độ nhám R9–R12</strong>: cảm nhận độ bám chân thật trước khi chọn lát sàn ướt</span>
                             </button>
                         </div>
 

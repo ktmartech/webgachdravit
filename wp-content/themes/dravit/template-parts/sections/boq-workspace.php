@@ -308,7 +308,7 @@ $breadcrumb = [
                 </div>
                 <span><?php echo esc_html($config['legalName']); ?></span><br>
                 <span><?php echo esc_html($config['address']); ?></span><br>
-                <span><?php echo esc_html(($config['siteHost'] === 'localhost' ? 'gachdravit.vn' : $config['siteHost']) . ' · Hotline / Zalo: ' . $hotline); ?></span>
+                <span><?php echo esc_html($config['siteHost'] . ' · Hotline / Zalo: ' . $hotline); ?></span>
             </div>
             <div class="drv-boq-print__meta">
                 <strong class="drv-boq-print__title">BẢNG DỰ TOÁN KHỐI LƯỢNG GẠCH ỐP LÁT</strong>

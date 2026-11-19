@@ -105,7 +105,7 @@ final class LeadAdmin implements ServiceProviderInterface {
                 printf('<span class="drv-lead-pill drv-lead-status--%s">%s</span>', esc_attr($status), esc_html(LeadRepository::STATUS_LABELS[$status] ?? $status));
                 $oid = (int) $m('_drv_converted_order_id', 0);
                 if ($oid > 0 && function_exists('wc_get_order') && ($o = wc_get_order($oid)) instanceof \WC_Order) {
-                    printf('<br><a href="%s">#DRV-%d</a>', esc_url($o->get_edit_order_url()), $oid);
+                    printf('<br><a href="%s">#DRV-%s</a>', esc_url($o->get_edit_order_url()), esc_html((string) $oid));
                 }
                 break;
             case 'drv_date':
@@ -418,7 +418,7 @@ final class LeadAdmin implements ServiceProviderInterface {
         }
 
         $rates = isset($_POST['drv_agreed_price_m2']) && is_array($_POST['drv_agreed_price_m2'])
-            ? array_map(static fn ($v): string => (string) preg_replace('/\D/', '', (string) $v), wp_unslash($_POST['drv_agreed_price_m2']))
+            ? array_map(static fn ($v): string => (string) preg_replace('/\D/', '', (string) $v), wp_unslash($_POST['drv_agreed_price_m2'])) // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Mỗi giá trị được lọc chỉ còn chữ số ngay trong closure.
             : [];
         $ops_raw = isset($_POST['drv_ops']) && is_array($_POST['drv_ops']) ? wp_unslash($_POST['drv_ops']) : []; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Làm sạch trong OrderConverter.
         $fee_raw = trim((string) ($ops_raw['shipping_fee'] ?? ''));

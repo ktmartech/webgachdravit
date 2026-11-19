@@ -1,12 +1,13 @@
 import { openDialog, registerAction } from './core.js';
 import { registerCalcElements } from './chunks/calc-elements.js';
 import { initShareMenu } from './chunks/share-menu.js';
-import { prefersReducedMotion, qs } from './utils/dom.js';
+import { prefersReducedMotion, qs, qsa } from './utils/dom.js';
 import { readJsonStorage, writeJsonStorage } from './utils/storage.js';
 import { showToast } from './utils/toast.js';
 
 const VIEWED_STORAGE_KEY = 'drv_viewed';
-const MAX_VIEWED_ITEMS = 8;
+const MAX_STORED_VIEWED = 20;
+const MAX_VIEWED_ITEMS = 12;
 
 let pdpAbort = null;
 
@@ -24,7 +25,7 @@ export function recordViewedProduct(productId) {
     ? existing.map((v) => Number.parseInt(String(v), 10) || 0).filter((v) => v > 0 && v !== pid)
     : [];
 
-  const next = [pid, ...clean].slice(0, MAX_VIEWED_ITEMS + 1);
+  const next = [pid, ...clean].slice(0, MAX_STORED_VIEWED);
   writeJsonStorage(VIEWED_STORAGE_KEY, next);
   return next;
 }
@@ -61,6 +62,7 @@ async function hydrateRecentlyViewedSection() {
     if (typeof data?.cards_html === 'string' && data.cards_html.trim() !== '') {
       grid.innerHTML = data.cards_html;
       section.hidden = false;
+      updateSliderButtons(section);
 
       if (!prefersReducedMotion()) {
         import('./chunks/motion.js')
@@ -71,6 +73,45 @@ async function hydrateRecentlyViewedSection() {
   } catch {
     // Silent fallback if offline
   }
+}
+
+function updateSliderButtons(slider) {
+  const track = qs('[data-drv-slider-track]', slider);
+  const prevBtn = qs('[data-drv-slider-prev]', slider);
+  const nextBtn = qs('[data-drv-slider-next]', slider);
+  if (!track) {
+    return;
+  }
+
+  const maxScroll = Math.max(0, track.scrollWidth - track.clientWidth);
+  if (prevBtn instanceof HTMLButtonElement) {
+    prevBtn.disabled = track.scrollLeft <= 2;
+  }
+  if (nextBtn instanceof HTMLButtonElement) {
+    nextBtn.disabled = track.scrollLeft >= maxScroll - 2;
+  }
+}
+
+function setupProductSliders(signal) {
+  const sliders = qsa('[data-drv-slider]');
+  for (const slider of sliders) {
+    const track = qs('[data-drv-slider-track]', slider);
+    if (!track) {
+      continue;
+    }
+    updateSliderButtons(slider);
+    track.addEventListener('scroll', () => updateSliderButtons(slider), { passive: true, signal });
+  }
+
+  window.addEventListener(
+    'resize',
+    () => {
+      for (const slider of sliders) {
+        updateSliderButtons(slider);
+      }
+    },
+    { passive: true, signal },
+  );
 }
 
 function setupStickyPurchaseObserver(signal) {
@@ -160,6 +201,21 @@ export function initProductPage() {
         return;
       }
 
+      const sliderNavBtn = target.closest('[data-drv-slider-prev], [data-drv-slider-next]');
+      if (sliderNavBtn instanceof HTMLElement) {
+        event.preventDefault();
+        const slider = sliderNavBtn.closest('[data-drv-slider]');
+        const track = slider ? qs('[data-drv-slider-track]', slider) : null;
+        if (track) {
+          const isNext = sliderNavBtn.hasAttribute('data-drv-slider-next');
+          const firstCard = qs('.drv-card', track);
+          const cardW = firstCard ? firstCard.getBoundingClientRect().width + 16 : track.clientWidth * 0.5;
+          const step = window.innerWidth >= 1024 ? cardW * 2 : cardW;
+          track.scrollBy({ left: isNext ? step : -step, behavior: 'smooth' });
+        }
+        return;
+      }
+
       const clearViewedBtn = target.closest('[data-drv-clear-viewed]');
       if (clearViewedBtn) {
         event.preventDefault();
@@ -188,6 +244,7 @@ export function initProductPage() {
     );
   }
 
+  setupProductSliders(signal);
   setupStickyPurchaseObserver(signal);
   void hydrateRecentlyViewedSection();
 }

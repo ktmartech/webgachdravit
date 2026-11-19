@@ -193,7 +193,7 @@ final class Renderer {
             }
             drv_ui('product-card', [
                 'product'       => $product,
-                'priority_load' => ($start_index === 0 && $idx < 4),
+                'priority_load' => ($start_index === 0 && $idx === 0),
                 'heading_tag'   => 'h2',
             ]);
         }

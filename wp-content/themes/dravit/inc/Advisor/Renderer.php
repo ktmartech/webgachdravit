@@ -90,7 +90,7 @@ final class Renderer {
                 'product'       => $cardSource,
                 'context'       => 'advisor',
                 'advisor_meta'  => $advisorMeta,
-                'priority_load' => $index < 2,
+                'priority_load' => $index === 0,
                 'heading_tag'   => 'h3',
             ]);
 

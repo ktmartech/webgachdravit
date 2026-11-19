@@ -18,13 +18,10 @@ final class PriceState {
      * Trả về 1 trong 4 trạng thái chuẩn: `priced | sale | quote_only | out_of_stock`.
      */
     public static function resolve(\WC_Product $product): string {
-        $model = (string) ($product->get_meta('drv_pricing_model', true) ?: 'area_pack');
-        if ($model === 'area_pack') {
-            $price_m2 = (int) $product->get_meta('drv_price_m2', true);
-            if ($price_m2 <= 0 || $product->get_regular_price('edit') === '') {
-                return self::QUOTE_ONLY;
-            }
-        } elseif ($product->get_regular_price('edit') === '' || (float) $product->get_regular_price('edit') <= 0.0) {
+        $price_m2  = (int) $product->get_meta('drv_price_m2', true);
+        $reg_price = $product->get_regular_price('edit');
+
+        if ($price_m2 <= 0 || $reg_price === '' || (float) $reg_price <= 0.0) {
             return self::QUOTE_ONLY;
         }
 

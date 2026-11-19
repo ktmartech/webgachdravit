@@ -43,30 +43,40 @@
 
   .drv-footer-dock__head {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     gap: var(--s-2);
   }
 
   .drv-footer-dock__kicker {
     display: inline-flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 6px;
     font-size: 0.8125rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--c-teal-700);
+    line-height: 1.35;
+    min-width: 0;
+  }
+
+  .drv-footer-dock__kicker i {
+    flex-shrink: 0;
+    margin-top: 1px;
   }
 
   .drv-footer-dock__status {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
     font-weight: 600;
     padding: 2px 8px;
     border-radius: var(--r-pill);
+    white-space: nowrap;
+    flex-shrink: 0;
+    line-height: 1.4;
   }
 
   .drv-footer-dock__status--online {
@@ -297,6 +307,7 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    min-block-size: 24px; /* WCAG 2.5.8 Target Size (Minimum) */
     color: var(--c-navy-300);
     text-decoration: none;
     line-height: 1.4;
